@@ -9,11 +9,18 @@ import {
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('darkMode');
+      return saved ? JSON.parse(saved) : true;
+    }
+    return true;
+  });
   const [showExitIntent, setShowExitIntent] = useState(false);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const exitIntentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -59,12 +66,44 @@ export default function App() {
     }
   }, [mobileMenuOpen]);
 
+  // Persist dark mode to localStorage
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
+
+  // Focus trap for exit intent popup (WCAG 2.1.2)
+  useEffect(() => {
+    if (showExitIntent && exitIntentRef.current) {
+      const focusableElements = exitIntentRef.current.querySelectorAll(
+        'button, [href], [tabindex]:not([tabindex="-1"])'
+      );
+      const first = focusableElements[0] as HTMLElement;
+      const last = focusableElements[focusableElements.length - 1] as HTMLElement;
+      first?.focus();
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+        }
+        if (e.key === 'Escape') setShowExitIntent(false);
+      };
+      exitIntentRef.current.addEventListener('keydown', handleTab);
+      return () => exitIntentRef.current?.removeEventListener('keydown', handleTab);
+    }
+  }, [showExitIntent]);
+
   const bg = darkMode ? 'bg-slate-950' : 'bg-white';
   const text = darkMode ? 'text-slate-100' : 'text-slate-900';
   const textMuted = darkMode ? 'text-slate-300' : 'text-slate-600';
   const textSubtle = darkMode ? 'text-slate-400' : 'text-slate-500';
   const cardBg = darkMode ? 'bg-slate-900/40' : 'bg-slate-50';
   const cardBorder = darkMode ? 'border-slate-800' : 'border-slate-200';
+  
+  // Static hover classes for Tailwind JIT (dynamic classes don't work)
+  const hoverText = darkMode ? 'hover:text-white' : 'hover:text-slate-900';
+  const hoverBorder = darkMode ? 'hover:border-slate-700' : 'hover:border-slate-300';
+  const hoverBg = darkMode ? 'hover:bg-slate-900/60' : 'hover:bg-slate-100';
+  const hoverTextSubtle = darkMode ? 'hover:text-slate-300' : 'hover:text-slate-700';
 
   return (
     <div className={`min-h-screen ${bg} ${text}`}>
@@ -93,10 +132,10 @@ export default function App() {
             </a>
             
             <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className={`text-sm ${textMuted} hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Features</a>
-              <a href="#how-it-works" className={`text-sm ${textMuted} hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>How It Works</a>
-              <a href="#pricing" className={`text-sm ${textMuted} hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Pricing</a>
-              <a href="#b2b" className={`text-sm ${textMuted} hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>For Organizations</a>
+              <a href="#features" className={`text-sm ${textMuted} ${hoverText} transition-colors`}>Features</a>
+              <a href="#how-it-works" className={`text-sm ${textMuted} ${hoverText} transition-colors`}>How It Works</a>
+              <a href="#pricing" className={`text-sm ${textMuted} ${hoverText} transition-colors`}>Pricing</a>
+              <a href="#b2b" className={`text-sm ${textMuted} ${hoverText} transition-colors`}>For Organizations</a>
               <button 
                 onClick={() => setDarkMode(!darkMode)}
                 className={`text-sm ${textMuted} transition-colors`}
@@ -159,11 +198,11 @@ export default function App() {
 
       {/* Exit Intent Popup */}
       {showExitIntent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="exit-intent-title">
+        <div ref={exitIntentRef} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="exit-intent-title">
           <div className={`relative mx-4 max-w-md rounded-2xl ${darkMode ? 'bg-slate-900' : 'bg-white'} p-8 shadow-2xl animate-scale-in`}>
             <button
               onClick={() => setShowExitIntent(false)}
-              className={`absolute top-4 right-4 ${textSubtle} hover:${darkMode ? 'text-white' : 'text-slate-900'}`}
+              className={`absolute top-4 right-4 ${textSubtle} ${hoverText}`}
               aria-label="Close popup"
             >
               <X size={20} />
@@ -316,7 +355,7 @@ export default function App() {
             <p className={`text-center text-sm ${textSubtle} mb-8`}>Trusted by professionals from leading companies</p>
             <div className="flex flex-wrap items-center justify-center gap-8 opacity-60 grayscale">
               {['Google', 'Microsoft', 'Amazon', 'Meta', 'Apple', 'Netflix'].map((company) => (
-                <div key={company} className={`text-xl font-bold ${textSubtle} hover:${darkMode ? 'text-slate-300' : 'text-slate-700'} transition-colors`}>
+                <div key={company} className={`text-xl font-bold ${textSubtle} ${hoverTextSubtle} transition-colors`}>
                   {company}
                 </div>
               ))}
@@ -340,7 +379,7 @@ export default function App() {
                 { icon: <Lock className="text-amber-400" size={24} />, title: 'Privacy Concerns', desc: 'Your data is sold to recruiters without your consent.' },
                 { icon: <TrendingUp className="text-amber-400 rotate-180" size={24} />, title: 'No Learning', desc: 'Applications don\'t improve based on what actually works.' },
               ].map((problem, i) => (
-                <div key={i} className={`rounded-xl border ${cardBorder} ${cardBg} p-6 hover:${darkMode ? 'border-slate-700' : 'border-slate-300'} transition-colors`}>
+                <div key={i} className={`rounded-xl border ${cardBorder} ${cardBg} p-6 ${hoverBorder} transition-colors`}>
                   <div className="mb-4" aria-hidden="true">{problem.icon}</div>
                   <h3 className="text-lg font-semibold mb-2">{problem.title}</h3>
                   <p className={`text-sm ${textMuted}`}>{problem.desc}</p>
@@ -571,7 +610,7 @@ export default function App() {
                 <div key={i} className={`rounded-xl border ${cardBorder} ${cardBg} overflow-hidden`} role="listitem">
                   <button
                     onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
-                    className={`w-full px-6 py-4 text-left flex items-center justify-between hover:${darkMode ? 'bg-slate-900/60' : 'bg-slate-100'} transition-colors`}
+                    className={`w-full px-6 py-4 text-left flex items-center justify-between ${hoverBg} transition-colors`}
                     aria-expanded={openFAQ === i}
                     aria-controls={`faq-answer-${i}`}
                   >
@@ -626,41 +665,41 @@ export default function App() {
             <nav aria-label="Product links">
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className={`space-y-2 text-sm ${textMuted}`}>
-                <li><a href="#features" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Features</a></li>
-                <li><a href="#pricing" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Pricing</a></li>
-                <li><a href="#b2b" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>For Organizations</a></li>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Changelog</a></li>
+                <li><a href="#features" className={`${hoverText} transition-colors`}>Features</a></li>
+                <li><a href="#pricing" className={`${hoverText} transition-colors`}>Pricing</a></li>
+                <li><a href="#b2b" className={`${hoverText} transition-colors`}>For Organizations</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>Changelog</a></li>
               </ul>
             </nav>
             <nav aria-label="Company links">
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className={`space-y-2 text-sm ${textMuted}`}>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>About</a></li>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Blog</a></li>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Careers</a></li>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Contact</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>About</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>Blog</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>Careers</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>Contact</a></li>
               </ul>
             </nav>
             <nav aria-label="Legal links">
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className={`space-y-2 text-sm ${textMuted}`}>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Privacy Policy</a></li>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Terms of Service</a></li>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>Cookie Policy</a></li>
-                <li><a href="#" className={`hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`}>GDPR</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>Privacy Policy</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>Terms of Service</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>Cookie Policy</a></li>
+                <li><a href="#" className={`${hoverText} transition-colors`}>GDPR</a></li>
               </ul>
             </nav>
           </div>
           <div className={`mt-12 pt-8 border-t ${cardBorder} flex flex-col sm:flex-row items-center justify-between gap-4`}>
             <p className={`text-sm ${textSubtle}`}>© 2026 NextJob. All rights reserved.</p>
             <div className="flex items-center gap-4">
-              <a href="#" className={`${textMuted} hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`} aria-label="Twitter">
+              <a href="#" className={`${textMuted} ${hoverText} transition-colors`} aria-label="Twitter">
                 <Twitter size={20} />
               </a>
-              <a href="#" className={`${textMuted} hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`} aria-label="LinkedIn">
+              <a href="#" className={`${textMuted} ${hoverText} transition-colors`} aria-label="LinkedIn">
                 <Linkedin size={20} />
               </a>
-              <a href="#" className={`${textMuted} hover:${darkMode ? 'text-white' : 'text-slate-900'} transition-colors`} aria-label="GitHub">
+              <a href="#" className={`${textMuted} ${hoverText} transition-colors`} aria-label="GitHub">
                 <Github size={20} />
               </a>
             </div>
@@ -758,7 +797,7 @@ function ROICalculator({ darkMode, textMuted, textSubtle, cardBorder }: { darkMo
               <span className="text-sm font-medium text-emerald-400">Time Saved</span>
             </div>
             <p className="text-3xl font-bold">{timeSaved.toFixed(0)} hours/month</p>
-            <p className={`text-sm ${textMuted} mt-1`}>That's {(timeSaved / 40).toFixed(1)} full work weeks per year</p>
+            <p className={`text-sm ${textMuted} mt-1`}>That's {((timeSaved * 12) / 40).toFixed(1)} full work weeks per year</p>
           </div>
           <div className="rounded-xl bg-cyan-500/10 border border-cyan-500/20 p-6">
             <div className="flex items-center gap-3 mb-2">
