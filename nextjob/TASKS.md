@@ -125,6 +125,22 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 - **Verification:** Manual test: import CV → verify each claim → check Career Graph state
 - **Files:** `nextjob/apps/web/src/app/verify-claims/`, `nextjob/packages/career-graph/src/verification.ts`
 
+#### T-09a: Implement preferences capture
+- [ ] **Status:** Not started
+- **Deliverable:** UI and API for capturing target roles, seniority, industries, locations, work mode (remote/hybrid/on-site), salary expectations, company preferences, exclusions, relocation, notice period
+- **Dependencies:** T-03, T-08
+- **Acceptance:** All preference fields captured per PRD §FR-ONB-04; stored in CareerProfile with versioning; preferences used by matching engine
+- **Verification:** Set preferences → verify stored in CareerProfile; `npm run test -- preferences` → pass; manual test: set preferences → verify matching uses them
+- **Files:** `nextjob/apps/web/src/app/preferences/`, `nextjob/packages/career-graph/src/preferences.ts`
+
+#### T-09b: Implement automation policy setting
+- [ ] **Status:** Not started
+- **Deliverable:** UI and API for setting automation mode (Manual/Copilot/Autopilot) with field-level overrides
+- **Dependencies:** T-09a, T-19
+- **Acceptance:** User can select automation mode; field-level overrides work; policy stored and enforced during application execution; mode respected per PRD §Automation Modes
+- **Verification:** Set automation policy → verify stored; trigger application → verify mode respected; test field-level override → verify applied
+- **Files:** `nextjob/apps/web/src/app/automation-policy/`, `nextjob/packages/policy/src/automation.ts`
+
 #### T-10: Implement evidence storage and access control
 - [ ] **Status:** Not started
 - **Deliverable:** S3 storage for evidence documents with signed URLs and access control
@@ -198,7 +214,7 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 - [ ] **Status:** Not started
 - **Deliverable:** Resume variant, cover letter, application answers generated from verified evidence only
 - **Dependencies:** T-05, T-08, T-16
-- **Acceptance:** FR-01 satisfied; every generated statement maps to CareerClaim; no hallucinated facts; dates/employers/qualifications preserved
+- **Acceptance:** FR-01 satisfied; every generated statement maps to CareerClaim; 0 unsupported claims in tailoring eval suite; dates/employers/qualifications preserved
 - **Verification:** Generate tailored content → verify all statements trace to evidence; `npm run test:eval -- tailoring` → 0 unsupported claims
 - **Files:** `nextjob/packages/tailoring/src/`
 - **Note:** Requires human review for evidence constraint logic
@@ -474,16 +490,16 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-04 (Verified submission receipts) | T-26 | Not started |
 | FR-05 (Duplicate prevention) | T-23, T-24, T-25 | Not started |
 | FR-06 (Explainable actions) | T-14, T-15, T-20 | Not started |
-| FR-07 (Policy precedence) | T-19 | Not started |
+| FR-07 (Policy precedence) | T-19, T-09b | Not started |
 | FR-08 (No auto-retry ambiguous) | T-25 | Not started |
 | FR-09 (Aggregate-only reporting) | T-30, T-31 | Not started |
 | FR-10 (Privacy controls) | T-36 | Not started |
 | FR-11 (Answer reuse) | T-19 | Not started |
-| FR-12 (Capability dimensions) | T-14, T-15 | Not started |
+| FR-12 (Capability dimensions) | T-14, T-15, T-09a | Not started |
 | FR-13 (Actionable notifications) | T-28 | Not started |
 | FR-14 (Interview prep) | Not in MVP scope | N/A |
 | G-04 (Eligibility false-positive ≤2%) | T-12, T-13 | Not started |
-| G-09 (Autopilot evidence ≥80%) | T-24, T-25 | Not started |
+| G-09 (Autopilot evidence ≥80%) | T-24, T-25, T-09b | Not started |
 | G-10 (Min cohort size ≥5) | T-30, T-31 | Not started |
 
 ## Release Gates
