@@ -132,6 +132,19 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 - **FR-ROL-02 [Should]:** Phase 2 SHOULD add: email outcomes, interview preparation, additional ATSs, localization, experiments.
 - **FR-ROL-03 [Could]:** Phase 3 MAY add: safe autopilot, outcome-informed ranking, expanded eligibility, B2B integrations, Career Vault.
 
+### Marketing & Landing Page
+
+- **FR-MKT-01 [Must]:** Landing page MUST clearly communicate value proposition: "Apply with proof" — evidence-backed career agent that converts verified evidence into eligible applications and interview outcomes.
+- **FR-MKT-02 [Must]:** Landing page MUST display: hero section with tagline, core differentiators (evidence-backed Career Graph, eligibility before application, no fabricated claims, verified submission receipts, global capability transparency), target personas (active professionals, international candidates, graduates, career changers), pricing tiers (Free, Search Pass, Agent Pass), social proof placeholders, clear CTAs (Sign Up, Learn More).
+- **FR-MKT-03 [Must]:** Landing page MUST be optimized for conversion: above-the-fold value prop, benefit-focused copy, trust signals (security, privacy, no data sales), frictionless signup flow, mobile-responsive.
+- **FR-MKT-04 [Must]:** Landing page MUST support SEO: semantic HTML, meta tags, structured data, fast load times (<2s LCP), accessible (WCAG 2.2 AA).
+- **FR-MKT-05 [Must]:** Landing page MUST integrate analytics: track page views, CTA clicks, signup conversions, bounce rate, time on page; no PII in analytics events.
+- **FR-MKT-06 [Should]:** Landing page SHOULD support A/B testing for: hero copy, pricing display, CTA placement, social proof variants.
+- **FR-MKT-07 [Should]:** Landing page SHOULD include: FAQ section addressing common objections (AI hallucination, privacy, work authorization, eligibility accuracy), testimonials/reviews section (post-launch), blog/resources section (post-launch).
+- **FR-MKT-08 [Must]:** Landing page MUST support B2B2C: separate section or page for institutions/programs highlighting cohort management, aggregate reporting, privacy safeguards, pricing.
+- **FR-MKT-09 [Must]:** Landing page MUST comply with legal requirements: privacy policy link, terms of service link, cookie consent (if applicable), GDPR compliance for EU visitors.
+- **FR-MKT-10 [Should]:** Landing page SHOULD support referral program: unique referral links, referral tracking, incentive display (post-launch).
+
 ## Acceptance
 
 - **AC-01 → FR-01:** Given a CareerClaim with evidence, when tailoring generates a statement, then the statement references the claim_id and evidence_id.
@@ -145,6 +158,11 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 - **AC-09 → FR-FEC-02:** Given a failed submission, when user views failure details, then they see status, explanation, and recovery action.
 - **AC-10 → FR-ACC-01:** Given a user navigating with keyboard only, when they complete the application flow, then all interactive elements are reachable and operable.
 - **AC-11 → FR-ANA-02:** Given a product analytics event, when inspected, then it contains no PII, CV content, or sensitive application data.
+- **AC-12 → FR-MKT-02:** Given a visitor lands on the homepage, when they scroll through the page, then they see: hero with tagline, 5 core differentiators, 4 target personas, 3 pricing tiers, signup CTA.
+- **AC-13 → FR-MKT-03:** Given a visitor on mobile device, when they view the landing page, then all content is readable, CTAs are tappable, and layout doesn't require horizontal scrolling.
+- **AC-14 → FR-MKT-04:** Given the landing page is indexed, when Google crawls it, then meta title, description, and structured data are present and accurate.
+- **AC-15 → FR-MKT-05:** Given a visitor interacts with the landing page, when analytics are inspected, then page views, CTA clicks, and conversions are tracked without PII.
+- **AC-16 → FR-MKT-08:** Given an institution administrator visits the landing page, when they navigate to the B2B section, then they see cohort management, aggregate reporting, privacy safeguards, and pricing information.
 
 ## Validation
 

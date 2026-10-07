@@ -568,6 +568,50 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 ---
 
+### Phase 24: Marketing & Landing Page
+
+#### T-52: Design and implement marketing landing page
+- [ ] **Status:** Not started
+- **Deliverable:** Marketing landing page with hero section, value proposition ("Apply with proof"), 5 core differentiators (evidence-backed Career Graph, eligibility before application, no fabricated claims, verified submission receipts, global capability transparency), 4 target personas, 3 pricing tiers (Free, Search Pass, Agent Pass), social proof placeholders, clear CTAs (Sign Up, Learn More), FAQ section, trust signals (security, privacy, no data sales)
+- **Dependencies:** T-02, T-04
+- **Acceptance:** FR-MKT-01, FR-MKT-02, FR-MKT-03 satisfied; AC-12, AC-13 passing; mobile-responsive; WCAG 2.2 AA compliant; conversion-optimized layout
+- **Verification:** Visual review → verify all sections present; mobile test → verify responsive; accessibility audit → WCAG 2.2 AA pass; Lighthouse → performance score ≥90
+- **Files:** `nextjob/apps/web/src/app/(marketing)/page.tsx`, `nextjob/apps/web/src/components/marketing/`
+
+#### T-53: Implement B2B2C landing page section
+- [ ] **Status:** Not started
+- **Deliverable:** Separate section or page for institutions/programs highlighting: cohort management, aggregate reporting (minimum cohort size ≥5), privacy safeguards (no individual data exposure), pricing for organizations, case studies/testimonials placeholders, contact/demo CTA
+- **Dependencies:** T-52, T-30
+- **Acceptance:** FR-MKT-08 satisfied; AC-16 passing; institution administrators can find and understand B2B offering
+- **Verification:** Navigate to B2B section → verify content present; test with institution persona → verify clarity
+- **Files:** `nextjob/apps/web/src/app/(marketing)/b2b/page.tsx`, `nextjob/apps/web/src/components/marketing/b2b/`
+
+#### T-54: Implement landing page SEO and analytics
+- [ ] **Status:** Not started
+- **Deliverable:** SEO optimization (meta tags, structured data, semantic HTML, fast load <2s LCP), analytics integration (page views, CTA clicks, signup conversions, bounce rate, time on page), A/B testing framework support, no PII in analytics
+- **Dependencies:** T-52, T-48
+- **Acceptance:** FR-MKT-04, FR-MKT-05, FR-MKT-06 satisfied; AC-14, AC-15 passing; Lighthouse SEO score ≥90; analytics events contain no PII
+- **Verification:** Lighthouse audit → SEO ≥90, performance ≥90; inspect analytics events → no PII; verify meta tags and structured data present
+- **Files:** `nextjob/apps/web/src/app/(marketing)/layout.tsx`, `nextjob/apps/web/src/lib/analytics/`
+
+#### T-55: Implement landing page legal compliance
+- [ ] **Status:** Not started
+- **Deliverable:** Privacy policy page, terms of service page, cookie consent banner (if applicable), GDPR compliance for EU visitors, data processing agreements for B2B customers
+- **Dependencies:** T-52, T-36
+- **Acceptance:** FR-MKT-09 satisfied; all legal pages accessible from landing page footer; cookie consent works; GDPR compliance verified
+- **Verification:** Navigate to legal pages → verify content present; test cookie consent → verify functionality; review GDPR compliance → verify data handling
+- **Files:** `nextjob/apps/web/src/app/(legal)/privacy/page.tsx`, `nextjob/apps/web/src/app/(legal)/terms/page.tsx`, `nextjob/apps/web/src/components/cookie-consent.tsx`
+
+#### T-56: Implement referral program infrastructure
+- [ ] **Status:** Not started
+- **Deliverable:** Referral link generation, referral tracking, referral incentive display, referral conversion tracking in analytics
+- **Dependencies:** T-52, T-48
+- **Acceptance:** FR-MKT-10 satisfied; users can generate and share referral links; referrals tracked and attributed; incentives displayed
+- **Verification:** Generate referral link → verify unique; share link → verify tracking; check analytics → verify referral conversions tracked
+- **Files:** `nextjob/packages/api/src/referrals/`, `nextjob/apps/web/src/components/referral/`
+
+---
+
 ## Requirement Coverage
 
 | PRD Requirement | Task(s) | Status |
@@ -615,6 +659,16 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-ROL-01 (Phase 1 MVP) | All tasks | Not started |
 | FR-ROL-02 (Phase 2) | Not in MVP scope | N/A |
 | FR-ROL-03 (Phase 3) | Not in MVP scope | N/A |
+| FR-MKT-01 (Landing page value prop) | T-52 | Not started |
+| FR-MKT-02 (Landing page sections) | T-52 | Not started |
+| FR-MKT-03 (Conversion optimization) | T-52 | Not started |
+| FR-MKT-04 (SEO) | T-54 | Not started |
+| FR-MKT-05 (Analytics) | T-54 | Not started |
+| FR-MKT-06 (A/B testing) | T-54 | Not started |
+| FR-MKT-07 (FAQ, testimonials) | T-52 | Not started |
+| FR-MKT-08 (B2B2C section) | T-53 | Not started |
+| FR-MKT-09 (Legal compliance) | T-55 | Not started |
+| FR-MKT-10 (Referral program) | T-56 | Not started |
 | G-04 (Eligibility false-positive ≤2%) | T-12, T-13 | Not started |
 | G-09 (Autopilot evidence ≥80%) | T-24, T-25, T-09b | Not started |
 | G-10 (Min cohort size ≥5) | T-30, T-31 | Not started |

@@ -26,7 +26,11 @@ npm run test:eval    # AI evaluation suite
 ```
 nextjob/
 ├── apps/
-│   ├── web/                # Next.js + TypeScript (FR-ONB, matching, tracker)
+│   ├── web/                # Next.js + TypeScript (FR-ONB, matching, tracker, marketing)
+│   │   └── src/app/
+│   │       ├── (marketing)/  # Landing page, B2B section
+│   │       ├── (legal)/      # Privacy policy, terms of service
+│   │       └── (app)/        # Authenticated app (dashboard, applications, etc.)
 │   └── extension/          # WXT browser extension (ATS execution)
 ├── packages/
 │   ├── api/                # Fastify modular monolith
