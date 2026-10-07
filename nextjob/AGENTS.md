@@ -2,7 +2,10 @@
 
 ## Status
 
-Pre-implementation. No repository, build pipeline, or runtime exists yet. Technology stack approved (2026-01-15). Three decisions remain pending: eligibility false-positive threshold, autopilot evidence coverage threshold, and organization minimum cohort size for reporting.
+Pre-implementation. No repository, build pipeline, or runtime exists yet. Technology stack and all threshold decisions approved (2026-01-15):
+- Eligibility false-positive threshold: ≤2%
+- Autopilot evidence coverage: ≥80%
+- Minimum cohort size for reporting: ≥5 participants
 
 ## Commands
 

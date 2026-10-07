@@ -23,11 +23,13 @@ Job seekers face fragmented discovery, irrelevant opportunities, repetitive appl
 - **G-01:** Increase qualified interview conversion → Verified Qualified Interview Rate → target TBD
 - **G-02:** Reduce application effort → Approval effort per application → target TBD
 - **G-03:** Prevent unsupported claims → Unsupported-claim rate = 0
-- **G-04:** Prevent ineligible applications → Eligibility false-positive rate → threshold TBD
+- **G-04:** Prevent ineligible applications → Eligibility false-positive rate ≤ 2%
 - **G-05:** Verify every submission → Verified submission rate ≥ 98%
 - **G-06:** Prevent duplicate submissions → Duplicate prevention ≥ 95%
 - **G-07:** Make every action explainable → 100% of automated actions have reason + source + evidence
 - **G-08:** Support global candidates → Capability labels on every job card
+- **G-09:** Autopilot safety → Evidence coverage ≥ 80% before autopilot execution
+- **G-10:** Privacy-safe reporting → Minimum cohort size ≥ 5 participants for aggregate reporting
 
 ## Scope
 
@@ -126,6 +128,9 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 | B2B privacy concerns | Aggregate-only reporting | Working decision |
 
 **Open questions:**
-- Eligibility false-positive threshold not yet approved
 - Search Pass price ($39/30 days) not validated
-- Autopilot safety threshold (evidence coverage %) not defined
+
+**Approved decisions (2026-01-15):**
+- Eligibility false-positive threshold: ≤2% (G-04)
+- Autopilot evidence coverage threshold: ≥80% (G-09)
+- Organization minimum cohort size for reporting: ≥5 participants (G-10)

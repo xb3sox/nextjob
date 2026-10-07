@@ -173,10 +173,10 @@ graph TB
 | Custom workflow vs Temporal | Custom: less dependency. Temporal: durability, retries, visibility built-in. | Approved: Temporal for connector reliability (FR-05) |
 | Single AI provider vs abstraction | Single: simpler. Abstraction: model flexibility, eval comparison. | Approved: abstraction for eval-driven routing |
 
-**Decisions requiring approval before implementation:**
-- Eligibility false-positive threshold
-- Autopilot evidence coverage threshold
-- Organization minimum cohort size for reporting
+**Implementation guidance for approved thresholds:**
+- Eligibility false-positive ≤2%: Evaluate all hard requirements (location, authorization, sponsorship, licenses, mandatory qualifications). Default to Unknown when evidence is insufficient. Track false-positive rate in eval suite.
+- Autopilot evidence coverage ≥80%: Before autopilot execution, compute ratio of job requirements with verified evidence to total requirements. Block autopilot if below threshold; fall back to Copilot.
+- Minimum cohort size ≥5: In organization reporting queries, return "insufficient cohort size" when participant count < 5. Never expose individual data below this threshold.
 
 ## Risks
 
