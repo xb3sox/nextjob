@@ -9,7 +9,7 @@ Addresses PRD FR-01 through FR-14 and all acceptance criteria. Key constraints:
 - Idempotent external actions (FR-05) require durable workflow orchestration
 - Sensitive-field isolation (FR-03) requires separate storage with access controls
 - Global capability transparency (FR-08) requires per-job dimension evaluation
-- All stack choices are **Provisional** pending owner approval
+- All stack choices are **Approved** (2026-01-15)
 
 ## Architecture
 
@@ -80,24 +80,24 @@ graph TB
 
 | Layer | Technology | Status | Rationale |
 |-------|-----------|--------|-----------|
-| Web | Next.js + TypeScript | Provisional | SSR for SEO, React ecosystem, Vercel deployment |
-| UI | shadcn/ui + Radix + Tailwind | Provisional | Accessible primitives, customizable, no runtime overhead |
-| Forms | React Hook Form + Zod | Provisional | Performance, schema validation shared with API |
-| Extension | WXT | Provisional | Cross-browser, TypeScript-native, modern build |
-| Backend | Fastify | Provisional | Performance, schema validation, plugin architecture |
-| Architecture | Modular monolith | Provisional | Simplicity, deploy speed, clear boundaries for future extraction |
-| Database | PostgreSQL + pgvector | Provisional | Relational integrity, vector search, FTS in one system |
-| ORM | Drizzle | Provisional | Type-safe, SQL-close, migration support |
-| Workflow | Temporal | Provisional | Durable execution, retries, visibility for connectors (FR-05) |
-| AI | Vercel AI SDK + provider abstraction | Provisional | Multi-model support, streaming, structured output |
-| AI Observability | Langfuse + OpenTelemetry | Provisional | Trace-based eval, cost tracking, prompt management |
-| Cache | Valkey | Provisional | Redis-compatible, session and rate-limit storage |
-| Storage | S3 | Provisional | Document storage, evidence files |
-| Analytics | PostHog | Provisional | Product analytics, feature flags, no PII in events |
-| Billing | Stripe | Provisional | Subscriptions, usage-based, global |
-| Infrastructure | AWS + Vercel | Provisional | Managed services, edge deployment |
-| IaC | OpenTofu | Provisional | Terraform-compatible, open-source |
-| CI/CD | GitHub Actions | Provisional | Integrated with repo, matrix builds |
+| Web | Next.js + TypeScript | Approved | SSR for SEO, React ecosystem, Vercel deployment |
+| UI | shadcn/ui + Radix + Tailwind | Approved | Accessible primitives, customizable, no runtime overhead |
+| Forms | React Hook Form + Zod | Approved | Performance, schema validation shared with API |
+| Extension | WXT | Approved | Cross-browser, TypeScript-native, modern build |
+| Backend | Fastify | Approved | Performance, schema validation, plugin architecture |
+| Architecture | Modular monolith | Approved | Simplicity, deploy speed, clear boundaries for future extraction |
+| Database | PostgreSQL + pgvector | Approved | Relational integrity, vector search, FTS in one system |
+| ORM | Drizzle | Approved | Type-safe, SQL-close, migration support |
+| Workflow | Temporal | Approved | Durable execution, retries, visibility for connectors (FR-05) |
+| AI | Vercel AI SDK + provider abstraction | Approved | Multi-model support, streaming, structured output |
+| AI Observability | Langfuse + OpenTelemetry | Approved | Trace-based eval, cost tracking, prompt management |
+| Cache | Valkey | Approved | Redis-compatible, session and rate-limit storage |
+| Storage | S3 | Approved | Document storage, evidence files |
+| Analytics | PostHog | Approved | Product analytics, feature flags, no PII in events |
+| Billing | Stripe | Approved | Subscriptions, usage-based, global |
+| Infrastructure | AWS + Vercel | Approved | Managed services, edge deployment |
+| IaC | OpenTofu | Approved | Terraform-compatible, open-source |
+| CI/CD | GitHub Actions | Approved | Integrated with repo, matrix builds |
 
 ## Components
 
@@ -168,13 +168,12 @@ graph TB
 
 | Option | Trade-offs | Status |
 |--------|-----------|--------|
-| Microservices vs modular monolith | Monolith: simpler ops, faster iteration. Microservices: independent scaling. | Provisional: monolith first, extract if needed |
-| MongoDB vs PostgreSQL | MongoDB: flexible schema. PostgreSQL: integrity, vector, FTS in one. | Provisional: PostgreSQL for integrity requirements |
-| Custom workflow vs Temporal | Custom: less dependency. Temporal: durability, retries, visibility built-in. | Provisional: Temporal for connector reliability (FR-05) |
-| Single AI provider vs abstraction | Single: simpler. Abstraction: model flexibility, eval comparison. | Provisional: abstraction for eval-driven routing |
+| Microservices vs modular monolith | Monolith: simpler ops, faster iteration. Microservices: independent scaling. | Approved: monolith first, extract if needed |
+| MongoDB vs PostgreSQL | MongoDB: flexible schema. PostgreSQL: integrity, vector, FTS in one. | Approved: PostgreSQL for integrity requirements |
+| Custom workflow vs Temporal | Custom: less dependency. Temporal: durability, retries, visibility built-in. | Approved: Temporal for connector reliability (FR-05) |
+| Single AI provider vs abstraction | Single: simpler. Abstraction: model flexibility, eval comparison. | Approved: abstraction for eval-driven routing |
 
 **Decisions requiring approval before implementation:**
-- Technology stack (all provisional)
 - Eligibility false-positive threshold
 - Autopilot evidence coverage threshold
 - Organization minimum cohort size for reporting

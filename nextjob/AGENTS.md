@@ -2,7 +2,7 @@
 
 ## Status
 
-Pre-implementation. No repository, build pipeline, or runtime exists yet. All stack choices are provisional pending owner approval.
+Pre-implementation. No repository, build pipeline, or runtime exists yet. Technology stack approved (2026-01-15). Three decisions remain pending: eligibility false-positive threshold, autopilot evidence coverage threshold, and organization minimum cohort size for reporting.
 
 ## Commands
 

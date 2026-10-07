@@ -22,6 +22,7 @@ Pre-implementation. No runnable commands yet.
 
 ## External Actions
 
-- Owner → Approve provisional technology stack → Signed-off TECH.md → Completion criterion: All stack choices marked Approved
 - Owner → Define eligibility false-positive threshold → Approved threshold in PRD.md → Completion criterion: Threshold documented and accepted
+- Owner → Define autopilot evidence coverage threshold → Approved threshold in PRD.md → Completion criterion: Threshold documented and accepted
+- Owner → Define organization minimum cohort size for reporting → Approved threshold in PRD.md → Completion criterion: Threshold documented and accepted
 - Owner → Commission tenant isolation penetration test → Report → Completion criterion: No unresolved critical findings
