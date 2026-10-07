@@ -145,6 +145,102 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 - **FR-MKT-09 [Must]:** Landing page MUST comply with legal requirements: privacy policy link, terms of service link, cookie consent (if applicable), GDPR compliance for EU visitors.
 - **FR-MKT-10 [Should]:** Landing page SHOULD support referral program: unique referral links, referral tracking, incentive display (post-launch).
 
+### Performance Excellence
+
+- **FR-PERF-01 [Must]:** Landing page MUST achieve Core Web Vitals targets: LCP < 2.5s, INP < 200ms, CLS < 0.1 on both mobile and desktop.
+- **FR-PERF-02 [Must]:** Landing page MUST implement image optimization: WebP/AVIF formats, responsive images with srcset, lazy loading below fold, art direction for different breakpoints.
+- **FR-PERF-03 [Must]:** Landing page MUST implement font optimization: preload critical fonts, font-display: swap, use variable fonts where possible, subset fonts for used characters.
+- **FR-PERF-04 [Must]:** Landing page MUST implement code splitting: route-based splitting, dynamic imports for below-fold content, bundle analysis to keep initial JS < 100KB gzipped.
+- **FR-PERF-05 [Must]:** Landing page MUST implement edge caching: CDN configuration with appropriate cache headers, stale-while-revalidate for dynamic content, cache invalidation on content updates.
+- **FR-PERF-06 [Must]:** Landing page MUST implement Real User Monitoring (RUM): track actual user performance metrics (LCP, FID, CLS, INP) with p75 and p95 percentiles.
+
+### Advanced SEO
+
+- **FR-SEO-01 [Must]:** Landing page MUST include comprehensive schema markup: Organization, Product, FAQ, BreadcrumbList, WebSite schemas validated with Google Rich Results Test.
+- **FR-SEO-02 [Must]:** Landing page MUST generate dynamic Open Graph images: auto-generated per page with branding, title, description, and visual elements using Next.js ImageResponse.
+- **FR-SEO-03 [Must]:** Landing page MUST include Twitter Cards: summary_large_image with custom images optimized for Twitter display (1200x628px).
+- **FR-SEO-04 [Must]:** Landing page MUST auto-generate sitemap.xml: updated on content changes, includes all public pages, proper lastmod dates, priority and changefreq attributes.
+- **FR-SEO-05 [Must]:** Landing page MUST configure robots.txt: allow legitimate crawlers, block AI bots (GPTBot, ClaudeBot, CCBot) unless explicitly allowed, reference sitemap location.
+- **FR-SEO-06 [Must]:** Landing page MUST implement canonical URLs: prevent duplicate content issues, self-referencing canonicals on all pages.
+- **FR-SEO-07 [Must]:** Landing page MUST support AI search optimization: llms.txt file for AI crawlers, structured data optimized for AI consumption, clear entity definitions.
+- **FR-SEO-08 [Should]:** Landing page SHOULD implement hreflang tags: prepare for internationalization with proper language/region codes.
+
+### Conversion Science
+
+- **FR-CRO-01 [Must]:** Landing page MUST include interactive product demo: embedded preview showing application flow with real-looking data, no signup required to view.
+- **FR-CRO-02 [Must]:** Landing page MUST include before/after comparison: traditional apply process vs NextJob side-by-side showing time saved and quality improvement.
+- **FR-CRO-03 [Must]:** Landing page MUST include ROI calculator: interactive tool estimating time saved, interview rate improvement, and application quality score based on user inputs.
+- **FR-CRO-04 [Should]:** Landing page SHOULD implement exit intent popup: offer lead magnet (career guide, checklist) or special discount when user attempts to leave.
+- **FR-CRO-05 [Should]:** Landing page SHOULD implement scroll-triggered animations: reveal content progressively as user scrolls using Intersection Observer.
+- **FR-CRO-06 [Must]:** Landing page MUST track micro-conversions: form starts, video plays, demo interactions, pricing page views, FAQ expansions.
+- **FR-CRO-07 [Should]:** Landing page SHOULD implement social proof rotation: rotating testimonials, customer logos, and success metrics with smooth transitions.
+- **FR-CRO-08 [Should]:** Landing page SHOULD implement urgency indicators: limited-time offers, countdown timers for promotions (ethical use only, no fake scarcity).
+- **FR-CRO-09 [Should]:** Landing page SHOULD implement sticky CTA: persistent call-to-action bar that appears after scrolling past hero.
+- **FR-CRO-10 [Must]:** Landing page MUST include comparison table: feature comparison with traditional job search methods (without naming specific competitors).
+
+### Visual Excellence
+
+- **FR-VIS-01 [Must]:** Landing page MUST implement marketing design system: hero components, feature sections, pricing cards, testimonial components, CTA button variants.
+- **FR-VIS-02 [Should]:** Landing page SHOULD implement scroll animations: Framer Motion for reveal effects, parallax scrolling, smooth transitions between sections.
+- **FR-VIS-03 [Should]:** Landing page SHOULD implement micro-interactions: button hover states with scale/shadow, form field focus animations, loading state transitions.
+- **FR-VIS-04 [Must]:** Landing page MUST implement loading skeletons: content placeholders during data fetch to prevent layout shift and improve perceived performance.
+- **FR-VIS-05 [Should]:** Landing page SHOULD support video content: hero video backgrounds (muted, autoplay, loop), product walkthrough videos, testimonial videos with captions.
+- **FR-VIS-06 [Should]:** Landing page SHOULD implement dark/light mode: respect user preference via prefers-color-scheme, provide manual toggle, persist choice in localStorage.
+- **FR-VIS-07 [Must]:** Landing page MUST implement responsive images: art direction using <picture> element with different crops for mobile/tablet/desktop.
+- **FR-VIS-08 [Must]:** Landing page MUST use consistent icon system: Lucide icons throughout, consistent sizing (16px inline, 24px section headers, 32px hero), proper color inheritance.
+
+### Content Strategy
+
+- **FR-CONT-01 [Must]:** Landing page MUST follow messaging hierarchy: primary value prop → key benefits → detailed features → social proof → final CTA.
+- **FR-CONT-02 [Must]:** Landing page MUST follow copywriting guidelines: conversational tone, benefit-focused language, short sentences (<20 words), active voice, no jargon.
+- **FR-CONT-03 [Must]:** Landing page MUST use content blocks library: reusable sections (hero, features, testimonials, pricing, CTA) with consistent structure and spacing.
+- **FR-CONT-04 [Should]:** Landing page SHOULD include video scripts: product demo script (60s), explainer video script (90s), testimonial interview template.
+- **FR-CONT-05 [Should]:** Landing page SHOULD support email nurture sequences: welcome series (3 emails over 7 days), onboarding emails (5 emails over 14 days), re-engagement emails (monthly).
+- **FR-CONT-06 [Should]:** Landing page SHOULD offer lead magnets: downloadable guides (career checklist, resume template, interview prep), whitepapers (AI in hiring trends), checklists (application tracker).
+- **FR-CONT-07 [Should]:** Landing page SHOULD include blog/resources structure: SEO-optimized content hub with categories (career tips, product updates, industry insights), tag system, related posts.
+
+### Trust & Credibility
+
+- **FR-TRUST-01 [Should]:** Landing page SHOULD display customer logos: prominent section with 6-12 company logos (post-launch, with permission), grayscale with color on hover.
+- **FR-TRUST-02 [Should]:** Landing page SHOULD display security certifications: SOC 2 Type II badge, GDPR compliance badge, encryption indicators (post-certification).
+- **FR-TRUST-03 [Must]:** Landing page MUST include data handling transparency: dedicated page explaining what data is collected, how it's used, storage duration, deletion process, no data sales guarantee.
+- **FR-TRUST-04 [Must]:** Landing page MUST include sample outputs: example submission receipts, tailored resume snippets, cover letter examples (with sensitive data redacted).
+- **FR-TRUST-05 [Should]:** Landing page SHOULD display integration logos: supported ATS systems (Greenhouse, Lever, Workday, iCIMS) with "coming soon" indicators for planned integrations.
+- **FR-TRUST-06 [Should]:** Landing page SHOULD include press/media section: mentions in publications, awards, podcast appearances, founder interviews (post-launch).
+- **FR-TRUST-07 [Should]:** Landing page SHOULD include case studies structure: problem → solution → results format with specific metrics (e.g., "3x interview rate in 60 days").
+- **FR-TRUST-08 [Must]:** Landing page MUST include trust badges: "No data sold", "Privacy-first", "Evidence-backed", "GDPR compliant" badges in footer and key sections.
+
+### Technical Excellence
+
+- **FR-TECH-01 [Must]:** Landing page MUST implement security headers: Content-Security-Policy (restrictive), Strict-Transport-Security, X-Frame-Options (DENY), X-Content-Type-Options (nosniff), Referrer-Policy (strict-origin-when-cross-origin).
+- **FR-TECH-02 [Must]:** Landing page MUST implement progressive enhancement: core content accessible without JavaScript, enhanced experience with JS enabled, graceful degradation for older browsers.
+- **FR-TECH-03 [Must]:** Landing page MUST implement error boundaries: catch React errors gracefully, display user-friendly error message, log error to monitoring service, offer retry option.
+- **FR-TECH-04 [Must]:** Landing page MUST include branded 404 page: helpful message, search functionality, navigation links to popular pages, contact option, maintain brand consistency.
+- **FR-TECH-05 [Must]:** Landing page MUST implement loading states: spinners for async actions, progress bars for multi-step processes, skeleton screens for content loading.
+- **FR-TECH-06 [Must]:** Landing page MUST implement form validation: real-time feedback on input, inline error messages below fields, success states with confirmation, accessible error announcements.
+- **FR-TECH-07 [Must]:** Landing page MUST implement bot protection: CAPTCHA on contact/signup forms (invisible reCAPTCHA v3), rate limiting on API endpoints (100 req/min per IP).
+- **FR-TECH-08 [Must]:** Landing page MUST implement accessibility beyond WCAG: comprehensive ARIA labels, focus management for modals/drawers, screen reader testing with NVDA/VoiceOver, keyboard trap prevention.
+
+### Growth Infrastructure
+
+- **FR-GROW-01 [Must]:** Landing page MUST implement email capture: newsletter signup in footer, lead magnet download forms, exit intent capture (if implemented).
+- **FR-GROW-02 [Should]:** Landing page SHOULD integrate with email service: connect to Resend/SendGrid/Mailchimp for email delivery, double opt-in for newsletters, unsubscribe handling.
+- **FR-GROW-03 [Should]:** Landing page SHOULD support webinar/event promotion: registration forms, calendar integration (Add to Calendar buttons), reminder emails, replay access page.
+- **FR-GROW-04 [Should]:** Landing page SHOULD include community links: Discord server invite, Slack community, forum link, GitHub repository (if open source components).
+- **FR-GROW-05 [Should]:** Landing page SHOULD implement social sharing: Open Graph optimization for all pages, share buttons on blog posts (Twitter, LinkedIn, email), click-to-tweet quotes.
+- **FR-GROW-06 [Should]:** Landing page SHOULD include partner/affiliate section: partner program overview, affiliate signup form, commission structure, partner dashboard link.
+- **FR-GROW-07 [Should]:** Landing page SHOULD provide press kit: downloadable logo pack (SVG, PNG, dark/light versions), brand guidelines PDF, media contact form, high-res product screenshots.
+
+### Monitoring & Optimization
+
+- **FR-MON-01 [Must]:** Landing page MUST track conversion funnel: visitor → page view → CTA click → signup start → signup complete → first application, with drop-off rates at each stage.
+- **FR-MON-02 [Must]:** Landing page MUST implement performance monitoring: Lighthouse CI in CI/CD pipeline, Web Vitals tracking in production, performance budgets with alerts.
+- **FR-MON-03 [Must]:** Landing page MUST implement error tracking: Sentry or similar for JavaScript errors, source maps for debugging, error grouping and deduplication, alerting on error spikes.
+- **FR-MON-04 [Must]:** Landing page MUST implement uptime monitoring: external monitoring service (Pingdom/UptimeRobot), multi-region checks, SMS/email alerts on downtime, status page.
+- **FR-MON-05 [Should]:** Landing page SHOULD track A/B testing results: statistical significance calculation (p < 0.05), winner declaration automation, segment analysis (device, geography, time).
+- **FR-MON-06 [Should]:** Landing page SHOULD implement heatmaps: click tracking on all interactive elements, scroll depth analysis, interaction recording (mouse movement, form fills) with user consent.
+- **FR-MON-07 [Should]:** Landing page SHOULD implement session recording: user journey analysis with consent banner, ability to replay sessions for UX research, PII auto-redaction in recordings.
+
 ## Acceptance
 
 - **AC-01 → FR-01:** Given a CareerClaim with evidence, when tailoring generates a statement, then the statement references the claim_id and evidence_id.
@@ -163,6 +259,26 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 - **AC-14 → FR-MKT-04:** Given the landing page is indexed, when Google crawls it, then meta title, description, and structured data are present and accurate.
 - **AC-15 → FR-MKT-05:** Given a visitor interacts with the landing page, when analytics are inspected, then page views, CTA clicks, and conversions are tracked without PII.
 - **AC-16 → FR-MKT-08:** Given an institution administrator visits the landing page, when they navigate to the B2B section, then they see cohort management, aggregate reporting, privacy safeguards, and pricing information.
+- **AC-17 → FR-PERF-01:** Given the landing page is loaded on a mid-tier mobile device on 4G, when measured with Lighthouse, then LCP < 2.5s, INP < 200ms, CLS < 0.1.
+- **AC-18 → FR-PERF-02:** Given images are displayed on the landing page, when inspected in network tab, then all images are served in WebP/AVIF format with appropriate sizes for viewport.
+- **AC-19 → FR-SEO-01:** Given the landing page HTML, when validated with Google Rich Results Test, then all schema markup (Organization, Product, FAQ) passes validation with no errors.
+- **AC-20 → FR-SEO-02:** Given a page URL is shared on social media, when preview is generated, then a branded Open Graph image (1200x630px) with title and description is displayed.
+- **AC-21 → FR-CRO-01:** Given a visitor lands on the homepage, when they interact with the product demo, then they can explore the application flow without signing up.
+- **AC-22 → FR-CRO-03:** Given a visitor uses the ROI calculator, when they input their current application volume, then they see estimated time saved and interview rate improvement.
+- **AC-23 → FR-CRO-06:** Given a visitor interacts with the landing page, when analytics are inspected, then micro-conversions (form starts, video plays, demo interactions) are tracked.
+- **AC-24 → FR-VIS-01:** Given the landing page is rendered, when inspected in browser dev tools, then all components use the marketing design system tokens consistently.
+- **AC-25 → FR-VIS-04:** Given the landing page is loading, when content is being fetched, then skeleton screens are displayed with no layout shift.
+- **AC-26 → FR-VIS-06:** Given a user has dark mode enabled in system preferences, when they visit the landing page, then dark theme is applied automatically.
+- **AC-27 → FR-CONT-01:** Given the landing page content structure, when analyzed, then sections follow hierarchy: value prop → benefits → features → proof → CTA.
+- **AC-28 → FR-TRUST-03:** Given a visitor clicks "How we handle your data", when the transparency page loads, then it clearly explains data collection, usage, storage, and deletion.
+- **AC-29 → FR-TRUST-04:** Given sample outputs are displayed, when inspected, then all sensitive data (names, emails, addresses) is redacted.
+- **AC-30 → FR-TECH-01:** Given the landing page HTTP response, when headers are inspected, then CSP, HSTS, X-Frame-Options, X-Content-Type-Options, and Referrer-Policy are present and correctly configured.
+- **AC-31 → FR-TECH-02:** Given JavaScript is disabled in the browser, when the landing page loads, then core content (hero, features, pricing) is still visible and readable.
+- **AC-32 → FR-TECH-04:** Given a visitor navigates to a non-existent page, when the 404 page loads, then it displays a branded error page with search and navigation options.
+- **AC-33 → FR-TECH-06:** Given a user fills out a signup form, when they enter invalid data, then real-time validation shows inline errors with accessible announcements.
+- **AC-34 → FR-MON-01:** Given a visitor completes the signup flow, when the conversion funnel is analyzed, then all stages (visitor → page view → CTA click → signup start → signup complete) are tracked with timestamps.
+- **AC-35 → FR-MON-02:** Given the landing page is deployed, when performance is monitored, then Lighthouse CI runs in CI/CD and Web Vitals are tracked in production with alerts on degradation.
+- **AC-36 → FR-MON-03:** Given a JavaScript error occurs on the landing page, when error tracking is inspected, then the error is captured with stack trace, source map, and user context.
 
 ## Validation
 

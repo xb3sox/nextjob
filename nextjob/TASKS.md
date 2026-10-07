@@ -612,6 +612,466 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 ---
 
+### Phase 25: Performance Excellence
+
+#### T-57: Implement Core Web Vitals optimization
+- [ ] **Status:** Not started
+- **Deliverable:** Optimize LCP < 2.5s, INP < 200ms, CLS < 0.1 through code splitting, lazy loading, image optimization, and critical CSS inlining
+- **Dependencies:** T-52
+- **Acceptance:** FR-PERF-01 satisfied; Lighthouse Performance score ≥90 on mobile and desktop; all Core Web Vitals in green zone
+- **Verification:** Run Lighthouse CI → verify scores; test on WebPageTest → verify CWV metrics; check bundle analyzer → verify initial JS < 100KB
+- **Files:** `nextjob/apps/web/src/app/(marketing)/layout.tsx`, `nextjob/apps/web/src/styles/`
+
+#### T-58: Implement image optimization pipeline
+- [ ] **Status:** Not started
+- **Deliverable:** Automatic WebP/AVIF conversion, responsive images with srcset, lazy loading below fold, art direction for breakpoints, blur placeholders
+- **Dependencies:** T-52
+- **Acceptance:** FR-PERF-02 satisfied; all images served in modern formats; responsive sizes for all breakpoints; no layout shift from images
+- **Verification:** Inspect network tab → verify WebP/AVIF formats; resize browser → verify srcset switching; check CLS → verify no shift
+- **Files:** `nextjob/apps/web/src/components/optimized-image.tsx`, `nextjob/apps/web/next.config.js`
+
+#### T-59: Implement font optimization
+- [ ] **Status:** Not started
+- **Deliverable:** Preload critical fonts, font-display: swap, variable fonts, character subsetting, font preloading strategy
+- **Dependencies:** T-52
+- **Acceptance:** FR-PERF-03 satisfied; critical fonts loaded in < 1s; no FOIT (Flash of Invisible Text); font files < 50KB each
+- **Verification:** Check network tab → verify font loading order; disable cache → verify no FOIT; check font file sizes
+- **Files:** `nextjob/apps/web/src/styles/fonts.css`, `nextjob/apps/web/src/app/(marketing)/layout.tsx`
+
+#### T-60: Implement code splitting and bundle optimization
+- [ ] **Status:** Not started
+- **Deliverable:** Route-based code splitting, dynamic imports for below-fold content, tree shaking, dead code elimination, bundle analysis
+- **Dependencies:** T-52
+- **Acceptance:** FR-PERF-04 satisfied; initial bundle < 100KB gzipped; route transitions load chunks on demand; no unused code in bundles
+- **Verification:** Run bundle analyzer → verify sizes; test route transitions → verify chunk loading; check Lighthouse → verify no unused JavaScript
+- **Files:** `nextjob/apps/web/src/app/(marketing)/page.tsx`, `nextjob/apps/web/next.config.js`
+
+#### T-61: Implement edge caching and CDN configuration
+- [ ] **Status:** Not started
+- **Deliverable:** CDN setup with Vercel Edge Network, cache headers for static assets, stale-while-revalidate for dynamic content, cache invalidation on deploy
+- **Dependencies:** T-52, T-40
+- **Acceptance:** FR-PERF-05 satisfied; static assets cached at edge with 1-year TTL; HTML cached with 5-minute TTL and SWR; cache hits > 90%
+- **Verification:** Check response headers → verify cache-control; test multiple regions → verify edge delivery; monitor cache hit ratio
+- **Files:** `nextjob/apps/web/vercel.json`, `nextjob/apps/web/next.config.js`
+
+---
+
+### Phase 26: Advanced SEO
+
+#### T-62: Implement schema markup
+- [ ] **Status:** Not started
+- **Deliverable:** JSON-LD schema for Organization, Product, FAQ, BreadcrumbList, WebSite; validated with Google Rich Results Test
+- **Dependencies:** T-52
+- **Acceptance:** FR-SEO-01 satisfied; all schemas pass validation; no errors in Google Search Console; rich results eligible
+- **Verification:** Run Google Rich Results Test → verify no errors; check Search Console → verify schema detection; inspect page source → verify JSON-LD
+- **Files:** `nextjob/apps/web/src/lib/schema.ts`, `nextjob/apps/web/src/app/(marketing)/layout.tsx`
+
+#### T-63: Implement dynamic Open Graph images
+- [ ] **Status:** Not started
+- **Deliverable:** Auto-generated OG images (1200x630px) using Next.js ImageResponse with branding, title, description, and visual elements
+- **Dependencies:** T-52
+- **Acceptance:** FR-SEO-02 satisfied; every page has unique OG image; images load in < 2s; branding consistent across all images
+- **Verification:** Share URL on social media → verify image preview; check OG image endpoint → verify generation; test multiple pages → verify uniqueness
+- **Files:** `nextjob/apps/web/src/app/api/og/route.tsx`, `nextjob/apps/web/src/components/og-template.tsx`
+
+#### T-64: Implement sitemap and robots.txt
+- [ ] **Status:** Not started
+- **Deliverable:** Auto-generated sitemap.xml with all public pages, proper lastmod dates, priority attributes; robots.txt allowing legitimate crawlers, blocking AI bots
+- **Dependencies:** T-52
+- **Acceptance:** FR-SEO-04, FR-SEO-05 satisfied; sitemap includes all public pages; robots.txt blocks GPTBot, ClaudeBot, CCBot; sitemap submitted to Google Search Console
+- **Verification:** Check /sitemap.xml → verify all pages present; check /robots.txt → verify AI bot blocking; submit to Search Console → verify indexing
+- **Files:** `nextjob/apps/web/src/app/sitemap.ts`, `nextjob/apps/web/src/app/robots.ts`
+
+#### T-65: Implement AI search optimization
+- [ ] **Status:** Not started
+- **Deliverable:** llms.txt file for AI crawlers, structured data optimized for AI consumption, clear entity definitions, FAQ format for AI parsing
+- **Dependencies:** T-52, T-62
+- **Acceptance:** FR-SEO-07 satisfied; llms.txt present and comprehensive; structured data includes entity definitions; content formatted for AI extraction
+- **Verification:** Check /llms.txt → verify content; test with AI tools → verify entity recognition; inspect structured data → verify clarity
+- **Files:** `nextjob/apps/web/src/app/llms.txt`, `nextjob/apps/web/src/lib/schema.ts`
+
+#### T-66: Implement canonical URLs and hreflang
+- [ ] **Status:** Not started
+- **Deliverable:** Self-referencing canonical URLs on all pages; hreflang tags for future internationalization (en-US, en-GB, etc.)
+- **Dependencies:** T-52
+- **Acceptance:** FR-SEO-06, FR-SEO-08 satisfied; all pages have canonical tags; hreflang tags present (even if single language); no duplicate content issues
+- **Verification:** Inspect page headers → verify canonical tags; check hreflang → verify presence; run SEO audit → verify no duplicate content
+- **Files:** `nextjob/apps/web/src/app/(marketing)/layout.tsx`, `nextjob/apps/web/src/lib/metadata.ts`
+
+#### T-67: Implement Twitter Cards
+- [ ] **Status:** Not started
+- **Deliverable:** Twitter Card meta tags (summary_large_image) with custom images (1200x628px), title, description for all pages
+- **Dependencies:** T-52, T-63
+- **Acceptance:** FR-SEO-03 satisfied; all pages have Twitter Card tags; images optimized for Twitter display; card validator passes
+- **Verification:** Share URL on Twitter → verify card preview; run Twitter Card Validator → verify pass; check meta tags → verify presence
+- **Files:** `nextjob/apps/web/src/app/(marketing)/layout.tsx`, `nextjob/apps/web/src/lib/metadata.ts`
+
+#### T-68: Implement structured data for AI
+- [ ] **Status:** Not started
+- **Deliverable:** Enhanced schema markup with detailed entity definitions, relationships, and properties optimized for AI understanding
+- **Dependencies:** T-62, T-65
+- **Acceptance:** FR-SEO-07 satisfied; schema includes detailed entity definitions; relationships clearly defined; AI tools can parse content accurately
+- **Verification:** Test with AI tools → verify entity extraction; inspect schema → verify detail level; check Search Console → verify no errors
+- **Files:** `nextjob/apps/web/src/lib/schema.ts`, `nextjob/apps/web/src/app/(marketing)/layout.tsx`
+
+---
+
+### Phase 27: Conversion Optimization
+
+#### T-69: Implement interactive product demo
+- [ ] **Status:** Not started
+- **Deliverable:** Embedded interactive demo showing application flow with real-looking (mock) data, no signup required, step-by-step walkthrough
+- **Dependencies:** T-52
+- **Acceptance:** FR-CRO-01 satisfied; demo is interactive and explorable; no signup wall; demonstrates key value props; mobile-responsive
+- **Verification:** Test demo flow → verify interactivity; check mobile → verify responsive; monitor engagement → verify usage
+- **Files:** `nextjob/apps/web/src/components/marketing/product-demo.tsx`, `nextjob/apps/web/src/app/(marketing)/page.tsx`
+
+#### T-70: Implement before/after comparison
+- [ ] **Status:** Not started
+- **Deliverable:** Side-by-side comparison showing traditional apply process vs NextJob with time saved, quality improvement, and effort reduction metrics
+- **Dependencies:** T-52
+- **Acceptance:** FR-CRO-02 satisfied; comparison clearly shows value; metrics are realistic and defensible; visual design emphasizes difference
+- **Verification:** Review comparison → verify clarity; check metrics → verify accuracy; test on mobile → verify readability
+- **Files:** `nextjob/apps/web/src/components/marketing/comparison.tsx`, `nextjob/apps/web/src/app/(marketing)/page.tsx`
+
+#### T-71: Implement ROI calculator
+- [ ] **Status:** Not started
+- **Deliverable:** Interactive calculator estimating time saved, interview rate improvement, and application quality score based on user inputs (applications/month, current success rate)
+- **Dependencies:** T-52
+- **Acceptance:** FR-CRO-03 satisfied; calculator is interactive and responsive; estimates are realistic; results update in real-time; mobile-friendly
+- **Verification:** Test calculator → verify calculations; check mobile → verify responsive; monitor usage → verify engagement
+- **Files:** `nextjob/apps/web/src/components/marketing/roi-calculator.tsx`, `nextjob/apps/web/src/app/(marketing)/page.tsx`
+
+#### T-72: Implement exit intent popup
+- [ ] **Status:** Not started
+- **Deliverable:** Exit intent detection with popup offering lead magnet (career guide) or special discount; triggered only once per session; dismissible
+- **Dependencies:** T-52, T-86
+- **Acceptance:** FR-CRO-04 satisfied; popup triggers on exit intent; shows only once per session; offers valuable lead magnet; includes clear CTA and close button
+- **Verification:** Test exit intent → verify trigger; refresh page → verify no re-trigger; check mobile → verify no exit intent (not supported)
+- **Files:** `nextjob/apps/web/src/components/marketing/exit-intent.tsx`, `nextjob/apps/web/src/hooks/use-exit-intent.ts`
+
+#### T-73: Implement scroll-triggered animations
+- [ ] **Status:** Not started
+- **Deliverable:** Framer Motion animations for section reveals, fade-ins, slide-ups using Intersection Observer; respects prefers-reduced-motion
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-CRO-05 satisfied; animations trigger on scroll; smooth and performant; respect reduced motion preference; no layout shift
+- **Verification:** Scroll through page → verify animations; enable reduced motion → verify no animations; check performance → verify no jank
+- **Files:** `nextjob/apps/web/src/components/marketing/animated-section.tsx`, `nextjob/apps/web/src/hooks/use-scroll-animation.ts`
+
+#### T-74: Implement social proof rotation
+- [ ] **Status:** Not started
+- **Deliverable:** Rotating display of customer testimonials, company logos, and success metrics with smooth transitions; auto-rotates every 5s; pausable
+- **Dependencies:** T-52, T-88
+- **Acceptance:** FR-CRO-07 satisfied; social proof rotates smoothly; includes testimonials, logos, metrics; accessible (keyboard navigable, screen reader friendly)
+- **Verification:** Watch rotation → verify smooth transitions; test keyboard navigation → verify accessibility; check screen reader → verify announcements
+- **Files:** `nextjob/apps/web/src/components/marketing/social-proof-carousel.tsx`, `nextjob/apps/web/src/app/(marketing)/page.tsx`
+
+#### T-75: Implement comparison table
+- [ ] **Status:** Not started
+- **Deliverable:** Feature comparison table showing NextJob vs traditional job search methods (manual applications, other AI tools) without naming specific competitors
+- **Dependencies:** T-52
+- **Acceptance:** FR-CRO-10 satisfied; table clearly shows advantages; no competitor names; mobile-responsive (horizontal scroll or stacked); accessible
+- **Verification:** Review table → verify clarity; test mobile → verify responsive; check accessibility → verify screen reader support
+- **Files:** `nextjob/apps/web/src/components/marketing/comparison-table.tsx`, `nextjob/apps/web/src/app/(marketing)/page.tsx`
+
+#### T-76: Implement sticky CTA
+- [ ] **Status:** Not started
+- **Deliverable:** Persistent CTA bar that appears after scrolling past hero section; includes primary CTA button and value prop reminder; dismissible
+- **Dependencies:** T-52
+- **Acceptance:** FR-CRO-09 satisfied; sticky CTA appears after hero; includes clear CTA; dismissible; doesn't obstruct content; mobile-friendly
+- **Verification:** Scroll page → verify CTA appears; click dismiss → verify disappears; check mobile → verify non-obstructive
+- **Files:** `nextjob/apps/web/src/components/marketing/sticky-cta.tsx`, `nextjob/apps/web/src/hooks/use-sticky-cta.ts`
+
+---
+
+### Phase 28: Visual Excellence
+
+#### T-77: Create marketing design system
+- [ ] **Status:** Not started
+- **Deliverable:** Reusable marketing components: hero variants, feature sections, pricing cards, testimonial components, CTA button variants, trust badges
+- **Dependencies:** T-52
+- **Acceptance:** FR-VIS-01 satisfied; all components use design tokens; consistent spacing and typography; documented with Storybook or similar
+- **Verification:** Review components → verify consistency; check design tokens → verify usage; test responsiveness → verify all breakpoints
+- **Files:** `nextjob/apps/web/src/components/marketing/`, `nextjob/apps/web/src/styles/marketing-tokens.css`
+
+#### T-78: Implement scroll animations
+- [ ] **Status:** Not started
+- **Deliverable:** Framer Motion scroll animations: parallax effects, reveal animations, stagger animations; performance-optimized with will-change and transform
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-VIS-02 satisfied; animations are smooth (60fps); respect prefers-reduced-motion; no performance degradation; mobile-optimized
+- **Verification:** Scroll through page → verify animations; enable reduced motion → verify disabled; check performance → verify 60fps
+- **Files:** `nextjob/apps/web/src/components/marketing/animations.tsx`, `nextjob/apps/web/src/styles/animations.css`
+
+#### T-79: Implement micro-interactions
+- [ ] **Status:** Not started
+- **Deliverable:** Button hover states (scale, shadow), form field focus animations, loading state transitions, success/error state animations
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-VIS-03 satisfied; all interactive elements have hover/focus states; animations are subtle and fast (< 200ms); accessible
+- **Verification:** Hover over buttons → verify states; focus form fields → verify animations; check accessibility → verify focus indicators
+- **Files:** `nextjob/apps/web/src/styles/interactions.css`, `nextjob/apps/web/src/components/ui/button.tsx`
+
+#### T-80: Implement loading skeletons
+- [ ] **Status:** Not started
+- **Deliverable:** Skeleton screens for all content sections: hero, features, pricing, testimonials; match final layout to prevent CLS
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-VIS-04 satisfied; skeletons match final layout; no layout shift; smooth transition to content; accessible (aria-busy)
+- **Verification:** Load page with slow network → verify skeletons; check CLS → verify no shift; inspect accessibility → verify aria attributes
+- **Files:** `nextjob/apps/web/src/components/marketing/skeletons.tsx`, `nextjob/apps/web/src/app/(marketing)/page.tsx`
+
+#### T-81: Implement video content support
+- [ ] **Status:** Not started
+- **Deliverable:** Video player component supporting hero backgrounds (muted, autoplay, loop), product walkthroughs, testimonials with captions and transcripts
+- **Dependencies:** T-52
+- **Acceptance:** FR-VIS-05 satisfied; videos load efficiently (lazy loading); captions available; transcripts provided; mobile-optimized (poster images)
+- **Verification:** Test video playback → verify functionality; check captions → verify accuracy; test mobile → verify poster images
+- **Files:** `nextjob/apps/web/src/components/marketing/video-player.tsx`, `nextjob/apps/web/src/app/(marketing)/page.tsx`
+
+#### T-82: Implement dark/light mode
+- [ ] **Status:** Not started
+- **Deliverable:** Theme toggle with system preference detection (prefers-color-scheme), manual override, localStorage persistence, smooth transitions
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-VIS-06 satisfied; respects system preference; manual toggle works; preference persists; all components support both themes; no FOUC
+- **Verification:** Change system theme → verify auto-switch; toggle manually → verify persistence; refresh page → verify no FOUC
+- **Files:** `nextjob/apps/web/src/components/theme-provider.tsx`, `nextjob/apps/web/src/hooks/use-theme.ts`, `nextjob/apps/web/src/styles/themes.css`
+
+---
+
+### Phase 29: Content Strategy
+
+#### T-83: Define messaging hierarchy
+- [ ] **Status:** Not started
+- **Deliverable:** Document messaging framework: primary value prop → key benefits (3-5) → detailed features → social proof → final CTA; approved copy for each section
+- **Dependencies:** None
+- **Acceptance:** FR-CONT-01 satisfied; hierarchy is clear and logical; copy is benefit-focused; approved by stakeholders
+- **Verification:** Review messaging doc → verify hierarchy; test with users → verify comprehension; check consistency → verify across all pages
+- **Files:** `nextjob/docs/marketing/messaging-hierarchy.md`
+
+#### T-84: Create copywriting guidelines
+- [ ] **Status:** Not started
+- **Deliverable:** Comprehensive copywriting guide: tone of voice (conversational, confident, trustworthy), vocabulary (no jargon), sentence structure (< 20 words), active voice, examples
+- **Dependencies:** T-83
+- **Acceptance:** FR-CONT-02 satisfied; guidelines are clear and actionable; examples provided for each principle; approved by stakeholders
+- **Verification:** Review guidelines → verify clarity; write sample copy → verify adherence; get feedback → verify effectiveness
+- **Files:** `nextjob/docs/marketing/copywriting-guidelines.md`
+
+#### T-85: Build content blocks library
+- [ ] **Status:** Not started
+- **Deliverable:** Reusable content blocks: hero variants, feature sections, testimonials, pricing, FAQ, CTA sections; documented with usage guidelines
+- **Dependencies:** T-77, T-83, T-84
+- **Acceptance:** FR-CONT-03 satisfied; all blocks are reusable; consistent structure; documented; used across all marketing pages
+- **Verification:** Review blocks → verify reusability; check documentation → verify clarity; test on multiple pages → verify consistency
+- **Files:** `nextjob/apps/web/src/components/marketing/blocks/`, `nextjob/docs/marketing/content-blocks.md`
+
+#### T-86: Create video scripts
+- [ ] **Status:** Not started
+- **Deliverable:** Video scripts: product demo (60s), explainer video (90s), testimonial interview template; include visual directions and key messages
+- **Dependencies:** T-83, T-84
+- **Acceptance:** FR-CONT-04 satisfied; scripts are clear and engaging; follow messaging hierarchy; include visual directions; approved by stakeholders
+- **Verification:** Review scripts → verify clarity; read aloud → verify timing; check messaging → verify alignment
+- **Files:** `nextjob/docs/marketing/video-scripts.md`
+
+#### T-87: Set up email nurture sequences
+- [ ] **Status:** Not started
+- **Deliverable:** Email sequences: welcome series (3 emails over 7 days), onboarding (5 emails over 14 days), re-engagement (monthly); templates and copy
+- **Dependencies:** T-83, T-84, T-100
+- **Acceptance:** FR-CONT-05 satisfied; sequences are logical and valuable; copy follows guidelines; templates created; ready to deploy
+- **Verification:** Review sequences → verify logic; check copy → verify guidelines; test templates → verify rendering
+- **Files:** `nextjob/docs/marketing/email-sequences.md`, `nextjob/apps/web/src/lib/email/templates/`
+
+---
+
+### Phase 30: Trust & Credibility
+
+#### T-88: Implement customer logos section
+- [ ] **Status:** Not started
+- **Deliverable:** Customer logo display section: 6-12 company logos in grayscale, color on hover, with permission; responsive grid layout
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-TRUST-01 satisfied; logos displayed with permission; grayscale by default; color on hover; responsive grid; accessible
+- **Verification:** Review logos → verify permissions; test hover → verify color change; check mobile → verify responsive
+- **Files:** `nextjob/apps/web/src/components/marketing/customer-logos.tsx`, `nextjob/public/images/logos/`
+
+#### T-89: Implement security certifications display
+- [ ] **Status:** Not started
+- **Deliverable:** Security certification badges: SOC 2 Type II, GDPR compliance, encryption indicators; with links to verification pages
+- **Dependencies:** T-52, T-77, T-37
+- **Acceptance:** FR-TRUST-02 satisfied; badges displayed prominently; links to verification pages; up-to-date; accessible
+- **Verification:** Review badges → verify accuracy; test links → verify verification pages; check accessibility → verify screen reader support
+- **Files:** `nextjob/apps/web/src/components/marketing/security-badges.tsx`, `nextjob/apps/web/src/app/(marketing)/security/page.tsx`
+
+#### T-90: Create data handling transparency page
+- [ ] **Status:** Not started
+- **Deliverable:** Dedicated page explaining data practices: what data is collected, how it's used, storage duration, deletion process, no data sales guarantee
+- **Dependencies:** T-52, T-36
+- **Acceptance:** FR-TRUST-03 satisfied; page is comprehensive and clear; written in plain language; accessible from footer and key sections
+- **Verification:** Review page → verify completeness; test readability → verify clarity; check links → verify accessibility
+- **Files:** `nextjob/apps/web/src/app/(marketing)/data-handling/page.tsx`
+
+#### T-91: Implement sample outputs gallery
+- [ ] **Status:** Not started
+- **Deliverable:** Gallery of sample outputs: submission receipts, tailored resume snippets, cover letter examples; all sensitive data redacted
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-TRUST-04 satisfied; samples demonstrate value; all PII redacted; accessible; mobile-responsive
+- **Verification:** Review samples → verify value demonstration; check redaction → verify no PII; test mobile → verify responsive
+- **Files:** `nextjob/apps/web/src/components/marketing/sample-outputs.tsx`, `nextjob/public/images/samples/`
+
+#### T-92: Implement integration logos
+- [ ] **Status:** Not started
+- **Deliverable:** Supported ATS integration logos: Greenhouse, Lever, Workday, iCIMS; with "coming soon" indicators for planned integrations
+- **Dependencies:** T-52, T-77, T-23
+- **Acceptance:** FR-TRUST-05 satisfied; logos displayed accurately; "coming soon" indicators clear; responsive grid; accessible
+- **Verification:** Review logos → verify accuracy; check "coming soon" → verify clarity; test mobile → verify responsive
+- **Files:** `nextjob/apps/web/src/components/marketing/integration-logos.tsx`, `nextjob/public/images/integrations/`
+
+#### T-93: Create press/media section
+- [ ] **Status:** Not started
+- **Deliverable:** Press and media section: publication mentions, awards, podcast appearances, founder interviews; with links and dates
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-TRUST-06 satisfied; mentions are accurate and up-to-date; links work; responsive layout; accessible
+- **Verification:** Review mentions → verify accuracy; test links → verify functionality; check mobile → verify responsive
+- **Files:** `nextjob/apps/web/src/components/marketing/press-section.tsx`, `nextjob/apps/web/src/app/(marketing)/press/page.tsx`
+
+---
+
+### Phase 31: Technical Excellence
+
+#### T-94: Implement security headers
+- [ ] **Status:** Not started
+- **Deliverable:** Security headers configuration: CSP (restrictive), HSTS, X-Frame-Options (DENY), X-Content-Type-Options (nosniff), Referrer-Policy (strict-origin-when-cross-origin)
+- **Dependencies:** T-52, T-40
+- **Acceptance:** FR-TECH-01 satisfied; all headers present and correctly configured; CSP allows necessary resources; no security warnings
+- **Verification:** Check response headers → verify presence; test with security scanner → verify no issues; test functionality → verify CSP doesn't break features
+- **Files:** `nextjob/apps/web/next.config.js`, `nextjob/apps/web/vercel.json`
+
+#### T-95: Implement progressive enhancement
+- [ ] **Status:** Not started
+- **Deliverable:** Core content accessible without JavaScript; enhanced experience with JS enabled; graceful degradation for older browsers
+- **Dependencies:** T-52
+- **Acceptance:** FR-TECH-02 satisfied; content readable without JS; enhanced with JS; works in older browsers (Chrome 80+, Firefox 78+, Safari 13+)
+- **Verification:** Disable JS → verify core content; enable JS → verify enhanced experience; test in older browsers → verify functionality
+- **Files:** `nextjob/apps/web/src/app/(marketing)/page.tsx`, `nextjob/apps/web/src/components/marketing/`
+
+#### T-96: Implement error boundaries
+- [ ] **Status:** Not started
+- **Deliverable:** React error boundaries for all major sections; user-friendly error messages; error logging to monitoring service; retry option
+- **Dependencies:** T-52, T-107
+- **Acceptance:** FR-TECH-03 satisfied; errors caught gracefully; user-friendly messages displayed; errors logged; retry option available
+- **Verification:** Trigger errors → verify boundaries catch; check user experience → verify friendly messages; check logs → verify error capture
+- **Files:** `nextjob/apps/web/src/components/error-boundary.tsx`, `nextjob/apps/web/src/app/(marketing)/layout.tsx`
+
+#### T-97: Create 404 page
+- [ ] **Status:** Not started
+- **Deliverable:** Branded 404 page: helpful message, search functionality, navigation links to popular pages, contact option, maintain brand consistency
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-TECH-04 satisfied; 404 page is branded and helpful; includes search and navigation; contact option available; accessible
+- **Verification:** Navigate to invalid URL → verify 404 page; test search → verify functionality; check links → verify navigation; test accessibility
+- **Files:** `nextjob/apps/web/src/app/not-found.tsx`
+
+#### T-98: Implement loading states
+- [ ] **Status:** Not started
+- **Deliverable:** Loading states for all async actions: spinners for buttons, progress bars for multi-step, skeleton screens for content; consistent design
+- **Dependencies:** T-52, T-77, T-80
+- **Acceptance:** FR-TECH-05 satisfied; all async actions show loading states; consistent design; accessible (aria-busy, aria-live)
+- **Verification:** Trigger async actions → verify loading states; check design → verify consistency; test accessibility → verify aria attributes
+- **Files:** `nextjob/apps/web/src/components/ui/loading.tsx`, `nextjob/apps/web/src/components/marketing/skeletons.tsx`
+
+#### T-99: Implement form validation
+- [ ] **Status:** Not started
+- **Deliverable:** Real-time form validation: inline error messages, success states, accessible error announcements, field-level and form-level validation
+- **Dependencies:** T-52
+- **Acceptance:** FR-TECH-06 satisfied; validation is real-time; errors are inline and clear; success states shown; accessible (aria-invalid, aria-describedby)
+- **Verification:** Fill forms with invalid data → verify errors; submit valid data → verify success; test accessibility → verify announcements
+- **Files:** `nextjob/apps/web/src/components/ui/form.tsx`, `nextjob/apps/web/src/lib/validation.ts`
+
+---
+
+### Phase 32: Growth Infrastructure
+
+#### T-100: Implement email capture
+- [ ] **Status:** Not started
+- **Deliverable:** Email capture forms: newsletter signup in footer, lead magnet download forms, exit intent capture; with validation and success states
+- **Dependencies:** T-52, T-72, T-86
+- **Acceptance:** FR-GROW-01 satisfied; forms are accessible and validated; success states shown; emails stored securely; GDPR compliant
+- **Verification:** Submit forms → verify validation and success; check database → verify storage; test GDPR → verify consent
+- **Files:** `nextjob/apps/web/src/components/marketing/email-capture.tsx`, `nextjob/apps/web/src/app/api/newsletter/route.ts`
+
+#### T-101: Set up email nurture
+- [ ] **Status:** Not started
+- **Deliverable:** Email service integration: connect to Resend/SendGrid/Mailchimp; double opt-in for newsletters; unsubscribe handling; template rendering
+- **Dependencies:** T-87, T-100
+- **Acceptance:** FR-GROW-02 satisfied; emails delivered reliably; double opt-in works; unsubscribe functional; templates render correctly
+- **Verification:** Sign up → verify double opt-in; check email delivery → verify receipt; unsubscribe → verify removal; check templates → verify rendering
+- **Files:** `nextjob/apps/web/src/lib/email/service.ts`, `nextjob/apps/web/src/app/api/email/route.ts`
+
+#### T-102: Implement webinar promotion
+- [ ] **Status:** Not started
+- **Deliverable:** Webinar/event promotion: registration forms, calendar integration (Add to Calendar), reminder emails, replay access page
+- **Dependencies:** T-52, T-100, T-101
+- **Acceptance:** FR-GROW-03 satisfied; registration works; calendar integration functional; reminders sent; replay accessible
+- **Verification:** Register for webinar → verify confirmation; add to calendar → verify integration; check reminders → verify delivery; access replay → verify functionality
+- **Files:** `nextjob/apps/web/src/app/(marketing)/webinars/[slug]/page.tsx`, `nextjob/apps/web/src/components/marketing/webinar-registration.tsx`
+
+#### T-103: Add community links
+- [ ] **Status:** Not started
+- **Deliverable:** Community links section: Discord server invite, Slack community, forum link, GitHub repository; with descriptions and member counts
+- **Dependencies:** T-52, T-77
+- **Acceptance:** FR-GROW-04 satisfied; links are accurate and up-to-date; descriptions clear; member counts displayed; accessible
+- **Verification:** Click links → verify functionality; check descriptions → verify clarity; verify member counts → verify accuracy
+- **Files:** `nextjob/apps/web/src/components/marketing/community-links.tsx`, `nextjob/apps/web/src/app/(marketing)/community/page.tsx`
+
+#### T-104: Create press kit
+- [ ] **Status:** Not started
+- **Deliverable:** Downloadable press kit: logo pack (SVG, PNG, dark/light), brand guidelines PDF, media contact form, high-res product screenshots
+- **Dependencies:** T-52, T-93
+- **Acceptance:** FR-GROW-07 satisfied; all assets downloadable; brand guidelines comprehensive; contact form functional; screenshots high-quality
+- **Verification:** Download assets → verify quality; review guidelines → verify comprehensiveness; submit contact form → verify delivery; check screenshots → verify quality
+- **Files:** `nextjob/apps/web/src/app/(marketing)/press-kit/page.tsx`, `nextjob/public/press-kit/`
+
+---
+
+### Phase 33: Monitoring & Optimization
+
+#### T-105: Implement conversion funnel tracking
+- [ ] **Status:** Not started
+- **Deliverable:** Conversion funnel tracking: visitor → page view → CTA click → signup start → signup complete → first application; with drop-off rates and timestamps
+- **Dependencies:** T-48, T-52
+- **Acceptance:** FR-MON-01 satisfied; all funnel stages tracked; drop-off rates calculated; timestamps recorded; accessible in analytics dashboard
+- **Verification:** Complete signup flow → verify all stages tracked; check analytics → verify drop-off rates; verify timestamps → verify accuracy
+- **Files:** `nextjob/apps/web/src/lib/analytics/funnel.ts`, `nextjob/apps/web/src/app/api/analytics/funnel/route.ts`
+
+#### T-106: Set up performance monitoring
+- [ ] **Status:** Not started
+- **Deliverable:** Performance monitoring: Lighthouse CI in CI/CD, Web Vitals tracking in production, performance budgets with alerts, trend analysis
+- **Dependencies:** T-57, T-39
+- **Acceptance:** FR-MON-02 satisfied; Lighthouse runs on every deploy; Web Vitals tracked in production; alerts on degradation; trends visible
+- **Verification:** Deploy → verify Lighthouse run; check production → verify Web Vitals; trigger degradation → verify alert; check trends → verify visibility
+- **Files:** `nextjob/.github/workflows/lighthouse.yml`, `nextjob/apps/web/src/lib/monitoring/performance.ts`
+
+#### T-107: Implement error tracking
+- [ ] **Status:** Not started
+- **Deliverable:** Error tracking with Sentry: JavaScript error capture, source maps, error grouping and deduplication, alerting on error spikes, user context
+- **Dependencies:** T-96, T-38
+- **Acceptance:** FR-MON-03 satisfied; errors captured with stack traces; source maps uploaded; errors grouped; alerts configured; user context included
+- **Verification:** Trigger error → verify capture; check Sentry → verify stack trace and grouping; trigger spike → verify alert; check context → verify user data
+- **Files:** `nextjob/apps/web/src/lib/monitoring/sentry.ts`, `nextjob/apps/web/src/instrumentation.ts`
+
+#### T-108: Set up uptime monitoring
+- [ ] **Status:** Not started
+- **Deliverable:** Uptime monitoring: external service (Pingdom/UptimeRobot), multi-region checks, SMS/email alerts on downtime, public status page
+- **Dependencies:** T-40
+- **Acceptance:** FR-MON-04 satisfied; monitoring from multiple regions; alerts sent within 1 minute; status page public and up-to-date
+- **Verification:** Simulate downtime → verify alert timing; check regions → verify multi-region; visit status page → verify accuracy
+- **Files:** `nextjob/apps/web/src/app/(marketing)/status/page.tsx`, `nextjob/docs/monitoring/uptime-setup.md`
+
+#### T-109: Implement heatmaps and session recording
+- [ ] **Status:** Not started
+- **Deliverable:** Heatmaps and session recording: click tracking, scroll depth, interaction recording with user consent; PII auto-redaction; analysis dashboard
+- **Dependencies:** T-48, T-52
+- **Acceptance:** FR-MON-07 satisfied; heatmaps show click patterns; scroll depth tracked; sessions recorded with consent; PII redacted; analysis accessible
+- **Verification:** Interact with page → verify heatmap data; check scroll depth → verify tracking; review sessions → verify consent and redaction; check dashboard → verify access
+- **Files:** `nextjob/apps/web/src/lib/analytics/heatmaps.ts`, `nextjob/apps/web/src/components/cookie-consent.tsx`
+
+---
+
 ## Requirement Coverage
 
 | PRD Requirement | Task(s) | Status |
@@ -669,6 +1129,75 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-MKT-08 (B2B2C section) | T-53 | Not started |
 | FR-MKT-09 (Legal compliance) | T-55 | Not started |
 | FR-MKT-10 (Referral program) | T-56 | Not started |
+| FR-PERF-01 (Core Web Vitals) | T-57 | Not started |
+| FR-PERF-02 (Image optimization) | T-58 | Not started |
+| FR-PERF-03 (Font optimization) | T-59 | Not started |
+| FR-PERF-04 (Code splitting) | T-60 | Not started |
+| FR-PERF-05 (Edge caching) | T-61 | Not started |
+| FR-PERF-06 (RUM) | T-106 | Not started |
+| FR-SEO-01 (Schema markup) | T-62 | Not started |
+| FR-SEO-02 (OG images) | T-63 | Not started |
+| FR-SEO-03 (Twitter Cards) | T-67 | Not started |
+| FR-SEO-04 (Sitemap) | T-64 | Not started |
+| FR-SEO-05 (Robots.txt) | T-64 | Not started |
+| FR-SEO-06 (Canonical URLs) | T-66 | Not started |
+| FR-SEO-07 (AI search) | T-65, T-68 | Not started |
+| FR-SEO-08 (Hreflang) | T-66 | Not started |
+| FR-CRO-01 (Interactive demo) | T-69 | Not started |
+| FR-CRO-02 (Before/after) | T-70 | Not started |
+| FR-CRO-03 (ROI calculator) | T-71 | Not started |
+| FR-CRO-04 (Exit intent) | T-72 | Not started |
+| FR-CRO-05 (Scroll animations) | T-73 | Not started |
+| FR-CRO-06 (Micro-conversions) | T-105 | Not started |
+| FR-CRO-07 (Social proof) | T-74 | Not started |
+| FR-CRO-08 (Urgency indicators) | Not in MVP scope | N/A |
+| FR-CRO-09 (Sticky CTA) | T-76 | Not started |
+| FR-CRO-10 (Comparison table) | T-75 | Not started |
+| FR-VIS-01 (Marketing design system) | T-77 | Not started |
+| FR-VIS-02 (Scroll animations) | T-78 | Not started |
+| FR-VIS-03 (Micro-interactions) | T-79 | Not started |
+| FR-VIS-04 (Loading skeletons) | T-80 | Not started |
+| FR-VIS-05 (Video support) | T-81 | Not started |
+| FR-VIS-06 (Dark/light mode) | T-82 | Not started |
+| FR-VIS-07 (Responsive images) | T-58 | Not started |
+| FR-VIS-08 (Icon system) | T-77 | Not started |
+| FR-CONT-01 (Messaging hierarchy) | T-83 | Not started |
+| FR-CONT-02 (Copywriting guidelines) | T-84 | Not started |
+| FR-CONT-03 (Content blocks) | T-85 | Not started |
+| FR-CONT-04 (Video scripts) | T-86 | Not started |
+| FR-CONT-05 (Email nurture) | T-87 | Not started |
+| FR-CONT-06 (Lead magnets) | Not in MVP scope | N/A |
+| FR-CONT-07 (Blog/resources) | Not in MVP scope | N/A |
+| FR-TRUST-01 (Customer logos) | T-88 | Not started |
+| FR-TRUST-02 (Security certifications) | T-89 | Not started |
+| FR-TRUST-03 (Data transparency) | T-90 | Not started |
+| FR-TRUST-04 (Sample outputs) | T-91 | Not started |
+| FR-TRUST-05 (Integration logos) | T-92 | Not started |
+| FR-TRUST-06 (Press/media) | T-93 | Not started |
+| FR-TRUST-07 (Case studies) | Not in MVP scope | N/A |
+| FR-TRUST-08 (Trust badges) | T-89 | Not started |
+| FR-TECH-01 (Security headers) | T-94 | Not started |
+| FR-TECH-02 (Progressive enhancement) | T-95 | Not started |
+| FR-TECH-03 (Error boundaries) | T-96 | Not started |
+| FR-TECH-04 (404 page) | T-97 | Not started |
+| FR-TECH-05 (Loading states) | T-98 | Not started |
+| FR-TECH-06 (Form validation) | T-99 | Not started |
+| FR-TECH-07 (Bot protection) | Not in MVP scope | N/A |
+| FR-TECH-08 (Enhanced accessibility) | T-46 | Not started |
+| FR-GROW-01 (Email capture) | T-100 | Not started |
+| FR-GROW-02 (Email service) | T-101 | Not started |
+| FR-GROW-03 (Webinar promotion) | T-102 | Not started |
+| FR-GROW-04 (Community links) | T-103 | Not started |
+| FR-GROW-05 (Social sharing) | T-63 | Not started |
+| FR-GROW-06 (Partner/affiliate) | Not in MVP scope | N/A |
+| FR-GROW-07 (Press kit) | T-104 | Not started |
+| FR-MON-01 (Conversion funnel) | T-105 | Not started |
+| FR-MON-02 (Performance monitoring) | T-106 | Not started |
+| FR-MON-03 (Error tracking) | T-107 | Not started |
+| FR-MON-04 (Uptime monitoring) | T-108 | Not started |
+| FR-MON-05 (A/B testing results) | T-54 | Not started |
+| FR-MON-06 (Heatmaps) | T-109 | Not started |
+| FR-MON-07 (Session recording) | T-109 | Not started |
 | G-04 (Eligibility false-positive ≤2%) | T-12, T-13 | Not started |
 | G-09 (Autopilot evidence ≥80%) | T-24, T-25, T-09b | Not started |
 | G-10 (Min cohort size ≥5) | T-30, T-31 | Not started |
