@@ -480,6 +480,94 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 ---
 
+### Phase 18: Application State Machine
+
+#### T-44: Implement complete application state machine
+- [ ] **Status:** Not started
+- **Deliverable:** Full state machine with all progress states (DISCOVERED → SUBMITTED_VERIFIED), outcome states (INTERVIEW, REJECTED, OFFER, WITHDRAWN, HIRED), and exception states (BLOCKED, NEEDS_USER, FAILED_RETRYABLE, NEEDS_RECONCILIATION, FAILED_FINAL, CANCELLED)
+- **Dependencies:** T-25
+- **Acceptance:** FR-ASM-01, FR-ASM-02, FR-ASM-03, FR-ASM-04 satisfied; all state transitions atomic and auditable; AC-07, AC-08 passing
+- **Verification:** Test all state transitions; verify audit logs; `npm run test -- state-machine` → pass
+- **Files:** `nextjob/packages/applications/src/state-machine.ts`
+
+---
+
+### Phase 19: Failure & Edge Cases
+
+#### T-45: Implement failure handling for all edge cases
+- [ ] **Status:** Not started
+- **Deliverable:** Explicit handling for all edge cases per FR-FEC-01: duplicate jobs, closed jobs, changed descriptions, missing/conflicting evidence, unknown eligibility, unsupported/sensitive questions, CAPTCHA, MFA, ATS timeout, partial submission, unknown results, connector outage, revoked OAuth, expired auth, model failure, invalid output, malicious content, user edits during execution, job removed during application, duplicate recruiter confirmation
+- **Dependencies:** T-25, T-24
+- **Acceptance:** FR-FEC-01, FR-FEC-02, FR-FEC-03 satisfied; every failure produces status + explanation + recovery action; AC-09 passing
+- **Verification:** Simulate each edge case → verify appropriate handling; check failure messages → verify status/explanation/recovery present
+- **Files:** `nextjob/packages/applications/src/failures.ts`, `nextjob/packages/connectors/src/errors.ts`
+
+---
+
+### Phase 20: Accessibility & Localization
+
+#### T-46: Implement WCAG 2.2 AA accessibility
+- [ ] **Status:** Not started
+- **Deliverable:** Full WCAG 2.2 AA compliance: keyboard navigation, screen-reader support, visible focus, semantic HTML, error identification, accessible approvals, no color-only meaning, responsive layouts
+- **Dependencies:** T-15, T-18, T-20, T-27
+- **Acceptance:** FR-ACC-01, FR-ACC-02 satisfied; AC-10 passing; axe-core audit passes with 0 critical violations
+- **Verification:** Run axe-core audit → 0 critical violations; test keyboard navigation → all elements reachable; test screen reader → all content announced
+- **Files:** All UI components in `nextjob/apps/web/src/`
+
+#### T-47: Implement localization infrastructure
+- [ ] **Status:** Not started
+- **Deliverable:** RTL-ready architecture with locale-aware dates, currency formatting, address/phone localization
+- **Dependencies:** T-02
+- **Acceptance:** FR-ACC-03 satisfied; architecture supports additional languages; locale detection works
+- **Verification:** Switch locale → verify dates/currency format correctly; test RTL layout → verify mirrors correctly
+- **Files:** `nextjob/packages/shared/src/i18n/`, `nextjob/apps/web/src/i18n/`
+
+---
+
+### Phase 21: Analytics & Experimentation
+
+#### T-48: Implement product analytics with privacy safeguards
+- [ ] **Status:** Not started
+- **Deliverable:** Product event tracking for onboarding, claim verification, job impressions, match actions, eligibility, tailoring, approvals, submission, failures, outcomes, interviews, billing with PII redaction
+- **Dependencies:** T-38
+- **Acceptance:** FR-ANA-01, FR-ANA-02 satisfied; AC-11 passing; no PII in analytics events
+- **Verification:** Trigger events → verify tracked; inspect event payloads → verify no PII/CV content/sensitive data
+- **Files:** `nextjob/packages/api/src/analytics/`
+
+#### T-49: Implement experimentation framework
+- [ ] **Status:** Not started
+- **Deliverable:** Feature flag system for experiments (ranking, match explanations, tailoring, approval UX, notifications, pricing, onboarding) with guardrails (unsupported claims, ineligible applications, duplicate submissions, sensitive-field errors, complaints, connector failures)
+- **Dependencies:** T-48
+- **Acceptance:** FR-ANA-03, FR-ANA-04, FR-ANA-05 satisfied; primary outcome is interview lift; guardrails monitored
+- **Verification:** Create experiment → verify assignment; monitor guardrails → verify alerts trigger on violations
+- **Files:** `nextjob/packages/api/src/experiments/`
+
+---
+
+### Phase 22: Monetization
+
+#### T-50: Implement free tier and Search Pass billing
+- [ ] **Status:** Not started
+- **Deliverable:** Free tier (Career Graph, job discovery, eligibility, tracker, limited applications) and Search Pass (~$39/30 days, full matching, tailoring, assisted applications, tracking, receipts)
+- **Dependencies:** T-32
+- **Acceptance:** FR-MON-01, FR-MON-02, FR-MON-04 satisfied; free tier limits enforced; Search Pass subscription works; no monetization of candidate data/sensitive data/hidden credits
+- **Verification:** Sign up → verify free tier limits; upgrade to Search Pass → verify full access; check billing → verify no hidden charges
+- **Files:** `nextjob/packages/api/src/billing/`
+
+---
+
+### Phase 23: Rollout & Documentation
+
+#### T-51: Document rollout plan
+- [ ] **Status:** Not started
+- **Deliverable:** Rollout documentation with Phase 1 (MVP), Phase 2 (email outcomes, interview prep, additional ATSs, localization, experiments), Phase 3 (safe autopilot, outcome-informed ranking, expanded eligibility, B2B integrations, Career Vault)
+- **Dependencies:** T-42, T-43
+- **Acceptance:** FR-ROL-01, FR-ROL-02, FR-ROL-03 satisfied; all phases documented with scope and dependencies
+- **Verification:** Review rollout doc → verify all phases documented; check dependencies → verify logical
+- **Files:** `nextjob/docs/ROLLOUT.md`
+
+---
+
 ## Requirement Coverage
 
 | PRD Requirement | Task(s) | Status |
@@ -504,6 +592,29 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-ONB-04 (Preferences) | T-09a | Not started |
 | FR-ONB-05 (Eligibility capture) | T-09a, T-12 | Not started |
 | FR-ONB-06 (Automation policy) | T-09b | Not started |
+| FR-ASM-01 (State progression) | T-25, T-44 | Not started |
+| FR-ASM-02 (Outcome states) | T-25, T-44 | Not started |
+| FR-ASM-03 (Exception states) | T-25, T-44, T-45 | Not started |
+| FR-ASM-04 (Atomic transitions) | T-25, T-44 | Not started |
+| FR-FEC-01 (Edge case handling) | T-45 | Not started |
+| FR-FEC-02 (Failure details) | T-45 | Not started |
+| FR-FEC-03 (No auto-retry ambiguous) | T-25, T-45 | Not started |
+| FR-ACC-01 (WCAG 2.2 AA) | T-46 | Not started |
+| FR-ACC-02 (Accessibility features) | T-46 | Not started |
+| FR-ACC-03 (Localization) | T-47 | Not started |
+| FR-ACC-04 (Additional languages) | Not in MVP scope | N/A |
+| FR-ANA-01 (Product analytics) | T-48 | Not started |
+| FR-ANA-02 (No PII in analytics) | T-48 | Not started |
+| FR-ANA-03 (Experimentation) | T-49 | Not started |
+| FR-ANA-04 (Interview lift metric) | T-49 | Not started |
+| FR-ANA-05 (Experiment guardrails) | T-49 | Not started |
+| FR-MON-01 (Free tier) | T-50 | Not started |
+| FR-MON-02 (Search Pass) | T-50 | Not started |
+| FR-MON-03 (Agent Pass) | Not in MVP scope | N/A |
+| FR-MON-04 (No data monetization) | T-50 | Not started |
+| FR-ROL-01 (Phase 1 MVP) | All tasks | Not started |
+| FR-ROL-02 (Phase 2) | Not in MVP scope | N/A |
+| FR-ROL-03 (Phase 3) | Not in MVP scope | N/A |
 | G-04 (Eligibility false-positive ≤2%) | T-12, T-13 | Not started |
 | G-09 (Autopilot evidence ≥80%) | T-24, T-25, T-09b | Not started |
 | G-10 (Min cohort size ≥5) | T-30, T-31 | Not started |

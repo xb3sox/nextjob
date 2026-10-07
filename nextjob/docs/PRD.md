@@ -91,6 +91,47 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 - **FR-ONB-05 [Must]:** Eligibility MUST capture explicit user-provided citizenship, work authorization, sponsorship requirement, location restrictions, and clearance/licensing requirements.
 - **FR-ONB-06 [Must]:** Automation policy MUST allow user to select Manual, Copilot, or Autopilot-eligible modes with field-level overrides.
 
+### Application State Machine
+
+- **FR-ASM-01 [Must]:** Applications MUST progress through states: DISCOVERED → NORMALIZED → ELIGIBILITY_CHECKED → MATCHED → PLANNED → TAILORED → POLICY_CHECKED → NEEDS_APPROVAL → READY → EXECUTING → SUBMITTED_UNVERIFIED → SUBMITTED_VERIFIED.
+- **FR-ASM-02 [Must]:** Outcome states MUST include: INTERVIEW, REJECTED, OFFER, WITHDRAWN, HIRED.
+- **FR-ASM-03 [Must]:** Exception states MUST include: BLOCKED, NEEDS_USER, FAILED_RETRYABLE, NEEDS_RECONCILIATION, FAILED_FINAL, CANCELLED.
+- **FR-ASM-04 [Must]:** State transitions MUST be atomic and auditable.
+
+### Failure & Edge Cases
+
+- **FR-FEC-01 [Must]:** System MUST explicitly handle: duplicate jobs, closed jobs, changed job descriptions, missing evidence, conflicting evidence, unknown eligibility, unsupported questions, sensitive questions, CAPTCHA, MFA, ATS timeout, partial submission, unknown submission result, connector outage, revoked OAuth, expired authorization, model failure, invalid structured output, malicious job content, user edits during execution, job removed during application, duplicate recruiter confirmation.
+- **FR-FEC-02 [Must]:** Every failure MUST produce: status + explanation + recovery action.
+- **FR-FEC-03 [Must]:** Ambiguous external submissions MUST NOT automatically retry (FR-08).
+
+### Accessibility & Localization
+
+- **FR-ACC-01 [Must]:** All user interfaces MUST meet WCAG 2.2 AA.
+- **FR-ACC-02 [Must]:** System MUST support: keyboard navigation, screen-reader support, visible focus, semantic HTML, error identification, accessible approvals, no color-only meaning, responsive layouts.
+- **FR-ACC-03 [Should]:** System SHOULD be RTL-ready and support locale-aware dates, currency formatting, address/phone localization.
+- **FR-ACC-04 [Could]:** Additional languages MAY be supported post-MVP (architecture supports it).
+
+### Analytics & Experimentation
+
+- **FR-ANA-01 [Must]:** System MUST track product events for: onboarding, claim verification, job impressions, match actions, eligibility, tailoring, approvals, submission, failures, outcomes, interviews, billing.
+- **FR-ANA-02 [Must]:** System MUST NOT send sensitive application content or raw CV data to product analytics.
+- **FR-ANA-03 [Should]:** Experiments SHOULD test: ranking, match explanations, tailoring, approval UX, notifications, pricing, onboarding.
+- **FR-ANA-04 [Must]:** Primary experiment outcome MUST be interview lift.
+- **FR-ANA-05 [Must]:** Experiment guardrails MUST include: unsupported claims, ineligible applications, duplicate submissions, sensitive-field errors, complaints, connector failures.
+
+### Monetization
+
+- **FR-MON-01 [Must]:** Free tier MUST include: Career Graph, job discovery, eligibility, tracker, limited applications.
+- **FR-MON-02 [Must]:** Search Pass (~$39/30 days) MUST include: full matching, tailoring, assisted applications, tracking, receipts.
+- **FR-MON-03 [Should]:** Agent Pass (next phase) SHOULD add: safe autopilot, advanced automation, outcome optimization.
+- **FR-MON-04 [Must]:** System MUST NOT monetize: candidate data, sensitive data, recruiter advertising based on private data, hidden credits, fake guarantees.
+
+### Rollout Plan
+
+- **FR-ROL-01 [Must]:** Phase 1 (MVP) MUST include: identity, Career Graph, evidence, jobs, eligibility, matching, tailoring, risk engine, approvals, extension, execution, receipts, tracker, organizations, billing, admin, analytics.
+- **FR-ROL-02 [Should]:** Phase 2 SHOULD add: email outcomes, interview preparation, additional ATSs, localization, experiments.
+- **FR-ROL-03 [Could]:** Phase 3 MAY add: safe autopilot, outcome-informed ranking, expanded eligibility, B2B integrations, Career Vault.
+
 ## Acceptance
 
 - **AC-01 → FR-01:** Given a CareerClaim with evidence, when tailoring generates a statement, then the statement references the claim_id and evidence_id.
@@ -99,6 +140,11 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 - **AC-04 → FR-04:** Given a successful ATS submission, when the connector returns confirmation, then a receipt is generated with job_version, field_hashes, and verification_status.
 - **AC-05 → FR-05:** Given a submitted application to job X, when the user triggers apply again for job X, then the system returns the existing receipt without re-submitting.
 - **AC-06 → FR-08:** Given an ATS timeout with no confirmation, when the workflow retries, then it does not re-submit but transitions to NEEDS_RECONCILIATION.
+- **AC-07 → FR-ASM-01:** Given an application in DISCOVERED state, when eligibility check passes, then state transitions to ELIGIBILITY_CHECKED with audit log entry.
+- **AC-08 → FR-ASM-03:** Given an application in EXECUTING state, when connector fails, then state transitions to FAILED_RETRYABLE with retry count incremented.
+- **AC-09 → FR-FEC-02:** Given a failed submission, when user views failure details, then they see status, explanation, and recovery action.
+- **AC-10 → FR-ACC-01:** Given a user navigating with keyboard only, when they complete the application flow, then all interactive elements are reachable and operable.
+- **AC-11 → FR-ANA-02:** Given a product analytics event, when inspected, then it contains no PII, CV content, or sensitive application data.
 
 ## Validation
 
