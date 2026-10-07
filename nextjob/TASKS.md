@@ -498,6 +498,12 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-12 (Capability dimensions) | T-14, T-15, T-09a | Not started |
 | FR-13 (Actionable notifications) | T-28 | Not started |
 | FR-14 (Interview prep) | Not in MVP scope | N/A |
+| FR-ONB-01 (Account creation) | T-04 | Not started |
+| FR-ONB-02 (CV import) | T-07 | Not started |
+| FR-ONB-03 (Claim verification) | T-09 | Not started |
+| FR-ONB-04 (Preferences) | T-09a | Not started |
+| FR-ONB-05 (Eligibility capture) | T-09a, T-12 | Not started |
+| FR-ONB-06 (Automation policy) | T-09b | Not started |
 | G-04 (Eligibility false-positive ≤2%) | T-12, T-13 | Not started |
 | G-09 (Autopilot evidence ≥80%) | T-24, T-25, T-09b | Not started |
 | G-10 (Min cohort size ≥5) | T-30, T-31 | Not started |

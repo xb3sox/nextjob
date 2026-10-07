@@ -82,6 +82,15 @@ Mass-application spam, LinkedIn automation, CAPTCHA bypass, immigration/legal ad
 - **FR-13 [Should]:** Notifications SHOULD be limited to actionable events only.
 - **FR-14 [Could]:** Interview preparation MAY generate likely questions and evidence-backed talking points.
 
+### Onboarding Requirements
+
+- **FR-ONB-01 [Must]:** Account creation MUST support email and social authentication.
+- **FR-ONB-02 [Must]:** CV import MUST accept PDF/DOCX and extract identity, employment, education, skills, certifications, projects, achievements, and languages.
+- **FR-ONB-03 [Must]:** Every extracted claim MUST be confirmed, edited, removed, or marked unverified by the user.
+- **FR-ONB-04 [Must]:** Preferences MUST capture target roles, seniority, industries, locations, remote/hybrid/on-site, salary expectations, company preferences, exclusions, relocation, and notice period.
+- **FR-ONB-05 [Must]:** Eligibility MUST capture explicit user-provided citizenship, work authorization, sponsorship requirement, location restrictions, and clearance/licensing requirements.
+- **FR-ONB-06 [Must]:** Automation policy MUST allow user to select Manual, Copilot, or Autopilot-eligible modes with field-level overrides.
+
 ## Acceptance
 
 - **AC-01 → FR-01:** Given a CareerClaim with evidence, when tailoring generates a statement, then the statement references the claim_id and evidence_id.
