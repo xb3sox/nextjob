@@ -1,10 +1,119 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Component, ReactNode } from 'react';
 import {
   Zap, CheckCircle2, AlertTriangle, Code2, FileText, Database,
   Lock, Globe, TrendingUp, Eye, ArrowRight, Menu, X, Brain,
   Scale, Clock, ShieldCheck, Sparkles, Star, Play, Linkedin,
   Twitter, Github, ChevronDown, Building2, DollarSign, Check
 } from 'lucide-react';
+
+// Error Boundary Component (React Official Pattern)
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Log error to analytics service in production
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-8">
+          <div className="text-center max-w-md">
+            <AlertTriangle size={48} className="mx-auto mb-4 text-amber-400" />
+            <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
+            <p className="text-slate-400 mb-6">We're sorry, but something unexpected happened. Please try refreshing the page.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="rounded-lg bg-emerald-500 px-6 py-3 font-medium text-white hover:bg-emerald-600 transition-colors"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Cookie Consent Banner Component (GDPR Compliant)
+function CookieConsent() {
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    // Check if user has already made a choice
+    const consent = localStorage.getItem('cookieConsent');
+    if (!consent) {
+      // Show banner after 2 seconds to not interrupt initial load
+      const timer = setTimeout(() => setShowBanner(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem('cookieConsent', 'accepted');
+    setShowBanner(false);
+    // Initialize analytics here if needed
+  };
+
+  const handleReject = () => {
+    localStorage.setItem('cookieConsent', 'rejected');
+    setShowBanner(false);
+  };
+
+  if (!showBanner) return null;
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-slide-up">
+      <div className="mx-auto max-w-4xl rounded-xl bg-slate-900 border border-slate-700 p-6 shadow-2xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-white mb-2">We value your privacy</h3>
+            <p className="text-sm text-slate-400">
+              We use cookies to enhance your browsing experience and analyze site traffic. By clicking "Accept", you consent to our use of cookies.{' '}
+              <a href="#" className="text-emerald-400 hover:text-emerald-300 underline">
+                Learn more
+              </a>
+            </p>
+          </div>
+          <div className="flex gap-3 shrink-0">
+            <button
+              onClick={handleReject}
+              className="rounded-lg border border-slate-600 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors"
+            >
+              Reject
+            </button>
+            <button
+              onClick={handleAccept}
+              className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 transition-colors"
+            >
+              Accept
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -106,11 +215,12 @@ export default function App() {
   const hoverTextSubtle = darkMode ? 'hover:text-slate-300' : 'hover:text-slate-700';
 
   return (
-    <div className={`min-h-screen ${bg} ${text}`}>
-      {/* Skip to content link for accessibility */}
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-emerald-500 focus:px-4 focus:py-2 focus:text-white">
-        Skip to main content
-      </a>
+    <ErrorBoundary>
+      <div className={`min-h-screen ${bg} ${text}`}>
+        {/* Skip to content link for accessibility */}
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-emerald-500 focus:px-4 focus:py-2 focus:text-white">
+          Skip to main content
+        </a>
 
       {/* Navigation */}
       <nav 
@@ -706,7 +816,11 @@ export default function App() {
           </div>
         </div>
       </footer>
-    </div>
+      
+      {/* Cookie Consent Banner (GDPR Compliant) */}
+      <CookieConsent />
+      </div>
+    </ErrorBoundary>
   );
 }
 
