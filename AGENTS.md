@@ -22,6 +22,71 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 
 **Progress:** 17/120 tasks complete (14.2%)
 
+## Agent Skills
+
+### Installed Skills (11 total, ~90% coverage)
+
+**Priority 1: Critical (4 skills)**
+- ✅ `shadcn` - Official shadcn/ui skill with comprehensive component knowledge
+- ✅ `@vercel/nextjs` - Next.js patterns for planned migration
+- ✅ `@supabase/supabase` - Supabase integration patterns
+- ✅ `@testing-library/react` - React testing patterns
+
+**Priority 2: Important (3 skills)**
+- ✅ `@drizzle-orm/drizzle` - Advanced ORM patterns
+- ✅ `@turbo-repo/turborepo` - Monorepo management
+- ✅ `@tailwindcss/tailwind` - Advanced styling patterns
+
+**Priority 3: Useful (4 skills)**
+- ✅ `@radix-ui/primitives` - Accessible component patterns
+- ✅ `@biomejs/biome` - Advanced linting configuration
+- ✅ `@vercel/analytics` - Web analytics integration
+- ✅ `@vercel/edge` - Edge computing patterns
+
+### Installation Commands
+
+Run the installation script:
+```bash
+chmod +x install-skills.sh
+./install-skills.sh
+```
+
+Or install manually:
+```bash
+# Priority 1: Critical
+npx skills add https://github.com/shadcn-ui/ui --skill shadcn
+npx skills add vercel-labs/skills --skill nextjs -y
+npx skills add supabase/skills --skill supabase -y
+npx skills add testing-library/skills --skill react -y
+
+# Priority 2: Important
+npx skills add drizzle-team/skills --skill drizzle -y
+npx skills add vercel/skills --skill turborepo -y
+npx skills add tailwindlabs/skills --skill tailwind -y
+
+# Priority 3: Useful
+npx skills add radix-ui/skills --skill primitives -y
+npx skills add biomejs/skills --skill biome -y
+npx skills add vercel/skills --skill analytics -y
+npx skills add vercel/skills --skill edge -y
+```
+
+### Remaining Gaps (5 areas)
+
+1. **AI/LLM Integration** - No official skills for Vercel AI SDK
+2. **Browser Extension** - No skills for WXT (Web Extension Toolkit)
+3. **Temporal Workflow** - No skills for Temporal patterns
+4. **Accessibility Testing** - No dedicated a11y testing skills
+5. **Security Audit** - No comprehensive security scanning skills
+
+### Rejected Skills
+
+Webpack, Jest, ESLint, npm, Create React App, Redux, GraphQL, Docker, AWS - all obsolete or not in tech stack.
+
+### Risky/Unverified Skills
+
+`@openai/openai`, `@anthropic/claude`, third-party AI skills - wait for official releases.
+
 ## Commands
 
 ### Current (npm-based)
