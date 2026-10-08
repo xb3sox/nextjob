@@ -70,7 +70,7 @@ npx shadcn@latest diff             # Show component differences
 ## Structure
 
 ```
-nextjob/
+./
 ├── apps/
 │   ├── web/                # Next.js + TypeScript (FR-ONB, matching, tracker, marketing)
 │   │   └── src/app/
