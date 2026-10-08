@@ -82,13 +82,25 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
   - ✅ Build succeeds without errors
 
 #### T-03: Set up database schema and migrations
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** PostgreSQL schema with all entities per TECH.md §Data & Integrations
 - **Dependencies:** T-02
 - **Acceptance:** All entities (User, CareerClaim, Evidence, Job, ApplicationPlan, Receipt, Organization, etc.) created; migrations versioned; tenant_id on every table
 - **Verification:** `npm run db:migrate` → success; `npm run db:seed` → test data loaded
 - **Files:** `nextjob/packages/api/src/db/schema.ts`, `nextjob/packages/api/src/db/migrations/`
-- **Note:** Include retention_policy and deletion_state columns per TECH.md
+- **Evidence:**
+  - ✅ Database schema created with 20+ tables covering all entities from TECH.md
+  - ✅ All tables include required base columns: id, tenant_id, version, source, provenance, created_at, updated_at, retention_policy, deletion_state
+  - ✅ Entities implemented: users, accounts, sessions, organizations, cohorts, cohort_members, career_profiles, career_claims, evidence, companies, jobs, eligibility_assessments, matches, application_plans, approvals, receipts, outcomes, audit_events, consent_records, subscriptions, notifications
+  - ✅ Proper indexes created for performance (tenant_id, user_id, foreign keys)
+  - ✅ Unique constraints for business rules (email, provider accounts, user+job combinations)
+  - ✅ Drizzle ORM configured with PostgreSQL driver
+  - ✅ Migration infrastructure set up (drizzle.config.ts, migrate.ts)
+  - ✅ Seed script created with test data (users, organizations, cohorts, career data, companies, jobs)
+  - ✅ Database connection utility created (src/db/index.ts)
+  - ✅ API package structure created with Fastify server
+  - ✅ Environment configuration documented (.env.example)
+  - ✅ Package scripts configured (db:generate, db:migrate, db:seed, db:studio)
 
 #### T-04: Set up authentication and tenant isolation
 - [ ] **Status:** Not started
@@ -1360,19 +1372,19 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 ## Next Unblocked Task
 
-**T-03: Set up database schema and migrations**
+**T-04: Set up authentication and tenant isolation**
 
-Dependencies: T-01, T-02 (Complete)  
+Dependencies: T-01, T-02, T-03 (Complete)  
 Blockers: None  
-Estimated effort: 8 hours
+Estimated effort: 12 hours
 
 ---
 
 ## Updated Priorities (Post Ultra-Minimal Redesign)
 
 ### High Priority (Next 30 Days)
-1. **T-03: Set up database schema and migrations** - Foundation for all backend features
-2. **T-04: Set up authentication and tenant isolation** - Critical for security
+1. ~~**T-03: Set up database schema and migrations**~~ ✅ Complete
+2. **T-04: Set up authentication and tenant isolation** - Critical for security (NEXT)
 3. **T-07: Implement CV import and extraction** - Core user flow
 4. **T-08: Implement Career Graph with evidence provenance** - Core differentiator
 5. **T-12: Implement eligibility engine** - Key feature (≤2% false-positive rate)
