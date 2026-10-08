@@ -2,23 +2,43 @@
 
 ## Status
 
-Pre-implementation. No repository, build pipeline, or runtime exists yet. Technology stack and all threshold decisions approved (2026-01-15):
+In Progress. Landing page and database schema implemented. Technology stack and all threshold decisions approved (2026-01-15):
 - Eligibility false-positive threshold: ≤2%
 - Autopilot evidence coverage: ≥80%
 - Minimum cohort size for reporting: ≥5 participants
 
+**Completed:**
+- ✅ T-01: Repository structure initialized
+- ✅ T-02: Development environment set up
+- ✅ T-03: Database schema created (20+ tables)
+- ✅ T-52: Landing page implemented (ultra-minimal design)
+- ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
+- ✅ T-80, T-95-T-99: Technical excellence features
+
 ## Commands
 
-None verified. Expected commands once implementation begins:
+Verified and working:
 
-```
-npm install          # Install dependencies
-npm run dev          # Start development server
-npm run build        # Production build
-npm run typecheck    # TypeScript validation
-npm run lint         # Lint check
-npm run test         # Unit and integration tests
-npm run test:eval    # AI evaluation suite
+```bash
+# Frontend (Landing Page)
+npm install                    # Install dependencies
+npm run dev                    # Start development server (http://localhost:3000)
+npm run build                  # Production build
+npm run typecheck              # TypeScript validation
+npm run lint                   # ESLint check
+
+# Backend (API)
+cd nextjob/packages/api
+npm install                    # Install API dependencies
+npm run dev                    # Start API server (http://localhost:4000)
+npm run db:generate            # Generate database migrations
+npm run db:migrate             # Run database migrations
+npm run db:seed                # Seed test data
+npm run db:studio              # Open Drizzle Studio
+
+# Testing (coming soon)
+npm run test                   # Unit and integration tests
+npm run test:eval              # AI evaluation suite
 ```
 
 ## Structure

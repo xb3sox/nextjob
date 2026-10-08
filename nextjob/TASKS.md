@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (Landing Page Redesigned - Ultra-Minimal)  
+**Status:** In Progress (12/113 tasks complete - 11%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -1441,16 +1441,16 @@ Due to ultra-minimal redesign, several tasks are no longer needed or simplified:
 ## Next Actions
 
 ### Immediate (This Week)
-1. **T-03: Database schema** - Start with User, CareerClaim, Evidence entities
-2. **T-04: Authentication** - Implement OAuth 2.0 with tenant isolation
+1. **T-04: Authentication** - Implement OAuth 2.0 with tenant isolation (12 hours)
+2. **T-54: Analytics** - Complete PostHog/Plausible integration (8 hours)
 3. **Test landing page** - Get user feedback on new minimal design
 
 ### Short-term (Next 2 Weeks)
-4. **T-07: CV import** - Build PDF/DOCX extraction pipeline
-5. **T-08: Career Graph** - Implement evidence provenance tracking
-6. **T-12: Eligibility engine** - Build rule-based eligibility checks
+4. **T-07: CV import** - Build PDF/DOCX extraction pipeline (16 hours)
+5. **T-08: Career Graph** - Implement evidence provenance tracking (20 hours)
+6. **T-12: Eligibility engine** - Build rule-based eligibility checks (24 hours)
 
 ### Medium-term (Next Month)
-7. **T-17: Tailoring engine** - Implement evidence-constrained AI generation
-8. **T-23: ATS connector** - Build first connector (Greenhouse or Lever)
-9. **T-54: Analytics** - Complete PostHog/Plausible integration
+7. **T-17: Tailoring engine** - Implement evidence-constrained AI generation (32 hours)
+8. **T-23: ATS connector** - Build first connector (Greenhouse or Lever) (40 hours)
+9. **T-32: Stripe billing** - Implement subscription management (24 hours)
