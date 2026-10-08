@@ -7,9 +7,55 @@ import NotFound from './pages/NotFound';
 
 function LandingPage() {
   const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const validateEmail = (email: string): boolean => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      setStatus('error');
+      setErrorMessage('Please enter your email address');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setStatus('error');
+      setErrorMessage('Please enter a valid email address');
+      return;
+    }
+
+    setStatus('loading');
+    setErrorMessage('');
+
+    // Simulate API call
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setStatus('success');
+      setEmail('');
+      // TODO: Replace with actual API call
+      console.log('Email submitted:', email);
+    } catch (error) {
+      setStatus('error');
+      setErrorMessage('Something went wrong. Please try again.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
+      {/* Skip to content link for accessibility */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-emerald-500 focus:px-4 focus:py-2 focus:text-white"
+      >
+        Skip to main content
+      </a>
+
       {/* Minimal Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-sm border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -27,7 +73,7 @@ function LandingPage() {
       </nav>
 
       {/* Hero - Ultra Minimal */}
-      <main className="pt-32 pb-20 px-6">
+      <main id="main-content" className="pt-32 pb-20 px-6">
         <div className="max-w-3xl mx-auto">
           {/* Value Proposition - Complete Sentence */}
           <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.1] mb-6">
@@ -42,20 +88,68 @@ function LandingPage() {
           </p>
 
           {/* Single CTA */}
-          <div id="signup" className="flex flex-col sm:flex-row gap-3 mb-20">
+          <form onSubmit={handleSubmit} id="signup" className="flex flex-col sm:flex-row gap-3 mb-6">
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (status === 'error') {
+                  setStatus('idle');
+                  setErrorMessage('');
+                }
+              }}
               placeholder="you@company.com"
-              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50 transition-colors"
+              disabled={status === 'loading' || status === 'success'}
+              className={`flex-1 px-4 py-3 bg-white/5 border rounded-lg text-white placeholder:text-white/30 focus:outline-none transition-colors ${
+                status === 'error' 
+                  ? 'border-red-500/50 focus:border-red-500/50' 
+                  : 'border-white/10 focus:border-emerald-500/50'
+              } disabled:opacity-50 disabled:cursor-not-allowed`}
               aria-label="Email address"
+              aria-invalid={status === 'error'}
+              aria-describedby={status === 'error' ? 'email-error' : undefined}
             />
-            <button className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
-              Start free
-              <ArrowRight className="w-4 h-4" />
+            <button 
+              type="submit"
+              disabled={status === 'loading' || status === 'success'}
+              className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              {status === 'loading' ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Joining...
+                </>
+              ) : status === 'success' ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  Joined!
+                </>
+              ) : (
+                <>
+                  Start free
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
-          </div>
+          </form>
+
+          {/* Error Message */}
+          {status === 'error' && errorMessage && (
+            <div id="email-error" role="alert" className="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400">
+              {errorMessage}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {status === 'success' && (
+            <div role="status" className="mb-6 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-400">
+              ✓ Thanks! We'll be in touch soon.
+            </div>
+          )}
 
           {/* Product Preview - Show, Don't Tell */}
           <div className="relative rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
@@ -89,7 +183,11 @@ function LandingPage() {
                   <span>Eligibility: ✓ Verified</span>
                   <span>Match: 94%</span>
                 </div>
-                <button className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors">
+                <button 
+                  className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                  aria-label="Submit application preview"
+                  onClick={() => alert('This is a preview. Sign up to access the full application.')}
+                >
                   Submit application →
                 </button>
               </div>
@@ -266,7 +364,7 @@ function LandingPage() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-white/40">
             <Zap className="w-4 h-4" />
-            <span>© 2024 NextJob</span>
+            <span>© 2026 NextJob</span>
           </div>
           <div className="flex gap-6 text-sm text-white/40">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
