@@ -2,7 +2,7 @@
 
 ## Status
 
-In Progress. Landing page and database schema implemented. Technology stack and all threshold decisions approved (2026-01-15):
+In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technology stack and all threshold decisions approved (2026-01-15):
 - Eligibility false-positive threshold: ≤2%
 - Autopilot evidence coverage: ≥80%
 - Minimum cohort size for reporting: ≥5 participants
@@ -11,9 +11,14 @@ In Progress. Landing page and database schema implemented. Technology stack and 
 - ✅ T-01: Repository structure initialized
 - ✅ T-02: Development environment set up
 - ✅ T-03: Database schema created (20+ tables)
+- ✅ T-03a: Migrated to Bun package manager (30x faster)
+- ✅ T-03b: Added Vitest testing framework (5x faster, 20 example tests)
+- ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
+
+**Progress:** 15/120 tasks complete (12.5%)
 
 ## Commands
 

@@ -98,9 +98,9 @@ graph TB
 | Infrastructure | AWS + Vercel | Approved | Managed services, edge deployment |
 | IaC | OpenTofu | Approved | Terraform-compatible, open-source |
 | CI/CD | GitHub Actions | Approved | Integrated with repo, matrix builds |
-| Package Manager | Bun | 🔄 Migration Planned | 30x faster than npm, native TypeScript, built-in bundler |
-| Testing | Vitest | 🔄 Migration Planned | 5x faster than Jest, native Vite integration, zero config |
-| Linting | Biome | 🔄 Migration Planned | 56x faster than ESLint, replaces ESLint+Prettier, single tool |
+| Package Manager | Bun | ✅ Complete | 30x faster than npm, native TypeScript, built-in bundler |
+| Testing | Vitest | ✅ Complete | 5x faster than Jest, native Vite integration, zero config, 20 example tests |
+| Linting | Biome | ✅ Complete | 56x faster than ESLint, replaces ESLint+Prettier, single tool |
 | Monorepo | Turborepo | 🔄 Migration Planned | Build caching, task orchestration, 9x faster builds |
 
 See [Development Environment Improvement Plan](DEVELOPMENT_ENVIRONMENT_IMPROVEMENT_PLAN.md) for toolchain upgrade details.

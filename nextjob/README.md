@@ -10,7 +10,7 @@
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 12.5%](https://img.shields.io/badge/Progress-12.5%25-green)](TASKS.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -167,7 +167,7 @@ See [Development Environment Improvement Plan](docs/DEVELOPMENT_ENVIRONMENT_IMPR
 
 ## 🚀 Getting Started
 
-> **Status:** In Progress. Landing page and database schema implemented.
+> **Status:** In Progress. Modern toolchain and testing framework implemented.
 
 ### For Developers
 
@@ -185,22 +185,23 @@ See [Development Environment Improvement Plan](docs/DEVELOPMENT_ENVIRONMENT_IMPR
 - ✅ 404 page, loading states, form validation
 - ✅ SEO optimization with structured data
 - ✅ WCAG 2.1 AA accessibility compliance
+- ✅ **Bun package manager** - 30x faster than npm
+- ✅ **Vitest testing framework** - 5x faster than Jest, 20 example tests
+- ✅ **Biome linter/formatter** - 56x faster than ESLint+Prettier
 
 **Next Tasks:**
 
-**Toolchain Upgrades (This Week):**
-1. **T-03a: Migrate to Bun** - 30x faster package manager (2 hours)
-2. **T-03b: Add Vitest** - 5x faster testing framework (4 hours)
-3. **T-03c: Migrate to Biome** - 56x faster linting (3 hours)
-4. **T-03d: Add Turborepo** - Build caching and orchestration (4 hours)
+**Toolchain (This Week):**
+1. **T-03d: Add Turborepo** - Build caching and orchestration (4 hours)
 
 **UI Modernization (Next Week):**
-5. **T-03e: Integrate shadcn/ui** - Modern component library (8 hours)
-6. **T-03f: Implement shadcn blocks** - Pre-built page sections (6 hours)
+2. **T-03e: Integrate shadcn/ui** - Modern component library (8 hours)
+3. **T-03f: Implement shadcn blocks** - Pre-built page sections (6 hours)
+4. **T-03g: Create custom registry** - Share NextJob components (10 hours)
 
 **Core Features:**
-7. **T-04: Authentication** - OAuth 2.0 with tenant isolation (12 hours)
-8. **T-07: CV import** - PDF/DOCX extraction pipeline (16 hours)
+5. **T-04: Authentication** - OAuth 2.0 with tenant isolation (12 hours)
+6. **T-07: CV import** - PDF/DOCX extraction pipeline (16 hours)
 
 See [TASKS.md](TASKS.md) for complete task list and [Development Environment Improvement Plan](docs/DEVELOPMENT_ENVIRONMENT_IMPROVEMENT_PLAN.md) for toolchain details.
 
