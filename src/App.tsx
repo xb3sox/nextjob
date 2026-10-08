@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef, Component, ReactNode } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {
   Zap, CheckCircle2, AlertTriangle, Code2, FileText, Database,
   Lock, Globe, TrendingUp, Eye, ArrowRight, Menu, X, Brain,
   Scale, Clock, ShieldCheck, Sparkles, Star, Play, Linkedin,
   Twitter, Github, ChevronDown, Building2, DollarSign, Check
 } from 'lucide-react';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import NotFound from './pages/NotFound';
 
 // Error Boundary Component (React Official Pattern)
 interface ErrorBoundaryProps {
@@ -91,7 +95,7 @@ function CookieConsent() {
             <h3 className="text-lg font-semibold text-white mb-2">We value your privacy</h3>
             <p className="text-sm text-slate-400">
               We use cookies to enhance your browsing experience and analyze site traffic. By clicking "Accept", you consent to our use of cookies.{' '}
-              <a href="#privacy" className="text-emerald-400 hover:text-emerald-300 underline" aria-label="Learn more about our cookie policy">
+              <a href="/privacy" className="text-emerald-400 hover:text-emerald-300 underline" aria-label="Learn more about our cookie policy">
                 Learn more
               </a>
             </p>
@@ -225,12 +229,17 @@ export default function App() {
   const hoverTextSubtle = darkMode ? 'hover:text-slate-300' : 'hover:text-slate-700';
 
   return (
-    <ErrorBoundary>
-      <div className={`min-h-screen ${bg} ${text}`}>
-        {/* Skip to content link for accessibility */}
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-emerald-500 focus:px-4 focus:py-2 focus:text-white">
-          Skip to main content
-        </a>
+    <BrowserRouter>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="*" element={
+            <div className={`min-h-screen ${bg} ${text}`}>
+              {/* Skip to content link for accessibility */}
+              <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-emerald-500 focus:px-4 focus:py-2 focus:text-white">
+                Skip to main content
+              </a>
 
       {/* Navigation */}
       <nav 
@@ -817,10 +826,10 @@ export default function App() {
             <nav aria-label="Legal links">
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className={`space-y-2 text-sm ${textMuted}`}>
-                <li><a href="#" className={`${hoverText} transition-colors`}>Privacy Policy</a></li>
-                <li><a href="#" className={`${hoverText} transition-colors`}>Terms of Service</a></li>
-                <li><a href="#" className={`${hoverText} transition-colors`}>Cookie Policy</a></li>
-                <li><a href="#" className={`${hoverText} transition-colors`}>GDPR</a></li>
+                <li><a href="/privacy" className={`${hoverText} transition-colors`}>Privacy Policy</a></li>
+                <li><a href="/terms" className={`${hoverText} transition-colors`}>Terms of Service</a></li>
+                <li><a href="/privacy" className={`${hoverText} transition-colors`}>Cookie Policy</a></li>
+                <li><a href="/privacy" className={`${hoverText} transition-colors`}>GDPR</a></li>
               </ul>
             </nav>
           </div>
@@ -844,7 +853,10 @@ export default function App() {
       {/* Cookie Consent Banner (GDPR Compliant) */}
       <CookieConsent />
       </div>
-    </ErrorBoundary>
+          } />
+        </Routes>
+      </ErrorBoundary>
+    </BrowserRouter>
   );
 }
 
