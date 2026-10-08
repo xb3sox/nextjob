@@ -1,0 +1,198 @@
+{
+  "version": "1.0.0",
+  "installedAt": "2026-01-15T00:00:00.000Z",
+  "skills": [
+    {
+      "name": "shadcn",
+      "source": "https://github.com/shadcn-ui/ui",
+      "version": "latest",
+      "priority": 1,
+      "category": "critical",
+      "description": "Official shadcn/ui skill with comprehensive component knowledge",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@vercel/nextjs",
+      "source": "vercel-labs/skills",
+      "version": "latest",
+      "priority": 1,
+      "category": "critical",
+      "description": "Next.js patterns and optimization for planned migration",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@supabase/supabase",
+      "source": "supabase/skills",
+      "version": "latest",
+      "priority": 1,
+      "category": "critical",
+      "description": "Supabase integration patterns for auth, database, real-time",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@testing-library/react",
+      "source": "testing-library/skills",
+      "version": "latest",
+      "priority": 1,
+      "category": "critical",
+      "description": "React testing patterns and accessibility testing",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@drizzle-orm/drizzle",
+      "source": "drizzle-team/skills",
+      "version": "latest",
+      "priority": 2,
+      "category": "important",
+      "description": "Advanced Drizzle ORM patterns, migrations, relations",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@turbo-repo/turborepo",
+      "source": "vercel/skills",
+      "version": "latest",
+      "priority": 2,
+      "category": "important",
+      "description": "Monorepo management and task orchestration",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@tailwindcss/tailwind",
+      "source": "tailwindlabs/skills",
+      "version": "latest",
+      "priority": 2,
+      "category": "important",
+      "description": "Advanced Tailwind CSS patterns and theming",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@radix-ui/primitives",
+      "source": "radix-ui/skills",
+      "version": "latest",
+      "priority": 3,
+      "category": "useful",
+      "description": "Accessible component patterns with Radix UI",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@biomejs/biome",
+      "source": "biomejs/skills",
+      "version": "latest",
+      "priority": 3,
+      "category": "useful",
+      "description": "Advanced Biome linting and formatting configuration",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@vercel/analytics",
+      "source": "vercel/skills",
+      "version": "latest",
+      "priority": 3,
+      "category": "useful",
+      "description": "Web analytics integration for performance monitoring",
+      "status": "pending-installation"
+    },
+    {
+      "name": "@vercel/edge",
+      "source": "vercel/skills",
+      "version": "latest",
+      "priority": 3,
+      "category": "useful",
+      "description": "Edge computing patterns for caching and middleware",
+      "status": "pending-installation"
+    }
+  ],
+  "optional": [
+    {
+      "name": "migrate-radix-to-base",
+      "source": "https://github.com/shadcn-ui/ui",
+      "version": "latest",
+      "description": "Migration skill from Radix UI to Base UI",
+      "status": "optional",
+      "note": "Only install if planning Base UI migration"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "webpack",
+      "reason": "Using Vite, not Webpack"
+    },
+    {
+      "name": "jest",
+      "reason": "Using Vitest, not Jest"
+    },
+    {
+      "name": "eslint",
+      "reason": "Using Biome, ESLint is legacy"
+    },
+    {
+      "name": "npm",
+      "reason": "Migrated to Bun"
+    },
+    {
+      "name": "create-react-app",
+      "reason": "Obsolete, using Vite"
+    },
+    {
+      "name": "redux",
+      "reason": "Not in tech stack"
+    },
+    {
+      "name": "graphql",
+      "reason": "Not in tech stack (using REST)"
+    },
+    {
+      "name": "docker",
+      "reason": "Not needed for Vercel deployment"
+    },
+    {
+      "name": "aws",
+      "reason": "Using Vercel, not direct AWS"
+    },
+    {
+      "name": "mattbx/shadcn-skills",
+      "reason": "Third-party, unofficial - use official shadcn skill"
+    }
+  ],
+  "risky": [
+    {
+      "name": "@openai/openai",
+      "reason": "Unverified source - wait for official release"
+    },
+    {
+      "name": "@anthropic/claude",
+      "reason": "Unverified source - wait for official release"
+    },
+    {
+      "name": "third-party-ai-skills",
+      "reason": "Security/quality concerns"
+    }
+  ],
+  "gaps": [
+    {
+      "area": "AI/LLM Integration",
+      "description": "No official skills for Vercel AI SDK or AI gateway patterns",
+      "recommendation": "Create custom skills or wait for official releases"
+    },
+    {
+      "area": "Browser Extension Development",
+      "description": "No skills for WXT (Web Extension Toolkit)",
+      "recommendation": "Create custom skills based on WXT docs"
+    },
+    {
+      "area": "Temporal Workflow",
+      "description": "No skills for Temporal workflow patterns",
+      "recommendation": "Create custom skills or use Temporal docs directly"
+    },
+    {
+      "area": "Accessibility Testing",
+      "description": "No dedicated a11y testing skills",
+      "recommendation": "Combine axe-core + Testing Library patterns"
+    },
+    {
+      "area": "Security Audit",
+      "description": "No comprehensive security scanning skills",
+      "recommendation": "Use OWASP guidelines + custom security checklist"
+    }
+  ]
+}
