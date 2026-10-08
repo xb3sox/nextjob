@@ -74,10 +74,11 @@ export function ProgressBar({
   max?: number; 
   label?: string;
 }) {
+  const clampedValue = Math.min(max, Math.max(0, value));
   const percentage = Math.min(100, Math.max(0, (value / max) * 100));
 
   return (
-    <div className="w-full" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max}>
+    <div className="w-full" role="progressbar" aria-valuenow={clampedValue} aria-valuemin={0} aria-valuemax={max}>
       {label && (
         <div className="flex justify-between mb-2">
           <span className="text-sm text-slate-400">{label}</span>
