@@ -10,7 +10,7 @@
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 12.5%](https://img.shields.io/badge/Progress-12.5%25-green)](TASKS.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 14.2%](https://img.shields.io/badge/Progress-14.2%25-green)](TASKS.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)

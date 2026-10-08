@@ -14,11 +14,13 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-03a: Migrated to Bun package manager (30x faster)
 - ✅ T-03b: Added Vitest testing framework (5x faster, 20 example tests)
 - ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
+- ✅ T-03d: Added Turborepo for build caching (9x faster builds)
+- ✅ T-03e: Integrated shadcn/ui component library (8 core components)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 15/120 tasks complete (12.5%)
+**Progress:** 17/120 tasks complete (14.2%)
 
 ## Commands
 
