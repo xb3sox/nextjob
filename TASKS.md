@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (22/120 tasks complete - 18.3%)  
+**Status:** In Progress (24/120 tasks complete - 20%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -24,6 +24,12 @@ Comprehensive product review completed. Critical issues fixed:
 - **State management** - Status states (idle, loading, success, error)
 - **ARIA attributes** - aria-invalid, aria-describedby, role="alert"
 
+### ✅ Fixed Issues (Design Consistency)
+- **Removed darkMode state** - Removed unused darkMode state from PrivacyPolicy, TermsOfService, NotFound pages
+- **Unified color scheme** - All pages now use consistent #0a0a0a background
+- **Fixed component colors** - Updated Loading.tsx and Skeleton.tsx to use consistent colors
+- **Added CSS variables** - Added shadcn/ui CSS variables to index.css for component compatibility
+
 ### 🔍 Issues Identified (Pending)
 - No backend API integration (email submission is simulated)
 - No rate limiting on form submission
@@ -31,20 +37,20 @@ Comprehensive product review completed. Critical issues fixed:
 - No analytics tracking
 - No error monitoring
 - No E2E tests
-- Dark mode state unused in sub-pages (needs decision)
 
 ### 📊 Review Statistics
-- **Total issues found:** 12
+- **Total issues found:** 17
 - **Critical issues fixed:** 7
 - **Medium issues fixed:** 5
+- **Design consistency fixes:** 5
 - **Pending issues:** 6 (require backend)
 - **Tests passing:** 20/20
-- **Build status:** ✅ Success (4.89s)
-- **Bundle size:** 208.55 KB JS (61.90 KB gzipped)
+- **Build status:** ✅ Success (4.73s)
+- **Bundle size:** 208.62 KB JS (61.67 KB gzipped), 36.65 KB CSS (7.14 KB gzipped)
 
 ### 📄 Documentation
 - **Review report:** `PRODUCT_REVIEW_REPORT.md` - Complete review with all findings
-- **Updated files:** App.tsx, package.json, TASKS.md
+- **Updated files:** App.tsx, package.json, TASKS.md, PrivacyPolicy.tsx, TermsOfService.tsx, NotFound.tsx, Loading.tsx, Skeleton.tsx, index.css
 
 ## Toolchain Upgrade (2026-01-15)
 

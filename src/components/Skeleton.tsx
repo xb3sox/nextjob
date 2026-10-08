@@ -1,7 +1,7 @@
 export function Skeleton({ className = '' }: { className?: string }) {
   return (
     <div 
-      className={`animate-pulse bg-slate-700/50 rounded ${className}`}
+      className={`animate-pulse bg-white/10 rounded ${className}`}
       aria-hidden="true"
     />
   );
@@ -9,7 +9,7 @@ export function Skeleton({ className = '' }: { className?: string }) {
 
 export function CardSkeleton() {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
       <Skeleton className="h-12 w-12 rounded-lg mb-4" />
       <Skeleton className="h-6 w-3/4 mb-2" />
       <Skeleton className="h-4 w-full mb-4" />
@@ -39,7 +39,7 @@ export function HeroSkeleton() {
 
 export function PricingCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-8">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8">
       <Skeleton className="h-8 w-32 mb-2" />
       <Skeleton className="h-4 w-48 mb-6" />
       <Skeleton className="h-12 w-24 mb-6" />
@@ -57,7 +57,7 @@ export function PricingCardSkeleton() {
 
 export function TestimonialSkeleton() {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6">
+    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
       <div className="flex gap-1 mb-4">
         {[...Array(5)].map((_, i) => (
           <Skeleton key={i} className="h-4 w-4" />
@@ -75,7 +75,7 @@ export function TestimonialSkeleton() {
 
 export function FAQSkeleton() {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 overflow-hidden">
+    <div className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
       <div className="px-6 py-4">
         <Skeleton className="h-5 w-3/4 mb-2" />
       </div>
@@ -85,9 +85,9 @@ export function FAQSkeleton() {
 
 export function PageSkeleton() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Navigation Skeleton */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-xl border-b border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">

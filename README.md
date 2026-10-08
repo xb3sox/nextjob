@@ -10,7 +10,7 @@
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 18.3%](https://img.shields.io/badge/Progress-18.3%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 20%](https://img.shields.io/badge/Progress-20%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -180,7 +180,7 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 **Completed:**
 - ✅ Landing page with ultra-minimal design (Linear/Stripe/Vercel inspired)
 - ✅ Database schema with 20+ tables (PostgreSQL + Drizzle ORM)
-- ✅ Privacy Policy and Terms of Service pages
+- ✅ Privacy Policy and Terms of Service pages (design consistent)
 - ✅ 404 page, loading states, form validation
 - ✅ SEO optimization with structured data
 - ✅ WCAG 2.1 AA accessibility compliance
@@ -188,7 +188,11 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 - ✅ **Vitest testing framework** - 5x faster than Jest, 20 example tests
 - ✅ **Biome linter/formatter** - 56x faster than ESLint+Prettier
 - ✅ **Turborepo** - 9x faster builds with caching
-- ✅ **shadcn/ui** - 8 core components installed
+- ✅ **shadcn/ui** - 8 core components installed with CSS variables
+- ✅ **Design consistency** - Unified dark theme across all pages
+- ✅ **Form validation** - Email validation with error handling
+- ✅ **Loading states** - Spinners and disabled states
+- ✅ **Accessibility** - Skip links, ARIA labels, focus management
 
 **Next Tasks:**
 
