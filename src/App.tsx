@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ArrowRight, Check, Zap } from 'lucide-react';
 import PrivacyPolicy from './pages/PrivacyPolicy';

@@ -44,13 +44,13 @@ export function LoadingButton({
 export function PageLoader() {
   return (
     <div 
-      className="min-h-screen flex items-center justify-center bg-slate-950"
+      className="min-h-screen flex items-center justify-center bg-[#0a0a0a]"
       role="status"
       aria-label="Loading page"
     >
       <div className="text-center">
         <Loader2 className="h-12 w-12 animate-spin text-emerald-400 mx-auto mb-4" />
-        <p className="text-slate-400">Loading...</p>
+        <p className="text-white/60">Loading...</p>
       </div>
     </div>
   );
@@ -60,7 +60,7 @@ export function InlineLoader({ text = 'Loading...' }: { text?: string }) {
   return (
     <div className="flex items-center gap-2" role="status" aria-live="polite">
       <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
-      <span className="text-sm text-slate-400">{text}</span>
+      <span className="text-sm text-white/60">{text}</span>
     </div>
   );
 }
@@ -81,11 +81,11 @@ export function ProgressBar({
     <div className="w-full" role="progressbar" aria-valuenow={clampedValue} aria-valuemin={0} aria-valuemax={max}>
       {label && (
         <div className="flex justify-between mb-2">
-          <span className="text-sm text-slate-400">{label}</span>
-          <span className="text-sm text-slate-400">{percentage.toFixed(0)}%</span>
+          <span className="text-sm text-white/60">{label}</span>
+          <span className="text-sm text-white/60">{percentage.toFixed(0)}%</span>
         </div>
       )}
-      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
         <div 
           className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300"
           style={{ width: `${percentage}%` }}
