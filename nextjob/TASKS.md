@@ -1,8 +1,19 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (12/113 tasks complete - 11%)  
+**Status:** In Progress (12/120 tasks complete - 10%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
+
+## Toolchain Upgrade (2026-01-15)
+
+Modernizing development environment with cutting-edge tools:
+- **Bun** - 30x faster package manager (replacing npm)
+- **Vitest** - 5x faster testing framework
+- **Biome** - 56x faster linting/formatting (replacing ESLint+Prettier)
+- **Turborepo** - Build caching and task orchestration
+- **shadcn/ui** - Modern component library with blocks and registry
+
+See [DEVELOPMENT_ENVIRONMENT_IMPROVEMENT_PLAN.md](docs/DEVELOPMENT_ENVIRONMENT_IMPROVEMENT_PLAN.md) and [SHADCN_INTEGRATION_PLAN.md](docs/SHADCN_INTEGRATION_PLAN.md) for details.
 
 ## Design Update (2026-01-15)
 
@@ -100,10 +111,100 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
   - ✅ Database connection utility created (src/db/index.ts)
   - ✅ API package structure created with Fastify server
   - ✅ Environment configuration documented (.env.example)
-  - ✅ Package scripts configured (db:generate, db:migrate, db:seed, db:studio)
+   - ✅ Package scripts configured (db:generate, db:migrate, db:seed, db:studio)
 
-#### T-04: Set up authentication and tenant isolation
+#### T-03a: Migrate to Bun package manager
 - [ ] **Status:** Not started
+- **Deliverable:** Replace npm with Bun for 30x faster dependency installation
+- **Dependencies:** T-02
+- **Acceptance:** All npm scripts work with Bun; CI/CD updated; documentation updated
+- **Verification:** `bun install` completes in <5s; `bun run build` succeeds; `bun run test` passes
+- **Files:** `package.json`, `bun.lockb`, CI/CD workflows
+- **Evidence Required:**
+  - Before/after install time comparison
+  - All existing scripts working
+  - CI/CD pipeline updated
+- **Risk:** Low - Bun is npm-compatible
+
+#### T-03b: Add Vitest testing framework
+- [ ] **Status:** Not started
+- **Deliverable:** Unit and integration testing with Vitest (5x faster than Jest)
+- **Dependencies:** T-02
+- **Acceptance:** Vitest configured; example tests written; coverage reporting enabled
+- **Verification:** `bun run test` executes tests; `bun run test:coverage` generates report; coverage >80%
+- **Files:** `vitest.config.ts`, `src/**/*.test.ts`, coverage configuration
+- **Evidence Required:**
+  - Test configuration file
+  - At least 5 example tests
+  - Coverage report showing >80%
+- **Risk:** Low - Vitest is Jest-compatible
+
+#### T-03c: Migrate to Biome for linting/formatting
+- [ ] **Status:** Not started
+- **Deliverable:** Replace ESLint+Prettier with Biome for 56x faster linting
+- **Dependencies:** T-02
+- **Acceptance:** Biome configured; all files formatted; linting passes; ESLint+Prettier removed
+- **Verification:** `bun run lint` completes in <1s; `bun run format` formats all files; no ESLint/Prettier config files remain
+- **Files:** `biome.json`, remove `.eslintrc*`, `.prettierrc*`
+- **Evidence Required:**
+  - Biome configuration file
+  - Before/after lint time comparison
+  - All files formatted
+- **Risk:** Medium - Some custom ESLint rules may not be available in Biome
+
+#### T-03d: Add Turborepo for build caching
+- [ ] **Status:** Not started
+- **Deliverable:** Monorepo build orchestration with 9x faster builds via caching
+- **Dependencies:** T-01, T-02
+- **Acceptance:** Turborepo configured; build caching working; CI/CD optimized
+- **Verification:** `bun run build` uses cache on second run; CI/CD pipeline 5x faster
+- **Files:** `turbo.json`, package.json scripts
+- **Evidence Required:**
+  - Turborepo configuration
+  - Cache hit demonstration
+  - CI/CD performance metrics
+- **Risk:** Low - Turborepo is additive
+
+#### T-03e: Integrate shadcn/ui component library
+- [ ] **Status:** Not started
+- **Deliverable:** Modern component library with 60+ accessible components
+- **Dependencies:** T-02
+- **Acceptance:** shadcn/ui initialized; core components installed; custom components migrated
+- **Verification:** `npx shadcn@latest add button` succeeds; components render correctly; accessibility audit passes
+- **Files:** `components.json`, `src/components/ui/`, migrated components
+- **Evidence Required:**
+  - shadcn/ui configuration
+  - List of installed components
+  - Migration guide for custom components
+- **Risk:** Low - shadcn/ui is copy-paste, no dependencies
+
+#### T-03f: Implement shadcn blocks for landing page
+- [ ] **Status:** Not started
+- **Deliverable:** Pre-built page sections (hero, pricing, FAQ, etc.) using shadcn blocks
+- **Dependencies:** T-03e
+- **Acceptance:** Landing page rebuilt with shadcn blocks; all sections responsive; performance maintained
+- **Verification:** Landing page loads in <2s; all blocks render correctly; mobile responsive
+- **Files:** `src/components/blocks/`, updated landing page
+- **Evidence Required:**
+  - List of implemented blocks
+  - Before/after screenshots
+  - Performance metrics
+- **Risk:** Low - Blocks are pre-built and tested
+
+#### T-03g: Create custom shadcn registry
+- [ ] **Status:** Not started
+- **Deliverable:** Shareable component registry for NextJob-specific components
+- **Dependencies:** T-03e
+- **Acceptance:** Registry structure created; custom components published; installation via CLI works
+- **Verification:** `npx shadcn@latest add @nextjob/application-card` succeeds; components install correctly
+- **Files:** `registry/`, `registry.json`, custom components
+- **Evidence Required:**
+  - Registry configuration
+  - List of published components
+  - Installation instructions
+- **Risk:** Low - Registry is additive
+
+#### T-04: Set up authentication and tenant isolation- [ ] **Status:** Not started
 - **Deliverable:** OAuth 2.0 authentication with tenant isolation
 - **Dependencies:** T-03
 - **Acceptance:** Email/social auth working; tenant_id enforced on all queries; RBAC implemented

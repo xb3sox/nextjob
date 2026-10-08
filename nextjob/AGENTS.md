@@ -17,8 +17,7 @@ In Progress. Landing page and database schema implemented. Technology stack and 
 
 ## Commands
 
-Verified and working:
-
+### Current (npm-based)
 ```bash
 # Frontend (Landing Page)
 npm install                    # Install dependencies
@@ -39,6 +38,26 @@ npm run db:studio              # Open Drizzle Studio
 # Testing (coming soon)
 npm run test                   # Unit and integration tests
 npm run test:eval              # AI evaluation suite
+```
+
+### Planned (Bun-based - T-03a)
+```bash
+bun install                    # Install dependencies (30x faster)
+bun run dev                    # Start development server
+bun run build                  # Production build
+bun run typecheck              # TypeScript validation
+bun run lint                   # Lint check (Biome - 56x faster)
+bun run format                 # Format code (Biome)
+bun run test                   # Unit and integration tests (Vitest - 5x faster)
+bun run test:coverage          # Generate coverage report
+bun run test:eval              # AI evaluation suite
+```
+
+### shadcn/ui Commands (T-03e)
+```bash
+npx shadcn@latest add <component>  # Add shadcn/ui component
+npx shadcn@latest list             # List available components
+npx shadcn@latest diff             # Show component differences
 ```
 
 ## Structure

@@ -10,7 +10,7 @@
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 113](https://img.shields.io/badge/Tasks-113-blue)](TASKS.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -157,8 +157,13 @@ See [Technical Design](docs/TECH.md#architecture) for full diagram and details.
 | **AI** | Vercel AI SDK + provider abstraction | ✅ Approved |
 | **Extension** | WXT | ✅ Approved |
 | **Infrastructure** | AWS + Vercel | ✅ Approved |
+| **Package Manager** | Bun (30x faster than npm) | 🔄 Migration Planned |
+| **Testing** | Vitest (5x faster than Jest) | 🔄 Migration Planned |
+| **Linting** | Biome (56x faster than ESLint) | 🔄 Migration Planned |
+| **Monorepo** | Turborepo (9x faster builds) | 🔄 Migration Planned |
 
 See [Technical Design §Stack](docs/TECH.md#stack) for complete list with rationale.
+See [Development Environment Improvement Plan](docs/DEVELOPMENT_ENVIRONMENT_IMPROVEMENT_PLAN.md) for toolchain upgrade details.
 
 ## 🚀 Getting Started
 
@@ -181,15 +186,23 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 - ✅ SEO optimization with structured data
 - ✅ WCAG 2.1 AA accessibility compliance
 
-**Next Task:**
+**Next Tasks:**
 
-**T-04: Set up authentication and tenant isolation**
-- Implement OAuth 2.0 authentication
-- Add tenant isolation middleware
-- Set up RBAC (Role-Based Access Control)
-- Estimated effort: 12 hours
+**Toolchain Upgrades (This Week):**
+1. **T-03a: Migrate to Bun** - 30x faster package manager (2 hours)
+2. **T-03b: Add Vitest** - 5x faster testing framework (4 hours)
+3. **T-03c: Migrate to Biome** - 56x faster linting (3 hours)
+4. **T-03d: Add Turborepo** - Build caching and orchestration (4 hours)
 
-See [TASKS.md §Phase 1](TASKS.md#phase-1-environment--infrastructure) for details.
+**UI Modernization (Next Week):**
+5. **T-03e: Integrate shadcn/ui** - Modern component library (8 hours)
+6. **T-03f: Implement shadcn blocks** - Pre-built page sections (6 hours)
+
+**Core Features:**
+7. **T-04: Authentication** - OAuth 2.0 with tenant isolation (12 hours)
+8. **T-07: CV import** - PDF/DOCX extraction pipeline (16 hours)
+
+See [TASKS.md](TASKS.md) for complete task list and [Development Environment Improvement Plan](docs/DEVELOPMENT_ENVIRONMENT_IMPROVEMENT_PLAN.md) for toolchain details.
 
 ## 🗺️ Roadmap
 
