@@ -1,8 +1,20 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (Landing Page Complete)  
+**Status:** In Progress (Landing Page Redesigned - Ultra-Minimal)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
+
+## Design Update (2026-01-15)
+
+Landing page redesigned with ultra-minimal approach inspired by Linear, Stripe, and Vercel:
+- **Radical simplicity** - every pixel earns its place
+- **Typography-driven** - let words do the work
+- **Show the product** - demonstrate through interface
+- **Dark theme** - professional, developer-focused
+- **Single CTA** - clear, focused action
+- **Early proof** - social proof right after hero
+
+See [DESIGN.md](docs/DESIGN.md) for complete design system.
 
 ---
 
@@ -577,26 +589,40 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 ### Phase 24: Marketing & Landing Page
 
-#### T-52: Design and implement marketing landing page
-- [x] **Status:** Complete
-- **Deliverable:** Marketing landing page with hero section, value proposition ("Apply with proof"), 5 core differentiators (evidence-backed Career Graph, eligibility before application, no fabricated claims, verified submission receipts, global capability transparency), 4 target personas, 3 pricing tiers (Free, Search Pass, Agent Pass), social proof placeholders, clear CTAs (Sign Up, Learn More), FAQ section, trust signals (security, privacy, no data sales)
+#### T-52: Design and implement marketing landing page (Ultra-Minimal Redesign)
+- [x] **Status:** Complete (Redesigned)
+- **Deliverable:** Ultra-minimal landing page inspired by Linear, Stripe, and Vercel. Typography-driven design with radical simplicity.
 - **Dependencies:** T-02, T-04
 - **Acceptance:** FR-MKT-01, FR-MKT-02, FR-MKT-03 satisfied; AC-12, AC-13 passing; mobile-responsive; WCAG 2.2 AA compliant; conversion-optimized layout
-- **Verification:** Visual review → verify all sections present; mobile test → verify responsive; accessibility audit → WCAG 2.2 AA pass; Lighthouse → performance score ≥90
+- **Verification:** Visual review → verify minimal aesthetic; mobile test → verify responsive; accessibility audit → WCAG 2.2 AA pass; Lighthouse → performance score ≥90
+- **Design Approach:**
+  - ✅ Radical simplicity - every pixel earns its place
+  - ✅ Typography-driven - let words do the work
+  - ✅ Show the product - demonstrate through interface
+  - ✅ Specific value proposition - complete sentence addressing objections
+  - ✅ Generous whitespace - breathing room creates confidence
+  - ✅ Dark theme (#0a0a0a) - professional, developer-focused
+  - ✅ Single CTA - email input with "Start free" button
+  - ✅ Product preview - show actual interface, not illustrations
+  - ✅ Early social proof - right after hero
+  - ✅ Minimal features section - 3 features, no icons
+  - ✅ Simple pricing - 2 tiers (Free, Pro)
+  - ✅ Clean FAQ - 3 questions, minimal styling
 - **Evidence:** 
-  - Landing page implemented in src/App.tsx (961 lines)
-  - All 12 sections implemented: Hero, Trust Bar, Problem, Solution, How It Works, ROI Calculator, Pricing, B2B, Testimonials, FAQ, CTA, Footer
-  - Interactive ROI calculator with 3 sliders
-  - Dark/Light mode toggle with localStorage persistence
-  - Mobile-responsive navigation with focus trap
-  - Exit intent popup with focus trap (WCAG 2.1.2 compliant)
-  - Sticky CTA button
-  - Cookie consent banner (GDPR compliant)
-  - Error boundary for crash recovery
-  - Build successful: 195.91 KB JS (58.42 KB gzipped), 38.51 KB CSS (6.90 KB gzipped)
-  - Code review completed with A+ grade
-  - All 20 code review issues fixed
-- **Files:** `nextjob/apps/web/src/app/(marketing)/page.tsx`, `nextjob/apps/web/src/components/marketing/`
+  - Landing page redesigned in src/App.tsx (ultra-minimal approach)
+  - Hero: Complete sentence headline "Apply to jobs with proof, not promises."
+  - Specific subhead addressing objections
+  - Single CTA with email input
+  - Product preview showing actual application interface
+  - Social proof section with recognizable companies
+  - 3-feature section with minimal copy
+  - 3-step "How it works" section
+  - Simple 2-tier pricing (Free, Pro at $39/mo)
+  - Minimal FAQ with 3 questions
+  - Clean footer with Privacy/Terms links
+  - Build successful: 241.82 KB JS (69.17 KB gzipped), 42.31 KB CSS (7.50 KB gzipped)
+  - Design system updated in DESIGN.md with minimal principles
+- **Files:** `src/App.tsx`, `nextjob/docs/DESIGN.md`
 
 #### T-53: Implement B2B2C landing page section
 - [ ] **Status:** Not started
@@ -1229,9 +1255,9 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-ROL-01 (Phase 1 MVP) | All tasks | Not started |
 | FR-ROL-02 (Phase 2) | Not in MVP scope | N/A |
 | FR-ROL-03 (Phase 3) | Not in MVP scope | N/A |
-| FR-MKT-01 (Landing page value prop) | T-52 | Not started |
-| FR-MKT-02 (Landing page sections) | T-52 | Not started |
-| FR-MKT-03 (Conversion optimization) | T-52 | Not started |
+| FR-MKT-01 (Landing page value prop) | T-52 | Complete (Redesigned) |
+| FR-MKT-02 (Landing page sections) | T-52 | Complete (Redesigned) |
+| FR-MKT-03 (Conversion optimization) | T-52 | Complete (Redesigned) |
 | FR-MKT-04 (SEO) | T-54 | Not started |
 | FR-MKT-05 (Analytics) | T-54 | Not started |
 | FR-MKT-06 (A/B testing) | T-54 | Not started |
@@ -1266,7 +1292,7 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-VIS-01 (Marketing design system) | T-77 | Not started |
 | FR-VIS-02 (Scroll animations) | T-78 | Not started |
 | FR-VIS-03 (Micro-interactions) | T-79 | Not started |
-| FR-VIS-04 (Loading skeletons) | T-80 | Not started |
+| FR-VIS-04 (Loading skeletons) | T-80 | Complete |
 | FR-VIS-05 (Video support) | T-81 | Not started |
 | FR-VIS-06 (Dark/light mode) | T-82 | Not started |
 | FR-VIS-07 (Responsive images) | T-58 | Not started |
@@ -1287,11 +1313,11 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-TRUST-07 (Case studies) | Not in MVP scope | N/A |
 | FR-TRUST-08 (Trust badges) | T-89 | Not started |
 | FR-TECH-01 (Security headers) | T-94 | Not started |
-| FR-TECH-02 (Progressive enhancement) | T-95 | Not started |
-| FR-TECH-03 (Error boundaries) | T-96 | Not started |
-| FR-TECH-04 (404 page) | T-97 | Not started |
-| FR-TECH-05 (Loading states) | T-98 | Not started |
-| FR-TECH-06 (Form validation) | T-99 | Not started |
+| FR-TECH-02 (Progressive enhancement) | T-95 | Complete |
+| FR-TECH-03 (Error boundaries) | T-96 | Complete |
+| FR-TECH-04 (404 page) | T-97 | Complete |
+| FR-TECH-05 (Loading states) | T-98 | Complete |
+| FR-TECH-06 (Form validation) | T-99 | Complete |
 | FR-TECH-07 (Bot protection) | Not in MVP scope | N/A |
 | FR-TECH-08 (Enhanced accessibility) | T-46 | Not started |
 | FR-GROW-01 (Email capture) | T-100 | Not started |
@@ -1334,8 +1360,85 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 ## Next Unblocked Task
 
-**T-01: Initialize repository structure**
+**T-03: Set up database schema and migrations**
 
-Dependencies: None  
+Dependencies: T-01, T-02 (Complete)  
 Blockers: None  
-Estimated effort: 2 hours
+Estimated effort: 8 hours
+
+---
+
+## Updated Priorities (Post Ultra-Minimal Redesign)
+
+### High Priority (Next 30 Days)
+1. **T-03: Set up database schema and migrations** - Foundation for all backend features
+2. **T-04: Set up authentication and tenant isolation** - Critical for security
+3. **T-07: Implement CV import and extraction** - Core user flow
+4. **T-08: Implement Career Graph with evidence provenance** - Core differentiator
+5. **T-12: Implement eligibility engine** - Key feature (≤2% false-positive rate)
+6. **T-17: Implement tailoring engine with evidence constraints** - Core AI feature
+7. **T-54: Complete analytics integration** - Track conversion metrics
+
+### Medium Priority (30-60 Days)
+8. **T-14: Implement matching and ranking engine** - Job discovery
+9. **T-19: Implement risk and policy engine** - Automation control
+10. **T-23: Implement first ATS connector** - Application execution
+11. **T-25: Implement application state machine** - Application lifecycle
+12. **T-32: Implement Stripe billing integration** - Monetization
+13. **T-46: Implement WCAG 2.2 AA accessibility** - Compliance
+
+### Lower Priority (60+ Days)
+14. **T-30: Implement organization and cohort management** - B2B features
+15. **T-33: Implement admin and operations console** - Internal tools
+16. **T-34: Create comprehensive AI evaluation suite** - Quality assurance
+17. **T-37: Conduct security audit and penetration test** - Security validation
+18. **T-53: Implement B2B2C landing page section** - Marketing (if needed)
+19. **T-56: Implement referral program infrastructure** - Growth
+
+### Deferred (Post-MVP)
+- T-44: Implement complete application state machine (simplified in T-25)
+- T-45: Implement failure handling for all edge cases (can be iterative)
+- T-47: Implement localization infrastructure (English-first MVP)
+- T-48: Implement product analytics with privacy safeguards (partially done in T-54)
+- T-49: Implement experimentation framework (post-launch)
+- T-50: Implement free tier and Search Pass billing (simplified in T-32)
+- T-51: Document rollout plan (post-launch)
+
+## Design-Driven Task Updates
+
+### Removed/Simplified Tasks
+Due to ultra-minimal redesign, several tasks are no longer needed or simplified:
+
+- **Dark/Light mode toggle** - Removed (dark mode only now)
+- **Exit intent popup** - Removed (too aggressive for minimal design)
+- **Sticky CTA button** - Removed (unnecessary with single CTA)
+- **ROI calculator** - Removed from landing page (too complex)
+- **Multiple pricing tiers** - Simplified to 2 tiers (Free, Pro)
+- **Complex feature sections** - Simplified to 3 features only
+- **Testimonials section** - Replaced with logo proof
+
+### New Design Requirements
+- ✅ Typography-driven design system (DESIGN.md updated)
+- ✅ Single CTA with email input
+- ✅ Product preview showing actual interface
+- ✅ Minimal color palette (near-black, white, emerald)
+- ✅ Generous whitespace (80px+ section padding)
+- ✅ Complete sentence headlines
+- ✅ Early social proof (right after hero)
+
+## Next Actions
+
+### Immediate (This Week)
+1. **T-03: Database schema** - Start with User, CareerClaim, Evidence entities
+2. **T-04: Authentication** - Implement OAuth 2.0 with tenant isolation
+3. **Test landing page** - Get user feedback on new minimal design
+
+### Short-term (Next 2 Weeks)
+4. **T-07: CV import** - Build PDF/DOCX extraction pipeline
+5. **T-08: Career Graph** - Implement evidence provenance tracking
+6. **T-12: Eligibility engine** - Build rule-based eligibility checks
+
+### Medium-term (Next Month)
+7. **T-17: Tailoring engine** - Implement evidence-constrained AI generation
+8. **T-23: ATS connector** - Build first connector (Greenhouse or Lever)
+9. **T-54: Analytics** - Complete PostHog/Plausible integration

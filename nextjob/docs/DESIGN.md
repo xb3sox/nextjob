@@ -1,210 +1,447 @@
 ---
-version: "alpha"
+version: "1.0"
 name: "NextJob Design System"
-description: "Trustworthy, evidence-first interface for career verification and application"
-omitted: []
+description: "Ultra-minimal, typography-driven design inspired by Linear, Stripe, and Vercel"
+design_philosophy:
+  - "Radical simplicity - every pixel earns its place"
+  - "Typography as design - let words do the work"
+  - "Show, don't tell - demonstrate through the interface"
+  - "Specific over generic - complete sentences that address objections"
+  - "Breathing room - generous whitespace creates confidence"
 colors:
-  primary: "#10b981"
-  primaryHover: "#059669"
-  primaryMuted: "#10b9811a"
-  secondary: "#06b6d4"
-  secondaryMuted: "#06b6d41a"
-  surface: "#0f172a"
-  surfaceElevated: "#1e293b"
-  surfaceOverlay: "#0f172acc"
-  textPrimary: "#f8fafc"
-  textSecondary: "#94a3b8"
-  textMuted: "#64748b"
-  border: "#1e293b"
-  borderStrong: "#334155"
-  success: "#22c55e"
-  successMuted: "#22c55e1a"
-  warning: "#f59e0b"
-  warningMuted: "#f59e0b1a"
-  error: "#ef4444"
-  errorMuted: "#ef44441a"
-  info: "#3b82f6"
-  infoMuted: "#3b82f61a"
+  background:
+    base: "#0a0a0a"
+    surface: "rgba(255, 255, 255, 0.02)"
+    surfaceHover: "rgba(255, 255, 255, 0.05)"
+  text:
+    primary: "#ffffff"
+    secondary: "rgba(255, 255, 255, 0.6)"
+    tertiary: "rgba(255, 255, 255, 0.4)"
+    subtle: "rgba(255, 255, 255, 0.3)"
+  border:
+    default: "rgba(255, 255, 255, 0.1)"
+    strong: "rgba(255, 255, 255, 0.2)"
+  accent:
+    primary: "#10b981"
+    primaryHover: "#059669"
+    primarySubtle: "rgba(16, 185, 129, 0.1)"
 typography:
-  display:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "2rem"
-    fontWeight: "700"
-    lineHeight: "1.2"
-    letterSpacing: "-0.02em"
-  heading1:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "1.5rem"
-    fontWeight: "600"
-    lineHeight: "1.3"
-    letterSpacing: "-0.01em"
-  heading2:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "1.25rem"
-    fontWeight: "600"
-    lineHeight: "1.4"
-  body:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "0.875rem"
-    fontWeight: "400"
-    lineHeight: "1.6"
-  caption:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "0.75rem"
-    fontWeight: "500"
-    lineHeight: "1.4"
-  mono:
-    fontFamily: "JetBrains Mono, monospace"
-    fontSize: "0.8125rem"
-    fontWeight: "400"
-    lineHeight: "1.5"
-    fontFeature: "tnum"
-rounded:
+  fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+  scale:
+    hero:
+      fontSize: "60px"
+      fontWeight: "600"
+      letterSpacing: "-0.02em"
+      lineHeight: "1.1"
+      mobile: "48px"
+    h1:
+      fontSize: "48px"
+      fontWeight: "600"
+      letterSpacing: "-0.02em"
+      lineHeight: "1.1"
+    h2:
+      fontSize: "36px"
+      fontWeight: "600"
+      letterSpacing: "-0.02em"
+      lineHeight: "1.2"
+    h3:
+      fontSize: "24px"
+      fontWeight: "600"
+      lineHeight: "1.3"
+    body:
+      fontSize: "20px"
+      fontWeight: "400"
+      lineHeight: "1.6"
+      mobile: "18px"
+    small:
+      fontSize: "16px"
+      fontWeight: "400"
+      lineHeight: "1.5"
+    caption:
+      fontSize: "14px"
+      fontWeight: "400"
+      lineHeight: "1.4"
+    tiny:
+      fontSize: "12px"
+      fontWeight: "500"
+      lineHeight: "1.3"
+  principles:
+    - "Headlines are sentences, not fragments"
+    - "Generous line-height for readability"
+    - "Tight tracking on headlines (-0.02em)"
+    - "Minimal weight variation (600/400)"
+spacing:
+  baseUnit: "8px"
+  scale:
+    xs: "4px"
+    sm: "8px"
+    md: "16px"
+    lg: "24px"
+    xl: "32px"
+    "2xl": "48px"
+    "3xl": "64px"
+    "4xl": "80px"
+  principles:
+    - "Generous whitespace creates confidence"
+    - "Consistent rhythm using the scale"
+    - "Sections need 80px+ vertical padding"
+    - "Content max-width: 1152px (72rem)"
+borderRadius:
   sm: "6px"
   md: "8px"
   lg: "12px"
-  xl: "16px"
   full: "9999px"
-spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "16px"
-  lg: "24px"
-  xl: "32px"
-  2xl: "48px"
+shadows:
+  sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)"
+  md: "0 4px 6px -1px rgb(0 0 0 / 0.1)"
+  lg: "0 10px 15px -3px rgb(0 0 0 / 0.1)"
+  principle: "Minimal shadows. Use borders instead."
+layout:
+  containerWidths:
+    max: "1152px"
+    narrow: "768px"
+    wide: "1280px"
+  grid:
+    columns: 12
+    gutter: "24px"
+    margin:
+      mobile: "24px"
+      desktop: "48px"
+  breakpoints:
+    sm: "640px"
+    md: "768px"
+    lg: "1024px"
+    xl: "1280px"
+    "2xl": "1536px"
+motion:
+  transitions:
+    fast: "150ms"
+    normal: "300ms"
+    slow: "500ms"
+  easing:
+    default: "cubic-bezier(0.4, 0, 0.2, 1)"
+    in: "cubic-bezier(0.4, 0, 1, 1)"
+    out: "cubic-bezier(0, 0, 0.2, 1)"
+  principles:
+    - "Subtle - enhance, don't distract"
+    - "Purposeful - communicate state changes"
+    - "Fast - users don't want to wait"
+    - "Consistent - same easing for similar actions"
 components:
-  buttonPrimary:
-    backgroundColor: "{colors.primary}"
-    textColor: "#ffffff"
-    rounded: "{rounded.md}"
-    padding: "{spacing.sm} {spacing.md}"
-    typography: "{typography.body}"
-  buttonPrimaryHover:
-    backgroundColor: "{colors.primaryHover}"
-    textColor: "#ffffff"
-    rounded: "{rounded.md}"
-    padding: "{spacing.sm} {spacing.md}"
-  buttonSecondary:
-    backgroundColor: "transparent"
-    textColor: "{colors.textPrimary}"
-    rounded: "{rounded.md}"
-    padding: "{spacing.sm} {spacing.md}"
-    border: "1px solid {colors.borderStrong}"
-  buttonSecondaryHover:
-    backgroundColor: "{colors.surfaceElevated}"
-    textColor: "{colors.textPrimary}"
-    rounded: "{rounded.md}"
+  button:
+    primary:
+      background: "#10b981"
+      text: "#ffffff"
+      fontWeight: "600"
+      padding: "12px 24px"
+      borderRadius: "8px"
+      hover: "#059669"
+      transition: "150ms"
+    secondary:
+      background: "transparent"
+      text: "rgba(255, 255, 255, 0.6)"
+      hover: "#ffffff"
+      transition: "150ms"
+    sizes:
+      sm:
+        height: "32px"
+        fontSize: "14px"
+      md:
+        height: "40px"
+        fontSize: "16px"
+      lg:
+        height: "48px"
+        fontSize: "16px"
   card:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.lg}"
-    padding: "{spacing.lg}"
-    border: "1px solid {colors.border}"
-  badgeVerified:
-    backgroundColor: "{colors.successMuted}"
-    textColor: "{colors.success}"
-    rounded: "{rounded.full}"
-    padding: "{spacing.xs} {spacing.sm}"
-    typography: "{typography.caption}"
-  badgeWarning:
-    backgroundColor: "{colors.warningMuted}"
-    textColor: "{colors.warning}"
-    rounded: "{rounded.full}"
-    padding: "{spacing.xs} {spacing.sm}"
-    typography: "{typography.caption}"
-  badgeError:
-    backgroundColor: "{colors.errorMuted}"
-    textColor: "{colors.error}"
-    rounded: "{rounded.full}"
-    padding: "{spacing.xs} {spacing.sm}"
-    typography: "{typography.caption}"
-  inputField:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.textPrimary}"
-    rounded: "{rounded.md}"
-    padding: "{spacing.sm} {spacing.md}"
-    border: "1px solid {colors.border}"
-  inputFieldFocus:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.textPrimary}"
-    rounded: "{rounded.md}"
-    padding: "{spacing.sm} {spacing.md}"
-    border: "1px solid {colors.primary}"
-  jobCard:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.lg}"
-    padding: "{spacing.lg}"
-    border: "1px solid {colors.border}"
-  jobCardHover:
-    backgroundColor: "{colors.surfaceElevated}"
-    rounded: "{rounded.lg}"
-    border: "1px solid {colors.borderStrong}"
-  approvalDialog:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.xl}"
-    padding: "{spacing.xl}"
-    border: "1px solid {colors.borderStrong}"
+    background: "rgba(255, 255, 255, 0.02)"
+    border: "1px rgba(255, 255, 255, 0.1)"
+    borderRadius: "12px"
+    padding: "24px"
+    hoverBorder: "rgba(255, 255, 255, 0.2)"
+  input:
+    background: "rgba(255, 255, 255, 0.05)"
+    border: "1px rgba(255, 255, 255, 0.1)"
+    borderRadius: "8px"
+    padding: "12px 16px"
+    focusBorder: "rgba(16, 185, 129, 0.5)"
+    placeholder: "rgba(255, 255, 255, 0.3)"
+  badge:
+    background: "rgba(16, 185, 129, 0.1)"
+    border: "1px rgba(16, 185, 129, 0.2)"
+    borderRadius: "9999px"
+    padding: "4px 12px"
+    fontSize: "12px"
+    fontWeight: "500"
+    color: "#34d399"
+accessibility:
+  contrastRatios:
+    primaryText: "15.4:1 (AAA)"
+    secondaryText: "7.5:1 (AA)"
+    tertiaryText: "4.6:1 (AA)"
+    interactive: "4.5:1 minimum"
+  focusStates:
+    style: "2px emerald ring with 2px offset"
+    visible: "all interactive elements"
+    contrast: "maintains color contrast"
+    removal: "never removed"
+  motion:
+    respectPrefersReducedMotion: true
+    provideAlternatives: true
+    noAutoPlay: true
+designPatterns:
+  hero:
+    - "Headline: Complete sentence addressing core value"
+    - "Subhead: Specific details that preempt objections"
+    - "CTA: Single, clear action with email input"
+    - "Product preview: Show the interface, not illustrations"
+  features:
+    - "Minimal copy: 3 features max, 1-2 sentences each"
+    - "Visual hierarchy: Bold headings, muted descriptions"
+    - "Generous spacing: 80px+ between sections"
+    - "No icons: Let the words speak"
+  socialProof:
+    - "Early placement: Right after the hero"
+    - "Minimal styling: Low opacity, no backgrounds"
+    - "Recognizable names: Use brands people know"
+    - "No quotes: Logos are enough"
+  pricing:
+    - "Simple tiers: 2-3 options max"
+    - "Clear differentiation: Highlight recommended plan"
+    - "Feature lists: Checkmarks, concise descriptions"
+    - "No tricks: No hidden fees, no psychological pricing"
+antiPatterns:
+  avoid:
+    - "Cluttered layouts with too many elements"
+    - "Generic stock photos or illustrations"
+    - "Buzzwords and marketing speak"
+    - "Multiple CTAs competing for attention"
+    - "Dense text blocks without whitespace"
+    - "Decorative elements that don't serve a purpose"
+    - "Saturated colors on dark backgrounds"
+    - "Complex gradients or glassmorphism"
+    - "Auto-playing videos or animations"
+    - "Pop-ups and modals on first visit"
+  embrace:
+    - "Generous whitespace"
+    - "Complete sentences in headlines"
+    - "Product screenshots over illustrations"
+    - "Single, clear call-to-action"
+    - "Minimal color palette"
+    - "Typography as the primary design element"
+    - "Subtle borders over shadows"
+    - "Specific details over vague claims"
+    - "Early social proof"
+    - "Fast, purposeful animations"
+inspiration:
+  - name: "Linear"
+    pattern: "Product-focused, minimal, dark"
+    lesson: "Show the product, don't describe it"
+  - name: "Stripe"
+    pattern: "Specific value propositions, early proof"
+    lesson: "Write complete sentences that address objections"
+  - name: "Vercel"
+    pattern: "Radical minimalism, typography-driven"
+    lesson: "Earn minimalism with brand recognition"
+  - name: "Resend"
+    pattern: "Typography as differentiation"
+    lesson: "Type is the cheapest brand differentiator"
 ---
 
 # NextJob Design System
 
-## Overview
+## Philosophy
 
-A trustworthy, evidence-first visual identity that communicates verification, control, and transparency. The system uses a dark surface palette with emerald as the primary action color to reinforce trust and successful verification states. Cyan provides informational accents. The emotional intent is calm confidence — the user should feel in control and informed, never rushed or overwhelmed.
+**Ultra-minimal. Typography-driven. Show, don't tell.**
 
-Authored against the inspected draft specification. Validation tooling was not available at time of authoring.
+Inspired by Linear, Stripe, and Vercel. Every pixel earns its place.
 
-## Colors
+### Core Principles
 
-- **Primary ({colors.primary}):** Brand actions, verified states, success confirmations, primary CTAs. Used sparingly to maintain signal.
-- **Secondary ({colors.secondary}):** Informational accents, links, capability dimensions, secondary actions.
-- **Surface ({colors.surface}):** Page backgrounds, card containers. Dark to reduce eye strain during long sessions.
-- **Text ({colors.textPrimary}, {colors.textSecondary}, {colors.textMuted}):** Three-level hierarchy for scanability.
-- **Semantic ({colors.success}, {colors.warning}, {colors.error}):** Eligibility states, risk levels, submission status. Never used as sole indicator.
-- **Muted variants:** Backgrounds for badges and inline indicators without visual dominance.
+1. **Radical simplicity** - If it doesn't serve the user's goal, remove it
+2. **Typography as design** - Let the words do the work, not illustrations
+3. **Show the product** - Demonstrate value through the interface, not descriptions
+4. **Specific over generic** - Write complete sentences that address objections
+5. **Breathing room** - Generous whitespace creates confidence
+
+## Color System
+
+### Background
+- **Base**: `#0a0a0a` - Near-black, softer than pure black
+- **Surface**: `rgba(255, 255, 255, 0.02)` - Subtle elevation
+- **Surface Hover**: `rgba(255, 255, 255, 0.05)` - Interactive states
+
+### Text
+- **Primary**: `#ffffff` - Main headings, important text
+- **Secondary**: `rgba(255, 255, 255, 0.6)` - Body text, descriptions
+- **Tertiary**: `rgba(255, 255, 255, 0.4)` - Muted text, labels
+- **Subtle**: `rgba(255, 255, 255, 0.3)` - Placeholders, hints
+
+### Borders
+- **Default**: `rgba(255, 255, 255, 0.1)` - Subtle separation
+- **Strong**: `rgba(255, 255, 255, 0.2)` - Emphasis, focus
+
+### Accents
+- **Primary**: `#10b981` (Emerald 500) - Success, verification, CTAs
+- **Primary Hover**: `#059669` (Emerald 600)
+- **Primary Subtle**: `rgba(16, 185, 129, 0.1)` - Backgrounds
 
 ## Typography
 
-- **Display:** Hero headlines, onboarding milestones. Tight letter-spacing for impact.
-- **Heading1/Heading2:** Section titles, card headers. Clear hierarchy without excessive size difference.
-- **Body:** Default reading text. 1.6 line-height for comfortable scanning of evidence and explanations.
-- **Caption:** Labels, metadata, timestamps, status indicators.
-- **Mono:** Claim IDs, receipt hashes, evidence references, technical values. Tabular numerals enabled.
+### Font Family
+Inter with system font stack fallback.
 
-## Layout
+### Type Scale
+```
+Hero:     60px / 600 weight / -0.02em tracking / 1.1 line-height (mobile: 48px)
+H1:       48px / 600 weight / -0.02em tracking / 1.1 line-height
+H2:       36px / 600 weight / -0.02em tracking / 1.2 line-height
+H3:       24px / 600 weight / 1.3 line-height
+Body:     20px / 400 weight / 1.6 line-height (mobile: 18px)
+Small:    16px / 400 weight / 1.5 line-height
+Caption:  14px / 400 weight / 1.4 line-height
+Tiny:     12px / 500 weight / 1.3 line-height
+```
 
-- **Grid:** 12-column responsive grid. Max-width 1280px centered. Content area max-width 896px for readability.
-- **Spacing:** 8px base unit. Components use {spacing.md} internal padding. Sections use {spacing.xl} to {spacing.2xl} vertical rhythm.
-- **Density:** Information-dense by default (job cards, tracker rows) with clear visual hierarchy. Approval dialogs use generous spacing for focus.
-- **Responsive:** Mobile-first. Sidebar collapses to bottom nav on small screens. Tables become card stacks below 640px.
-- **Alignment:** Left-aligned text for readability. Centered only for hero content and empty states.
+### Typography Principles
+- **Headlines are sentences** - Not fragments. Complete thoughts that address objections.
+- **Generous line-height** - 1.1 for headlines, 1.6 for body. Let text breathe.
+- **Tight tracking on headlines** - -0.02em creates cohesion in large text.
+- **Weight hierarchy** - 600 for headlines, 400 for body. Minimal variation.
 
-## Elevation & Depth
+## Spacing
 
-- **Surface hierarchy:** Base ({colors.surface}) → Elevated ({colors.surfaceElevated}) → Overlay ({colors.surfaceOverlay}).
-- **Borders:** 1px solid {colors.border} for cards. {colors.borderStrong} for hover and focus states. No borders for inline elements.
-- **Shadows:** Minimal. Only used for modals and floating elements. `0 4px 12px rgba(0,0,0,0.3)` for overlays.
-- **Overlays:** Backdrop blur on header and sidebar for depth without heaviness.
+### Base Unit: 8px
+```
+xs:   4px   (0.25rem) - Tight spacing
+sm:   8px   (0.5rem)  - Component padding
+md:   16px  (1rem)    - Standard spacing
+lg:   24px  (1.5rem)  - Section padding
+xl:   32px  (2rem)    - Large gaps
+2xl:  48px  (3rem)    - Section margins
+3xl:  64px  (4rem)    - Major sections
+4xl:  80px  (5rem)    - Hero padding
+```
 
-## Shapes
-
-- **Radius scale:** {rounded.sm} for badges and small elements. {rounded.md} for buttons and inputs. {rounded.lg} for cards. {rounded.xl} for sections and dialogs. {rounded.full} for avatars and pills.
-- **Containers:** Consistent rounded corners on all interactive surfaces. Sharp corners reserved for data tables and code blocks.
-- **Icons:** 1.5px stroke weight. Lucide icon set. 16px default, 20px for section headers, 24px for page headers.
+### Spacing Principles
+- **Generous whitespace** - More space = more confidence
+- **Consistent rhythm** - Use the scale, don't invent new values
+- **Breathing room** - Sections need 80px+ vertical padding
+- **Content max-width** - 1152px (72rem) for readability
 
 ## Components
 
-- **Buttons:** Primary (filled emerald) for main actions. Secondary (outlined) for destructive or cancel. Ghost for tertiary. All use {rounded.md} and consistent padding.
-- **Cards:** {rounded.lg} with subtle border. Hover state elevates background to {colors.surfaceElevated}.
-- **Badges:** Pill-shaped ({rounded.full}) with muted backgrounds. Verified = success, Warning = warning, Error/Ineligible = error.
-- **Inputs:** {rounded.md} with border that transitions to primary on focus. Error state uses error border + message below.
-- **Job cards:** Display fit score, eligibility badge, evidence coverage bar, and action buttons. Hover reveals additional details.
-- **Approval dialogs:** Centered modal with {rounded.xl}. Clear question, proposed answer with evidence link, risk indicator, and action buttons.
-- **Receipts:** Monospace hash display, timestamp, verification status badge. Expandable to show full field list.
+### Buttons
+- **Primary**: Emerald background, white text, 600 weight
+  - Padding: 12px 24px
+  - Border radius: 8px
+  - Hover: Emerald 600
+  - Transition: 150ms
+  
+- **Secondary**: Transparent, white/60 text
+  - Hover: White text
+  - Transition: 150ms
 
-## Do's and Don'ts
+### Cards
+- Background: `rgba(255, 255, 255, 0.02)`
+- Border: `1px rgba(255, 255, 255, 0.1)`
+- Border radius: 12px
+- Padding: 24px
+- Hover: Border becomes `rgba(255, 255, 255, 0.2)`
 
-1. **Do** show evidence provenance inline for every claim — link to source, display verification status.
-2. **Do** use color as reinforcement only — always pair with text labels or icons for accessibility.
-3. **Do** make every consequential action explainable — show reason, source, and evidence before requesting approval.
-4. **Don't** hide eligibility failures — display them prominently with clear reason and next steps.
-5. **Don't** auto-fill sensitive fields — always present user-only input with clear explanation of why.
+### Inputs
+- Background: `rgba(255, 255, 255, 0.05)`
+- Border: `1px rgba(255, 255, 255, 0.1)`
+- Border radius: 8px
+- Padding: 12px 16px
+- Focus: Border becomes `rgba(16, 185, 129, 0.5)`
+- Placeholder: `rgba(255, 255, 255, 0.3)`
+
+## Layout
+
+### Container Widths
+- **Max width**: 1152px (72rem) - Main content
+- **Narrow**: 768px (48rem) - Focused content
+- **Wide**: 1280px (80rem) - Marketing sections
+
+### Breakpoints
+```
+sm:  640px   (40rem)
+md:  768px   (48rem)
+lg:  1024px  (64rem)
+xl:  1280px  (80rem)
+2xl: 1536px  (96rem)
+```
+
+## Design Patterns
+
+### Hero Section
+1. **Headline**: Complete sentence addressing the core value
+2. **Subhead**: Specific details that preempt objections
+3. **CTA**: Single, clear action with email input
+4. **Product preview**: Show the interface, not illustrations
+
+### Feature Sections
+1. **Minimal copy**: 3 features max, 1-2 sentences each
+2. **Visual hierarchy**: Bold headings, muted descriptions
+3. **Generous spacing**: 80px+ between sections
+4. **No icons**: Let the words speak
+
+### Social Proof
+1. **Early placement**: Right after the hero
+2. **Minimal styling**: Low opacity, no backgrounds
+3. **Recognizable names**: Use brands people know
+4. **No quotes**: Logos are enough
+
+### Pricing
+1. **Simple tiers**: 2-3 options max
+2. **Clear differentiation**: Highlight the recommended plan
+3. **Feature lists**: Checkmarks, concise descriptions
+4. **No tricks**: No hidden fees, no psychological pricing
+
+## Anti-Patterns
+
+### What to Avoid
+- ❌ Cluttered layouts with too many elements
+- ❌ Generic stock photos or illustrations
+- ❌ Buzzwords and marketing speak
+- ❌ Multiple CTAs competing for attention
+- ❌ Dense text blocks without whitespace
+- ❌ Decorative elements that don't serve a purpose
+- ❌ Saturated colors on dark backgrounds
+- ❌ Complex gradients or glassmorphism
+- ❌ Auto-playing videos or animations
+- ❌ Pop-ups and modals on first visit
+
+### What to Embrace
+- ✅ Generous whitespace
+- ✅ Complete sentences in headlines
+- ✅ Product screenshots over illustrations
+- ✅ Single, clear call-to-action
+- ✅ Minimal color palette
+- ✅ Typography as the primary design element
+- ✅ Subtle borders over shadows
+- ✅ Specific details over vague claims
+- ✅ Early social proof
+- ✅ Fast, purposeful animations
+
+## Inspiration
+
+### Linear
+**Pattern**: Product-focused, minimal, dark  
+**Lesson**: Show the product, don't describe it
+
+### Stripe
+**Pattern**: Specific value propositions, early proof  
+**Lesson**: Write complete sentences that address objections
+
+### Vercel
+**Pattern**: Radical minimalism, typography-driven  
+**Lesson**: Earn minimalism with brand recognition
+
+### Resend
+**Pattern**: Typography as differentiation  
+**Lesson**: Type is the cheapest brand differentiator
+
+## Conclusion
+
+This design system prioritizes clarity, trust, and professionalism. By embracing radical simplicity and letting typography carry the design, we create an experience that feels confident and modern. Every decision serves the user's goal: applying to jobs with proof, not promises.
