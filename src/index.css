@@ -74,6 +74,26 @@ body {
   animation: progress 1s ease-out 0.5s forwards;
 }
 
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-scale-in,
+  .animate-slide-up,
+  .animate-progress {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -133,6 +153,15 @@ input[type="range"]::-moz-range-thumb {
 input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.1);
   background: #059669;
+}
+
+/* Firefox track styling */
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #1e293b;
+  cursor: pointer;
 }
 
 /* Focus styles for accessibility */

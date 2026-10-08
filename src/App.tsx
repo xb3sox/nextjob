@@ -35,12 +35,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return this.props.fallback || (
-        <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-8">
+        <div role="alert" className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-8">
           <div className="text-center max-w-md">
-            <AlertTriangle size={48} className="mx-auto mb-4 text-amber-400" />
+            <AlertTriangle size={48} className="mx-auto mb-4 text-amber-400" aria-hidden="true" />
             <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
             <p className="text-slate-400 mb-6">We're sorry, but something unexpected happened. Please try refreshing the page.</p>
             <button
+              type="button"
               onClick={() => window.location.reload()}
               className="rounded-lg bg-emerald-500 px-6 py-3 font-medium text-white hover:bg-emerald-600 transition-colors"
             >
@@ -90,21 +91,25 @@ function CookieConsent() {
             <h3 className="text-lg font-semibold text-white mb-2">We value your privacy</h3>
             <p className="text-sm text-slate-400">
               We use cookies to enhance your browsing experience and analyze site traffic. By clicking "Accept", you consent to our use of cookies.{' '}
-              <a href="#" className="text-emerald-400 hover:text-emerald-300 underline">
+              <a href="#privacy" className="text-emerald-400 hover:text-emerald-300 underline" aria-label="Learn more about our cookie policy">
                 Learn more
               </a>
             </p>
           </div>
           <div className="flex gap-3 shrink-0">
             <button
+              type="button"
               onClick={handleReject}
               className="rounded-lg border border-slate-600 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors"
+              aria-label="Reject cookies"
             >
               Reject
             </button>
             <button
+              type="button"
               onClick={handleAccept}
               className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 transition-colors"
+              aria-label="Accept cookies"
             >
               Accept
             </button>
@@ -130,6 +135,7 @@ export default function App() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const exitIntentRef = useRef<HTMLDivElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -168,7 +174,11 @@ export default function App() {
           if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
           else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
         }
-        if (e.key === 'Escape') setMobileMenuOpen(false);
+        if (e.key === 'Escape') {
+          setMobileMenuOpen(false);
+          // Return focus to menu button
+          setTimeout(() => mobileMenuButtonRef.current?.focus(), 0);
+        }
       };
       menuRef.current.addEventListener('keydown', handleTab);
       return () => menuRef.current?.removeEventListener('keydown', handleTab);
@@ -247,19 +257,29 @@ export default function App() {
               <a href="#pricing" className={`text-sm ${textMuted} ${hoverText} transition-colors`}>Pricing</a>
               <a href="#b2b" className={`text-sm ${textMuted} ${hoverText} transition-colors`}>For Organizations</a>
               <button 
+                type="button"
                 onClick={() => setDarkMode(!darkMode)}
                 className={`text-sm ${textMuted} transition-colors`}
                 aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
               >
                 {darkMode ? '☀️' : '🌙'}
               </button>
-              <button className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 transition-colors">
+              <button type="button" className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 transition-colors">
                 Get Started Free
               </button>
             </div>
 
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              ref={mobileMenuButtonRef}
+              type="button"
+              onClick={() => {
+                const newState = !mobileMenuOpen;
+                setMobileMenuOpen(newState);
+                if (!newState) {
+                  // Return focus to menu button when closing
+                  setTimeout(() => mobileMenuButtonRef.current?.focus(), 0);
+                }
+              }}
               className={`md:hidden rounded-lg p-2 ${darkMode ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-600 hover:bg-slate-100'}`}
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileMenuOpen}
@@ -283,13 +303,14 @@ export default function App() {
               <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className={`block text-sm ${textMuted}`} role="menuitem">Pricing</a>
               <a href="#b2b" onClick={() => setMobileMenuOpen(false)} className={`block text-sm ${textMuted}`} role="menuitem">For Organizations</a>
               <button 
+                type="button"
                 onClick={() => setDarkMode(!darkMode)}
                 className={`w-full text-left text-sm ${textMuted}`}
                 role="menuitem"
               >
                 {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
               </button>
-              <button className="w-full rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white" role="menuitem">
+              <button type="button" className="w-full rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-white" role="menuitem">
                 Get Started Free
               </button>
             </div>
@@ -300,7 +321,7 @@ export default function App() {
       {/* Sticky CTA */}
       {showStickyCTA && (
         <div className="fixed bottom-4 left-4 right-4 z-40 md:left-auto md:right-8 md:w-auto animate-slide-up" role="complementary" aria-label="Quick action">
-          <button className="w-full md:w-auto rounded-xl bg-emerald-500 px-6 py-3 text-sm font-medium text-white shadow-lg hover:bg-emerald-600 transition-all">
+          <button type="button" className="w-full md:w-auto rounded-xl bg-emerald-500 px-6 py-3 text-sm font-medium text-white shadow-lg hover:bg-emerald-600 transition-all">
             Start Free Trial
           </button>
         </div>
@@ -311,6 +332,7 @@ export default function App() {
         <div ref={exitIntentRef} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="exit-intent-title">
           <div className={`relative mx-4 max-w-md rounded-2xl ${darkMode ? 'bg-slate-900' : 'bg-white'} p-8 shadow-2xl animate-scale-in`}>
             <button
+              type="button"
               onClick={() => setShowExitIntent(false)}
               className={`absolute top-4 right-4 ${textSubtle} ${hoverText}`}
               aria-label="Close popup"
@@ -323,10 +345,11 @@ export default function App() {
               <p className={`mb-6 ${textMuted}`}>
                 Download "The Ultimate Job Search Checklist" and boost your interview rate by 3x.
               </p>
-              <button className="w-full rounded-lg bg-emerald-500 px-6 py-3 font-medium text-white hover:bg-emerald-600 transition-colors">
+              <button type="button" className="w-full rounded-lg bg-emerald-500 px-6 py-3 font-medium text-white hover:bg-emerald-600 transition-colors">
                 Download Free Guide
               </button>
               <button
+                type="button"
                 onClick={() => setShowExitIntent(false)}
                 className={`mt-3 text-sm ${textSubtle}`}
               >
@@ -363,11 +386,11 @@ export default function App() {
               </p>
 
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button className="group flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-base font-medium text-white hover:bg-emerald-600 transition-all hover:scale-105">
+                <button type="button" className="group flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-base font-medium text-white hover:bg-emerald-600 transition-all hover:scale-105">
                   Start Free Trial
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </button>
-                <button className={`group flex items-center gap-2 rounded-xl border ${darkMode ? 'border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'} px-6 py-3 text-base font-medium transition-all`}>
+                <button type="button" className={`group flex items-center gap-2 rounded-xl border ${darkMode ? 'border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'} px-6 py-3 text-base font-medium transition-all`}>
                   <Play size={18} className="text-emerald-400" aria-hidden="true" />
                   Watch Demo
                 </button>
@@ -606,7 +629,7 @@ export default function App() {
                       </li>
                     ))}
                   </ul>
-                  <button className={`w-full rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${plan.popular ? 'bg-emerald-500 text-white hover:bg-emerald-600' : `border ${cardBorder} ${darkMode ? 'bg-slate-900 text-slate-300 hover:bg-slate-800' : 'bg-white text-slate-700 hover:bg-slate-50'}`}`}>
+                  <button type="button" className={`w-full rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${plan.popular ? 'bg-emerald-500 text-white hover:bg-emerald-600' : `border ${cardBorder} ${darkMode ? 'bg-slate-900 text-slate-300 hover:bg-slate-800' : 'bg-white text-slate-700 hover:bg-slate-50'}`}`}>
                     {plan.cta}
                   </button>
                 </div>
@@ -634,7 +657,7 @@ export default function App() {
                     </li>
                   ))}
                 </ul>
-                <button className="group flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-3 text-base font-medium text-white hover:bg-cyan-600 transition-all">
+                <button type="button" className="group flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-3 text-base font-medium text-white hover:bg-cyan-600 transition-all">
                   Schedule Demo
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </button>
@@ -719,6 +742,7 @@ export default function App() {
               ].map((faq, i) => (
                 <div key={i} className={`rounded-xl border ${cardBorder} ${cardBg} overflow-hidden`} role="listitem">
                   <button
+                    type="button"
                     onClick={() => setOpenFAQ(openFAQ === i ? null : i)}
                     className={`w-full px-6 py-4 text-left flex items-center justify-between ${hoverBg} transition-colors`}
                     aria-expanded={openFAQ === i}
@@ -745,11 +769,11 @@ export default function App() {
               <h2 id="cta-title" className="text-3xl font-bold sm:text-4xl mb-4">Ready to apply with proof?</h2>
               <p className={`text-lg ${textMuted} mb-8`}>Join thousands of job seekers who've transformed their job search with NextJob.</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button className="group flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 text-lg font-medium text-white hover:bg-emerald-600 transition-all hover:scale-105">
+                <button type="button" className="group flex items-center gap-2 rounded-xl bg-emerald-500 px-8 py-4 text-lg font-medium text-white hover:bg-emerald-600 transition-all hover:scale-105">
                   Start Free Trial
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </button>
-                <button className={`flex items-center gap-2 rounded-xl border ${darkMode ? 'border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'} px-8 py-4 text-lg font-medium transition-all`}>
+                <button type="button" className={`flex items-center gap-2 rounded-xl border ${darkMode ? 'border-slate-700 bg-slate-900/50 text-slate-300 hover:bg-slate-800' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'} px-8 py-4 text-lg font-medium transition-all`}>
                   Talk to Sales
                 </button>
               </div>
@@ -904,7 +928,7 @@ function ROICalculator({ darkMode, textMuted, textSubtle, cardBorder }: { darkMo
             </div>
           </div>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4" aria-live="polite" aria-atomic="true">
           <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-6">
             <div className="flex items-center gap-3 mb-2">
               <Clock className="text-emerald-400" size={24} aria-hidden="true" />
