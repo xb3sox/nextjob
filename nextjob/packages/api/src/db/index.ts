@@ -9,8 +9,14 @@ if (!connectionString) {
 }
 
 // For query purposes
-const queryClient = postgres(connectionString);
+export const queryClient = postgres(connectionString);
 export const db = drizzle(queryClient, { schema });
 
 // For migrations (single connection)
 export const migrationClient = postgres(connectionString, { max: 1 });
+
+// Graceful shutdown handler
+export const closeDatabaseConnections = async () => {
+  await queryClient.end();
+  await migrationClient.end();
+};

@@ -1,4 +1,4 @@
-import { db } from './index';
+import { db, queryClient, migrationClient } from './index';
 import { users, organizations, cohorts, cohortMembers, careerProfiles, careerClaims, companies, jobs } from './schema';
 
 async function seed() {
@@ -200,10 +200,14 @@ async function seed() {
   console.log('Created jobs');
 
   console.log('Seed complete!');
+  await queryClient.end();
+  await migrationClient.end();
   process.exit(0);
 }
 
-seed().catch((err) => {
+seed().catch(async (err) => {
   console.error('Seed failed:', err);
+  await queryClient.end();
+  await migrationClient.end();
   process.exit(1);
 });

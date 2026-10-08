@@ -118,7 +118,7 @@ export const careerClaims = pgTable('career_claims', {
   type: varchar('type', { length: 50 }).notNull(), // experience, education, skill, certification, project, achievement
   title: text('title').notNull(),
   content: jsonb('content').notNull(),
-  evidenceId: uuid('evidence_id'),
+  evidenceId: uuid('evidence_id').references(() => evidence.id, { onDelete: 'set null' }),
   verificationStatus: varchar('verification_status', { length: 20 }).notNull().default('unverified'),
   confidence: integer('confidence').notNull().default(0),
   verifiedBy: uuid('verified_by'),
@@ -209,7 +209,7 @@ export const matches = pgTable('matches', {
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   jobId: uuid('job_id').notNull().references(() => jobs.id, { onDelete: 'cascade' }),
   score: integer('score').notNull(),
-  eligibilityId: uuid('eligibility_id').references(() => eligibilityAssessments.id),
+  eligibilityId: uuid('eligibility_id').references(() => eligibilityAssessments.id, { onDelete: 'set null' }),
   factors: jsonb('factors').notNull(), // breakdown of scoring factors
   rankedAt: timestamp('ranked_at').notNull().defaultNow(),
 }, (table) => ({
@@ -227,12 +227,12 @@ export const applicationPlans = pgTable('application_plans', {
   ...baseColumns,
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   jobId: uuid('job_id').notNull().references(() => jobs.id, { onDelete: 'cascade' }),
-  matchId: uuid('match_id').references(() => matches.id),
+  matchId: uuid('match_id').references(() => matches.id, { onDelete: 'set null' }),
   status: varchar('status', { length: 30 }).notNull().default('draft'), // draft, planned, approved, submitted, verified
   resumeVariant: jsonb('resume_variant'),
   coverLetter: text('cover_letter'),
   answers: jsonb('answers'),
-  eligibilityId: uuid('eligibility_id').references(() => eligibilityAssessments.id),
+  eligibilityId: uuid('eligibility_id').references(() => eligibilityAssessments.id, { onDelete: 'set null' }),
   plannedAt: timestamp('planned_at'),
   approvedAt: timestamp('approved_at'),
   submittedAt: timestamp('submitted_at'),
@@ -249,7 +249,7 @@ export const approvals = pgTable('approvals', {
   proposedValue: jsonb('proposed_value'),
   riskLevel: varchar('risk_level', { length: 20 }).notNull(), // low, medium, high, sensitive
   status: varchar('status', { length: 20 }).notNull().default('pending'), // pending, approved, rejected
-  decidedBy: uuid('decided_by').references(() => users.id),
+  decidedBy: uuid('decided_by').references(() => users.id, { onDelete: 'set null' }),
   decidedAt: timestamp('decided_at'),
   reason: text('reason'),
 }, (table) => ({
@@ -283,7 +283,7 @@ export const outcomes = pgTable('outcomes', {
   status: varchar('status', { length: 20 }).notNull(), // interview, rejected, offer, withdrawn, hired
   notes: text('notes'),
   reportedAt: timestamp('reported_at').notNull().defaultNow(),
-  reportedBy: uuid('reported_by').references(() => users.id),
+  reportedBy: uuid('reported_by').references(() => users.id, { onDelete: 'set null' }),
 }, (table) => ({
   receiptIdx: index('outcomes_receipt_idx').on(table.receiptId),
   statusIdx: index('outcomes_status_idx').on(table.status),

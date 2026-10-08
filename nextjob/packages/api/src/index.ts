@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import { closeDatabaseConnections } from './db/index.js';
 
 const fastify = Fastify({
   logger: true,
@@ -25,6 +26,17 @@ fastify.get('/api/v1/status', async () => {
   };
 });
 
+// Graceful shutdown handler
+const gracefulShutdown = async (signal: string) => {
+  fastify.log.info(`Received ${signal}, shutting down gracefully...`);
+  await fastify.close();
+  await closeDatabaseConnections();
+  process.exit(0);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
 // Start server
 const start = async () => {
   try {
@@ -35,6 +47,7 @@ const start = async () => {
     console.log(`Server running at http://${host}:${port}`);
   } catch (err) {
     fastify.log.error(err);
+    await closeDatabaseConnections();
     process.exit(1);
   }
 };
