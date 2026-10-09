@@ -20,7 +20,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 17/120 tasks complete (14.2%)
+**Progress:** 25/120 tasks complete (20.8%)
 
 ## Agent Skills
 
