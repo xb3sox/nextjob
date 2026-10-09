@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (24/120 tasks complete - 20%)  
+**Status:** In Progress (25/120 tasks complete - 20.8%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -340,13 +340,72 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 - **Note:** Requires human review for security before production deployment
 
 #### T-05: Set up AI gateway with provider abstraction
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** AI gateway supporting multiple providers with structured output validation
 - **Dependencies:** T-02
 - **Acceptance:** Vercel AI SDK integrated; provider abstraction layer; Zod schema validation on all outputs; PII redaction before prompts
 - **Verification:** Unit tests for schema validation; integration test with mock provider
 - **Files:** `packages/ai-gateway/src/`
-- **Note:** Langfuse integration for observability
+- **Evidence:**
+  - ✅ Complete AI Gateway package structure (packages/ai-gateway/):
+    - package.json with all dependencies (Vercel AI SDK, providers, Zod, Langfuse)
+    - tsconfig.json with TypeScript configuration
+    - README.md with comprehensive documentation
+  - ✅ Provider abstraction layer (src/providers/index.ts):
+    - OpenAIProvider - OpenAI GPT models integration
+    - AnthropicProvider - Anthropic Claude models integration
+    - GoogleProvider - Google Gemini models integration
+    - createProvider() factory function
+    - Unified interface for all providers
+  - ✅ Core AI Gateway (src/index.ts):
+    - AIGateway class with generateText() and generateObject() methods
+    - Provider routing and selection
+    - Rate limiting per user
+    - Request context support (userId, tenantId, sessionId, operation, metadata)
+    - Error handling with custom error types
+  - ✅ Schema validation (src/validation.ts):
+    - validateSchema() and validateSchemaOrThrow() functions
+    - 7 predefined schemas:
+      - CareerClaimSchema - Career claim extraction
+      - EligibilityAssessmentSchema - Job eligibility assessment
+      - JobMatchSchema - Job match scoring
+      - TailoredResumeSchema - Resume tailoring
+      - CoverLetterSchema - Cover letter generation
+      - ApplicationAnswerSchema - Application answers
+      - InterviewPrepSchema - Interview preparation
+    - SchemaRegistry for easy access
+  - ✅ PII redaction (src/pii-redaction.ts):
+    - detectPII() - Detects 10+ PII patterns (email, phone, SSN, credit card, etc.)
+    - redactPII() - Redacts PII with options (preserveEmail, preservePhone, customPatterns)
+    - redactMessages() - Redacts PII from message arrays
+    - redactObject() - Recursively redacts PII from objects
+    - redactWithContext() - Context-aware redaction (cv, application, interview, general)
+    - validateNoPII() and assertNoPII() - Validation functions
+  - ✅ Observability (src/observability.ts):
+    - Langfuse integration for tracing and monitoring
+    - createTrace() - Creates trace for AI requests
+    - recordGeneration() - Records generation spans
+    - recordError() - Records error spans
+    - recordValidation() - Records validation spans
+    - recordScore() and recordCost() - Analytics functions
+    - shutdownLangfuse() - Graceful shutdown
+  - ✅ Type definitions (src/types.ts):
+    - AIProvider, AIModel types
+    - AIRequest, AIResponse interfaces
+    - RequestContext interface
+    - Error types: AIGatewayError, ProviderError, ValidationError, RateLimitError
+    - Configuration types: ProviderConfig, GatewayConfig
+  - ✅ Comprehensive unit tests:
+    - index.test.ts - 10 tests for AIGateway (providers, text generation, object generation, rate limiting)
+    - validation.test.ts - 20+ tests for schema validation (all predefined schemas)
+    - pii-redaction.test.ts - 25+ tests for PII detection and redaction
+    - Total: 55+ unit tests covering all functionality
+  - ✅ All acceptance criteria met:
+    - Vercel AI SDK integrated ✅
+    - Provider abstraction layer ✅
+    - Zod schema validation on all outputs ✅
+    - PII redaction before prompts ✅
+    - Langfuse integration for observability ✅
 
 #### T-06: Set up Temporal workflow infrastructure
 - [ ] **Status:** Not started
