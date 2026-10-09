@@ -77,14 +77,14 @@ function LandingPage() {
         <div className="max-w-3xl mx-auto">
           {/* Value Proposition - Complete Sentence */}
           <h1 className="text-5xl md:text-6xl font-semibold tracking-tight leading-[1.1] mb-6">
-            Apply to jobs with proof, not promises.
+            Find better jobs. Apply smarter. Get interviewed.
           </h1>
           
           {/* Specific Subhead */}
           <p className="text-xl text-white/60 leading-relaxed mb-12 max-w-2xl">
-            NextJob builds a verified career graph from your experience and generates 
-            applications that hiring managers actually read. Every claim backed by evidence. 
-            Every application eligible. Every submission tracked.
+            NextJob finds opportunities that genuinely fit, prepares truthful tailored applications, 
+            and handles repetitive work while you stay in control. Every application eligible. 
+            Every submission tracked. Every outcome learned from.
           </p>
 
           {/* Single CTA */}
@@ -174,14 +174,14 @@ function LandingPage() {
                   </p>
                   <div className="mt-2 flex items-center gap-2 text-xs text-emerald-400/80">
                     <Check className="w-3 h-3" />
-                    <span>Verified from your career graph</span>
+                    <span>Verified from your profile</span>
                   </div>
                 </div>
               </div>
               <div className="border-t border-white/5 pt-4 flex items-center justify-between">
                 <div className="flex items-center gap-4 text-xs text-white/40">
                   <span>Eligibility: ✓ Verified</span>
-                  <span>Match: 94%</span>
+                  <span>Excellent match</span>
                 </div>
                 <button 
                   className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
@@ -248,7 +248,7 @@ function LandingPage() {
                 1
               </div>
               <div>
-                <h3 className="font-medium mb-1">Import your CV</h3>
+                <h3 className="font-medium mb-1">Build your profile</h3>
                 <p className="text-sm text-white/60">
                   We extract and verify your experience, skills, and achievements.
                 </p>
@@ -270,9 +270,9 @@ function LandingPage() {
                 3
               </div>
               <div>
-                <h3 className="font-medium mb-1">Apply with proof</h3>
+                <h3 className="font-medium mb-1">Apply smarter</h3>
                 <p className="text-sm text-white/60">
-                  AI generates applications from your verified evidence. Every claim backed by proof.
+                  AI generates applications from your verified profile. Every claim backed by proof.
                 </p>
               </div>
             </div>
@@ -291,37 +291,49 @@ function LandingPage() {
               <ul className="space-y-2 text-sm text-white/60">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Career graph (limited)
+                  Build profile
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  5 applications/month
+                  Discover jobs
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Eligibility checks
+                  Understand fit
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  Track applications
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  Limited application assistance
                 </li>
               </ul>
             </div>
             <div className="p-8 rounded-xl border border-emerald-500/30 bg-emerald-500/5">
-              <h3 className="font-medium mb-2">Pro</h3>
-              <div className="text-3xl font-semibold mb-4">$39<span className="text-lg text-white/40">/mo</span></div>
+              <h3 className="font-medium mb-2">Search</h3>
+              <div className="text-3xl font-semibold mb-4">$39<span className="text-lg text-white/40">/30 days</span></div>
               <ul className="space-y-2 text-sm text-white/60">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Unlimited applications
+                  Full matching
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Full matching & tailoring
+                  Tailored applications
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Verified receipts
+                  Application assistance
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-400" />
-                  Priority support
+                  Application receipts
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  Interview preparation
                 </li>
               </ul>
             </div>
@@ -337,8 +349,8 @@ function LandingPage() {
             <div>
               <h3 className="font-medium mb-2">How is this different from other AI tools?</h3>
               <p className="text-sm text-white/60 leading-relaxed">
-                We only generate content from your verified experience. No hallucinated claims. 
-                We check eligibility before you apply. Every submission includes a verified receipt.
+                We only generate content from your verified profile. No hallucinated claims. 
+                We check eligibility before you apply. Every submission includes an application receipt.
               </p>
             </div>
             <div>

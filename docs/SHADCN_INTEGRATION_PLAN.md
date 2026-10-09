@@ -310,7 +310,7 @@ import { DataTable } from "@/components/blocks/data-table"
 />
 ```
 
-**Career Graph:**
+**Your Profile:**
 ```tsx
 import { CardGrid } from "@/components/blocks/card-grid"
 
@@ -819,7 +819,7 @@ export async function GET(
 
 ### Medium-term Actions (Next Month)
 10. **Create custom registry** - Share NextJob components
-11. **Build application-specific blocks** - Tracker, Career Graph
+11. **Build application-specific blocks** - Tracker, Your Profile
 12. **Setup GitHub registry** - Public component library
 13. **Train team** - Ensure everyone comfortable with shadcn/ui
 
