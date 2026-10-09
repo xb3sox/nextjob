@@ -79,7 +79,7 @@ See [DESIGN.md](docs/DESIGN.md) for complete design system.
 
 ## Scope
 
-Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibility, job ingestion, matching, tailoring, policy engine, browser extension, ATS execution, receipts, tracker, notifications, organizations, billing, admin console, analytics.
+Build MVP per PRD.md §Scope: authentication, profile import, your profile, eligibility, job ingestion, matching, tailoring, safety checks, browser extension, ATS execution, receipts, tracker, notifications, organizations, billing, admin console, analytics.
 
 ## Exclusions
 
@@ -417,30 +417,30 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 ---
 
-### Phase 2: Career Graph & Evidence
+### Phase 2: Your Profile & Evidence
 
-#### T-07: Implement CV import and extraction
+#### T-07: Implement profile import and extraction
 - [ ] **Status:** Not started
-- **Deliverable:** PDF/DOCX upload with AI extraction of identity, employment, education, skills, certifications, projects, achievements, languages
+- **Deliverable:** PDF/DOCX upload with AI extraction of employment, education, skills, achievements, projects, certifications, languages
 - **Dependencies:** T-03, T-05
 - **Acceptance:** FR-ONB-02 satisfied; extraction accuracy ≥90% on test set; all fields extracted per PRD §FR-ONB-02
-- **Verification:** Upload test CVs → verify extracted fields match source; `npm run test -- cv-extraction` → pass
-- **Files:** `packages/career-graph/src/cv-import/`
+- **Verification:** Upload test profiles → verify extracted fields match source; `npm run test -- profile-extraction` → pass
+- **Files:** `packages/profile/src/import/`
 
-#### T-08: Implement Career Graph with evidence provenance
+#### T-08: Implement Your Profile with evidence provenance
 - [ ] **Status:** Not started
-- **Deliverable:** CareerClaim storage with evidence_id, verification_status, confidence, versioning
+- **Deliverable:** Profile claim storage with evidence_id, verification_status, confidence, versioning
 - **Dependencies:** T-03, T-07
 - **Acceptance:** FR-01 satisfied; every claim has evidence_id; versioning works; provenance tracked
-- **Verification:** Create claims → verify evidence linkage; `npm run test -- career-graph` → pass
-- **Files:** `packages/career-graph/src/`
+- **Verification:** Create claims → verify evidence linkage; `npm run test -- profile` → pass
+- **Files:** `packages/profile/src/`
 
 #### T-09: Implement claim verification workflow
 - [ ] **Status:** Not started
 - **Deliverable:** User verification flow for each extracted claim (confirm/edit/remove/mark unverified)
 - **Dependencies:** T-08
 - **Acceptance:** FR-ONB-03 satisfied; every claim can be confirmed, edited, removed, or marked unverified; verification_status updated
-- **Verification:** Manual test: import CV → verify each claim → check Career Graph state
+- **Verification:** Manual test: import profile → verify each claim → check Your Profile state
 - **Files:** `apps/web/src/app/verify-claims/`, `packages/career-graph/src/verification.ts`
 
 #### T-09a: Implement preferences capture
@@ -866,7 +866,7 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 
 #### T-50: Implement free tier and Search Pass billing
 - [ ] **Status:** Not started
-- **Deliverable:** Free tier (Career Graph, job discovery, eligibility, tracker, limited applications) and Search Pass (~$39/30 days, full matching, tailoring, assisted applications, tracking, receipts)
+- **Deliverable:** Free tier (build profile, discover jobs, understand fit, track applications, limited application assistance) and Search (~$39/30 days, full matching, tailored applications, application assistance, receipts, interview preparation)
 - **Dependencies:** T-32
 - **Acceptance:** FR-MON-01, FR-MON-02, FR-MON-04 satisfied; free tier limits enforced; Search Pass subscription works; no monetization of candidate data/sensitive data/hidden credits
 - **Verification:** Sign up → verify free tier limits; upgrade to Search Pass → verify full access; check billing → verify no hidden charges
@@ -1524,7 +1524,7 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 | FR-13 (Actionable notifications) | T-28 | Not started |
 | FR-14 (Interview prep) | Not in MVP scope | N/A |
 | FR-ONB-01 (Account creation) | T-04 | Not started |
-| FR-ONB-02 (CV import) | T-07 | Not started |
+| FR-ONB-02 (Profile import) | T-07 | Not started |
 | FR-ONB-03 (Claim verification) | T-09 | Not started |
 | FR-ONB-04 (Preferences) | T-09a | Not started |
 | FR-ONB-05 (Eligibility capture) | T-09a, T-12 | Not started |
@@ -1664,8 +1664,8 @@ Build MVP per PRD.md §Scope: authentication, CV import, Career Graph, eligibili
 ### High Priority (Next 30 Days)
 1. ~~**T-03: Set up database schema and migrations**~~ ✅ Complete
 2. **T-04: Set up authentication and tenant isolation** - Critical for security (NEXT)
-3. **T-07: Implement CV import and extraction** - Core user flow
-4. **T-08: Implement Career Graph with evidence provenance** - Core differentiator
+3. **T-07: Implement profile import and extraction** - Core user flow
+4. **T-08: Implement Your Profile with evidence provenance** - Core differentiator
 5. **T-12: Implement eligibility engine** - Key feature (≤2% false-positive rate)
 6. **T-17: Implement tailoring engine with evidence constraints** - Core AI feature
 7. **T-54: Complete analytics integration** - Track conversion metrics
@@ -1725,8 +1725,8 @@ Due to ultra-minimal redesign, several tasks are no longer needed or simplified:
 3. **Test landing page** - Get user feedback on new minimal design
 
 ### Short-term (Next 2 Weeks)
-4. **T-07: CV import** - Build PDF/DOCX extraction pipeline
-5. **T-08: Career Graph** - Implement evidence provenance tracking
+4. **T-07: Profile import** - Build PDF/DOCX extraction pipeline
+5. **T-08: Your Profile** - Implement evidence provenance tracking
 6. **T-12: Eligibility engine** - Build rule-based eligibility checks
 
 ### Medium-term (Next Month)
