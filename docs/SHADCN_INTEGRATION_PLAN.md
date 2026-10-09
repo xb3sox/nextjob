@@ -351,7 +351,7 @@ import { FormSection } from "@/components/blocks/form-section"
 #### Step 3.1: Setup Registry Structure
 
 ```
-nextjob/
+./
 ├── registry/
 │   ├── registry.json          # Registry catalog
 │   ├── components/
