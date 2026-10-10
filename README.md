@@ -12,7 +12,7 @@ NextJob is your AI career agent that finds the right opportunities, prepares bet
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 23.3%](https://img.shields.io/badge/Progress-23.3%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 24.2%](https://img.shields.io/badge/Progress-24.2%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -213,6 +213,7 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 - ✅ **Temporal Workflows** - Durable execution for ATS connectors with idempotency
 - ✅ **Profile Import** - PDF/DOCX extraction with AI-powered data extraction
 - ✅ **Your Profile** - Claims management with evidence provenance and versioning
+- ✅ **Claim Verification** - User verification workflow with bulk operations
 - ✅ **Design consistency** - Unified dark theme across all pages
 - ✅ **Form validation** - Email validation with error handling
 - ✅ **Loading states** - Spinners and disabled states
@@ -221,9 +222,9 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 **Next Tasks:**
 
 **Core Features (This Week):**
-1. **T-09: Claim verification** - User verification workflow (12 hours)
-2. **T-09a: Preferences capture** - Job preferences UI (8 hours)
-3. **T-09b: Automation policy** - Automation mode settings (8 hours)
+1. **T-09a: Preferences capture** - Job preferences UI (8 hours)
+2. **T-09b: Automation policy** - Automation mode settings (8 hours)
+3. **T-10: Evidence storage** - S3 storage with access control (12 hours)
 
 **Eligibility & Matching (Next 2 Weeks):**
 4. **T-11: Job ingestion** - Job source ingestion and normalization (16 hours)
