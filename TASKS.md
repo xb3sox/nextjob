@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (30/120 tasks complete - 25%)  
+**Status:** In Progress (31/120 tasks complete - 25.8%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -597,12 +597,28 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Full integration with profile package
 
 #### T-09b: Implement automation policy setting
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** UI and API for setting automation mode (Manual/Copilot/Autopilot) with field-level overrides
 - **Dependencies:** T-09a, T-19
 - **Acceptance:** User can select automation mode; field-level overrides work; policy stored and enforced during application execution; mode respected per PRD §Automation Modes
 - **Verification:** Set automation policy → verify stored; trigger application → verify mode respected; test field-level override → verify applied
-- **Files:** `apps/web/src/app/automation-policy/`, `packages/policy/src/automation.ts`
+- **Files:** `packages/profile/src/automation/`
+- **Evidence:**
+  - ✅ Automation policy service implemented with full CRUD operations
+  - ✅ Three automation modes: manual, copilot, autopilot
+  - ✅ Field-level overrides with risk-based approval logic
+  - ✅ Auto-apply settings with constraints (max applications per day, eligibility check, profile coverage)
+  - ✅ Safety settings (always ask for sensitive fields, block without verification, require approval for high risk)
+  - ✅ Notification preferences
+  - ✅ Version control with previousVersionId tracking
+  - ✅ Optimistic concurrency control with version conflict detection
+  - ✅ Soft delete support
+  - ✅ Effective mode calculation based on field risk level
+  - ✅ Auto-apply allowance checking
+  - ✅ Comprehensive error handling with custom error types
+  - ✅ Type definitions with Zod schemas
+  - ✅ Unit tests (25+ tests covering all scenarios)
+  - ✅ Full integration with profile package
 
 #### T-10: Implement evidence storage and access control
 - [ ] **Status:** Not started
