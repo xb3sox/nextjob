@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (27/120 tasks complete - 22.5%)  
+**Status:** In Progress (28/120 tasks complete - 23.3%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -529,12 +529,22 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
     - Error handling ✅
 
 #### T-08: Implement Your Profile with evidence provenance
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Profile claim storage with evidence_id, verification_status, confidence, versioning
 - **Dependencies:** T-03, T-07
 - **Acceptance:** FR-01 satisfied; every claim has evidence_id; versioning works; provenance tracked
 - **Verification:** Create claims → verify evidence linkage; `npm run test -- profile` → pass
-- **Files:** `packages/profile/src/`
+- **Files:** `packages/profile/src/claims/`
+- **Evidence:**
+  - ✅ Claims service implemented with full CRUD operations
+  - ✅ Evidence service implemented with provenance tracking
+  - ✅ Versioning system for claims (creates new version on update)
+  - ✅ Verification status tracking (unverified, verified, rejected, pending_review)
+  - ✅ Confidence scoring based on evidence
+  - ✅ Comprehensive type definitions with Zod schemas
+  - ✅ Error handling with custom error types
+  - ✅ Unit tests for both services (20+ tests)
+  - ✅ Full integration with import system
 
 #### T-09: Implement claim verification workflow
 - [ ] **Status:** Not started

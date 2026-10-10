@@ -20,11 +20,12 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-05: AI Gateway (3 providers, 7 schemas, PII redaction, Langfuse, 55+ tests)
 - ✅ T-06: Temporal workflow infrastructure (durable execution, idempotency, 18 tests)
 - ✅ T-07: Profile import & extraction (PDF/DOCX, AI extraction, 20+ tests)
+- ✅ T-08: Your Profile with evidence provenance (claims service, evidence tracking, versioning, 20+ tests)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 27/120 tasks complete (22.5%)
+**Progress:** 28/120 tasks complete (23.3%)
 
 ## Agent Skills
 
