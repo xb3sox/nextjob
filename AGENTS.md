@@ -16,11 +16,15 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
 - ✅ T-03d: Added Turborepo for build caching (9x faster builds)
 - ✅ T-03e: Integrated shadcn/ui component library (8 core components)
+- ✅ T-04: Authentication & tenant isolation (OAuth 2.0, RBAC, 33 tests)
+- ✅ T-05: AI Gateway (3 providers, 7 schemas, PII redaction, Langfuse, 55+ tests)
+- ✅ T-06: Temporal workflow infrastructure (durable execution, idempotency, 18 tests)
+- ✅ T-07: Profile import & extraction (PDF/DOCX, AI extraction, 20+ tests)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 17/120 tasks complete (14.2%)
+**Progress:** 27/120 tasks complete (22.5%)
 
 ## Agent Skills
 

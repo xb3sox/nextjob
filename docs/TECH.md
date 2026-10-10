@@ -4,7 +4,7 @@
 
 Addresses PRD FR-01 through FR-14 and all acceptance criteria. Key constraints:
 
-- Evidence-constrained generation (FR-01) requires a Career Graph with full provenance
+- Evidence-constrained generation (FR-01) requires Your Profile with full provenance
 - Eligibility-before-ranking (FR-02) requires deterministic rule evaluation before AI
 - Idempotent external actions (FR-05) require durable workflow orchestration
 - Sensitive-field isolation (FR-03) requires separate storage with access controls
@@ -29,7 +29,7 @@ graph TB
 
     subgraph Modular Monolith
         Identity[Identity]
-        CG[Career Graph]
+        CG[Your Profile]
         Evidence[Evidence]
         Jobs[Jobs]
         Eligibility[Eligibility]
@@ -110,9 +110,9 @@ See [shadcn/ui Integration Plan](SHADCN_INTEGRATION_PLAN.md) for UI component li
 
 | Component | Responsibility | Interfaces |
 |-----------|---------------|------------|
-| Career Graph | Store and version candidate claims with evidence provenance | REST API, internal module calls |
+| Your Profile | Store and version candidate claims with evidence provenance | REST API, internal module calls |
 | Eligibility Engine | Deterministic rule evaluation before ranking | REST API, called by Matching |
-| Matching | Rank jobs by fit, eligibility, freshness | REST API, reads from Career Graph + Jobs |
+| Matching | Rank jobs by fit, eligibility, freshness | REST API, reads from Your Profile + Jobs |
 | Tailoring | Evidence-constrained generation of resume/cover letter/answers | REST API, calls AI Gateway with evidence context |
 | Policy Engine | Risk classification, policy precedence, approval routing | Internal module, called by Tailoring and Applications |
 | Application State Machine | Manage lifecycle from DISCOVERED to SUBMITTED_VERIFIED | Temporal workflows, REST API |
@@ -191,7 +191,7 @@ See [shadcn/ui Integration Plan](SHADCN_INTEGRATION_PLAN.md) for UI component li
 |--------|---------------|---------------|
 | `/auth` | Authentication, OAuth, sessions | POST /login, POST /logout, GET /me |
 | `/users` | User profiles, preferences | GET/PUT /profile, GET/PUT /preferences |
-| `/career` | Career Graph, claims, evidence | GET /claims, POST /verify, POST /evidence |
+| `/profile` | Your Profile, claims, evidence | GET /claims, POST /verify, POST /evidence |
 | `/jobs` | Job discovery, search, companies | GET /jobs, GET /jobs/:id, GET /companies |
 | `/eligibility` | Eligibility assessment | POST /assess, GET /assessments |
 | `/matches` | Job matching, ranking | GET /matches, GET /matches/:id |
@@ -208,8 +208,8 @@ See [shadcn/ui Integration Plan](SHADCN_INTEGRATION_PLAN.md) for UI component li
 | Event | Trigger | Consumers |
 |-------|---------|-----------|
 | `UserActivated` | User completes onboarding | Analytics, Organizations |
-| `ClaimVerified` | User verifies a CareerClaim | Career Graph, Matching |
-| `EvidenceAdded` | New evidence uploaded | Career Graph |
+| `ClaimVerified` | User verifies a profile claim | Your Profile, Matching |
+| `EvidenceAdded` | New evidence uploaded | Your Profile |
 | `JobNormalized` | Job ingested and normalized | Matching, Eligibility |
 | `JobExpired` | Job staleness detected | Matching |
 | `EligibilityAssessed` | Eligibility check completed | Matching, Applications |
