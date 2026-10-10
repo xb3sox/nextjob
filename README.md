@@ -12,7 +12,7 @@ NextJob is your AI career agent that finds the right opportunities, prepares bet
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 22.5%](https://img.shields.io/badge/Progress-22.5%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 23.3%](https://img.shields.io/badge/Progress-23.3%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -212,6 +212,7 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 - ✅ **AI Gateway** - Multi-provider support with PII redaction and observability with CSS variables
 - ✅ **Temporal Workflows** - Durable execution for ATS connectors with idempotency
 - ✅ **Profile Import** - PDF/DOCX extraction with AI-powered data extraction
+- ✅ **Your Profile** - Claims management with evidence provenance and versioning
 - ✅ **Design consistency** - Unified dark theme across all pages
 - ✅ **Form validation** - Email validation with error handling
 - ✅ **Loading states** - Spinners and disabled states
@@ -220,18 +221,19 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 **Next Tasks:**
 
 **Core Features (This Week):**
-1. **T-08: Your Profile** - Evidence provenance tracking (20 hours)
-2. **T-09: Claim verification** - User verification workflow (12 hours)
-3. **T-09a: Preferences capture** - Job preferences UI (8 hours)
+1. **T-09: Claim verification** - User verification workflow (12 hours)
+2. **T-09a: Preferences capture** - Job preferences UI (8 hours)
+3. **T-09b: Automation policy** - Automation mode settings (8 hours)
 
 **Eligibility & Matching (Next 2 Weeks):**
-4. **T-12: Eligibility engine** - Rule-based eligibility checks (24 hours)
-5. **T-14: Matching engine** - Job ranking with explainability (20 hours)
+4. **T-11: Job ingestion** - Job source ingestion and normalization (16 hours)
+5. **T-12: Eligibility engine** - Rule-based eligibility checks (24 hours)
+6. **T-14: Matching engine** - Job ranking with explainability (20 hours)
 
 **Application Flow (Next Month):**
-6. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
-7. **T-23: First ATS connector** - Build first connector (40 hours)
-8. **T-25: Application state machine** - Complete lifecycle (24 hours)
+7. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
+8. **T-23: First ATS connector** - Build first connector (40 hours)
+9. **T-25: Application state machine** - Complete lifecycle (24 hours)
 
 See [TASKS.md](TASKS.md) for complete task list.
 
