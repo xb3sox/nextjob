@@ -36,3 +36,9 @@ export { preferencesService, PreferencesService } from './preferences/preference
 
 // Convenience exports - Automation
 export { automationPolicyService, AutomationPolicyService } from './automation/automation-policy-service.js';
+
+// Storage management
+export * from './storage/index.js';
+
+// Convenience exports - Storage
+export { evidenceStorageService, EvidenceStorageService } from './storage/evidence-storage-service.js';
