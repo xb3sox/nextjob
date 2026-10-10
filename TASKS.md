@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (31/120 tasks complete - 25.8%)  
+**Status:** In Progress (32/120 tasks complete - 26.7%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -621,12 +621,27 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Full integration with profile package
 
 #### T-10: Implement evidence storage and access control
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** S3 storage for evidence documents with signed URLs and access control
 - **Dependencies:** T-03
 - **Acceptance:** Evidence files stored in S3; signed URLs generated; access control enforced per tenant
 - **Verification:** Upload evidence → verify S3 storage; attempt cross-tenant access → denied
-- **Files:** `packages/career-graph/src/evidence/`
+- **Files:** `packages/profile/src/storage/`
+- **Evidence:**
+  - ✅ Evidence storage service implemented with full CRUD operations
+  - ✅ Support for multiple storage providers (S3, local, memory)
+  - ✅ File upload with validation (size, type, hash)
+  - ✅ Signed URL generation with expiration
+  - ✅ Access control with read/write permissions
+  - ✅ Tenant isolation enforcement
+  - ✅ File verification workflow
+  - ✅ Soft delete and permanent delete support
+  - ✅ File metadata management
+  - ✅ Storage statistics and analytics
+  - ✅ Comprehensive error handling with custom error types
+  - ✅ Type definitions with Zod schemas
+  - ✅ Unit tests (30+ tests covering all scenarios)
+  - ✅ Full integration with profile package
 
 ---
 
