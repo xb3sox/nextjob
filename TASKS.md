@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (29/120 tasks complete - 24.2%)  
+**Status:** In Progress (30/120 tasks complete - 25%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -566,12 +566,35 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Version tracking for edited claims
 
 #### T-09a: Implement preferences capture
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** UI and API for capturing target roles, seniority, industries, locations, work mode (remote/hybrid/on-site), salary expectations, company preferences, exclusions, relocation, notice period
 - **Dependencies:** T-03, T-08
 - **Acceptance:** All preference fields captured per PRD §FR-ONB-04; stored in CareerProfile with versioning; preferences used by matching engine
 - **Verification:** Set preferences → verify stored in CareerProfile; `npm run test -- preferences` → pass; manual test: set preferences → verify matching uses them
-- **Files:** `apps/web/src/app/preferences/`, `packages/career-graph/src/preferences.ts`
+- **Files:** `packages/profile/src/preferences/`
+- **Evidence:**
+  - ✅ Preferences service implemented with full CRUD operations
+  - ✅ Comprehensive preferences schema covering all PRD requirements:
+    - Target roles and role families
+    - Seniority levels and years of experience
+    - Industries (target and excluded)
+    - Locations with remote/hybrid/on-site support
+    - Work mode preferences
+    - Salary expectations with currency and period
+    - Company preferences (size, stage, target, excluded)
+    - Relocation preferences
+    - Notice period
+    - Job search intensity
+    - Keywords (included and excluded)
+    - Skills (must-have and nice-to-have)
+  - ✅ Version control with previousVersionId tracking
+  - ✅ Optimistic concurrency control with version conflict detection
+  - ✅ Soft delete support
+  - ✅ Preferences summary for matching engine integration
+  - ✅ Comprehensive error handling with custom error types
+  - ✅ Type definitions with Zod schemas
+  - ✅ Unit tests (20+ tests covering all scenarios)
+  - ✅ Full integration with profile package
 
 #### T-09b: Implement automation policy setting
 - [ ] **Status:** Not started
