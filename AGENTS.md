@@ -23,11 +23,12 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-08: Your Profile with evidence provenance (claims service, evidence tracking, versioning, 20+ tests)
 - ✅ T-09: Claim verification workflow (confirm/edit/remove/mark unverified, bulk verification, 15+ tests)
 - ✅ T-09a: Preferences capture (comprehensive preferences schema, versioning, 20+ tests)
+- ✅ T-09b: Automation policy (Manual/Copilot/Autopilot modes, field overrides, 25+ tests)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 30/120 tasks complete (25%)
+**Progress:** 31/120 tasks complete (25.8%)
 
 ## Agent Skills
 

@@ -15,6 +15,9 @@ export * from './verification/index.js';
 // Preferences management
 export * from './preferences/index.js';
 
+// Automation policy
+export * from './automation/index.js';
+
 // Convenience exports - Import
 export { importProfile, validateFile, getFileTypeFromMime } from './import/index.js';
 export { extractTextFromPDF, validatePDF, extractPDFMetadata } from './import/pdf-extractor.js';
@@ -30,3 +33,6 @@ export { verificationService, VerificationService } from './verification/verific
 
 // Convenience exports - Preferences
 export { preferencesService, PreferencesService } from './preferences/preferences-service.js';
+
+// Convenience exports - Automation
+export { automationPolicyService, AutomationPolicyService } from './automation/automation-policy-service.js';
