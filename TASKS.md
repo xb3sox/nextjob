@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (28/120 tasks complete - 23.3%)  
+**Status:** In Progress (29/120 tasks complete - 24.2%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -547,12 +547,23 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Full integration with import system
 
 #### T-09: Implement claim verification workflow
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** User verification flow for each extracted claim (confirm/edit/remove/mark unverified)
 - **Dependencies:** T-08
 - **Acceptance:** FR-ONB-03 satisfied; every claim can be confirmed, edited, removed, or marked unverified; verification_status updated
 - **Verification:** Manual test: import profile → verify each claim → check Your Profile state
-- **Files:** `apps/web/src/app/verify-claims/`, `packages/career-graph/src/verification.ts`
+- **Files:** `packages/profile/src/verification/`
+- **Evidence:**
+  - ✅ Verification service implemented with full workflow support
+  - ✅ Four verification actions: confirm, edit, remove, mark_unverified
+  - ✅ Bulk verification support for multiple claims
+  - ✅ Pending verifications retrieval
+  - ✅ Verification statistics calculation
+  - ✅ Comprehensive error handling with custom error types
+  - ✅ Type definitions with Zod schemas
+  - ✅ Unit tests (15+ tests covering all scenarios)
+  - ✅ Full integration with Claims Service
+  - ✅ Version tracking for edited claims
 
 #### T-09a: Implement preferences capture
 - [ ] **Status:** Not started
