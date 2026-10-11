@@ -1,0 +1,168 @@
+{
+  "dataset": "professional_summary",
+  "description": "Professional summary generation test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ps-001",
+      "description": "Generate summary with experience and skills",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "experience",
+            "title": "Software Engineer",
+            "content": {
+              "company": "Tech Corp",
+              "years": 5
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-2",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "expert"
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Senior Software Engineer"
+      },
+      "tailoringType": "professional_summary",
+      "expectedOutput": {
+        "summary": "Experienced Software Engineer with 5 years at Tech Corp and expert-level JavaScript skills",
+        "evidenceClaimIds": ["claim-1", "claim-2"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ps-002",
+      "description": "Generate summary with education",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-3",
+            "type": "education",
+            "title": "PhD in Computer Science",
+            "content": {
+              "institution": "Stanford University"
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Research Scientist"
+      },
+      "tailoringType": "professional_summary",
+      "expectedOutput": {
+        "summary": "Research professional with PhD in Computer Science from Stanford University",
+        "evidenceClaimIds": ["claim-3"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ps-003",
+      "description": "Generate summary with achievements",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-4",
+            "type": "achievement",
+            "title": "Patent Holder",
+            "content": {
+              "description": "Hold 3 software patents"
+            },
+            "evidenceId": "evidence-4",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Innovation Lead"
+      },
+      "tailoringType": "professional_summary",
+      "expectedOutput": {
+        "summary": "Innovative professional holding 3 software patents",
+        "evidenceClaimIds": ["claim-4"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ps-004",
+      "description": "Reject unverified claims in summary",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-5",
+            "type": "experience",
+            "title": "Manager",
+            "content": {
+              "company": "Unknown",
+              "years": 10
+            },
+            "evidenceId": null,
+            "verificationStatus": "unverified",
+            "confidence": 0.2
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Director"
+      },
+      "tailoringType": "professional_summary",
+      "expectedOutput": {
+        "summary": null,
+        "evidenceClaimIds": [],
+        "unsupportedClaims": ["claim-5"],
+        "evidenceCoverage": 0.0,
+        "reason": "Unverified experience should not be included"
+      }
+    },
+    {
+      "id": "ps-005",
+      "description": "Generate concise summary",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-6",
+            "type": "skill",
+            "title": "Python",
+            "content": {
+              "level": "expert",
+              "yearsOfExperience": 8
+            },
+            "evidenceId": "evidence-6",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Python Developer"
+      },
+      "tailoringType": "professional_summary",
+      "expectedOutput": {
+        "summary": "Expert Python developer with 8 years of experience",
+        "evidenceClaimIds": ["claim-6"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "maxLength": 50
+      }
+    }
+  ]
+}

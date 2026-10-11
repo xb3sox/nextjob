@@ -1,0 +1,197 @@
+{
+  "scenario": "evidence_partial",
+  "description": "Test cases with partial evidence coverage",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ep-001",
+      "description": "Partial evidence - missing skills",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "TechCo",
+              "years": 3
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Engineer",
+        "requiredSkills": ["JavaScript", "React", "Node.js"]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at TechCo (3 years)",
+            "evidenceClaimId": "claim-1"
+          }
+        ],
+        "unsupportedClaims": [],
+        "missingSkills": ["JavaScript", "React", "Node.js"],
+        "evidenceCoverage": 0.5
+      }
+    },
+    {
+      "id": "ep-002",
+      "description": "Partial evidence - missing education",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-2",
+            "type": "skill",
+            "title": "Python",
+            "content": {
+              "level": "expert"
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Data Scientist",
+        "education": "Master's degree",
+        "requiredSkills": ["Python"]
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "skills",
+            "content": "Expert-level Python skills",
+            "evidenceClaimIds": ["claim-2"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "missingEducation": "Master's degree",
+        "evidenceCoverage": 0.5
+      }
+    },
+    {
+      "id": "ep-003",
+      "description": "Partial evidence - some verified, some not",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-3",
+            "type": "experience",
+            "title": "Engineer",
+            "content": {
+              "company": "Verified Corp"
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-4",
+            "type": "skill",
+            "title": "Unknown Skill",
+            "content": {
+              "level": "beginner"
+            },
+            "evidenceId": null,
+            "verificationStatus": "unverified",
+            "confidence": 0.3
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Engineer"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Engineer at Verified Corp",
+            "evidenceClaimId": "claim-3"
+          }
+        ],
+        "unsupportedClaims": ["claim-4"],
+        "evidenceCoverage": 0.5
+      }
+    },
+    {
+      "id": "ep-004",
+      "description": "Partial evidence - low confidence claims",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-5",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "TechCo"
+            },
+            "evidenceId": "evidence-5",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-6",
+            "type": "achievement",
+            "title": "Award",
+            "content": {
+              "description": "Some award"
+            },
+            "evidenceId": "evidence-6",
+            "verificationStatus": "verified",
+            "confidence": 0.45
+          }
+        ]
+      },
+      "tailoringType": "professional_summary",
+      "expectedOutput": {
+        "summary": "Developer at TechCo",
+        "evidenceClaimIds": ["claim-5"],
+        "unsupportedClaims": ["claim-6"],
+        "evidenceCoverage": 0.5,
+        "reason": "Low confidence achievement excluded"
+      }
+    },
+    {
+      "id": "ep-005",
+      "description": "Partial evidence - missing dates",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-7",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "TechCo"
+              // Missing startDate and endDate
+            },
+            "evidenceId": "evidence-7",
+            "verificationStatus": "verified",
+            "confidence": 0.8
+          }
+        ]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at TechCo",
+            "evidenceClaimId": "claim-7",
+            "missingFields": ["startDate", "endDate"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 0.8
+      }
+    }
+  ]
+}
