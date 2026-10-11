@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { z } from 'zod';
 import {
   EligibilityRule,
   EligibilityRuleSchema,
@@ -13,8 +14,72 @@ import {
   ListRulesRequest,
   ListRulesResponse,
   RuleNotFoundError,
+  AssessmentNotFoundError,
   InvalidRuleError,
 } from './types.js';
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const MAX_RULES_PER_CHECK = 1000;
+const UNKNOWN_CHECK_PENALTY_WEIGHT = 0.5;
+
+const DEGREE_LEVELS = ['high_school', 'associate', 'bachelor', 'master', 'doctorate'] as const;
+const PROFICIENCY_LEVELS = ['basic', 'intermediate', 'professional', 'fluent', 'native'] as const;
+const CLEARANCE_LEVELS = ['none', 'confidential', 'secret', 'top_secret', 'ts_sci'] as const;
+
+// ============================================================================
+// Input Validation Schemas
+// ============================================================================
+
+const UserProfileSchema = z.object({
+  location: z.object({
+    country: z.string(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+  }).optional(),
+  willingToRelocate: z.boolean().optional(),
+  workAuthorization: z.object({
+    authorizations: z.array(z.string()),
+  }).optional(),
+  needsSponsorship: z.boolean().optional(),
+  licenses: z.array(z.object({
+    name: z.string(),
+    valid: z.boolean(),
+  })).optional(),
+  certifications: z.array(z.object({
+    name: z.string(),
+  })).optional(),
+  education: z.array(z.object({
+    degree: z.string().optional(),
+    field: z.string().optional(),
+  })).optional(),
+  experience: z.array(z.object({
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+  })).optional(),
+  skills: z.array(z.object({
+    name: z.string(),
+  })).optional(),
+  languages: z.array(z.object({
+    language: z.string(),
+    proficiency: z.string().optional(),
+  })).optional(),
+  securityClearance: z.string().optional(),
+});
+
+const JobSchema = z.object({
+  location: z.object({
+    country: z.string(),
+    city: z.string().optional(),
+    remote: z.boolean().optional(),
+  }),
+  visaSponsorship: z.boolean().optional(),
+});
+
+type UserProfile = z.infer<typeof UserProfileSchema>;
+type Job = z.infer<typeof JobSchema>;
 
 // ============================================================================
 // Eligibility Engine Service
@@ -30,6 +95,21 @@ export class EligibilityEngineService {
 
   /**
    * Create a new eligibility rule
+   * 
+   * @param request - The rule creation request
+   * @returns The created eligibility rule
+   * @throws {InvalidRuleError} If the rule data is invalid
+   * 
+   * @example
+   * ```typescript
+   * const rule = await service.createRule({
+   *   tenantId: 'tenant-1',
+   *   name: 'US Location Required',
+   *   checkType: 'location',
+   *   condition: { countries: ['US'] },
+   *   userId: 'user-1',
+   * });
+   * ```
    */
   async createRule(request: CreateRuleRequest): Promise<EligibilityRule> {
     const now = new Date().toISOString();
@@ -52,17 +132,29 @@ export class EligibilityEngineService {
       deleted: false,
     };
 
-    // Validate rule
-    const validatedRule = EligibilityRuleSchema.parse(rule);
+    // Validate rule with proper error handling
+    try {
+      const validatedRule = EligibilityRuleSchema.parse(rule);
 
-    // Store rule
-    this.rulesStore.set(ruleId, validatedRule);
+      // Store rule
+      this.rulesStore.set(ruleId, validatedRule);
 
-    return validatedRule;
+      return validatedRule;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new InvalidRuleError(error.errors);
+      }
+      throw error;
+    }
   }
 
   /**
    * Get rule by ID
+   * 
+   * @param ruleId - The ID of the rule to retrieve
+   * @param tenantId - The tenant ID for isolation
+   * @returns The eligibility rule
+   * @throws {RuleNotFoundError} If the rule is not found
    */
   async getRule(ruleId: string, tenantId: string): Promise<EligibilityRule> {
     const rule = this.rulesStore.get(ruleId);
@@ -75,7 +167,15 @@ export class EligibilityEngineService {
   }
 
   /**
-   * Update rule
+   * Update an existing eligibility rule
+   * 
+   * @param ruleId - The ID of the rule to update
+   * @param tenantId - The tenant ID for isolation
+   * @param request - The update request
+   * @param userId - The ID of the user making the update
+   * @returns The updated eligibility rule
+   * @throws {RuleNotFoundError} If the rule is not found
+   * @throws {InvalidRuleError} If the updated rule data is invalid
    */
   async updateRule(
     ruleId: string,
@@ -98,17 +198,29 @@ export class EligibilityEngineService {
       updatedBy: userId,
     };
 
-    // Validate updated rule
-    const validatedRule = EligibilityRuleSchema.parse(updatedRule);
+    // Validate updated rule with proper error handling
+    try {
+      const validatedRule = EligibilityRuleSchema.parse(updatedRule);
 
-    // Store updated rule
-    this.rulesStore.set(ruleId, validatedRule);
+      // Store updated rule
+      this.rulesStore.set(ruleId, validatedRule);
 
-    return validatedRule;
+      return validatedRule;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new InvalidRuleError(error.errors);
+      }
+      throw error;
+    }
   }
 
   /**
    * Delete rule (soft delete)
+   * 
+   * @param ruleId - The ID of the rule to delete
+   * @param tenantId - The tenant ID for isolation
+   * @param userId - The ID of the user performing the deletion
+   * @throws {RuleNotFoundError} If the rule is not found
    */
   async deleteRule(ruleId: string, tenantId: string, userId: string): Promise<void> {
     const rule = await this.getRule(ruleId, tenantId);
@@ -127,6 +239,19 @@ export class EligibilityEngineService {
 
   /**
    * List rules with filters
+   * 
+   * @param request - The list request with filters and pagination
+   * @returns Paginated list of eligibility rules
+   * 
+   * @example
+   * ```typescript
+   * const result = await service.listRules({
+   *   tenantId: 'tenant-1',
+   *   checkType: 'location',
+   *   page: 1,
+   *   pageSize: 20,
+   * });
+   * ```
    */
   async listRules(request: ListRulesRequest): Promise<ListRulesResponse> {
     const { tenantId, checkType, required, page = 1, pageSize = 20 } = request;
@@ -169,19 +294,38 @@ export class EligibilityEngineService {
 
   /**
    * Check eligibility for a job
+   * 
+   * @param request - The eligibility check request
+   * @param userProfile - The user's profile data
+   * @param job - The job data to check eligibility against
+   * @returns The eligibility assessment with detailed checks
+   * @throws {z.ZodError} If the input data is invalid
+   * 
+   * @example
+   * ```typescript
+   * const result = await service.checkEligibility(
+   *   { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+   *   { location: { country: 'US' }, skills: [{ name: 'JavaScript' }] },
+   *   { location: { country: 'US', remote: false }, requiredSkills: ['JavaScript'] }
+   * );
+   * ```
    */
   async checkEligibility(
     request: CheckEligibilityRequest,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): Promise<CheckEligibilityResponse> {
+    // Validate inputs
+    UserProfileSchema.parse(userProfile);
+    JobSchema.parse(job);
+
     const { userId, tenantId, jobId } = request;
 
     // Get all rules for tenant
     const { rules } = await this.listRules({
       tenantId,
       page: 1,
-      pageSize: 1000,
+      pageSize: MAX_RULES_PER_CHECK,
     });
 
     // Run all checks
@@ -225,8 +369,17 @@ export class EligibilityEngineService {
       deleted: false,
     };
 
-    // Validate and store assessment
-    const validatedAssessment = EligibilityAssessmentSchema.parse(assessment);
+    // Validate and store assessment with proper error handling
+    let validatedAssessment: EligibilityAssessment;
+    try {
+      validatedAssessment = EligibilityAssessmentSchema.parse(assessment);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new Error(`Assessment validation failed: ${error.message}`);
+      }
+      throw error;
+    }
+    
     this.assessmentsStore.set(assessmentId, validatedAssessment);
 
     // Calculate summary
@@ -247,12 +400,17 @@ export class EligibilityEngineService {
 
   /**
    * Get assessment by ID
+   * 
+   * @param assessmentId - The ID of the assessment to retrieve
+   * @param tenantId - The tenant ID for isolation
+   * @returns The eligibility assessment
+   * @throws {AssessmentNotFoundError} If the assessment is not found
    */
   async getAssessment(assessmentId: string, tenantId: string): Promise<EligibilityAssessment> {
     const assessment = this.assessmentsStore.get(assessmentId);
 
     if (!assessment || assessment.deleted || assessment.tenantId !== tenantId) {
-      throw new Error(`Assessment not found: ${assessmentId}`);
+      throw new AssessmentNotFoundError(assessmentId);
     }
 
     return assessment;
@@ -260,6 +418,17 @@ export class EligibilityEngineService {
 
   /**
    * List assessments for a user
+   * 
+   * @param userId - The ID of the user
+   * @param tenantId - The tenant ID for isolation
+   * @param page - The page number (default: 1)
+   * @param pageSize - The number of items per page (default: 20)
+   * @returns Paginated list of eligibility assessments
+   * 
+   * @example
+   * ```typescript
+   * const result = await service.listAssessments('user-1', 'tenant-1', 1, 20);
+   * ```
    */
   async listAssessments(
     userId: string,
@@ -306,11 +475,16 @@ export class EligibilityEngineService {
 
   /**
    * Run a single eligibility check
+   * 
+   * @param rule - The eligibility rule to check
+   * @param userProfile - The user's profile data
+   * @param job - The job data to check against
+   * @returns The eligibility check result
    */
   private async runCheck(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): Promise<EligibilityCheck> {
     switch (rule.checkType) {
       case 'location':
@@ -345,11 +519,16 @@ export class EligibilityEngineService {
 
   /**
    * Check location eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkLocation(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userLocation = userProfile.location;
@@ -404,11 +583,16 @@ export class EligibilityEngineService {
 
   /**
    * Check work authorization eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkWorkAuthorization(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userAuth = userProfile.workAuthorization;
@@ -448,11 +632,16 @@ export class EligibilityEngineService {
 
   /**
    * Check sponsorship eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkSponsorship(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userNeedsSponsorship = userProfile.needsSponsorship;
@@ -485,11 +674,16 @@ export class EligibilityEngineService {
 
   /**
    * Check license eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkLicense(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userLicenses = userProfile.licenses || [];
@@ -520,11 +714,16 @@ export class EligibilityEngineService {
 
   /**
    * Check certification eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkCertification(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userCerts = userProfile.certifications || [];
@@ -555,21 +754,25 @@ export class EligibilityEngineService {
 
   /**
    * Check education eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkEducation(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userEducation = userProfile.education || [];
 
     if (condition.minimumDegree) {
-      const degreeLevels = ['high_school', 'associate', 'bachelor', 'master', 'doctorate'];
-      const requiredLevel = degreeLevels.indexOf(condition.minimumDegree);
+      const requiredLevel = DEGREE_LEVELS.indexOf(condition.minimumDegree as any);
       
-      const hasRequiredEducation = userEducation.some((edu: any) => {
-        const userLevel = degreeLevels.indexOf(edu.degree?.toLowerCase());
+      const hasRequiredEducation = userEducation.some((edu) => {
+        const userLevel = DEGREE_LEVELS.indexOf(edu.degree?.toLowerCase() as any);
         return userLevel >= requiredLevel;
       });
 
@@ -584,7 +787,7 @@ export class EligibilityEngineService {
     }
 
     if (condition.requiredFields) {
-      const hasRequiredField = userEducation.some((edu: any) =>
+      const hasRequiredField = userEducation.some((edu) =>
         condition.requiredFields.some((field: string) =>
           edu.field?.toLowerCase().includes(field.toLowerCase())
         )
@@ -610,11 +813,16 @@ export class EligibilityEngineService {
 
   /**
    * Check experience eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkExperience(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userExperience = userProfile.experience || [];
@@ -647,11 +855,16 @@ export class EligibilityEngineService {
 
   /**
    * Check skill eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkSkill(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userSkills = (userProfile.skills || []).map((s: any) => s.name?.toLowerCase());
@@ -681,11 +894,16 @@ export class EligibilityEngineService {
 
   /**
    * Check language eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkLanguage(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userLanguages = userProfile.languages || [];
@@ -693,14 +911,17 @@ export class EligibilityEngineService {
     if (condition.requiredLanguages) {
       const hasAllLanguages = condition.requiredLanguages.every(
         (required: any) => 
-          userLanguages.some((user: any) => {
+          userLanguages.some((user) => {
             if (user.language.toLowerCase() !== required.language.toLowerCase()) {
               return false;
             }
             
-            const proficiencyLevels = ['basic', 'intermediate', 'professional', 'fluent', 'native'];
-            const requiredLevel = proficiencyLevels.indexOf(required.proficiency?.toLowerCase() || 'intermediate');
-            const userLevel = proficiencyLevels.indexOf(user.proficiency?.toLowerCase() || 'basic');
+            const requiredLevel = PROFICIENCY_LEVELS.indexOf(
+              (required.proficiency?.toLowerCase() || 'intermediate') as any
+            );
+            const userLevel = PROFICIENCY_LEVELS.indexOf(
+              (user.proficiency?.toLowerCase() || 'basic') as any
+            );
             
             return userLevel >= requiredLevel;
           })
@@ -726,19 +947,27 @@ export class EligibilityEngineService {
 
   /**
    * Check security clearance eligibility
+   * 
+   * @param rule - The eligibility rule
+   * @param userProfile - The user's profile data
+   * @param job - The job data
+   * @returns The eligibility check result
    */
   private checkClearance(
     rule: EligibilityRule,
-    userProfile: any,
-    job: any
+    userProfile: UserProfile,
+    job: Job
   ): EligibilityCheck {
     const condition = rule.condition;
     const userClearance = userProfile.securityClearance;
 
     if (condition.requiredClearance) {
-      const clearanceLevels = ['none', 'confidential', 'secret', 'top_secret', 'ts_sci'];
-      const requiredLevel = clearanceLevels.indexOf(condition.requiredClearance.toLowerCase());
-      const userLevel = clearanceLevels.indexOf(userClearance?.toLowerCase() || 'none');
+      const requiredLevel = CLEARANCE_LEVELS.indexOf(
+        condition.requiredClearance.toLowerCase() as any
+      );
+      const userLevel = CLEARANCE_LEVELS.indexOf(
+        (userClearance?.toLowerCase() || 'none') as any
+      );
 
       if (userLevel < requiredLevel) {
         return {
@@ -758,7 +987,15 @@ export class EligibilityEngineService {
   }
 
   /**
-   * Calculate overall eligibility status
+   * Calculate overall eligibility status based on individual checks
+   * 
+   * @param checks - Array of eligibility checks
+   * @returns The overall eligibility status
+   * 
+   * Logic:
+   * - If any required check is ineligible, return 'ineligible'
+   * - If any required check is unknown, return 'unknown'
+   * - Otherwise, return 'eligible'
    */
   private calculateOverallStatus(checks: EligibilityCheck[]): EligibilityStatus {
     const hasIneligible = checks.some(c => c.status === 'ineligible' && c.required);
@@ -776,7 +1013,10 @@ export class EligibilityEngineService {
   }
 
   /**
-   * Calculate confidence score
+   * Calculate confidence score for eligibility assessment
+   * 
+   * @param checks - Array of eligibility checks
+   * @returns Confidence score between 0 and 1
    */
   private calculateConfidence(checks: EligibilityCheck[]): number {
     if (checks.length === 0) {
@@ -789,7 +1029,7 @@ export class EligibilityEngineService {
     // Confidence is based on percentage of eligible checks
     // Unknown checks reduce confidence
     const baseConfidence = eligibleChecks / checks.length;
-    const unknownPenalty = (unknownChecks / checks.length) * 0.5;
+    const unknownPenalty = (unknownChecks / checks.length) * UNKNOWN_CHECK_PENALTY_WEIGHT;
 
     return Math.max(0, baseConfidence - unknownPenalty);
   }
