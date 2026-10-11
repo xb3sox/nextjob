@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (41/120 tasks complete - 34.2%)  
+**Status:** In Progress (41/127 tasks complete - 32.3%)  
 **Last Updated:** 2026-01-15  
-**Latest Update:** T-76 Complete - Sticky CTA with analytics tracking  
+**Latest Update:** Added 7 critical UI tasks (T-01a to T-01g) for app interface  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -117,6 +117,69 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ## Tasks
 
 ### Phase 1: Environment & Infrastructure
+
+#### T-01a: Create Authentication UI (Login/Signup Pages)
+- [ ] **Status:** Not started
+- **Deliverable:** Login and Signup pages with email/password and OAuth support
+- **Dependencies:** T-04
+- **Acceptance:** Users can login/signup; forms validated; errors displayed; redirects to dashboard
+- **Verification:** Test login flow → verify redirect; test signup → verify account creation
+- **Files:** `src/pages/Login.tsx`, `src/pages/Signup.tsx`, `src/components/auth/`
+- **Priority:** 🔴 CRITICAL - Blocks all app access
+
+#### T-01b: Create Dashboard Page
+- [ ] **Status:** Not started
+- **Deliverable:** Main dashboard showing overview stats, recent activity, quick actions
+- **Dependencies:** T-01a
+- **Acceptance:** Dashboard displays user data; shows stats; provides navigation
+- **Verification:** Login → verify dashboard loads; check stats display correctly
+- **Files:** `src/pages/Dashboard.tsx`, `src/components/dashboard/`
+- **Priority:** 🔴 CRITICAL - Main app interface
+
+#### T-01c: Create Profile Management UI
+- [ ] **Status:** Not started
+- **Deliverable:** Profile page with claims management, verification workflow, preferences
+- **Dependencies:** T-01b, T-08, T-09, T-09a
+- **Acceptance:** Users can view/edit profile; verify claims; set preferences
+- **Verification:** Navigate to profile → verify data loads; edit profile → verify saves
+- **Files:** `src/pages/Profile.tsx`, `src/components/profile/`
+- **Priority:** 🟠 HIGH - Core user feature
+
+#### T-01d: Create Jobs Discovery UI
+- [ ] **Status:** Not started
+- **Deliverable:** Jobs page with search, filters, job cards, eligibility indicators
+- **Dependencies:** T-01b, T-11, T-12, T-14, T-15
+- **Acceptance:** Users can browse jobs; filter by criteria; view job details; see eligibility
+- **Verification:** Navigate to jobs → verify list loads; apply filters → verify results update
+- **Files:** `src/pages/Jobs.tsx`, `src/components/jobs/`
+- **Priority:** 🟠 HIGH - Core user feature
+
+#### T-01e: Create Applications Tracking UI
+- [ ] **Status:** Not started
+- **Deliverable:** Applications page showing all applications with status, receipts, outcomes
+- **Dependencies:** T-01b, T-25, T-26, T-27
+- **Acceptance:** Users can view all applications; track status; view receipts
+- **Verification:** Navigate to applications → verify list loads; click application → verify details
+- **Files:** `src/pages/Applications.tsx`, `src/components/applications/`
+- **Priority:** 🟠 HIGH - Core user feature
+
+#### T-01f: Create App Navigation and Layout
+- [ ] **Status:** Not started
+- **Deliverable:** App layout with sidebar navigation, header, responsive design
+- **Dependencies:** T-01b
+- **Acceptance:** Navigation works; responsive design; consistent layout across pages
+- **Verification:** Navigate between pages → verify layout consistent; resize → verify responsive
+- **Files:** `src/components/layout/`, `src/App.tsx` (update)
+- **Priority:** 🟠 HIGH - UX foundation
+
+#### T-01g: Implement Protected Routes
+- [ ] **Status:** Not started
+- **Deliverable:** Route protection that redirects unauthenticated users to login
+- **Dependencies:** T-01a, T-01f
+- **Acceptance:** Unauthenticated users redirected to login; authenticated users can access app
+- **Verification:** Access protected route without login → verify redirect; login → verify access
+- **Files:** `src/components/auth/ProtectedRoute.tsx`, `src/App.tsx` (update)
+- **Priority:** 🔴 CRITICAL - Security requirement
 
 #### T-01: Initialize repository structure
 - [x] **Status:** Complete

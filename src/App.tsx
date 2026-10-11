@@ -1,10 +1,38 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { ArrowRight, Check, Zap } from 'lucide-react';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import NotFound from './pages/NotFound';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
 import { analytics } from './lib/analytics';
+
+// TODO: Replace with actual auth context
+const useAuth = () => {
+  // Mock authentication - in production, this would check actual auth state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  useEffect(() => {
+    // Check if user is logged in (mock - check localStorage or cookie)
+    const token = localStorage.getItem('auth_token');
+    setIsAuthenticated(!!token);
+  }, []);
+  
+  return { isAuthenticated, setIsAuthenticated };
+};
+
+// Protected Route Component
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
+}
 
 function LandingPage() {
   const [email, setEmail] = useState('');
@@ -108,13 +136,13 @@ function LandingPage() {
             <Zap className="w-5 h-5 text-emerald-400" />
             <span className="font-semibold text-sm">NextJob</span>
           </div>
-          <a 
-            href="#signup" 
+          <Link
+            to="/signup" 
             className="text-sm text-white/60 hover:text-white transition-colors"
             onClick={() => analytics.trackCTAClick('Get started', 'navigation')}
           >
             Get started →
-          </a>
+          </Link>
         </div>
       </nav>
 
@@ -134,55 +162,23 @@ function LandingPage() {
           </p>
 
           {/* Single CTA */}
-          <form onSubmit={handleSubmit} id="signup" className="flex flex-col sm:flex-row gap-3 mb-6">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (status === 'error') {
-                  setStatus('idle');
-                  setErrorMessage('');
-                }
-              }}
-              placeholder="you@company.com"
-              disabled={status === 'loading' || status === 'success'}
-              className={`flex-1 px-4 py-3 bg-white/5 border rounded-lg text-white placeholder:text-white/30 focus:outline-none transition-colors ${
-                status === 'error' 
-                  ? 'border-red-500/50 focus:border-red-500/50' 
-                  : 'border-white/10 focus:border-emerald-500/50'
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-              aria-label="Email address"
-              aria-invalid={status === 'error'}
-              aria-describedby={status === 'error' ? 'email-error' : undefined}
-            />
-            <button 
-              type="submit"
-              disabled={status === 'loading' || status === 'success'}
+          <div id="signup" className="flex flex-col sm:flex-row gap-3 mb-6">
+            <Link
+              to="/signup"
               onClick={() => analytics.trackCTAClick('Start free', 'hero')}
-              className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+              className="flex-1 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
             >
-              {status === 'loading' ? (
-                <>
-                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Joining...
-                </>
-              ) : status === 'success' ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  Joined!
-                </>
-              ) : (
-                <>
-                  Start free
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
+              Start free
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to="/login"
+              onClick={() => analytics.trackCTAClick('Sign in', 'hero')}
+              className="px-6 py-3 border border-white/10 hover:border-white/20 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              Sign in
+            </Link>
+          </div>
 
           {/* Error Message */}
           {status === 'error' && errorMessage && (
@@ -478,9 +474,24 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
+        
+        {/* Protected Routes */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* 404 Route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
