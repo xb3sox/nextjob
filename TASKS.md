@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (32/120 tasks complete - 26.7%)  
+**Status:** In Progress (33/120 tasks complete - 27.5%)  
 **Last Updated:** 2026-01-15  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -648,12 +648,36 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 3: Jobs & Eligibility
 
 #### T-11: Implement job ingestion and normalization
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Job source ingestion with normalization, deduplication, freshness tracking
 - **Dependencies:** T-03
 - **Acceptance:** Jobs normalized per TECH.md §Job Graph; deduplication working; freshness tracked; canonical IDs maintained
 - **Verification:** Ingest test jobs → verify normalization; ingest duplicate → verify dedup
 - **Files:** `packages/api/src/jobs/`
+- **Evidence:**
+  - ✅ Job ingestion service implemented with full CRUD operations
+  - ✅ Job normalization service with comprehensive field normalization:
+    - Work mode normalization (remote/hybrid/on-site)
+    - Seniority level inference from title
+    - Location normalization (country, state, city)
+    - Skills normalization (case-insensitive, deduplication)
+    - Salary normalization (min/max validation)
+    - Role family inference from title and skills
+    - Freshness score calculation based on posted date
+  - ✅ Job deduplication service with:
+    - Fingerprint generation for duplicate detection
+    - Similarity calculation between jobs
+    - Canonical job selection based on completeness and recency
+    - Job merging to combine data from duplicates
+    - Potential duplicate detection with configurable threshold
+  - ✅ Comprehensive type definitions with Zod schemas
+  - ✅ Error handling with custom error types
+  - ✅ Unit tests for all services (50+ tests)
+  - ✅ Full integration with profile package
+  - ✅ Company management (find or create)
+  - ✅ Job statistics and analytics
+  - ✅ Freshness score updates
+  - ✅ Stale job expiration
 
 #### T-12: Implement eligibility engine
 - [ ] **Status:** Not started
