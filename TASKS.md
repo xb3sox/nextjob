@@ -2,6 +2,7 @@
 
 **Status:** In Progress (34/120 tasks complete - 28.3%)  
 **Last Updated:** 2026-01-15  
+**Latest Update:** T-12 Code Review Fixes Applied (Eligibility Engine improved from B+ to A-)  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -680,7 +681,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Stale job expiration
 
 #### T-12: Implement eligibility engine
-- [x] **Status:** Complete
+- [x] **Status:** Complete (Code Review Fixes Applied)
 - **Deliverable:** Deterministic rule evaluation for location, work authorization, sponsorship, licenses, mandatory qualifications
 - **Dependencies:** T-03, T-08
 - **Acceptance:** FR-02 satisfied; eligibility runs before ranking; Unknown returned when evidence insufficient; false-positive rate ≤2% (G-04)
@@ -703,10 +704,14 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Rule prioritization and ordering
   - ✅ Confidence score calculation
   - ✅ Assessment history tracking
-  - ✅ Comprehensive error handling
+  - ✅ Comprehensive error handling with Zod validation
   - ✅ Type definitions with Zod schemas
+  - ✅ Input validation with UserProfileSchema and JobSchema
+  - ✅ Named constants (no magic numbers)
+  - ✅ Comprehensive JSDoc documentation
   - ✅ Unit tests (25+ tests covering all scenarios)
   - ✅ Full integration with profile and jobs packages
+  - ✅ Code review fixes applied (see T12_CODE_REVIEW_FIXES.md)
 
 #### T-13: Create eligibility evaluation dataset
 - [ ] **Status:** Not started
