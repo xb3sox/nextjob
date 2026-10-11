@@ -29,11 +29,12 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-12: Eligibility engine (10 check types, rule management, confidence scoring, 25+ tests)
 - ✅ T-13: Eligibility evaluation dataset (105 test cases, 10 datasets, 3 scenarios)
 - ✅ T-14: Matching engine (7 factors, configurable weights, 20+ tests)
+- ✅ T-15: Job card UI (7 capability dimensions, responsive, accessible, 30+ tests)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 36/120 tasks complete (30%)
+**Progress:** 37/120 tasks complete (30.8%)
 
 ## Agent Skills
 

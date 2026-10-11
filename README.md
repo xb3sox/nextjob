@@ -12,7 +12,7 @@ NextJob is your AI career agent that finds the right opportunities, prepares bet
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 30%](https://img.shields.io/badge/Progress-30%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 30.8%](https://img.shields.io/badge/Progress-30.8%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -221,6 +221,7 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 - ✅ **Eligibility Engine** - Rule-based eligibility checks with 10 check types and confidence scoring
 - ✅ **Eligibility Evaluation** - Comprehensive test dataset with 105 test cases
 - ✅ **Matching Engine** - 7-factor scoring with configurable weights and explainability
+- ✅ **Job Card UI** - Responsive component with 7 capability dimensions and 30+ tests
 - ✅ **Design consistency** - Unified dark theme across all pages
 - ✅ **Form validation** - Email validation with error handling
 - ✅ **Loading states** - Spinners and disabled states
@@ -229,14 +230,14 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 **Next Tasks:**
 
 **Core Features (This Week):**
-1. **T-15: Job card UI** - Job card component with capability model (12 hours)
-2. **T-16: AI evaluation dataset for tailoring** - Test dataset (8 hours)
-3. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
+1. **T-16: AI evaluation dataset for tailoring** - Test dataset (8 hours)
+2. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
+3. **T-18: Tailoring UI** - User interface for application tailoring (16 hours)
 
 **Tailoring & Policy (Next 2 Weeks):**
-4. **T-18: Tailoring UI** - User interface for application tailoring (16 hours)
-5. **T-19: Risk and policy engine** - Risk classification and approval workflow (20 hours)
-6. **T-20: Approval workflow** - User approval interface (12 hours)
+4. **T-19: Risk and policy engine** - Risk classification and approval workflow (20 hours)
+5. **T-20: Approval workflow** - User approval interface (12 hours)
+6. **T-21: Browser extension scaffold** - WXT extension setup (12 hours)
 
 **Application Flow (Next Month):**
 7. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
