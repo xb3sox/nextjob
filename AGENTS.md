@@ -25,11 +25,12 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-09a: Preferences capture (comprehensive preferences schema, versioning, 20+ tests)
 - ✅ T-09b: Automation policy (Manual/Copilot/Autopilot modes, field overrides, 25+ tests)
 - ✅ T-10: Evidence storage (S3/local/memory, signed URLs, access control, 30+ tests)
+- ✅ T-11: Job ingestion & normalization (normalization, deduplication, freshness tracking, 50+ tests)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 32/120 tasks complete (26.7%)
+**Progress:** 33/120 tasks complete (27.5%)
 
 ## Agent Skills
 
