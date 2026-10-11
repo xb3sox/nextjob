@@ -9,6 +9,15 @@ export * from './types.js';
 // Claims and evidence management
 export * from './claims/index.js';
 
+// Verification workflow
+export * from './verification/index.js';
+
+// Preferences management
+export * from './preferences/index.js';
+
+// Automation policy
+export * from './automation/index.js';
+
 // Convenience exports - Import
 export { importProfile, validateFile, getFileTypeFromMime } from './import/index.js';
 export { extractTextFromPDF, validatePDF, extractPDFMetadata } from './import/pdf-extractor.js';
@@ -18,3 +27,18 @@ export { extractProfileWithAI, validateExtractedData } from './import/ai-extract
 // Convenience exports - Claims
 export { claimsService, ClaimsService } from './claims/claims-service.js';
 export { evidenceService, EvidenceService } from './claims/evidence-service.js';
+
+// Convenience exports - Verification
+export { verificationService, VerificationService } from './verification/verification-service.js';
+
+// Convenience exports - Preferences
+export { preferencesService, PreferencesService } from './preferences/preferences-service.js';
+
+// Convenience exports - Automation
+export { automationPolicyService, AutomationPolicyService } from './automation/automation-policy-service.js';
+
+// Storage management
+export * from './storage/index.js';
+
+// Convenience exports - Storage
+export { evidenceStorageService, EvidenceStorageService } from './storage/evidence-storage-service.js';

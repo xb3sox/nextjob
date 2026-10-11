@@ -12,7 +12,7 @@ NextJob is your AI career agent that finds the right opportunities, prepares bet
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 23.3%](https://img.shields.io/badge/Progress-23.3%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 28.3%](https://img.shields.io/badge/Progress-28.3%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -213,6 +213,12 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 - ✅ **Temporal Workflows** - Durable execution for ATS connectors with idempotency
 - ✅ **Profile Import** - PDF/DOCX extraction with AI-powered data extraction
 - ✅ **Your Profile** - Claims management with evidence provenance and versioning
+- ✅ **Claim Verification** - User verification workflow with bulk operations
+- ✅ **Preferences Capture** - Comprehensive job search preferences with versioning
+- ✅ **Automation Policy** - Manual/Copilot/Autopilot modes with field-level overrides
+- ✅ **Evidence Storage** - S3/local/memory storage with signed URLs and access control
+- ✅ **Job Ingestion** - Multi-source job import with normalization and deduplication
+- ✅ **Eligibility Engine** - Rule-based eligibility checks with 10 check types and confidence scoring
 - ✅ **Design consistency** - Unified dark theme across all pages
 - ✅ **Form validation** - Email validation with error handling
 - ✅ **Loading states** - Spinners and disabled states
@@ -221,14 +227,14 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 **Next Tasks:**
 
 **Core Features (This Week):**
-1. **T-09: Claim verification** - User verification workflow (12 hours)
-2. **T-09a: Preferences capture** - Job preferences UI (8 hours)
-3. **T-09b: Automation policy** - Automation mode settings (8 hours)
+1. **T-13: Eligibility evaluation dataset** - Test dataset for eligibility engine (8 hours)
+2. **T-14: Matching engine** - Job ranking with explainability (20 hours)
+3. **T-15: Job card UI** - Job card component with capability model (12 hours)
 
-**Eligibility & Matching (Next 2 Weeks):**
-4. **T-11: Job ingestion** - Job source ingestion and normalization (16 hours)
-5. **T-12: Eligibility engine** - Rule-based eligibility checks (24 hours)
-6. **T-14: Matching engine** - Job ranking with explainability (20 hours)
+**Tailoring (Next 2 Weeks):**
+4. **T-16: AI evaluation dataset for tailoring** - Test dataset (8 hours)
+5. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
+6. **T-18: Tailoring UI** - User interface for application tailoring (16 hours)
 
 **Application Flow (Next Month):**
 7. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
