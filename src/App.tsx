@@ -1,14 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ArrowRight, Check, Zap } from 'lucide-react';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import NotFound from './pages/NotFound';
+import { analytics } from './lib/analytics';
 
 function LandingPage() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showStickyCTA, setShowStickyCTA] = useState(false);
+
+  // Track landing page view
+  useEffect(() => {
+    analytics.trackLandingPage();
+  }, []);
+
+  // Handle scroll for sticky CTA
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyCTA(window.scrollY > 600);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Track section views with Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const section = entry.target.getAttribute('data-section');
+            if (section === 'pricing') {
+              analytics.trackPricingView();
+            }
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const pricingSection = document.querySelector('[data-section="pricing"]');
+    if (pricingSection) {
+      observer.observe(pricingSection);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const validateEmail = (email: string): boolean => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,28 +61,33 @@ function LandingPage() {
     if (!email) {
       setStatus('error');
       setErrorMessage('Please enter your email address');
+      analytics.trackSignupError('Empty email');
       return;
     }
 
     if (!validateEmail(email)) {
       setStatus('error');
       setErrorMessage('Please enter a valid email address');
+      analytics.trackSignupError('Invalid email format');
       return;
     }
 
     setStatus('loading');
     setErrorMessage('');
+    analytics.trackSignupSubmit(email);
 
     // Simulate API call
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       setStatus('success');
       setEmail('');
+      analytics.trackSignupSuccess();
       // TODO: Replace with actual API call
       console.log('Email submitted:', email);
     } catch (error) {
       setStatus('error');
       setErrorMessage('Something went wrong. Please try again.');
+      analytics.trackSignupError('API call failed');
     }
   };
 
@@ -66,6 +111,7 @@ function LandingPage() {
           <a 
             href="#signup" 
             className="text-sm text-white/60 hover:text-white transition-colors"
+            onClick={() => analytics.trackCTAClick('Get started', 'navigation')}
           >
             Get started →
           </a>
@@ -113,6 +159,7 @@ function LandingPage() {
             <button 
               type="submit"
               disabled={status === 'loading' || status === 'success'}
+              onClick={() => analytics.trackCTAClick('Start free', 'hero')}
               className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
             >
               {status === 'loading' ? (
@@ -186,7 +233,10 @@ function LandingPage() {
                 <button 
                   className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
                   aria-label="Submit application preview"
-                  onClick={() => alert('This is a preview. Sign up to access the full application.')}
+                  onClick={() => {
+                    analytics.trackCTAClick('Submit application', 'product_preview');
+                    alert('This is a preview. Sign up to access the full application.');
+                  }}
                 >
                   Submit application →
                 </button>
@@ -281,7 +331,7 @@ function LandingPage() {
       </section>
 
       {/* Pricing - Simple */}
-      <section className="py-20 px-6 border-t border-white/5">
+      <section className="py-20 px-6 border-t border-white/5" data-section="pricing">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-semibold mb-12 text-center">Simple pricing</h2>
           <div className="grid md:grid-cols-2 gap-6">
@@ -310,6 +360,12 @@ function LandingPage() {
                   Limited application assistance
                 </li>
               </ul>
+              <button 
+                className="mt-6 w-full py-2 px-4 border border-white/10 rounded-lg text-sm font-medium text-white/60 hover:text-white hover:border-white/20 transition-colors"
+                onClick={() => analytics.trackCTAClick('Get started', 'pricing_free')}
+              >
+                Get started
+              </button>
             </div>
             <div className="p-8 rounded-xl border border-emerald-500/30 bg-emerald-500/5">
               <h3 className="font-medium mb-2">Search</h3>
@@ -336,6 +392,12 @@ function LandingPage() {
                   Interview preparation
                 </li>
               </ul>
+              <button 
+                className="mt-6 w-full py-2 px-4 bg-emerald-500 hover:bg-emerald-600 rounded-lg text-sm font-medium text-white transition-colors"
+                onClick={() => analytics.trackCTAClick('Start free trial', 'pricing_search')}
+              >
+                Start free trial
+              </button>
             </div>
           </div>
         </div>
@@ -346,21 +408,30 @@ function LandingPage() {
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-semibold mb-12 text-center">Questions</h2>
           <div className="space-y-8">
-            <div>
+            <div 
+              onClick={() => analytics.trackFAQInteraction('How is this different from other AI tools?')}
+              className="cursor-pointer"
+            >
               <h3 className="font-medium mb-2">How is this different from other AI tools?</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 We only generate content from your verified profile. No hallucinated claims. 
                 We check eligibility before you apply. Every submission includes an application receipt.
               </p>
             </div>
-            <div>
+            <div 
+              onClick={() => analytics.trackFAQInteraction('Is my data safe?')}
+              className="cursor-pointer"
+            >
               <h3 className="font-medium mb-2">Is my data safe?</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 Yes. We use encryption at rest and in transit. We never sell your data. 
                 You can export or delete everything at any time. GDPR compliant.
               </p>
             </div>
-            <div>
+            <div 
+              onClick={() => analytics.trackFAQInteraction('What if I\'m an international candidate?')}
+              className="cursor-pointer"
+            >
               <h3 className="font-medium mb-2">What if I'm an international candidate?</h3>
               <p className="text-sm text-white/60 leading-relaxed">
                 We check work authorization, sponsorship requirements, and location restrictions 
@@ -384,6 +455,21 @@ function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Sticky CTA - Appears after scrolling */}
+      {showStickyCTA && status !== 'success' && (
+        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <a
+            href="#signup"
+            onClick={() => analytics.trackCTAClick('Start free', 'sticky_cta')}
+            className="flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg shadow-lg transition-all hover:scale-105"
+          >
+            <Zap className="w-4 h-4" />
+            Start free
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

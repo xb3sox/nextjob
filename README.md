@@ -12,7 +12,7 @@ NextJob is your AI career agent that finds the right opportunities, prepares bet
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 32.5%](https://img.shields.io/badge/Progress-32.5%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
+[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 34.2%](https://img.shields.io/badge/Progress-34.2%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](PRODUCT_REVIEW_REPORT.md)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -223,6 +223,8 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 - ✅ **Matching Engine** - 7-factor scoring with configurable weights and explainability
 - ✅ **Job Card UI** - Responsive component with 7 capability dimensions and 30+ tests
 - ✅ **Tailoring Engine** - Evidence-constrained content generation with 5 tailoring types and 25+ tests
+- ✅ **Landing Page Analytics** - PostHog integration with comprehensive event tracking
+- ✅ **Sticky CTA** - Persistent call-to-action with scroll detection and analytics
 - ✅ **Design consistency** - Unified dark theme across all pages
 - ✅ **Form validation** - Email validation with error handling
 - ✅ **Loading states** - Spinners and disabled states
@@ -241,9 +243,9 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 6. **T-23: First ATS connector** - Build first connector (40 hours)
 
 **Application Flow (Next Month):**
-7. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
-8. **T-23: First ATS connector** - Build first connector (40 hours)
-9. **T-25: Application state machine** - Complete lifecycle (24 hours)
+7. **T-25: Application state machine** - Complete lifecycle (24 hours)
+8. **T-26: Submission receipt generation** - Immutable submission proofs (16 hours)
+9. **T-27: Application tracker UI** - Track applications with filters (20 hours)
 
 See [TASKS.md](TASKS.md) for complete task list.
 

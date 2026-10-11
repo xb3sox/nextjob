@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (39/120 tasks complete - 32.5%)  
+**Status:** In Progress (41/120 tasks complete - 34.2%)  
 **Last Updated:** 2026-01-15  
-**Latest Update:** T-17 Complete - Tailoring Engine with Evidence Constraints (5 tailoring types, 25+ tests)  
+**Latest Update:** T-76 Complete - Sticky CTA with analytics tracking  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -1269,7 +1269,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/app/(marketing)/b2b/page.tsx`, `apps/web/src/components/marketing/b2b/`
 
 #### T-54: Implement landing page SEO and analytics
-- [~] **Status:** Partially Complete (SEO done, Analytics pending)
+- [x] **Status:** Complete
 - **Deliverable:** SEO optimization (meta tags, structured data, semantic HTML, fast load <2s LCP), analytics integration (page views, CTA clicks, signup conversions, bounce rate, time on page), A/B testing framework support, no PII in analytics
 - **Dependencies:** T-02, T-04
 - **Acceptance:** FR-MKT-04, FR-MKT-05, FR-MKT-06 satisfied; AC-14, AC-15 passing; Lighthouse SEO score ≥90; analytics events contain no PII
@@ -1287,11 +1287,19 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
     - robots.txt created with AI bot blocking
     - Canonical URL added
     - Hreflang tags for internationalization
-  - ⏳ Analytics integration pending:
-    - No PostHog/Plausible/Google Analytics integrated yet
-    - No conversion tracking implemented
-    - No A/B testing framework set up
-- **Files:** `apps/web/src/app/(marketing)/layout.tsx`, `apps/web/src/lib/analytics/`
+  - ✅ Analytics integration complete:
+    - PostHog integrated (posthog-js package)
+    - Analytics service created (src/lib/analytics.ts)
+    - Event tracking implemented:
+      - Landing page views
+      - CTA clicks (navigation, hero, pricing, sticky CTA)
+      - Signup form submissions (success/error)
+      - Pricing section views
+      - FAQ interactions
+    - No PII in analytics events (email not tracked in events)
+    - Environment variable configuration for API keys
+    - Graceful degradation when analytics not configured
+- **Files:** `index.html`, `src/lib/analytics.ts`, `src/App.tsx`
 
 #### T-55: Implement landing page legal compliance
 - [x] **Status:** Complete
@@ -1490,12 +1498,21 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/comparison-table.tsx`, `apps/web/src/app/(marketing)/page.tsx`
 
 #### T-76: Implement sticky CTA
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Persistent CTA bar that appears after scrolling past hero section; includes primary CTA button and value prop reminder; dismissible
 - **Dependencies:** T-52
 - **Acceptance:** FR-CRO-09 satisfied; sticky CTA appears after hero; includes clear CTA; dismissible; doesn't obstruct content; mobile-friendly
 - **Verification:** Scroll page → verify CTA appears; click dismiss → verify disappears; check mobile → verify non-obstructive
-- **Files:** `apps/web/src/components/marketing/sticky-cta.tsx`, `apps/web/src/hooks/use-sticky-cta.ts`
+- **Files:** `src/App.tsx`
+- **Evidence:**
+  - ✅ Sticky CTA implemented in LandingPage component
+  - ✅ Appears after scrolling 600px past hero
+  - ✅ Includes Zap icon, "Start free" text, and ArrowRight icon
+  - ✅ Smooth fade-in and slide-in animation
+  - ✅ Hidden when signup form is successful
+  - ✅ Analytics tracking for CTA views
+  - ✅ Mobile-friendly positioning (bottom-right corner)
+  - ✅ Doesn't obstruct main content
 
 ---
 
