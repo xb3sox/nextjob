@@ -1,0 +1,232 @@
+{
+  "scenario": "partial_profiles",
+  "description": "Test cases with partially specified user profiles",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "pp-001",
+      "description": "Partial profile - only location specified",
+      "userProfile": {
+        "location": { "country": "US" }
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.5,
+        "summary": { "total": 2, "passed": 1, "failed": 0, "unknown": 1 },
+        "warnings": ["Unable to verify skill"]
+      }
+    },
+    {
+      "id": "pp-002",
+      "description": "Partial profile - missing work authorization",
+      "userProfile": {
+        "location": { "country": "US" },
+        "skills": [{ "name": "JavaScript" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.67,
+        "summary": { "total": 3, "passed": 2, "failed": 0, "unknown": 1 },
+        "warnings": ["Unable to verify work_authorization"]
+      }
+    },
+    {
+      "id": "pp-003",
+      "description": "Partial profile - missing education and experience",
+      "userProfile": {
+        "location": { "country": "US" },
+        "skills": [{ "name": "JavaScript" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true },
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.33,
+        "summary": { "total": 3, "passed": 1, "failed": 0, "unknown": 2 },
+        "warnings": ["Unable to verify education", "Unable to verify experience"]
+      }
+    },
+    {
+      "id": "pp-004",
+      "description": "Partial profile - only required fields present",
+      "userProfile": {
+        "location": { "country": "US" },
+        "workAuthorization": { "authorizations": ["US Citizen"] },
+        "skills": [{ "name": "JavaScript" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": false },
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": false }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 5, "passed": 3, "failed": 0, "unknown": 2 }
+      }
+    },
+    {
+      "id": "pp-005",
+      "description": "Partial profile - all optional checks, missing data",
+      "userProfile": {},
+      "job": {},
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": false },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": false },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": false }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 3, "passed": 0, "failed": 0, "unknown": 3 }
+      }
+    },
+    {
+      "id": "pp-006",
+      "description": "Partial profile - mix of present and missing data",
+      "userProfile": {
+        "location": { "country": "US" },
+        "education": [{ "degree": "Bachelor" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true },
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.5,
+        "summary": { "total": 4, "passed": 2, "failed": 0, "unknown": 2 },
+        "warnings": ["Unable to verify experience", "Unable to verify skill"]
+      }
+    },
+    {
+      "id": "pp-007",
+      "description": "Partial profile - empty arrays",
+      "userProfile": {
+        "location": { "country": "US" },
+        "skills": [],
+        "education": []
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 0.33,
+        "summary": { "total": 3, "passed": 1, "failed": 2, "unknown": 0 },
+        "missingRequirements": [
+          "User does not have required skills",
+          "User does not have minimum required education (bachelor)"
+        ]
+      }
+    },
+    {
+      "id": "pp-008",
+      "description": "Partial profile - null values",
+      "userProfile": {
+        "location": { "country": "US" },
+        "workAuthorization": null,
+        "skills": null
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.33,
+        "summary": { "total": 3, "passed": 1, "failed": 0, "unknown": 2 },
+        "warnings": ["Unable to verify work_authorization", "Unable to verify skill"]
+      }
+    },
+    {
+      "id": "pp-009",
+      "description": "Partial profile - some fields with data, some without",
+      "userProfile": {
+        "location": { "country": "US" },
+        "workAuthorization": { "authorizations": ["US Citizen"] },
+        "skills": [{ "name": "JavaScript" }, { "name": "React" }],
+        "education": null,
+        "experience": null
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true },
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.6,
+        "summary": { "total": 5, "passed": 3, "failed": 0, "unknown": 2 },
+        "warnings": ["Unable to verify education", "Unable to verify experience"]
+      }
+    },
+    {
+      "id": "pp-010",
+      "description": "Partial profile - only one required field present",
+      "userProfile": {
+        "location": { "country": "US" }
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.25,
+        "summary": { "total": 4, "passed": 1, "failed": 0, "unknown": 3 },
+        "warnings": ["Unable to verify work_authorization", "Unable to verify skill", "Unable to verify education"]
+      }
+    }
+  ]
+}

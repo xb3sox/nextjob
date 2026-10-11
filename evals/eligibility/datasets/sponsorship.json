@@ -1,0 +1,90 @@
+{
+  "dataset": "sponsorship",
+  "description": "Sponsorship requirement eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "sp-001",
+      "description": "User needs sponsorship, job offers it",
+      "userProfile": { "needsSponsorship": true },
+      "job": { "visaSponsorship": true },
+      "rules": [{ "checkType": "sponsorship", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sp-002",
+      "description": "User needs sponsorship, job doesn't offer it",
+      "userProfile": { "needsSponsorship": true },
+      "job": { "visaSponsorship": false },
+      "rules": [{ "checkType": "sponsorship", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "ineligible", "required": true, "reason": "User needs sponsorship but job does not offer it" }], "missingRequirements": ["User needs sponsorship but job does not offer it"] }
+    },
+    {
+      "id": "sp-003",
+      "description": "User doesn't need sponsorship, job doesn't offer it",
+      "userProfile": { "needsSponsorship": false },
+      "job": { "visaSponsorship": false },
+      "rules": [{ "checkType": "sponsorship", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sp-004",
+      "description": "Job requires no sponsorship, user needs it",
+      "userProfile": { "needsSponsorship": true },
+      "job": {},
+      "rules": [{ "checkType": "sponsorship", "condition": { "requireNoSponsorship": true }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "ineligible", "required": true, "reason": "Job requires no sponsorship needed" }], "missingRequirements": ["Job requires no sponsorship needed"] }
+    },
+    {
+      "id": "sp-005",
+      "description": "Job requires no sponsorship, user doesn't need it",
+      "userProfile": { "needsSponsorship": false },
+      "job": {},
+      "rules": [{ "checkType": "sponsorship", "condition": { "requireNoSponsorship": true }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sp-006",
+      "description": "Missing sponsorship info - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [{ "checkType": "sponsorship", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sp-007",
+      "description": "Optional sponsorship rule",
+      "userProfile": { "needsSponsorship": true },
+      "job": { "visaSponsorship": false },
+      "rules": [{ "checkType": "sponsorship", "condition": {}, "required": false }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "ineligible", "required": false, "reason": "User needs sponsorship but job does not offer it" }] }
+    },
+    {
+      "id": "sp-008",
+      "description": "User needs sponsorship, job offers it, with requireNoSponsorship",
+      "userProfile": { "needsSponsorship": true },
+      "job": { "visaSponsorship": true },
+      "rules": [{ "checkType": "sponsorship", "condition": { "requireNoSponsorship": true }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "ineligible", "required": true, "reason": "Job requires no sponsorship needed" }], "missingRequirements": ["Job requires no sponsorship needed"] }
+    },
+    {
+      "id": "sp-009",
+      "description": "Multiple sponsorship rules",
+      "userProfile": { "needsSponsorship": false },
+      "job": { "visaSponsorship": true },
+      "rules": [
+        { "checkType": "sponsorship", "condition": {}, "required": true },
+        { "checkType": "sponsorship", "condition": { "requireNoSponsorship": false }, "required": true }
+      ],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "sponsorship", "status": "eligible", "required": true }, { "type": "sponsorship", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sp-010",
+      "description": "No sponsorship rules - should pass",
+      "userProfile": { "needsSponsorship": true },
+      "job": { "visaSponsorship": false },
+      "rules": [],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [] }
+    }
+  ]
+}

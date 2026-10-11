@@ -27,11 +27,12 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-10: Evidence storage (S3/local/memory, signed URLs, access control, 30+ tests)
 - ✅ T-11: Job ingestion & normalization (normalization, deduplication, freshness tracking, 50+ tests)
 - ✅ T-12: Eligibility engine (10 check types, rule management, confidence scoring, 25+ tests)
+- ✅ T-13: Eligibility evaluation dataset (105 test cases, 10 datasets, 3 scenarios)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 34/120 tasks complete (28.3%)
+**Progress:** 35/120 tasks complete (29.2%)
 
 ## Agent Skills
 

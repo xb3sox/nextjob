@@ -1,0 +1,87 @@
+{
+  "dataset": "certification",
+  "description": "Certification eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ce-001",
+      "description": "User has required certification",
+      "userProfile": { "certifications": [{ "name": "AWS Certified" }] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ce-002",
+      "description": "User has multiple certifications - one matches",
+      "userProfile": { "certifications": [{ "name": "AWS Certified" }, { "name": "Azure Certified" }] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ce-003",
+      "description": "User doesn't have required certification",
+      "userProfile": { "certifications": [{ "name": "Azure Certified" }] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "ineligible", "required": true, "reason": "User does not have required certifications" }], "missingRequirements": ["User does not have required certifications"] }
+    },
+    {
+      "id": "ce-004",
+      "description": "User has no certifications - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified"] }, "required": true }],
+      "expectedOutcome": { "status": "unknown", "confidence": 0.0, "checks": [{ "type": "certification", "status": "unknown", "required": true, "reason": "User does not have required certifications" }], "warnings": ["Unable to verify certification"] }
+    },
+    {
+      "id": "ce-005",
+      "description": "Multiple required certifications - user has all",
+      "userProfile": { "certifications": [{ "name": "AWS Certified" }, { "name": "PMP" }] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified", "PMP"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ce-006",
+      "description": "Multiple required certifications - user missing one",
+      "userProfile": { "certifications": [{ "name": "AWS Certified" }] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified", "PMP"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "ineligible", "required": true, "reason": "User does not have required certifications" }], "missingRequirements": ["User does not have required certifications"] }
+    },
+    {
+      "id": "ce-007",
+      "description": "Optional certification rule",
+      "userProfile": { "certifications": [] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified"] }, "required": false }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "ineligible", "required": false, "reason": "User does not have required certifications" }] }
+    },
+    {
+      "id": "ce-008",
+      "description": "No required certifications specified - should pass",
+      "userProfile": { "certifications": [{ "name": "AWS Certified" }] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ce-009",
+      "description": "Case-sensitive certification matching",
+      "userProfile": { "certifications": [{ "name": "aws certified" }] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "ineligible", "required": true, "reason": "User does not have required certifications" }], "missingRequirements": ["User does not have required certifications"] }
+    },
+    {
+      "id": "ce-010",
+      "description": "Empty certifications array",
+      "userProfile": { "certifications": [] },
+      "job": {},
+      "rules": [{ "checkType": "certification", "condition": { "requiredCertifications": ["AWS Certified"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "certification", "status": "ineligible", "required": true, "reason": "User does not have required certifications" }], "missingRequirements": ["User does not have required certifications"] }
+    }
+  ]
+}

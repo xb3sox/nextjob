@@ -1,0 +1,87 @@
+{
+  "dataset": "license",
+  "description": "Professional license eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "li-001",
+      "description": "User has required license",
+      "userProfile": { "licenses": [{ "name": "PE", "valid": true }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "li-002",
+      "description": "User has multiple licenses - one matches",
+      "userProfile": { "licenses": [{ "name": "PE", "valid": true }, { "name": "EIT", "valid": true }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "li-003",
+      "description": "User doesn't have required license",
+      "userProfile": { "licenses": [{ "name": "EIT", "valid": true }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "ineligible", "required": true, "reason": "User does not have required licenses" }], "missingRequirements": ["User does not have required licenses"] }
+    },
+    {
+      "id": "li-004",
+      "description": "User has license but it's not valid",
+      "userProfile": { "licenses": [{ "name": "PE", "valid": false }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "ineligible", "required": true, "reason": "User does not have required licenses" }], "missingRequirements": ["User does not have required licenses"] }
+    },
+    {
+      "id": "li-005",
+      "description": "User has no licenses - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE"] }, "required": true }],
+      "expectedOutcome": { "status": "unknown", "confidence": 0.0, "checks": [{ "type": "license", "status": "unknown", "required": true, "reason": "User does not have required licenses" }], "warnings": ["Unable to verify license"] }
+    },
+    {
+      "id": "li-006",
+      "description": "Multiple required licenses - user has all",
+      "userProfile": { "licenses": [{ "name": "PE", "valid": true }, { "name": "PMP", "valid": true }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE", "PMP"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "li-007",
+      "description": "Multiple required licenses - user missing one",
+      "userProfile": { "licenses": [{ "name": "PE", "valid": true }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE", "PMP"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "ineligible", "required": true, "reason": "User does not have required licenses" }], "missingRequirements": ["User does not have required licenses"] }
+    },
+    {
+      "id": "li-008",
+      "description": "Optional license rule",
+      "userProfile": { "licenses": [] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE"] }, "required": false }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "ineligible", "required": false, "reason": "User does not have required licenses" }] }
+    },
+    {
+      "id": "li-009",
+      "description": "No required licenses specified - should pass",
+      "userProfile": { "licenses": [{ "name": "PE", "valid": true }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "li-010",
+      "description": "Case-sensitive license matching",
+      "userProfile": { "licenses": [{ "name": "pe", "valid": true }] },
+      "job": {},
+      "rules": [{ "checkType": "license", "condition": { "requiredLicenses": ["PE"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "license", "status": "ineligible", "required": true, "reason": "User does not have required licenses" }], "missingRequirements": ["User does not have required licenses"] }
+    }
+  ]
+}

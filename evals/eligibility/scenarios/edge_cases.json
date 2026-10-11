@@ -1,0 +1,275 @@
+{
+  "scenario": "edge_cases",
+  "description": "Edge cases and boundary conditions for eligibility testing",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ec-001",
+      "description": "Empty rules array - should always pass",
+      "userProfile": {
+        "location": { "country": "US" }
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 0, "passed": 0, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-002",
+      "description": "Zero experience required - user has zero",
+      "userProfile": {
+        "experience": []
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "experience", "condition": { "minimumYears": 0 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-003",
+      "description": "Exact match on experience years",
+      "userProfile": {
+        "experience": [{ "startDate": "2018-01-01", "endDate": "2023-01-01" }]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-004",
+      "description": "One day short on experience",
+      "userProfile": {
+        "experience": [{ "startDate": "2018-01-02", "endDate": "2023-01-01" }]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 0, "failed": 1, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-005",
+      "description": "Multiple education entries - highest degree counts",
+      "userProfile": {
+        "education": [
+          { "degree": "high_school" },
+          { "degree": "associate" },
+          { "degree": "bachelor" },
+          { "degree": "master" }
+        ]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "education", "condition": { "minimumDegree": "master" }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-006",
+      "description": "Duplicate skills in user profile",
+      "userProfile": {
+        "skills": [
+          { "name": "JavaScript" },
+          { "name": "JavaScript" },
+          { "name": "React" }
+        ]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript", "React"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-007",
+      "description": "Special characters in skill names",
+      "userProfile": {
+        "skills": [{ "name": "C++" }, { "name": "C#" }]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "skill", "condition": { "requiredSkills": ["C++", "C#"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-008",
+      "description": "Very long skill name",
+      "userProfile": {
+        "skills": [{ "name": "a".repeat(1000) }]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "skill", "condition": { "requiredSkills": ["a".repeat(1000)] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-009",
+      "description": "All checks unknown - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.0,
+        "summary": { "total": 3, "passed": 0, "failed": 0, "unknown": 3 },
+        "warnings": ["Unable to verify location", "Unable to verify work_authorization", "Unable to verify skill"]
+      }
+    },
+    {
+      "id": "ec-010",
+      "description": "Mix of eligible, ineligible, and unknown - ineligible wins",
+      "userProfile": {
+        "location": { "country": "US" },
+        "skills": [{ "name": "Python" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 0.33,
+        "summary": { "total": 3, "passed": 1, "failed": 1, "unknown": 1 },
+        "missingRequirements": ["User does not have required skills"],
+        "warnings": ["Unable to verify education"]
+      }
+    },
+    {
+      "id": "ec-011",
+      "description": "Confidence calculation with mixed results",
+      "userProfile": {
+        "location": { "country": "US" },
+        "skills": [{ "name": "JavaScript" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true },
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.5,
+        "summary": { "total": 4, "passed": 2, "failed": 0, "unknown": 2 },
+        "warnings": ["Unable to verify education", "Unable to verify experience"]
+      }
+    },
+    {
+      "id": "ec-012",
+      "description": "Large number of rules - performance test",
+      "userProfile": {
+        "skills": [{ "name": "JavaScript" }]
+      },
+      "job": {},
+      "rules": Array(50).fill(null).map((_, i) => ({
+        "checkType": "skill",
+        "condition": { "requiredSkills": ["JavaScript"] },
+        "required": true
+      })),
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 50, "passed": 50, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-013",
+      "description": "Unicode characters in location",
+      "userProfile": {
+        "location": { "country": "日本" }
+      },
+      "job": {
+        "location": { "country": "日本" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["日本"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-014",
+      "description": "Whitespace in skill names",
+      "userProfile": {
+        "skills": [{ "name": "  JavaScript  " }]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "ec-015",
+      "description": "Boundary: exactly at minimum years",
+      "userProfile": {
+        "experience": [{ "startDate": "2019-01-01", "endDate": "2024-01-01" }]
+      },
+      "job": {},
+      "rules": [
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 1, "passed": 1, "failed": 0, "unknown": 0 }
+      }
+    }
+  ]
+}

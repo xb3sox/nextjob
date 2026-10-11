@@ -1,0 +1,90 @@
+{
+  "dataset": "clearance",
+  "description": "Security clearance eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "cl-001",
+      "description": "User has required clearance level",
+      "userProfile": { "securityClearance": "secret" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "cl-002",
+      "description": "User has higher clearance than required",
+      "userProfile": { "securityClearance": "top_secret" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "cl-003",
+      "description": "User has lower clearance than required",
+      "userProfile": { "securityClearance": "confidential" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "ineligible", "required": true, "reason": "User has confidential clearance, but secret required" }], "missingRequirements": ["User has confidential clearance, but secret required"] }
+    },
+    {
+      "id": "cl-004",
+      "description": "User has no clearance - should return ineligible",
+      "userProfile": { "securityClearance": "none" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "ineligible", "required": true, "reason": "User has none clearance, but secret required" }], "missingRequirements": ["User has none clearance, but secret required"] }
+    },
+    {
+      "id": "cl-005",
+      "description": "Missing clearance info - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true }],
+      "expectedOutcome": { "status": "unknown", "confidence": 0.0, "checks": [{ "type": "clearance", "status": "unknown", "required": true, "reason": "User has no clearance, but secret required" }], "warnings": ["Unable to verify clearance"] }
+    },
+    {
+      "id": "cl-006",
+      "description": "TS/SCI clearance level",
+      "userProfile": { "securityClearance": "ts_sci" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "top_secret" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "cl-007",
+      "description": "Case-insensitive clearance matching",
+      "userProfile": { "securityClearance": "SECRET" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "cl-008",
+      "description": "Optional clearance rule",
+      "userProfile": { "securityClearance": "confidential" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": false }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "ineligible", "required": false, "reason": "User has confidential clearance, but secret required" }] }
+    },
+    {
+      "id": "cl-009",
+      "description": "No clearance required - should pass",
+      "userProfile": { "securityClearance": "none" },
+      "job": {},
+      "rules": [{ "checkType": "clearance", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "cl-010",
+      "description": "Multiple clearance rules - all must pass",
+      "userProfile": { "securityClearance": "top_secret" },
+      "job": {},
+      "rules": [
+        { "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true },
+        { "checkType": "clearance", "condition": { "requiredClearance": "confidential" }, "required": true }
+      ],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "clearance", "status": "eligible", "required": true }, { "type": "clearance", "status": "eligible", "required": true }] }
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "dataset": "skill",
+  "description": "Skill requirement eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "sk-001",
+      "description": "User has all required skills",
+      "userProfile": { "skills": [{ "name": "JavaScript" }, { "name": "React" }, { "name": "Node.js" }] },
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": { "requiredSkills": ["JavaScript", "React"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sk-002",
+      "description": "User missing one required skill",
+      "userProfile": { "skills": [{ "name": "JavaScript" }] },
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": { "requiredSkills": ["JavaScript", "React"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "ineligible", "required": true, "reason": "User does not have required skills" }], "missingRequirements": ["User does not have required skills"] }
+    },
+    {
+      "id": "sk-003",
+      "description": "User has no skills",
+      "userProfile": { "skills": [] },
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "ineligible", "required": true, "reason": "User does not have required skills" }], "missingRequirements": ["User does not have required skills"] }
+    },
+    {
+      "id": "sk-004",
+      "description": "Missing skills info - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sk-005",
+      "description": "Case-insensitive skill matching",
+      "userProfile": { "skills": [{ "name": "javascript" }] },
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sk-006",
+      "description": "User has extra skills beyond requirements",
+      "userProfile": { "skills": [{ "name": "JavaScript" }, { "name": "React" }, { "name": "Python" }, { "name": "Java" }] },
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sk-007",
+      "description": "No required skills specified - should pass",
+      "userProfile": { "skills": [{ "name": "JavaScript" }] },
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": {}, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sk-008",
+      "description": "Optional skill rule - user ineligible but rule not required",
+      "userProfile": { "skills": [{ "name": "Python" }] },
+      "job": {},
+      "rules": [{ "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": false }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "ineligible", "required": false, "reason": "User does not have required skills" }] }
+    },
+    {
+      "id": "sk-009",
+      "description": "Multiple skill rules - all must pass",
+      "userProfile": { "skills": [{ "name": "JavaScript" }, { "name": "React" }, { "name": "Node.js" }] },
+      "job": {},
+      "rules": [
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["React"] }, "required": true }
+      ],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "skill", "status": "eligible", "required": true }, { "type": "skill", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "sk-010",
+      "description": "Multiple skill rules - one fails",
+      "userProfile": { "skills": [{ "name": "JavaScript" }] },
+      "job": {},
+      "rules": [
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["React"] }, "required": true }
+      ],
+      "expectedOutcome": { "status": "ineligible", "confidence": 0.5, "checks": [{ "type": "skill", "status": "eligible", "required": true }, { "type": "skill", "status": "ineligible", "required": true, "reason": "User does not have required skills" }], "missingRequirements": ["User does not have required skills"] }
+    }
+  ]
+}

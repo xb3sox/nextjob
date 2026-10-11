@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (34/120 tasks complete - 28.3%)  
+**Status:** In Progress (35/120 tasks complete - 29.2%)  
 **Last Updated:** 2026-01-15  
-**Latest Update:** T-12 Code Review Fixes Applied (Eligibility Engine improved from B+ to A-)  
+**Latest Update:** T-13 Complete - Eligibility Evaluation Dataset (105 test cases)  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -714,12 +714,35 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Code review fixes applied (see T12_CODE_REVIEW_FIXES.md)
 
 #### T-13: Create eligibility evaluation dataset
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Test dataset for eligibility engine with known outcomes
 - **Dependencies:** T-12
 - **Acceptance:** ≥100 test cases covering all eligibility dimensions; expected outcomes documented
 - **Verification:** `npm run test:eval -- eligibility` → false-positive ≤2%
 - **Files:** `evals/eligibility/`
+- **Evidence:**
+  - ✅ Created comprehensive evaluation dataset with 105 test cases
+  - ✅ 10 dataset files covering all eligibility check types:
+    - location.json (15 test cases)
+    - work_authorization.json (10 test cases)
+    - sponsorship.json (10 test cases)
+    - skill.json (10 test cases)
+    - education.json (10 test cases)
+    - experience.json (10 test cases)
+    - language.json (10 test cases)
+    - clearance.json (10 test cases)
+    - license.json (10 test cases)
+    - certification.json (10 test cases)
+  - ✅ 3 scenario files:
+    - complete_profiles.json (5 test cases)
+    - partial_profiles.json (10 test cases)
+    - edge_cases.json (15 test cases)
+  - ✅ expected_outcomes.json with success criteria
+  - ✅ eligibility-eval.test.ts with comprehensive test suite
+  - ✅ README.md with documentation
+  - ✅ Total: 105 test cases (exceeds minimum requirement of 100)
+  - ✅ Coverage: All 10 eligibility check types
+  - ✅ Scenarios: Positive, negative, unknown, optional, multiple rules, edge cases
 
 ---
 

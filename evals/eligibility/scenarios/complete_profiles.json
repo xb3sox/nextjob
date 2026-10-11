@@ -1,0 +1,148 @@
+{
+  "scenario": "complete_profiles",
+  "description": "Test cases with fully specified user profiles",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "cp-001",
+      "description": "Complete profile - all eligibility checks pass",
+      "userProfile": {
+        "location": { "country": "US", "city": "San Francisco" },
+        "workAuthorization": { "authorizations": ["US Citizen"] },
+        "needsSponsorship": false,
+        "licenses": [{ "name": "PE", "valid": true }],
+        "certifications": [{ "name": "AWS Certified" }],
+        "education": [{ "degree": "Bachelor", "field": "Computer Science" }],
+        "experience": [{ "startDate": "2018-01-01", "endDate": "2023-01-01" }],
+        "skills": [{ "name": "JavaScript" }, { "name": "React" }, { "name": "Node.js" }],
+        "languages": [{ "language": "English", "proficiency": "fluent" }],
+        "securityClearance": "secret"
+      },
+      "job": {
+        "location": { "country": "US", "remote": false },
+        "visaSponsorship": false
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript", "React"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true },
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 5, "passed": 5, "failed": 0, "unknown": 0 }
+      }
+    },
+    {
+      "id": "cp-002",
+      "description": "Complete profile - one required check fails",
+      "userProfile": {
+        "location": { "country": "UK", "city": "London" },
+        "workAuthorization": { "authorizations": ["UK Citizen"] },
+        "needsSponsorship": false,
+        "education": [{ "degree": "Bachelor", "field": "Computer Science" }],
+        "experience": [{ "startDate": "2018-01-01", "endDate": "2023-01-01" }],
+        "skills": [{ "name": "JavaScript" }, { "name": "React" }],
+        "languages": [{ "language": "English", "proficiency": "fluent" }]
+      },
+      "job": {
+        "location": { "country": "US", "remote": false },
+        "visaSponsorship": false
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 0.33,
+        "summary": { "total": 3, "passed": 1, "failed": 2, "unknown": 0 },
+        "missingRequirements": [
+          "User location (UK) not in allowed countries",
+          "User does not have required work authorization"
+        ]
+      }
+    },
+    {
+      "id": "cp-003",
+      "description": "Complete profile - all optional checks fail",
+      "userProfile": {
+        "location": { "country": "UK" },
+        "workAuthorization": { "authorizations": ["UK Citizen"] },
+        "skills": [{ "name": "Python" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": false },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": false },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": false }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 3, "passed": 0, "failed": 3, "unknown": 0 }
+      }
+    },
+    {
+      "id": "cp-004",
+      "description": "Complete profile - mix of required and optional checks",
+      "userProfile": {
+        "location": { "country": "US" },
+        "workAuthorization": { "authorizations": ["US Citizen"] },
+        "skills": [{ "name": "JavaScript" }],
+        "education": [{ "degree": "Bachelor" }]
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"] }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript"] }, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "master" }, "required": false }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 3, "passed": 2, "failed": 1, "unknown": 0 }
+      }
+    },
+    {
+      "id": "cp-005",
+      "description": "Complete profile - high confidence with all checks passing",
+      "userProfile": {
+        "location": { "country": "US" },
+        "workAuthorization": { "authorizations": ["US Citizen"] },
+        "needsSponsorship": false,
+        "education": [{ "degree": "Master", "field": "Computer Science" }],
+        "experience": [{ "startDate": "2015-01-01", "endDate": "2023-01-01" }],
+        "skills": [{ "name": "JavaScript" }, { "name": "React" }, { "name": "Node.js" }, { "name": "Python" }],
+        "languages": [{ "language": "English", "proficiency": "native" }, { "language": "Spanish", "proficiency": "professional" }],
+        "securityClearance": "top_secret"
+      },
+      "job": {
+        "location": { "country": "US", "remote": true },
+        "visaSponsorship": false
+      },
+      "rules": [
+        { "checkType": "location", "condition": { "countries": ["US"], "allowRemote": true }, "required": true },
+        { "checkType": "work_authorization", "condition": { "requiredAuthorizations": ["US Citizen"] }, "required": true },
+        { "checkType": "sponsorship", "condition": {}, "required": true },
+        { "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true },
+        { "checkType": "experience", "condition": { "minimumYears": 5 }, "required": true },
+        { "checkType": "skill", "condition": { "requiredSkills": ["JavaScript", "React"] }, "required": true },
+        { "checkType": "language", "condition": { "requiredLanguages": [{ "language": "English", "proficiency": "professional" }] }, "required": true },
+        { "checkType": "clearance", "condition": { "requiredClearance": "secret" }, "required": true }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "summary": { "total": 8, "passed": 8, "failed": 0, "unknown": 0 }
+      }
+    }
+  ]
+}

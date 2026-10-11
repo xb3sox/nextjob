@@ -1,0 +1,87 @@
+{
+  "dataset": "education",
+  "description": "Education requirement eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ed-001",
+      "description": "User has required bachelor's degree",
+      "userProfile": { "education": [{ "degree": "Bachelor", "field": "Computer Science" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ed-002",
+      "description": "User has master's degree (exceeds requirement)",
+      "userProfile": { "education": [{ "degree": "Master", "field": "Computer Science" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ed-003",
+      "description": "User has associate degree (below requirement)",
+      "userProfile": { "education": [{ "degree": "Associate", "field": "Computer Science" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "ineligible", "required": true, "reason": "User does not have minimum required education (bachelor)" }], "missingRequirements": ["User does not have minimum required education (bachelor)"] }
+    },
+    {
+      "id": "ed-004",
+      "description": "User has no education info - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }],
+      "expectedOutcome": { "status": "unknown", "confidence": 0.0, "checks": [{ "type": "education", "status": "unknown", "required": true, "reason": "User does not have minimum required education (bachelor)" }], "warnings": ["Unable to verify education"] }
+    },
+    {
+      "id": "ed-005",
+      "description": "Required field of study - user has it",
+      "userProfile": { "education": [{ "degree": "Bachelor", "field": "Computer Science" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "requiredFields": ["computer science"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ed-006",
+      "description": "Required field of study - user doesn't have it",
+      "userProfile": { "education": [{ "degree": "Bachelor", "field": "Mathematics" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "requiredFields": ["computer science"] }, "required": true }],
+      "expectedOutcome": { "status": "ineligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "ineligible", "required": true, "reason": "User does not have required field of study" }], "missingRequirements": ["User does not have required field of study"] }
+    },
+    {
+      "id": "ed-007",
+      "description": "Multiple education requirements - degree and field",
+      "userProfile": { "education": [{ "degree": "Master", "field": "Computer Science" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor", "requiredFields": ["computer science"] }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ed-008",
+      "description": "Optional education rule",
+      "userProfile": { "education": [{ "degree": "High School" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": false }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "ineligible", "required": false, "reason": "User does not have minimum required education (bachelor)" }] }
+    },
+    {
+      "id": "ed-009",
+      "description": "Multiple education entries - at least one meets requirement",
+      "userProfile": { "education": [{ "degree": "High School" }, { "degree": "Bachelor", "field": "Computer Science" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "eligible", "required": true }] }
+    },
+    {
+      "id": "ed-010",
+      "description": "Case-insensitive degree matching",
+      "userProfile": { "education": [{ "degree": "BACHELOR", "field": "Computer Science" }] },
+      "job": {},
+      "rules": [{ "checkType": "education", "condition": { "minimumDegree": "bachelor" }, "required": true }],
+      "expectedOutcome": { "status": "eligible", "confidence": 1.0, "checks": [{ "type": "education", "status": "eligible", "required": true }] }
+    }
+  ]
+}

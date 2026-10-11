@@ -1,0 +1,417 @@
+{
+  "dataset": "location",
+  "description": "Location-based eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "loc-001",
+      "description": "US citizen in US applying for US-based job",
+      "userProfile": {
+        "location": { "country": "US", "city": "San Francisco" }
+      },
+      "job": {
+        "location": { "country": "US", "city": "San Francisco" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { "type": "location", "status": "eligible", "required": true }
+        ]
+      }
+    },
+    {
+      "id": "loc-002",
+      "description": "UK citizen applying for US-only job",
+      "userProfile": {
+        "location": { "country": "UK", "city": "London" }
+      },
+      "job": {
+        "location": { "country": "US", "city": "New York" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 1.0,
+        "checks": [
+          { 
+            "type": "location", 
+            "status": "ineligible", 
+            "required": true,
+            "reason": "User location (UK) not in allowed countries"
+          }
+        ],
+        "missingRequirements": ["User location (UK) not in allowed countries"]
+      }
+    },
+    {
+      "id": "loc-003",
+      "description": "Remote job - user location doesn't matter",
+      "userProfile": {
+        "location": { "country": "India", "city": "Bangalore" }
+      },
+      "job": {
+        "location": { "country": "US", "remote": true }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"], "allowRemote": true },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { 
+            "type": "location", 
+            "status": "eligible", 
+            "required": true,
+            "reason": "Remote position"
+          }
+        ]
+      }
+    },
+    {
+      "id": "loc-004",
+      "description": "Multiple allowed countries - user in second country",
+      "userProfile": {
+        "location": { "country": "CA", "city": "Toronto" }
+      },
+      "job": {
+        "location": { "country": "CA" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US", "CA", "UK"] },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { "type": "location", "status": "eligible", "required": true }
+        ]
+      }
+    },
+    {
+      "id": "loc-005",
+      "description": "Job requires relocation but user unwilling",
+      "userProfile": {
+        "location": { "country": "US", "city": "New York" },
+        "willingToRelocate": false
+      },
+      "job": {
+        "location": { "country": "US", "city": "San Francisco" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "requireRelocation": true },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 1.0,
+        "checks": [
+          { 
+            "type": "location", 
+            "status": "ineligible", 
+            "required": true,
+            "reason": "Job requires relocation but user is not willing"
+          }
+        ],
+        "missingRequirements": ["Job requires relocation but user is not willing"]
+      }
+    },
+    {
+      "id": "loc-006",
+      "description": "Job requires relocation and user willing",
+      "userProfile": {
+        "location": { "country": "US", "city": "New York" },
+        "willingToRelocate": true
+      },
+      "job": {
+        "location": { "country": "US", "city": "San Francisco" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "requireRelocation": true },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { "type": "location", "status": "eligible", "required": true }
+        ]
+      }
+    },
+    {
+      "id": "loc-007",
+      "description": "Missing user location - should return unknown",
+      "userProfile": {},
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.0,
+        "checks": [
+          { 
+            "type": "location", 
+            "status": "unknown", 
+            "required": true,
+            "reason": "Location information missing"
+          }
+        ],
+        "warnings": ["Unable to verify location"]
+      }
+    },
+    {
+      "id": "loc-008",
+      "description": "Missing job location - should return unknown",
+      "userProfile": {
+        "location": { "country": "US" }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.0,
+        "checks": [
+          { 
+            "type": "location", 
+            "status": "unknown", 
+            "required": true,
+            "reason": "Location information missing"
+          }
+        ],
+        "warnings": ["Unable to verify location"]
+      }
+    },
+    {
+      "id": "loc-009",
+      "description": "Optional location rule - user ineligible but rule not required",
+      "userProfile": {
+        "location": { "country": "UK" }
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": false
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { 
+            "type": "location", 
+            "status": "ineligible", 
+            "required": false,
+            "reason": "User location (UK) not in allowed countries"
+          }
+        ]
+      }
+    },
+    {
+      "id": "loc-010",
+      "description": "Multiple location rules - all must pass",
+      "userProfile": {
+        "location": { "country": "US", "city": "San Francisco" },
+        "willingToRelocate": true
+      },
+      "job": {
+        "location": { "country": "US", "city": "New York" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": true
+        },
+        {
+          "checkType": "location",
+          "condition": { "requireRelocation": true },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { "type": "location", "status": "eligible", "required": true },
+          { "type": "location", "status": "eligible", "required": true }
+        ]
+      }
+    },
+    {
+      "id": "loc-011",
+      "description": "Multiple location rules - one fails",
+      "userProfile": {
+        "location": { "country": "US", "city": "San Francisco" },
+        "willingToRelocate": false
+      },
+      "job": {
+        "location": { "country": "US", "city": "New York" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": true
+        },
+        {
+          "checkType": "location",
+          "condition": { "requireRelocation": true },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 0.5,
+        "checks": [
+          { "type": "location", "status": "eligible", "required": true },
+          { 
+            "type": "location", 
+            "status": "ineligible", 
+            "required": true,
+            "reason": "Job requires relocation but user is not willing"
+          }
+        ],
+        "missingRequirements": ["Job requires relocation but user is not willing"]
+      }
+    },
+    {
+      "id": "loc-012",
+      "description": "Remote job with allowRemote=false should fail",
+      "userProfile": {
+        "location": { "country": "India" }
+      },
+      "job": {
+        "location": { "country": "US", "remote": true }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"], "allowRemote": false },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 1.0,
+        "checks": [
+          { 
+            "type": "location", 
+            "status": "ineligible", 
+            "required": true,
+            "reason": "User location (India) not in allowed countries"
+          }
+        ],
+        "missingRequirements": ["User location (India) not in allowed countries"]
+      }
+    },
+    {
+      "id": "loc-013",
+      "description": "Case-insensitive country matching",
+      "userProfile": {
+        "location": { "country": "united states" }
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": ["US"] },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { "type": "location", "status": "eligible", "required": true }
+        ]
+      }
+    },
+    {
+      "id": "loc-014",
+      "description": "Empty countries list - should pass",
+      "userProfile": {
+        "location": { "country": "US" }
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [
+        {
+          "checkType": "location",
+          "condition": { "countries": [] },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          { "type": "location", "status": "eligible", "required": true }
+        ]
+      }
+    },
+    {
+      "id": "loc-015",
+      "description": "No location rule - should pass",
+      "userProfile": {
+        "location": { "country": "US" }
+      },
+      "job": {
+        "location": { "country": "US" }
+      },
+      "rules": [],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": []
+      }
+    }
+  ]
+}

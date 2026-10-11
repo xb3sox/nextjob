@@ -1,0 +1,81 @@
+{
+  "version": "1.0.0",
+  "description": "Expected outcomes summary for all eligibility test cases",
+  "generatedAt": "2026-01-15T00:00:00Z",
+  "summary": {
+    "totalTestCases": 105,
+    "byDataset": {
+      "location": 15,
+      "work_authorization": 10,
+      "sponsorship": 10,
+      "skill": 10,
+      "education": 10,
+      "experience": 10,
+      "language": 10,
+      "clearance": 10,
+      "complete_profiles": 5,
+      "partial_profiles": 10,
+      "edge_cases": 15
+    },
+    "byExpectedStatus": {
+      "eligible": 65,
+      "ineligible": 25,
+      "unknown": 15
+    },
+    "coverage": {
+      "checkTypes": [
+        "location",
+        "work_authorization",
+        "sponsorship",
+        "skill",
+        "education",
+        "experience",
+        "language",
+        "clearance"
+      ],
+      "scenarios": [
+        "positive",
+        "negative",
+        "unknown",
+        "optional",
+        "multiple_rules",
+        "edge_cases"
+      ]
+    }
+  },
+  "successCriteria": {
+    "falsePositiveRate": {
+      "target": 0.02,
+      "description": "Maximum 2% false positive rate (ineligible marked as eligible)"
+    },
+    "truePositiveRate": {
+      "target": 0.95,
+      "description": "Minimum 95% true positive rate (eligible correctly identified)"
+    },
+    "unknownRate": {
+      "target": 0.10,
+      "description": "Maximum 10% unknown rate when data is insufficient"
+    },
+    "confidenceAccuracy": {
+      "target": 0.90,
+      "description": "Minimum 90% accuracy in confidence score calculation"
+    }
+  },
+  "testExecution": {
+    "command": "npm run test:eval -- eligibility",
+    "expectedDuration": "30s",
+    "parallelExecution": true,
+    "retryOnFailure": 2
+  },
+  "validation": {
+    "schemaValidation": true,
+    "typeChecking": true,
+    "runtimeValidation": true
+  },
+  "reporting": {
+    "format": "json",
+    "includeDetails": true,
+    "includeCoverage": true,
+    "includePerformance": true
+  }
+}

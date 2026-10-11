@@ -1,0 +1,322 @@
+{
+  "dataset": "work_authorization",
+  "description": "Work authorization eligibility test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "wa-001",
+      "description": "US citizen with valid authorization",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["US Citizen"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen", "Green Card"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "eligible",
+            "required": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "wa-002",
+      "description": "Green card holder with valid authorization",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["Green Card"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen", "Green Card"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "eligible",
+            "required": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "wa-003",
+      "description": "H1B visa holder - not authorized for US-only jobs",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["H1B Visa"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen", "Green Card"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "ineligible",
+            "required": true,
+            "reason": "User does not have required work authorization"
+          }
+        ],
+        "missingRequirements": ["User does not have required work authorization"]
+      }
+    },
+    {
+      "id": "wa-004",
+      "description": "No work authorization info - should return unknown",
+      "userProfile": {},
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "unknown",
+        "confidence": 0.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "unknown",
+            "required": true,
+            "reason": "Work authorization information missing"
+          }
+        ],
+        "warnings": ["Unable to verify work_authorization"]
+      }
+    },
+    {
+      "id": "wa-005",
+      "description": "Multiple authorizations - at least one matches",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["H1B Visa", "US Citizen"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen", "Green Card"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "eligible",
+            "required": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "wa-006",
+      "description": "Optional work authorization rule - user ineligible but rule not required",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["H1B Visa"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen"]
+          },
+          "required": false
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "ineligible",
+            "required": false,
+            "reason": "User does not have required work authorization"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wa-007",
+      "description": "Empty authorizations array",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": []
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "ineligible",
+            "required": true,
+            "reason": "User does not have required work authorization"
+          }
+        ],
+        "missingRequirements": ["User does not have required work authorization"]
+      }
+    },
+    {
+      "id": "wa-008",
+      "description": "No required authorizations specified - should pass",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["US Citizen"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {},
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "eligible",
+            "required": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "wa-009",
+      "description": "Case-sensitive authorization matching",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["us citizen"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "ineligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "ineligible",
+            "required": true,
+            "reason": "User does not have required work authorization"
+          }
+        ],
+        "missingRequirements": ["User does not have required work authorization"]
+      }
+    },
+    {
+      "id": "wa-010",
+      "description": "Multiple work authorization rules - all must pass",
+      "userProfile": {
+        "workAuthorization": {
+          "authorizations": ["US Citizen", "Security Clearance"]
+        }
+      },
+      "job": {},
+      "rules": [
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["US Citizen"]
+          },
+          "required": true
+        },
+        {
+          "checkType": "work_authorization",
+          "condition": {
+            "requiredAuthorizations": ["Security Clearance"]
+          },
+          "required": true
+        }
+      ],
+      "expectedOutcome": {
+        "status": "eligible",
+        "confidence": 1.0,
+        "checks": [
+          {
+            "type": "work_authorization",
+            "status": "eligible",
+            "required": true
+          },
+          {
+            "type": "work_authorization",
+            "status": "eligible",
+            "required": true
+          }
+        ]
+      }
+    }
+  ]
+}
