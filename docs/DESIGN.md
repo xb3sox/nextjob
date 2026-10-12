@@ -180,7 +180,7 @@ accessibility:
     tertiaryText: "4.6:1 (AA)"
     interactive: "4.5:1 minimum"
   focusStates:
-    style: "2px emerald ring with 2px offset"
+    style: "2px moss (#34d399) ring with 2px offset"
     visible: "all interactive elements"
     contrast: "maintains color contrast"
     removal: "never removed"

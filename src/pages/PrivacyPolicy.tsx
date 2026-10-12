@@ -2,18 +2,18 @@ import { ArrowLeft, Shield, Lock, Eye, Database, Trash2, Download, Mail } from '
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-ink text-paper">
       {/* Header */}
-      <header className="border-b border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl sticky top-0 z-50">
+      <header className="border-b border-white/5 bg-ink/95 backdrop-blur-xl sticky top-0 z-50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <a href="/" className="flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors">
+            <a href="/" className="flex items-center gap-2 text-sm text-fog hover:text-white transition-colors">
               <ArrowLeft size={16} />
               Back to Home
             </a>
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-500">
-                <Shield size={18} className="text-slate-900" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-moss-deep to-moss">
+                <Shield size={18} className="text-ink" />
               </div>
               <span className="text-lg font-bold">NextJob</span>
             </div>
@@ -25,17 +25,17 @@ export default function PrivacyPolicy() {
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-sm text-white/40">Last updated: January 15, 2026</p>
+          <p className="text-sm text-fog">Last updated: January 15, 2026</p>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 mb-8">
           <div className="flex items-start gap-4 mb-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10 shrink-0">
-              <Shield className="text-emerald-400" size={24} />
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-moss/10 shrink-0">
+              <Shield className="text-moss" size={24} />
             </div>
             <div>
               <h2 className="text-2xl font-semibold mb-2">Our Commitment to Your Privacy</h2>
-              <p className="text-white/60">
+              <p className="text-fog">
                 At NextJob, we believe your career data is deeply personal. We're committed to protecting your privacy 
                 and being transparent about how we handle your information.
               </p>
@@ -46,52 +46,52 @@ export default function PrivacyPolicy() {
         <div className="space-y-8">
           <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-              <Database className="text-emerald-400" size={24} />
+              <Database className="text-moss" size={24} />
               What We Collect
             </h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
               <h3 className="font-semibold mb-3">We Collect:</h3>
-              <ul className="space-y-2 text-white/60">
+              <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Account Information:</strong> Email address, name, and authentication credentials</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Career Data:</strong> CV/resume content, work history, skills, education, and certifications that you upload</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Application Data:</strong> Job applications you create through our platform</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Usage Data:</strong> How you interact with our service (pages visited, features used)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Technical Data:</strong> IP address, browser type, device information</span>
                 </li>
               </ul>
             </div>
 
-            <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-6 mt-4">
-              <h3 className="font-semibold mb-3 text-red-400">We Never Collect:</h3>
-              <ul className="space-y-2 text-white/60">
+            <div className="rounded-xl border border-danger/20 bg-danger/5 p-6 mt-4">
+              <h3 className="font-semibold mb-3 text-danger">We Never Collect:</h3>
+              <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
+                  <span className="text-danger mt-1">✗</span>
                   <span>Social security numbers or government IDs</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
+                  <span className="text-danger mt-1">✗</span>
                   <span>Financial information (we use Stripe for payments)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
+                  <span className="text-danger mt-1">✗</span>
                   <span>Health or disability information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-red-400 mt-1">✗</span>
+                  <span className="text-danger mt-1">✗</span>
                   <span>Protected characteristics (race, religion, sexual orientation)</span>
                 </li>
               </ul>
@@ -100,25 +100,25 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-              <Eye className="text-emerald-400" size={24} />
+              <Eye className="text-moss" size={24} />
               How We Use Your Data
             </h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-              <ul className="space-y-3 text-white/60">
+              <ul className="space-y-3 text-fog">
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">→</span>
+                  <span className="text-moss mt-1">→</span>
                   <span><strong>Provide our service:</strong> Process your CV, match you with jobs, generate applications</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">→</span>
+                  <span className="text-moss mt-1">→</span>
                   <span><strong>Improve our product:</strong> Analyze usage patterns to enhance features (anonymized)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">→</span>
+                  <span className="text-moss mt-1">→</span>
                   <span><strong>Communicate with you:</strong> Send important updates about your account or service changes</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">→</span>
+                  <span className="text-moss mt-1">→</span>
                   <span><strong>Ensure security:</strong> Detect and prevent fraud, abuse, and technical issues</span>
                 </li>
               </ul>
@@ -127,28 +127,28 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-              <Lock className="text-emerald-400" size={24} />
+              <Lock className="text-moss" size={24} />
               Data Security
             </h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-              <p className="text-white/60 mb-4">
+              <p className="text-fog mb-4">
                 We implement industry-standard security measures to protect your data:
               </p>
-              <ul className="space-y-2 text-white/60">
+              <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Encryption:</strong> All data encrypted at rest and in transit (TLS 1.3)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Access Controls:</strong> Strict authentication and authorization</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Regular Audits:</strong> Security assessments and penetration testing</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">✓</span>
+                  <span className="text-moss mt-1">✓</span>
                   <span><strong>Minimal Access:</strong> Only essential personnel can access your data</span>
                 </li>
               </ul>
@@ -159,30 +159,30 @@ export default function PrivacyPolicy() {
             <h2 className="text-2xl font-semibold mb-4">Your Rights</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
-                <Download className="text-emerald-400 mb-2" size={20} />
+                <Download className="text-moss mb-2" size={20} />
                 <h3 className="font-semibold mb-2">Export Your Data</h3>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-fog">
                   Download all your data in a machine-readable format at any time
                 </p>
               </div>
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
-                <Trash2 className="text-emerald-400 mb-2" size={20} />
+                <Trash2 className="text-moss mb-2" size={20} />
                 <h3 className="font-semibold mb-2">Delete Your Account</h3>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-fog">
                   Permanently delete your account and all associated data
                 </p>
               </div>
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
-                <Eye className="text-emerald-400 mb-2" size={20} />
+                <Eye className="text-moss mb-2" size={20} />
                 <h3 className="font-semibold mb-2">View Your Data</h3>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-fog">
                   See exactly what data we have stored about you
                 </p>
               </div>
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
-                <Lock className="text-emerald-400 mb-2" size={20} />
+                <Lock className="text-moss mb-2" size={20} />
                 <h3 className="font-semibold mb-2">Restrict Processing</h3>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-fog">
                   Limit how we use your data for specific purposes
                 </p>
               </div>
@@ -191,9 +191,9 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-2xl font-semibold mb-4">Data Sharing</h2>
-            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-6">
-              <h3 className="font-semibold mb-3 text-emerald-400">We Never Sell Your Data</h3>
-              <p className="text-white/60">
+            <div className="rounded-xl border border-moss/20 bg-moss/5 p-6">
+              <h3 className="font-semibold mb-3 text-moss">We Never Sell Your Data</h3>
+              <p className="text-fog">
                 We will never sell, rent, or share your personal data with third parties for advertising or marketing purposes. 
                 Your career data is yours alone.
               </p>
@@ -201,24 +201,24 @@ export default function PrivacyPolicy() {
 
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 mt-4">
               <h3 className="font-semibold mb-3">Limited Third-Party Sharing</h3>
-              <p className="text-white/60 mb-3">
+              <p className="text-fog mb-3">
                 We only share data with trusted service providers who help us operate our service:
               </p>
-              <ul className="space-y-2 text-white/60">
+              <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">•</span>
+                  <span className="text-moss mt-1">•</span>
                   <span><strong>Payment Processing:</strong> Stripe (for subscription billing)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">•</span>
+                  <span className="text-moss mt-1">•</span>
                   <span><strong>Cloud Infrastructure:</strong> AWS and Vercel (for hosting and storage)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 mt-1">•</span>
+                  <span className="text-moss mt-1">•</span>
                   <span><strong>Analytics:</strong> PostHog (anonymized usage analytics)</span>
                 </li>
               </ul>
-              <p className="text-sm text-white/40 mt-3">
+              <p className="text-sm text-fog mt-3">
                 All third-party providers are contractually obligated to protect your data and comply with GDPR.
               </p>
             </div>
@@ -227,7 +227,7 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">Data Retention</h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-              <ul className="space-y-3 text-white/60">
+              <ul className="space-y-3 text-fog">
                 <li>
                   <strong>Account Data:</strong> Retained while your account is active
                 </li>
@@ -250,16 +250,16 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-              <p className="text-white/60 mb-4">
+              <p className="text-fog mb-4">
                 If you have questions about this privacy policy or want to exercise your rights, contact us:
               </p>
               <div className="flex items-center gap-3">
-                <Mail className="text-emerald-400" size={20} />
-                <a href="mailto:privacy@nextjob.ai" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+                <Mail className="text-moss" size={20} />
+                <a href="mailto:privacy@nextjob.ai" className="text-moss hover:text-paper transition-colors">
                   privacy@nextjob.ai
                 </a>
               </div>
-              <p className="text-sm text-white/40 mt-4">
+              <p className="text-sm text-fog mt-4">
                 We'll respond to all privacy-related inquiries within 30 days.
               </p>
             </div>
@@ -267,9 +267,9 @@ export default function PrivacyPolicy() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/5 text-center">
-          <p className="text-sm text-white/40">
+          <p className="text-sm text-fog">
             © 2026 NextJob. All rights reserved. | 
-            <a href="/terms" className="text-emerald-400 hover:text-emerald-300 ml-2 transition-colors">
+            <a href="/terms" className="text-moss hover:text-paper ml-2 transition-colors">
               Terms of Service
             </a>
           </p>
