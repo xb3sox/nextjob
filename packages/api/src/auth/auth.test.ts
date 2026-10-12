@@ -24,20 +24,60 @@ function toCamel(name: string): string {
   return name.replace(/_([a-z0-9])/g, (_m, c: string) => c.toUpperCase());
 }
 
+/** Inverse of `toCamel` (camelCase property -> physical SQL column name). */
+function toSnake(name: string): string {
+  return name.replace(/[A-Z]/g, (c: string) => `_${c.toLowerCase()}`);
+}
+
+/** Map a row's keys from one casing to the other (values untouched). */
+function remapKeys(row: Row, map: (k: string) => string): Row {
+  const out: Row = {};
+  for (const [k, v] of Object.entries(row)) out[map(k)] = v;
+  return out;
+}
+
+/**
+ * Relational-API accessors are keyed by the schema PROPERTY name (e.g.
+ * `db.query.verificationTokens`), while insert/update/delete receive the
+ * table object and resolve to the PHYSICAL name (`verification_tokens`).
+ * This maps property keys to physical store keys so both paths hit the same
+ * array — mirroring how drizzle resolves `.query.<prop>` through its schema
+ * config. Unknown keys pass through unchanged.
+ */
 type Row = Record<string, any>;
 type Store = Record<string, Row[]>;
 
+// The store mirrors the PHYSICAL SQL shape: rows are keyed by snake_case
+// column names (as real Postgres would return via drizzle's `db.query`), so
+// insert/where/update predicates — which carry physical column names from the
+// schema — match without casing surprises. The query API converts back to
+// camelCase on read, exactly like drizzle does.
+// The store is keyed by the PHYSICAL SQL table name, which is also the key
+// drizzle's relational `db.query.<key>` API uses for these tables (schema
+// property `verificationTokens` maps to physical `verification_tokens`).
 const store: Store = { users: [], accounts: [], sessions: [], verification_tokens: [] };
+
+/** Read a stored row using the camelCase property name callers/tests use. */
+function getProp(row: Row, prop: string): any {
+  return row[toSnake(prop)];
+}
+
+/** Write a stored row using the camelCase property name callers/tests use. */
+function setProp(row: Row, prop: string, value: unknown): void {
+  row[toSnake(prop)] = value;
+}
 
 let insertSeq = 0;
 
 function matches(row: Row, cond: any): boolean {
   if (!cond) return true;
   if (Array.isArray(cond)) return cond.every((c) => matches(row, c));
-  if (cond.__kind === 'eq') return row[toCamel(cond.column)] === cond.value;
+  if (cond.__kind === 'eq') {
+    return row[cond.column] === cond.value;
+  }
   if (cond.__kind === 'like') {
     const prefix = String(cond.pattern).replace(/%$/, '');
-    return String(row[toCamel(cond.column)] ?? '').startsWith(prefix);
+    return String(row[cond.column] ?? '').startsWith(prefix);
   }
   throw new Error('Unsupported mock condition');
 }
@@ -46,10 +86,13 @@ function matches(row: Row, cond: any): boolean {
 function applyUpdate(table: any, patch: Row, cond: unknown): Row[] {
   const name = tableName(table);
   const rows = store[name] ?? [];
+  // Patch keys arrive as camelCase property names (drizzle semantics);
+  // normalize them to the physical snake_case columns used in the store.
+  const normalizedPatch = remapKeys(patch, toSnake);
   const changed: Row[] = [];
   for (let i = 0; i < rows.length; i++) {
     if (matches(rows[i], cond)) {
-      rows[i] = { ...rows[i], ...patch };
+      rows[i] = { ...rows[i], ...normalizedPatch };
       changed.push(rows[i]);
     }
   }
@@ -77,14 +120,25 @@ vi.mock('../db/index', () => {
     query: new Proxy(
       {},
       {
-        get(_t, tableName: string) {
+        get(_t, propKey: string | symbol) {
+          // Relational-API accessors are keyed by the schema PROPERTY name
+          // (`db.query.verificationTokens`), while the store is keyed by the
+          // PHYSICAL table name (`verification_tokens`). Resolve through both
+          // so either casing hits the same array, mirroring drizzle.
+          if (typeof propKey !== 'string') return undefined;
+          const tableName = propKey in store ? propKey : toSnake(propKey);
+          const rows = store[tableName];
+          if (!rows) return undefined;
           return {
             findFirst: (opts: { where?: unknown }) => {
-              const rows = store[tableName] ?? [];
-              if (!opts?.where) return rows[0];
-              // tables in query use schema table objects keyed by drizzle name
+              // Rows are stored with physical snake_case column names; the
+              // relational query API returns camelCase property rows, exactly
+              // like real drizzle does.
+              const mapRow = (r: Row) => remapKeys(r, toCamel);
+              if (!opts?.where) return rows[0] ? mapRow(rows[0]) : undefined;
               const cond = opts.where as any;
-              return rows.find((r) => matches(r, cond));
+              const found = rows.find((r) => matches(r, cond));
+              return found ? mapRow(found) : undefined;
             },
           };
         },
@@ -95,15 +149,29 @@ vi.mock('../db/index', () => {
         returning: async () => {
           const name = tableName(table);
           const arr = Array.isArray(vals) ? vals : [vals];
-          const inserted = arr.map((v) => ({ id: `${name}-${++insertSeq}`, createdAt: new Date(), ...v }));
+          // Normalize camelCase property keys to physical column names so
+          // later eq/like predicates (which carry snake_case names) match.
+          // Defaults are merged AFTER normalization — otherwise `createdAt`
+          // would be re-added in camelCase and remapKeys would rename it to
+          // `created_at` while shadowing the real `createdAt` value, and any
+          // caller reading `.createdAt` off the returned row would get
+          // undefined (this silently zeroed session expiry dates).
+          const inserted = arr.map((v) => ({
+            ...remapKeys(v, toSnake),
+            id: `${name}-${++insertSeq}`,
+            created_at: new Date(),
+          }));
           (store[name] ??= []).push(...inserted);
-          return inserted;
+          // `.returning()` yields rows keyed by the property names callers
+          // passed in (plus defaults), mirroring drizzle's typed row shape.
+          return inserted.map((r) => remapKeys(r, toCamel));
         },
       }),
     }),
     update: (table: any) => ({
       set: (patch: Row) => ({
-        where: (cond: unknown) => makeThenable(() => applyUpdate(table, patch, cond)),
+        where: (cond: unknown) =>
+          makeThenable(() => applyUpdate(table, patch, cond).map((r) => remapKeys(r, toCamel))),
       }),
     }),
     delete: (table: any) => ({
@@ -115,19 +183,31 @@ vi.mock('../db/index', () => {
 
 // Simplified drizzle-orm operators compatible with the mock predicates.
 // Column objects expose their physical SQL name via Symbol.for('drizzle:Name').
-vi.mock('drizzle-orm', () => ({
-  eq: (column: any, value: unknown) => ({
-    __kind: 'eq',
-    column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
-    value,
-  }),
-  like: (column: any, pattern: string) => ({
-    __kind: 'like',
-    column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
-    pattern,
-  }),
-  and: (...conds: unknown[]) => conds.flat(),
-}));
+//
+// IMPORTANT: spread `importActual()` so the real drizzle-orm surface stays
+// available to other modules in the graph (e.g. src/db/schema.ts imports
+// `drizzle-orm/pg-core`, which internally re-exports from the mocked root).
+// A bare-stub factory here previously hid every non-overridden export and
+// broke schema loading (`uuid is not a function`). Only `eq`/`like`/`and`
+// are overridden, because the in-memory db mock understands just those
+// predicate shapes.
+vi.mock('drizzle-orm', async (importActual) => {
+  const actual = await importActual<typeof import('drizzle-orm')>();
+  return {
+    ...actual,
+    eq: (column: any, value: unknown) => ({
+      __kind: 'eq',
+      column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
+      value,
+    }),
+    like: (column: any, pattern: string) => ({
+      __kind: 'like',
+      column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
+      pattern,
+    }),
+    and: (...conds: unknown[]) => conds.flat(),
+  };
+});
 
 import {
   hashPassword,
@@ -267,7 +347,7 @@ describe('Authentication', () => {
 
     it('rejects inactive accounts', async () => {
       await vi.waitFor(() => expect(store.users.length).toBeGreaterThan(0));
-      store.users[0].status = 'suspended';
+      setProp(store.users[0], 'status', 'suspended');
       await expect(
         loginUser({ email: 'login@example.com', password: 'correctHorse1' })
       ).rejects.toThrow(/not active/);
@@ -278,11 +358,11 @@ describe('Authentication', () => {
       const salt = 'b'.repeat(32);
       // Wait until registration finished writing the row, then downgrade it.
       await vi.waitFor(() => expect(store.users.length).toBeGreaterThan(0));
-      store.users[0].passwordHash = `${salt}:${crypto
+      setProp(store.users[0], 'passwordHash', `${salt}:${crypto
         .pbkdf2Sync('correctHorse1', salt, 10_000, 64, 'sha512')
-        .toString('hex')}`;
+        .toString('hex')}`);
       await loginUser({ email: 'login@example.com', password: 'correctHorse1' });
-      expect(String(store.users[0].passwordHash).startsWith('pbkdf2:100000:')).toBe(true);
+      expect(String(getProp(store.users[0], 'passwordHash')).startsWith('pbkdf2:100000:')).toBe(true);
     });
   });
 
@@ -295,7 +375,7 @@ describe('Authentication', () => {
 
     it('rejects and cleans up expired sessions', async () => {
       const s = await createSession('user-1', 'tenant-1');
-      store.sessions[0].expires = new Date(Date.now() - 1000);
+      setProp(store.sessions[0], 'expires', new Date(Date.now() - 1000));
       expect(await validateSession(s.sessionToken)).toBeNull();
       expect(store.sessions).toHaveLength(0);
     });
@@ -319,7 +399,6 @@ describe('Authentication', () => {
       // New access token validates
       const validated = await validateSession(rotated.tokens.accessToken);
       expect(validated?.userId).toBe(login.user.id);
-      void refreshToken;
     });
 
     it('rejects unknown refresh tokens', async () => {
@@ -370,7 +449,7 @@ describe('Authentication', () => {
       const token = await sendVerificationEmail('verify@example.com');
       expect(token).toBeTruthy();
       expect(await verifyEmail(token!)).toBe(true);
-      expect(store.users[0].emailVerified).toBeInstanceOf(Date);
+      expect(getProp(store.users[0], 'emailVerified')).toBeInstanceOf(Date);
       await expect(verifyEmail(token!)).rejects.toThrow(/invalid or expired/i);
     });
 
@@ -378,7 +457,7 @@ describe('Authentication', () => {
       expect(await sendVerificationEmail('ghost@example.com')).toBeNull();
       await registerUser({ email: 'v2@example.com', password: 'password123', tenantId: 't' });
       await vi.waitFor(() => expect(store.users.length).toBeGreaterThan(0));
-      store.users[0].emailVerified = new Date();
+      setProp(store.users[0], 'emailVerified', new Date());
       expect(await sendVerificationEmail('v2@example.com')).toBeNull();
     });
   });
