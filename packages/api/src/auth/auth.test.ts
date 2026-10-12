@@ -73,16 +73,11 @@ function matches(row: Row, cond: any): boolean {
   if (!cond) return true;
   if (Array.isArray(cond)) return cond.every((c) => matches(row, c));
   if (cond.__kind === 'eq') {
-    if (row[cond.column] !== cond.value) {
-      console.log('[DBG eq MISS]', JSON.stringify({ column: cond.column, want: String(cond.value).slice(0,20), have: row[cond.column] === undefined ? 'UNDEF' : String(row[cond.column]).slice(0,20), keys: Object.keys(row) }));
-    }
     return row[cond.column] === cond.value;
   }
   if (cond.__kind === 'like') {
     const prefix = String(cond.pattern).replace(/%$/, '');
-    const ok = String(row[cond.column] ?? '').startsWith(prefix);
-    if (!ok) console.log('[DBG like MISS]', JSON.stringify({ column: cond.column, pattern: String(cond.pattern), ident: String(row[Symbol.for('drizzle:Name')] ?? row.identifier ?? row['identifier'] ?? '') }));
-    return ok;
+    return String(row[cond.column] ?? '').startsWith(prefix);
   }
   throw new Error('Unsupported mock condition');
 }
@@ -125,10 +120,17 @@ vi.mock('../db/index', () => {
     query: new Proxy(
       {},
       {
-        get(_t, tableName: string) {
+        get(_t, propKey: string | symbol) {
+          // Relational-API accessors are keyed by the schema PROPERTY name
+          // (`db.query.verificationTokens`), while the store is keyed by the
+          // PHYSICAL table name (`verification_tokens`). Resolve through both
+          // so either casing hits the same array, mirroring drizzle.
+          if (typeof propKey !== 'string') return undefined;
+          const tableName = propKey in store ? propKey : toSnake(propKey);
+          const rows = store[tableName];
+          if (!rows) return undefined;
           return {
             findFirst: (opts: { where?: unknown }) => {
-              const rows = store[tableName] ?? [];
               // Rows are stored with physical snake_case column names; the
               // relational query API returns camelCase property rows, exactly
               // like real drizzle does.
