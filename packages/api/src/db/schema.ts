@@ -1,0 +1,102 @@
+import { pgTable, text, timestamp, uuid, jsonb } from 'drizzle-orm/pg-core';
+
+// ============================================================================
+// Auth / tenancy tables (referenced by packages/api/src/auth and middleware)
+// ============================================================================
+
+export const tenants = pgTable('tenants', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const users = pgTable('users', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id')
+    .notNull()
+    .references(() => tenants.id),
+  email: text('email').notNull().unique(),
+  name: text('name'),
+  passwordHash: text('password_hash'),
+  avatarUrl: text('avatar_url'),
+  role: text('role').$type<'candidate' | 'admin' | 'organization_admin'>().notNull().default('candidate'),
+  status: text('status').$type<'active' | 'inactive' | 'suspended'>().notNull().default('active'),
+  emailVerified: timestamp('email_verified', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const accounts = pgTable('accounts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id')
+    .notNull()
+    .references(() => tenants.id),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  provider: text('provider').notNull(),
+  providerAccountId: text('provider_account_id').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const sessions = pgTable('sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id')
+    .notNull()
+    .references(() => tenants.id),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  sessionToken: text('session_token').notNull().unique(),
+  refreshTokenHash: text('refresh_token_hash'),
+  expires: timestamp('expires', { withTimezone: true }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const verificationTokens = pgTable('verification_tokens', {
+  identifier: text('identifier').notNull(),
+  token: text('token').notNull(),
+  expires: timestamp('expires', { withTimezone: true }).notNull(),
+});
+
+// ============================================================================
+// Domain tables referenced by existing services
+// ============================================================================
+
+export const applications = pgTable('applications', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id')
+    .notNull()
+    .references(() => tenants.id),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  jobId: uuid('job_id'),
+  atsName: text('ats_name'),
+  url: text('url'),
+  status: text('status').$type<
+    'draft' | 'ready' | 'submitting' | 'submitted' | 'needs_user' | 'failed' | 'unknown'
+  >().notNull().default('draft'),
+  payload: jsonb('payload'),
+  submittedAt: timestamp('submitted_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const receipts = pgTable('receipts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tenantId: uuid('tenant_id')
+    .notNull()
+    .references(() => tenants.id),
+  applicationId: uuid('application_id')
+    .notNull()
+    .references(() => applications.id, { onDelete: 'cascade' }),
+  resumeHash: text('resume_hash'),
+  coverLetterHash: text('cover_letter_hash'),
+  confirmationCode: text('confirmation_code'),
+  screenshotUrl: text('screenshot_url'),
+  submittedAt: timestamp('submitted_at', { withTimezone: true }),
+  verificationStatus: text('verification_status').$type<
+    'pending' | 'verified' | 'failed'
+  >().default('pending'),
+  metadata: jsonb('metadata'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+});
