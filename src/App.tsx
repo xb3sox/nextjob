@@ -1,52 +1,11 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ArrowRight, Check, Zap } from 'lucide-react';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { Check, ChevronDown, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import NotFound from './pages/NotFound';
+import WaitlistForm from './components/WaitlistForm';
 
 function LandingPage() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [previewNotice, setPreviewNotice] = useState(false);
-
-  const validateEmail = (email: string): boolean => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email) {
-      setStatus('error');
-      setErrorMessage('Please enter your email address');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setStatus('error');
-      setErrorMessage('Please enter a valid email address');
-      return;
-    }
-
-    setStatus('loading');
-    setErrorMessage('');
-
-    // Simulate API call
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setStatus('success');
-      setEmail('');
-      // TODO: Replace with actual API call
-      console.log('Email submitted:', email);
-    } catch (error) {
-      setStatus('error');
-      setErrorMessage('Something went wrong. Please try again.');
-    }
-  };
-
   return (
     <div className="min-h-screen bg-ink text-paper">
       {/* Skip to content link for accessibility */}
@@ -60,16 +19,24 @@ function LandingPage() {
       {/* Minimal Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-ink/80 backdrop-blur-sm border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-moss" />
+          <a href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity" aria-label="NextJob home">
+            <Zap className="w-5 h-5 text-moss" aria-hidden="true" />
             <span className="font-semibold text-sm">NextJob</span>
-          </div>
-          <a 
-            href="#signup" 
-            className="text-sm text-fog hover:text-white transition-colors"
-          >
-            Get started →
           </a>
+          <div className="flex items-center gap-6">
+            <a
+              href="#how-it-works"
+              className="hidden sm:block text-sm text-fog hover:text-paper transition-colors"
+            >
+              How it works
+            </a>
+            <a
+              href="#signup"
+              className="text-sm text-fog hover:text-paper transition-colors"
+            >
+              Get started →
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -88,129 +55,78 @@ function LandingPage() {
             Every submission tracked. Every outcome learned from.
           </p>
 
-          {/* Single CTA */}
-          <form onSubmit={handleSubmit} id="signup" className="flex flex-col sm:flex-row gap-3 mb-6">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (status === 'error') {
-                  setStatus('idle');
-                  setErrorMessage('');
-                }
-              }}
-              placeholder="you@company.com"
-              disabled={status === 'loading' || status === 'success'}
-              className={`flex-1 px-4 py-3 bg-white/5 border rounded-lg text-white placeholder:text-fog/70 focus:outline-none transition-colors ${
-                status === 'error' 
-                  ? 'border-danger/60 focus:border-danger/60' 
-                  : 'border-white/10 focus:border-moss/50'
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-              aria-label="Email address"
-              aria-invalid={status === 'error'}
-              aria-describedby={status === 'error' ? 'email-error' : undefined}
-            />
-            <button 
-              type="submit"
-              disabled={status === 'loading' || status === 'success'}
-              className="px-6 py-3 bg-moss-deep hover:bg-moss disabled:bg-moss-deep/50 disabled:cursor-not-allowed text-moss-dark font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-            >
-              {status === 'loading' ? (
-                <>
-                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Joining...
-                </>
-              ) : status === 'success' ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  Joined!
-                </>
-              ) : (
-                <>
-                  Start free
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
+          {/* Single CTA — extracted, self-contained waitlist form */}
+          <WaitlistForm />
 
-          {/* Error Message */}
-          {status === 'error' && errorMessage && (
-            <div id="email-error" role="alert" className="mb-6 p-3 bg-danger/10 border border-danger/20 rounded-lg text-sm text-danger">
-              {errorMessage}
-            </div>
-          )}
+          <p className="mb-10 text-xs text-fog/70">
+            Free while in beta · No credit card · Your data stays yours
+          </p>
 
-          {/* Success Message */}
-          {status === 'success' && (
-            <div role="status" className="mb-6 p-3 bg-moss/10 border border-moss/20 rounded-lg text-sm text-moss">
-              ✓ Thanks! We'll be in touch soon.
-            </div>
-          )}
+          <a
+            href="#how-it-works"
+            className="inline-flex items-center gap-1.5 mb-14 text-xs text-fog hover:text-moss transition-colors"
+          >
+            See how it works
+            <ChevronDown className="w-3.5 h-3.5 animate-bounce motion-reduce:animate-none" aria-hidden="true" />
+          </a>
 
           {/* Product Preview - Show, Don't Tell */}
-          <div className="relative rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
-            <div className="border-b border-white/10 px-4 py-3 flex items-center gap-2">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-white/10" />
-                <div className="w-3 h-3 rounded-full bg-white/10" />
-                <div className="w-3 h-3 rounded-full bg-white/10" />
-              </div>
-              <span className="text-xs text-fog ml-2">Senior Software Engineer at Stripe</span>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-moss/20 flex items-center justify-center shrink-0">
-                  <Check className="w-4 h-4 text-moss" />
+          <figure aria-label="Illustrative preview of a NextJob match card">
+            <div className="rounded-xl border border-white/10 bg-white/[0.02] overflow-hidden">
+              <div className="border-b border-white/10 px-4 py-3 flex items-center gap-2">
+                <div className="flex gap-1.5" aria-hidden="true">
+                  <div className="w-3 h-3 rounded-full bg-white/10" />
+                  <div className="w-3 h-3 rounded-full bg-white/10" />
+                  <div className="w-3 h-3 rounded-full bg-white/10" />
                 </div>
-                <div className="flex-1">
-                  <div className="text-sm text-fog mb-1">Why you're a fit</div>
-                  <p className="text-sm text-paper leading-relaxed">
-                    5+ years building distributed systems at scale. Led migration from monolith to microservices, 
-                    reducing deployment time by 70%. Strong background in React, Node.js, and TypeScript.
-                  </p>
-                  <div className="mt-2 flex items-center gap-2 text-xs text-moss/90">
-                    <Check className="w-3 h-3" />
-                    <span>Verified from your profile</span>
+                <span className="text-xs text-fog ml-2">Senior Software Engineer at Stripe</span>
+              </div>
+              <div className="p-6 space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-moss/20 flex items-center justify-center shrink-0">
+                    <Check className="w-4 h-4 text-moss" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm text-fog mb-1">Why you're a fit</div>
+                    <p className="text-sm text-paper leading-relaxed">
+                      5+ years building distributed systems at scale. Led migration from monolith to microservices, 
+                      reducing deployment time by 70%. Strong background in React, Node.js, and TypeScript.
+                    </p>
+                    <div className="mt-2 flex items-center gap-2 text-xs text-moss/90">
+                      <Check className="w-3 h-3" aria-hidden="true" />
+                      <span>Verified from your profile</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="border-t border-white/5 pt-4 flex items-center justify-between">
-                <div className="flex items-center gap-4 text-xs text-fog">
-                  <span>Eligibility: ✓ Verified</span>
-                  <span>Excellent match</span>
+                <div className="border-t border-white/5 pt-4 flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-xs text-fog">
+                    <span className="inline-flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-moss" aria-hidden="true" />
+                      Eligibility verified
+                    </span>
+                    <span>Excellent match</span>
+                  </div>
+                  <a
+                    href="#signup"
+                    className="text-xs text-moss hover:text-paper transition-colors"
+                  >
+                    Submit application →
+                  </a>
                 </div>
-                <button 
-                  className="text-xs text-moss hover:text-paper transition-colors"
-                  aria-label="Submit application preview"
-                  onClick={() => setPreviewNotice(true)}
-                >
-                  Submit application →
-                </button>
               </div>
-              {previewNotice && (
-                <div
-                  id="preview-notice"
-                  role="status"
-                  className="rounded-lg border border-moss/20 bg-moss/10 px-3 py-2 text-xs text-moss"
-                >
-                  This is a preview — join the waitlist above to send real applications.
-                </div>
-              )}
             </div>
-          </div>
+            <figcaption className="mt-3 text-center text-xs text-fog/70">
+              Illustrative preview — every real claim traces to your verified profile.
+            </figcaption>
+          </figure>
         </div>
       </main>
 
-      {/* Proof Section - Minimal */}
+      {/* Proof Section - Honest positioning: target employers, not fabricated customer logos */}
       <section className="py-20 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <p className="text-center text-sm text-fog mb-12">
-            Trusted by professionals from
+            Built for people targeting teams at
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-40">
             {['Google', 'Stripe', 'Vercel', 'Linear', 'Figma'].map((company) => (
@@ -249,12 +165,12 @@ function LandingPage() {
       </section>
 
       {/* How It Works - Minimal */}
-      <section id="how-it-works" className="py-20 px-6 border-t border-white/5">
+      <section id="how-it-works" className="py-20 px-6 border-t border-white/5 scroll-mt-20">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-display text-4xl mb-12 text-center">How it works</h2>
-          <div className="space-y-8">
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-sm text-fog">
+          <ol className="space-y-8">
+            <li className="flex gap-4">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-sm text-fog tnum">
                 1
               </div>
               <div>
@@ -263,9 +179,9 @@ function LandingPage() {
                   We extract and verify your experience, skills, and achievements.
                 </p>
               </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-sm text-fog">
+            </li>
+            <li className="flex gap-4">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-sm text-fog tnum">
                 2
               </div>
               <div>
@@ -274,9 +190,9 @@ function LandingPage() {
                   We find opportunities where you actually qualify. No wasted time.
                 </p>
               </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-sm text-fog">
+            </li>
+            <li className="flex gap-4">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 text-sm text-fog tnum">
                 3
               </div>
               <div>
@@ -285,8 +201,8 @@ function LandingPage() {
                   AI generates applications from your verified profile. Every claim backed by proof.
                 </p>
               </div>
-            </div>
-          </div>
+            </li>
+          </ol>
         </div>
       </section>
 
@@ -300,54 +216,60 @@ function LandingPage() {
               <div className="text-3xl font-semibold mb-4 tnum">$0</div>
               <ul className="space-y-2 text-sm text-fog">
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Build profile
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Discover jobs
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Understand fit
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Track applications
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Limited application assistance
                 </li>
               </ul>
             </div>
-            <div className="p-8 rounded-xl border border-moss/30 bg-moss/5">
+            <div className="relative p-8 rounded-xl border border-moss/30 bg-moss/5">
+              <span className="absolute top-6 right-6 rounded-full border border-moss/30 bg-moss/10 px-2.5 py-0.5 text-xs font-medium text-moss">
+                Most popular
+              </span>
               <h3 className="font-medium mb-2">Search</h3>
-              <div className="text-3xl font-semibold mb-4 tnum">$39<span className="text-lg text-fog">/30 days</span></div>
+              <div className="text-3xl font-semibold mb-4 tnum">$39<span className="text-lg text-fog font-normal">/30 days</span></div>
               <ul className="space-y-2 text-sm text-fog">
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
+                  Everything in Free, plus:
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Full matching
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Tailored applications
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
-                  Application assistance
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Application receipts
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-moss" />
+                  <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
                   Interview preparation
                 </li>
               </ul>
             </div>
           </div>
+          <p className="mt-6 text-center text-xs text-fog/70">
+            Cancel anytime · Search Pass renews every 30 days unless cancelled
+          </p>
         </div>
       </section>
 
@@ -381,17 +303,36 @@ function LandingPage() {
         </div>
       </section>
 
+      {/* Final CTA - Close the loop for readers who scrolled past the form */}
+      <section className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="font-display text-4xl mb-4">
+            Your next role is already listed somewhere.
+          </h2>
+          <p className="text-fog mb-10">
+            Join the waitlist and NextJob will find it, check you qualify, and have the application ready before you finish coffee.
+          </p>
+          <a
+            href="#signup"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-moss-deep hover:bg-moss text-moss-dark font-medium rounded-lg transition-colors"
+          >
+            Start free
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+
       {/* Footer - Minimal */}
       <footer className="py-12 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-fog">
-            <Zap className="w-4 h-4" />
+            <Zap className="w-4 h-4" aria-hidden="true" />
             <span>© 2026 NextJob</span>
           </div>
-          <div className="flex gap-6 text-sm text-fog">
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
-            <a href="/terms" className="hover:text-white transition-colors">Terms</a>
-          </div>
+          <nav aria-label="Footer" className="flex gap-6 text-sm text-fog">
+            <Link to="/privacy" className="hover:text-paper transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-paper transition-colors">Terms</Link>
+          </nav>
         </div>
       </footer>
     </div>
