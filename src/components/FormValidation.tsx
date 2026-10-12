@@ -1,5 +1,37 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { CheckCircle, AlertCircle } from 'lucide-react';
+
+// Pure validator: never call side-effectful code (custom validators) inside a
+// React state updater — updaters must be pure and may run twice in StrictMode.
+function computeFieldError<T extends Record<string, string>>(
+  rules: Record<keyof T, ValidationRule>,
+  name: keyof T,
+  value: string
+): string | null {
+  const rule = rules[name];
+
+  if (rule.required && !value.trim()) {
+    return 'This field is required';
+  }
+
+  if (rule.minLength && value.length < rule.minLength) {
+    return `Must be at least ${rule.minLength} characters`;
+  }
+
+  if (rule.maxLength && value.length > rule.maxLength) {
+    return `Must be no more than ${rule.maxLength} characters`;
+  }
+
+  if (rule.pattern && !rule.pattern.test(value)) {
+    return 'Invalid format';
+  }
+
+  if (rule.custom) {
+    return rule.custom(value);
+  }
+
+  return null;
+}
 
 interface ValidationRule {
   required?: boolean;
@@ -32,35 +64,19 @@ export function useFormValidation<T extends Record<string, string>>(
     }, {} as Record<keyof T, FieldValidation>)
   );
 
-  const validateField = (name: keyof T, value: string): string | null => {
-    const rule = rules[name];
-    
-    if (rule.required && !value.trim()) {
-      return 'This field is required';
-    }
-    
-    if (rule.minLength && value.length < rule.minLength) {
-      return `Must be at least ${rule.minLength} characters`;
-    }
-    
-    if (rule.maxLength && value.length > rule.maxLength) {
-      return `Must be no more than ${rule.maxLength} characters`;
-    }
-    
-    if (rule.pattern && !rule.pattern.test(value)) {
-      return 'Invalid format';
-    }
-    
-    if (rule.custom) {
-      return rule.custom(value);
-    }
-    
-    return null;
+  const fieldsRef = useRef(fields);
+  const commitFields = (next: Record<keyof T, FieldValidation>) => {
+    fieldsRef.current = next;
+    setFields(next);
   };
+
+  const validateField = (name: keyof T, value: string): string | null =>
+    computeFieldError(rules, name, value);
 
   const handleChange = (name: keyof T, value: string) => {
     const error = validateField(name, value);
-    setFields(prev => ({
+    const prev = fieldsRef.current;
+    commitFields({
       ...prev,
       [name]: {
         value,
@@ -68,13 +84,16 @@ export function useFormValidation<T extends Record<string, string>>(
         touched: prev[name].touched,
         valid: !error,
       },
-    }));
+    });
   };
 
-  const handleBlur = (name: keyof T) => {
-    const field = fields[name];
-    const error = validateField(name, field.value);
-    setFields(prev => ({
+  // Read values from the ref (kept in sync with state) so we never validate
+  // against stale state (e.g. blur fired immediately after change in the same
+  // tick), while keeping the state updater pure — no side effects inside it.
+  const handleBlur = (name: keyof T): boolean => {
+    const prev = fieldsRef.current;
+    const error = validateField(name, prev[name].value);
+    commitFields({
       ...prev,
       [name]: {
         ...prev[name],
@@ -82,31 +101,31 @@ export function useFormValidation<T extends Record<string, string>>(
         error,
         valid: !error,
       },
-    }));
+    });
+    return !error;
   };
 
   const validateAll = (): boolean => {
+    const prev = fieldsRef.current;
+    const newFields = { ...prev };
     let allValid = true;
-    const newFields = { ...fields };
-    
     Object.keys(rules).forEach((key) => {
       const name = key as keyof T;
-      const error = validateField(name, fields[name].value);
+      const error = validateField(name, prev[name].value);
       newFields[name] = {
-        ...fields[name],
+        ...prev[name],
         touched: true,
         error,
         valid: !error,
       };
       if (error) allValid = false;
     });
-    
-    setFields(newFields);
+    commitFields(newFields);
     return allValid;
   };
 
   const reset = () => {
-    setFields(
+    commitFields(
       Object.keys(initialValues).reduce((acc, key) => {
         acc[key as keyof T] = {
           value: initialValues[key as keyof T],
@@ -157,9 +176,9 @@ export function FormField({
 
   return (
     <div className="space-y-2">
-      <label htmlFor={name} className="block text-sm font-medium text-slate-300">
+      <label htmlFor={name} className="block text-sm font-medium text-fog">
         {label}
-        {required && <span className="text-red-400 ml-1">*</span>}
+        {required && <span className="text-danger ml-1">*</span>}
       </label>
       <div className="relative">
         <input
@@ -174,21 +193,21 @@ export function FormField({
           aria-describedby={hasError ? `${name}-error` : undefined}
           className={`w-full rounded-lg border px-4 py-2.5 text-sm transition-colors ${
             hasError
-              ? 'border-red-500 bg-red-500/5 text-slate-100 focus:border-red-500 focus:ring-red-500/20'
+              ? 'border-danger bg-danger/5 text-paper focus:border-danger focus:ring-danger/20'
               : isValid
-              ? 'border-emerald-500 bg-emerald-500/5 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20'
-              : 'border-slate-700 bg-slate-900 text-slate-100 focus:border-emerald-500 focus:ring-emerald-500/20'
+              ? 'border-moss-deep bg-moss/5 text-paper focus:border-moss-deep focus:ring-moss/20'
+              : 'border-white/15 bg-panel text-paper focus:border-moss-deep focus:ring-moss/20'
           } focus:outline-none focus:ring-2`}
         />
         {isValid && (
-          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-emerald-400" />
+          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-moss" />
         )}
         {hasError && (
-          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-400" />
+          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-danger" />
         )}
       </div>
       {hasError && (
-        <p id={`${name}-error`} className="text-sm text-red-400" role="alert">
+        <p id={`${name}-error`} className="text-sm text-danger" role="alert">
           {error}
         </p>
       )}
@@ -199,12 +218,12 @@ export function FormField({
 export function FormSuccess({ message }: { message: string }) {
   return (
     <div 
-      className="flex items-center gap-3 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20"
+      className="flex items-center gap-3 p-4 rounded-lg bg-moss/10 border border-moss/20"
       role="alert"
       aria-live="polite"
     >
-      <CheckCircle className="h-5 w-5 text-emerald-400 shrink-0" />
-      <p className="text-sm text-emerald-400">{message}</p>
+      <CheckCircle className="h-5 w-5 text-moss shrink-0" />
+      <p className="text-sm text-moss">{message}</p>
     </div>
   );
 }
@@ -212,12 +231,12 @@ export function FormSuccess({ message }: { message: string }) {
 export function FormError({ message }: { message: string }) {
   return (
     <div 
-      className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/20"
+      className="flex items-center gap-3 p-4 rounded-lg bg-danger/10 border border-danger/20"
       role="alert"
       aria-live="assertive"
     >
-      <AlertCircle className="h-5 w-5 text-red-400 shrink-0" />
-      <p className="text-sm text-red-400">{message}</p>
+      <AlertCircle className="h-5 w-5 text-danger shrink-0" />
+      <p className="text-sm text-danger">{message}</p>
     </div>
   );
 }
