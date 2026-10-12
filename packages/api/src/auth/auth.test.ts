@@ -115,19 +115,31 @@ vi.mock('../db/index', () => {
 
 // Simplified drizzle-orm operators compatible with the mock predicates.
 // Column objects expose their physical SQL name via Symbol.for('drizzle:Name').
-vi.mock('drizzle-orm', () => ({
-  eq: (column: any, value: unknown) => ({
-    __kind: 'eq',
-    column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
-    value,
-  }),
-  like: (column: any, pattern: string) => ({
-    __kind: 'like',
-    column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
-    pattern,
-  }),
-  and: (...conds: unknown[]) => conds.flat(),
-}));
+//
+// IMPORTANT: spread `importActual()` so the real drizzle-orm surface stays
+// available to other modules in the graph (e.g. src/db/schema.ts imports
+// `drizzle-orm/pg-core`, which internally re-exports from the mocked root).
+// A bare-stub factory here previously hid every non-overridden export and
+// broke schema loading (`uuid is not a function`). Only `eq`/`like`/`and`
+// are overridden, because the in-memory db mock understands just those
+// predicate shapes.
+vi.mock('drizzle-orm', async (importActual) => {
+  const actual = await importActual<typeof import('drizzle-orm')>();
+  return {
+    ...actual,
+    eq: (column: any, value: unknown) => ({
+      __kind: 'eq',
+      column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
+      value,
+    }),
+    like: (column: any, pattern: string) => ({
+      __kind: 'like',
+      column: column?.[Symbol.for('drizzle:Name')] ?? column?.name,
+      pattern,
+    }),
+    and: (...conds: unknown[]) => conds.flat(),
+  };
+});
 
 import {
   hashPassword,
