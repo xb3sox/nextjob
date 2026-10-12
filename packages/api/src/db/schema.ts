@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, jsonb, index, uniqueIndex, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, jsonb, uniqueIndex, primaryKey } from 'drizzle-orm/pg-core';
 
 // ============================================================================
 // Auth / tenancy tables (referenced by packages/api/src/auth and middleware)
@@ -10,20 +10,37 @@ export const tenants = pgTable('tenants', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const users = pgTable('users', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  tenantId: uuid('tenant_id')
-    .notNull()
-    .references(() => tenants.id),
-  email: text('email').notNull().unique(),
-  name: text('name'),
-  passwordHash: text('password_hash'),
-  avatarUrl: text('avatar_url'),
-  role: text('role').$type<'candidate' | 'admin' | 'organization_admin'>().notNull().default('candidate'),
-  status: text('status').$type<'active' | 'inactive' | 'suspended'>().notNull().default('active'),
-  emailVerified: timestamp('email_verified', { withTimezone: true }),
-  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-});
+// ============================================================================
+// Index strategy (hot lookup paths)
+//
+// Indexes are declared in the pgTable callback config (drizzle's canonical
+// pattern) rather than via standalone `index('...').on(col)` calls: the
+// chained top-level form crashes on this toolchain (column-builder class
+// fields such as `defaultConfig` are not applied under the installed Node/
+// transpile output, so `.on()` hits `JSON.parse(JSON.stringify(undefined))`).
+// The callback form is evaluated by the table builder itself and is safe.
+// Note: `users.email` keeps a plain `.unique()` constraint; a separate unique
+// index on the same column would be redundant.
+// ============================================================================
+
+export const users = pgTable(
+  'users',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    tenantId: uuid('tenant_id')
+      .notNull()
+      .references(() => tenants.id),
+    email: text('email').notNull().unique(),
+    name: text('name'),
+    passwordHash: text('password_hash'),
+    avatarUrl: text('avatar_url'),
+    role: text('role').$type<'candidate' | 'admin' | 'organization_admin'>().notNull().default('candidate'),
+    status: text('status').$type<'active' | 'inactive' | 'suspended'>().notNull().default('active'),
+    emailVerified: timestamp('email_verified', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex('users_tenant_idx').on(t.tenantId, t.id)]
+);
 
 export const accounts = pgTable('accounts', {
   id: uuid('id').primaryKey().defaultRandom(),
