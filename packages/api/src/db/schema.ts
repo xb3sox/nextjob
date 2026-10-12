@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, jsonb, index, uniqueIndex, primaryKey } from 'drizzle-orm/pg-core';
 
 // ============================================================================
 // Auth / tenancy tables (referenced by packages/api/src/auth and middleware)
@@ -52,11 +52,28 @@ export const sessions = pgTable('sessions', {
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const verificationTokens = pgTable('verification_tokens', {
-  identifier: text('identifier').notNull(),
-  token: text('token').notNull(),
-  expires: timestamp('expires', { withTimezone: true }).notNull(),
-});
+export const verificationTokens = pgTable(
+  'verification_tokens',
+  {
+    identifier: text('identifier').notNull(),
+    token: text('token').notNull(),
+    expires: timestamp('expires', { withTimezone: true }).notNull(),
+  },
+  (t) => [
+    // Auth.js convention: one live token per identifier; composite PK also
+    // satisfies drizzle-kit's requirement that every table has a primary key.
+    primaryKey({ columns: [t.identifier, t.token] }),
+  ]
+);
+
+// ============================================================================
+// Indexes (hot lookup paths): session/refresh hashes, tokens, tenant scoping
+// ============================================================================
+export const usersTenantIdx = index('users_tenant_idx').on(users.tenantId);
+export const usersEmailIdx = uniqueIndex('users_email_idx').on(users.email);
+export const sessionsUserIdx = index('sessions_user_idx').on(sessions.userId);
+export const sessionsRefreshIdx = index('sessions_refresh_idx').on(sessions.refreshTokenHash);
+export const verificationExpiresIdx = index('verification_expires_idx').on(verificationTokens.expires);
 
 // ============================================================================
 // Domain tables referenced by existing services

@@ -14,6 +14,16 @@ function tableName(table: any): string {
   return table?.[Symbol.for('drizzle:Name')] ?? table?.name ?? String(table);
 }
 
+/**
+ * Convert a physical SQL column name (as exposed by real drizzle columns via
+ * `.name`) into the camelCase property key used by service code and tests
+ * (e.g. `refresh_token_hash` -> `refreshTokenHash`). The store is keyed by
+ * camelCase so `db.query.*.findFirst` results behave like real drizzle rows.
+ */
+function toCamel(name: string): string {
+  return name.replace(/_([a-z0-9])/g, (_m, c: string) => c.toUpperCase());
+}
+
 type Row = Record<string, any>;
 type Store = Record<string, Row[]>;
 
@@ -24,10 +34,10 @@ let insertSeq = 0;
 function matches(row: Row, cond: any): boolean {
   if (!cond) return true;
   if (Array.isArray(cond)) return cond.every((c) => matches(row, c));
-  if (cond.__kind === 'eq') return row[cond.column] === cond.value;
+  if (cond.__kind === 'eq') return row[toCamel(cond.column)] === cond.value;
   if (cond.__kind === 'like') {
     const prefix = String(cond.pattern).replace(/%$/, '');
-    return String(row[cond.column] ?? '').startsWith(prefix);
+    return String(row[toCamel(cond.column)] ?? '').startsWith(prefix);
   }
   throw new Error('Unsupported mock condition');
 }
@@ -297,7 +307,6 @@ describe('Authentication', () => {
     });
 
     it('rotates refresh tokens and invalidates the old one', async () => {
-      const { refreshToken } = (await loginUser({ email: 'a@b.co', password: 'password123', tenantId: 't' }).catch(() => null)) ?? {};
       // No registered user -> login throws; instead go through register+login:
       await registerUser({ email: 'rot@example.com', password: 'password123', tenantId: 't' });
       const login = await loginUser({ email: 'rot@example.com', password: 'password123' });

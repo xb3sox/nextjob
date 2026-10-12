@@ -91,14 +91,22 @@ const LEGACY_ITERATIONS = 10_000; // iterations used by the original implementat
  */
 export async function hashPassword(password: string): Promise<string> {
   const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto
-    .pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, 64, 'sha512')
-    .toString('hex');
+  const hash = await pbkdf2HexAsync(password, salt, PBKDF2_ITERATIONS);
   return `pbkdf2:${PBKDF2_ITERATIONS}:${salt}:${hash}`;
 }
 
-function pbkdf2Hex(password: string, salt: string, iterations: number): string {
-  return crypto.pbkdf2Sync(password, salt, iterations, 64, 'sha512').toString('hex');
+/** Async PBKDF2 — never block the event loop with 100k-iteration derivations. */
+function pbkdf2HexAsync(password: string, salt: string, iterations: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    crypto.pbkdf2(password, salt, iterations, 64, 'sha512', (err, dk) => {
+      if (err) reject(err);
+      else resolve(dk.toString('hex'));
+    });
+  });
+}
+
+async function pbkdf2Hex(password: string, salt: string, iterations: number): Promise<string> {
+  return pbkdf2HexAsync(password, salt, iterations);
 }
 
 /**
@@ -115,13 +123,13 @@ export async function verifyPassword(password: string, storedHash: string): Prom
   if (parts.length === 4 && parts[0] === 'pbkdf2') {
     const iterations = Number.parseInt(parts[1], 10);
     if (!Number.isFinite(iterations) || iterations <= 0) return false;
-    const candidate = pbkdf2Hex(password, parts[2], iterations);
+    const candidate = await pbkdf2Hex(password, parts[2], iterations);
     return timingSafeEqualHex(candidate, parts[3]);
   }
 
   // Legacy format: <salt>:<hash> (10k iterations)
   if (parts.length === 2) {
-    const candidate = pbkdf2Hex(password, parts[0], LEGACY_ITERATIONS);
+    const candidate = await pbkdf2Hex(password, parts[0], LEGACY_ITERATIONS);
     return timingSafeEqualHex(candidate, parts[1]);
   }
 
@@ -280,6 +288,31 @@ function toSafeUser(u: typeof users.$inferSelect): User {
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const ACCESS_TOKEN_TTL_S = 3600; // 1 hour
 
+/**
+ * Registry mapping raw access tokens to their issue time, so the advertised
+ * `expiresIn` (ACCESS_TOKEN_TTL_S) is actually enforced server-side. Entries
+ * are pruned opportunistically and on session teardown.
+ * NOTE: in-memory only — a multi-instance deployment should move this to Redis
+ * or switch to signed short-lived JWTs bound to the session id.
+ */
+const accessTokenIssuedAt = new Map<string, number>();
+
+function rememberAccessToken(token: string): void {
+  accessTokenIssuedAt.set(token, Date.now());
+}
+
+function forgetAccessToken(token: string): void {
+  accessTokenIssuedAt.delete(token);
+}
+
+/** Opportunistic prune so the map cannot grow unbounded under load. */
+function pruneAccessTokens(): void {
+  const cutoff = Date.now() - SESSION_TTL_MS;
+  for (const [token, issued] of accessTokenIssuedAt) {
+    if (issued < cutoff) accessTokenIssuedAt.delete(token);
+  }
+}
+
 export async function createSession(userId: string, tenantId: string): Promise<Session> {
   const sessionToken = generateSessionToken();
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
@@ -302,6 +335,15 @@ export async function createSession(userId: string, tenantId: string): Promise<S
 export async function validateSession(rawToken: string): Promise<Session | null> {
   if (!rawToken || typeof rawToken !== 'string') return null;
 
+  // Enforce the advertised access-token TTL (see generateAuthTokens). Tokens
+  // issued more than ACCESS_TOKEN_TTL_S ago are rejected even if the underlying
+  // session is still alive — clients must use the refresh token to continue.
+  const issuedAt = accessTokenIssuedAt.get(rawToken);
+  if (issuedAt !== undefined && Date.now() - issuedAt > ACCESS_TOKEN_TTL_S * 1000) {
+    forgetAccessToken(rawToken);
+    return null;
+  }
+
   const session = await db.query.sessions.findFirst({
     where: eq(sessions.sessionToken, hashSessionToken(rawToken)),
   });
@@ -315,6 +357,8 @@ export async function validateSession(rawToken: string): Promise<Session | null>
     await deleteSessionByTokenHash(session.sessionToken);
     return null;
   }
+
+  pruneAccessTokens();
 
   // Sliding expiration: renew when more than half the TTL has elapsed.
   // This keeps active sessions alive without writing on every request.
@@ -330,6 +374,7 @@ export async function validateSession(rawToken: string): Promise<Session | null>
 }
 
 export async function deleteSession(rawToken: string): Promise<void> {
+  forgetAccessToken(rawToken);
   await deleteSessionByTokenHash(hashSessionToken(rawToken));
 }
 
@@ -362,6 +407,9 @@ async function generateAuthTokens(
     .set({ refreshTokenHash: hashRefreshToken(refreshToken) })
     .where(eq(sessions.sessionToken, hashSessionToken(sessionToken)));
 
+  // Track issue time so validateSession can enforce the advertised TTL.
+  rememberAccessToken(sessionToken);
+
   return {
     accessToken: sessionToken,
     refreshToken,
@@ -391,7 +439,9 @@ export async function refreshSession(params: {
     throw new AuthError('INVALID_TOKEN', 'Refresh token is invalid or expired');
   }
 
-  // Rotate: revoke the old session and issue a new one.
+  // Rotate: revoke the old session and issue a new one. The old access token
+  // is forgotten so it stops validating immediately (it was only ever known to
+  // the client; the DB stores just its digest, which cannot be reversed here).
   await db.delete(sessions).where(eq(sessions.id, session.id));
   const newSession = await createSession(session.userId, session.tenantId);
   const tokens = await generateAuthTokens(newSession.sessionToken, session.tenantId);
@@ -408,6 +458,14 @@ export interface OAuthProfile {
   email: string;
   name?: string;
   avatarUrl?: string;
+  /**
+   * Whether the provider asserts the email address is verified by them.
+   * Defaults to false — auto-linking an OAuth identity onto an existing
+   * password account is only safe when the provider has proven email control,
+   * otherwise it is an account-takeover vector (attacker registers a Google
+   * account using the victim's unverified email).
+   */
+  emailVerified?: boolean;
 }
 
 export async function findOrCreateOAuthUser(params: {
@@ -449,6 +507,14 @@ export async function findOrCreateOAuthUser(params: {
   });
 
   if (existingUser) {
+    // Only auto-link when the provider asserts a verified email; otherwise an
+    // attacker could claim any unverified address and inherit that account.
+    if (!profile.emailVerified) {
+      throw new AuthError(
+        'VALIDATION_FAILED',
+        'The email on this OAuth account is not verified by the provider. Sign in with your password or verify the email first.'
+      );
+    }
     // Link OAuth account to existing user
     await db.insert(accounts).values({
       tenantId: existingUser.tenantId ?? tenantId,
@@ -467,7 +533,8 @@ export async function findOrCreateOAuthUser(params: {
       email: profile.email.toLowerCase(),
       name: profile.name,
       avatarUrl: profile.avatarUrl,
-      emailVerified: new Date(),
+      // Trust the provider's verification assertion only; never blanket-mark.
+      emailVerified: profile.emailVerified ? new Date() : null,
       role: 'candidate',
       status: 'active',
     })
