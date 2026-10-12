@@ -1932,7 +1932,7 @@ Due to ultra-minimal redesign, several tasks are no longer needed or simplified:
 - ✅ Typography-driven design system (DESIGN.md updated)
 - ✅ Single CTA with email input
 - ✅ Product preview showing actual interface
-- ✅ Minimal color palette (near-black, white, emerald)
+- ✅ Minimal color palette (near-black, white, moss accent — `moss`/`moss-deep` tokens; `danger` for errors)
 - ✅ Generous whitespace (80px+ section padding)
 - ✅ Complete sentence headlines
 - ✅ Early social proof (right after hero)
