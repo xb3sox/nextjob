@@ -1,0 +1,4859 @@
+[
+  {
+    "id": "ELG-LOC-001",
+    "dimension": "location",
+    "expectedStatus": "eligible",
+    "rationale": "User in allowed country list.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-001 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US",
+            "CA"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US",
+        "city": "Austin"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-002",
+    "dimension": "location",
+    "expectedStatus": "ineligible",
+    "rationale": "User country not in allowed list.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-002 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US",
+            "CA"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "IN"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "ineligible",
+        "reason_contains": "not in allowed countries"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-003",
+    "dimension": "location",
+    "expectedStatus": "eligible",
+    "rationale": "Remote position overrides country restriction (allowRemote default true).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-003 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ],
+          "allowRemote": true
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "BR"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": true
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "eligible",
+        "reason_contains": "Remote position"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-004",
+    "dimension": "location",
+    "expectedStatus": "eligible",
+    "rationale": "Onsite US job, user in US; no country condition set.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-004 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-005",
+    "dimension": "location",
+    "expectedStatus": "unknown",
+    "rationale": "Missing user location yields unknown.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-005 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "unknown",
+        "reason_contains": "Location information missing"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-006",
+    "dimension": "location",
+    "expectedStatus": "ineligible",
+    "rationale": "Job requires relocation willingness; user unwilling.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-006 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "requireRelocation": true
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US"
+      },
+      "willingToRelocate": false
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "ineligible",
+        "reason_contains": "relocation"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-007",
+    "dimension": "location",
+    "expectedStatus": "eligible",
+    "rationale": "Job requires relocation; user willing.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-007 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "requireRelocation": true
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "CA"
+      },
+      "willingToRelocate": true
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-008",
+    "dimension": "location",
+    "expectedStatus": "eligible",
+    "rationale": "Single-country allow-list match.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-008 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "GB"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "GB",
+        "city": "London"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "GB",
+        "city": "London",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-009",
+    "dimension": "location",
+    "expectedStatus": "ineligible",
+    "rationale": "Remote-only allowance disabled and user abroad.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-009 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ],
+          "allowRemote": false
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "DE"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": true
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "ineligible",
+        "reason_contains": "not in allowed countries"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-010",
+    "dimension": "location",
+    "expectedStatus": "eligible",
+    "rationale": "Wide allow-list match (SG).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-010 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "JP",
+            "SG",
+            "KR",
+            "AU"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "SG"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "JP",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-011",
+    "dimension": "location",
+    "expectedStatus": "unknown",
+    "rationale": "Empty profile with explicit countries condition still lacks user location.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-011 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "AU",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "unknown",
+        "reason_contains": "missing"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LOC-012",
+    "dimension": "location",
+    "expectedStatus": "eligible",
+    "rationale": "Remote job passes even when allowRemote unset and user abroad.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-012 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "MX"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": true
+      }
+    },
+    "checks": [
+      {
+        "type": "location",
+        "status": "eligible",
+        "reason_contains": "Remote"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-013",
+    "dimension": "work_authorization",
+    "expectedStatus": "eligible",
+    "rationale": "User holds one of the required authorizations.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-013 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen",
+            "Green Card"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": [
+          "Green Card"
+        ]
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-014",
+    "dimension": "work_authorization",
+    "expectedStatus": "ineligible",
+    "rationale": "User authorization set does not intersect requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-014 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen",
+            "Green Card"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": [
+          "H1B"
+        ]
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "ineligible",
+        "reason_contains": "does not have required work authorization"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-015",
+    "dimension": "work_authorization",
+    "expectedStatus": "unknown",
+    "rationale": "No work authorization data on profile.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-015 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "EU Passport"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "unknown",
+        "reason_contains": "missing"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-016",
+    "dimension": "work_authorization",
+    "expectedStatus": "eligible",
+    "rationale": "Multiple authorizations include required EU Passport.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-016 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "EU Passport"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": [
+          "Work Permit",
+          "EU Passport"
+        ]
+      }
+    },
+    "job": {
+      "location": {
+        "country": "DE",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-017",
+    "dimension": "work_authorization",
+    "expectedStatus": "eligible",
+    "rationale": "Any-of list matched by second entry.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-017 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen",
+            "H1B",
+            "Green Card"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": [
+          "H1B"
+        ]
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-018",
+    "dimension": "work_authorization",
+    "expectedStatus": "ineligible",
+    "rationale": "Citizen-only role; user has permit only.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-018 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": [
+          "Open Work Permit"
+        ]
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-019",
+    "dimension": "work_authorization",
+    "expectedStatus": "eligible",
+    "rationale": "Present auth object with empty list but no condition requirements.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-019 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": []
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-020",
+    "dimension": "work_authorization",
+    "expectedStatus": "eligible",
+    "rationale": "Broad any-of list satisfied.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-020 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "Green Card",
+            "Work Permit"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": [
+          "Work Permit"
+        ]
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-021",
+    "dimension": "work_authorization",
+    "expectedStatus": "unknown",
+    "rationale": "Required check without auth info on remote-EU job.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-021 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "EU Passport"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "NL",
+        "remote": true
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "ELG-WOR-022",
+    "dimension": "work_authorization",
+    "expectedStatus": "eligible",
+    "rationale": "Government-adjacent role requiring citizen OR green card; user has Green Card.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-022 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen",
+            "Green Card"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "workAuthorization": {
+        "authorizations": [
+          "H1B",
+          "Green Card"
+        ]
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "work_authorization",
+        "status": "eligible",
+        "reason_contains": null
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-023",
+    "dimension": "sponsorship",
+    "expectedStatus": "ineligible",
+    "rationale": "User needs sponsorship; job does not offer it.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-023 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": true
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      },
+      "visaSponsorship": false
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "ineligible",
+        "reason_contains": "does not offer"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-024",
+    "dimension": "sponsorship",
+    "expectedStatus": "eligible",
+    "rationale": "User needs sponsorship and job offers it.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-024 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": true
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      },
+      "visaSponsorship": true
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-025",
+    "dimension": "sponsorship",
+    "expectedStatus": "eligible",
+    "rationale": "User does not need sponsorship; job irrelevant.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-025 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": false
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      },
+      "visaSponsorship": false
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-026",
+    "dimension": "sponsorship",
+    "expectedStatus": "ineligible",
+    "rationale": "requireNoSponsorship policy rejects sponsored candidate even when job offers sponsorship.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-026 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {
+          "requireNoSponsorship": true
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": true
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      },
+      "visaSponsorship": true
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "ineligible",
+        "reason_contains": "no sponsorship needed"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-027",
+    "dimension": "sponsorship",
+    "expectedStatus": "eligible",
+    "rationale": "requireNoSponsorship satisfied by self-authorised user.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-027 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {
+          "requireNoSponsorship": true
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": false
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      },
+      "visaSponsorship": false
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-028",
+    "dimension": "sponsorship",
+    "expectedStatus": "eligible",
+    "rationale": "Undefined sponsorship flag treated as falsy; eligible.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-028 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "CA",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-029",
+    "dimension": "sponsorship",
+    "expectedStatus": "ineligible",
+    "rationale": "Needs sponsorship; job flag absent (falsy).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-029 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": true
+    },
+    "job": {
+      "location": {
+        "country": "GB",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-030",
+    "dimension": "sponsorship",
+    "expectedStatus": "eligible",
+    "rationale": "Needs sponsorship; remote role advertises sponsorship.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-030 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": true
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": true
+      },
+      "visaSponsorship": true
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-031",
+    "dimension": "sponsorship",
+    "expectedStatus": "eligible",
+    "rationale": "No sponsorship requirement configured; defaults pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-031 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": false
+    },
+    "job": {
+      "location": {
+        "country": "AU",
+        "remote": false
+      },
+      "visaSponsorship": true
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SPO-032",
+    "dimension": "sponsorship",
+    "expectedStatus": "ineligible",
+    "rationale": "Defense contractor policy: no sponsorship accepted; user needs it.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-032 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {
+          "requireNoSponsorship": true
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "needsSponsorship": true
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      },
+      "visaSponsorship": false
+    },
+    "checks": [
+      {
+        "type": "sponsorship",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-033",
+    "dimension": "license",
+    "expectedStatus": "eligible",
+    "rationale": "All required licenses held and valid.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-033 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "RN"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "RN",
+          "valid": true
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-034",
+    "dimension": "license",
+    "expectedStatus": "ineligible",
+    "rationale": "License held but expired (invalid).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-034 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "RN"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "RN",
+          "valid": false
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "ineligible",
+        "reason_contains": "required licenses"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-035",
+    "dimension": "license",
+    "expectedStatus": "ineligible",
+    "rationale": "Required license missing entirely.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-035 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "CDL-A"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-036",
+    "dimension": "license",
+    "expectedStatus": "eligible",
+    "rationale": "Two required licenses both present and valid.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-036 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "PE",
+            "Real Estate"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "PE",
+          "valid": true
+        },
+        {
+          "name": "Real Estate",
+          "valid": true
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-037",
+    "dimension": "license",
+    "expectedStatus": "ineligible",
+    "rationale": "One of two required licenses invalid.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-037 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "PE",
+            "Electrician"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "PE",
+          "valid": true
+        },
+        {
+          "name": "Electrician",
+          "valid": false
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-038",
+    "dimension": "license",
+    "expectedStatus": "eligible",
+    "rationale": "No required licenses configured; auto-pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-038 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "CDL-A",
+          "valid": true
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-039",
+    "dimension": "license",
+    "expectedStatus": "ineligible",
+    "rationale": "Missing licenses field treated as empty list.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-039 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "Pilots License"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-040",
+    "dimension": "license",
+    "expectedStatus": "eligible",
+    "rationale": "Extra unrelated licenses do not block required match.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-040 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "Series 7"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "CDL-A",
+          "valid": true
+        },
+        {
+          "name": "Series 7",
+          "valid": true
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-041",
+    "dimension": "license",
+    "expectedStatus": "ineligible",
+    "rationale": "Name mismatch is exact-match sensitive ('RN License' != 'RN').",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-041 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "RN"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "RN License",
+          "valid": true
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LIC-042",
+    "dimension": "license",
+    "expectedStatus": "eligible",
+    "rationale": "Optional (non-required) license rule fails but must not gate overall eligibility.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-042 license",
+        "checkType": "license",
+        "required": false,
+        "condition": {
+          "requiredLicenses": [
+            "Electrician"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "license",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-043",
+    "dimension": "certification",
+    "expectedStatus": "eligible",
+    "rationale": "Required certification held.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-043 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "AWS SA"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": [
+        {
+          "name": "AWS SA"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-044",
+    "dimension": "certification",
+    "expectedStatus": "ineligible",
+    "rationale": "Required certification missing.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-044 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "CISSP"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": [
+        {
+          "name": "Comptia Security+"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "ineligible",
+        "reason_contains": "required certifications"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-045",
+    "dimension": "certification",
+    "expectedStatus": "eligible",
+    "rationale": "Both required certifications held.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-045 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "PMP",
+            "Scrum Master"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": [
+        {
+          "name": "PMP"
+        },
+        {
+          "name": "Scrum Master"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-046",
+    "dimension": "certification",
+    "expectedStatus": "ineligible",
+    "rationale": "Only one of two required certs held.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-046 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "PMP",
+            "CSM Advanced"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": [
+        {
+          "name": "PMP"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-047",
+    "dimension": "certification",
+    "expectedStatus": "eligible",
+    "rationale": "No condition configured; auto-pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-047 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-048",
+    "dimension": "certification",
+    "expectedStatus": "ineligible",
+    "rationale": "Empty certifications with requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-048 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "CFA"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-049",
+    "dimension": "certification",
+    "expectedStatus": "eligible",
+    "rationale": "Cert validity is not checked (unlike licenses); held cert passes.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-049 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "K8s CKA"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": [
+        {
+          "name": "K8s CKA"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-050",
+    "dimension": "certification",
+    "expectedStatus": "eligible",
+    "rationale": "Many held certs include the required one.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-050 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "CPA"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": [
+        {
+          "name": "CFA"
+        },
+        {
+          "name": "CPA"
+        },
+        {
+          "name": "Series 7"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-051",
+    "dimension": "certification",
+    "expectedStatus": "ineligible",
+    "rationale": "Case-sensitive exact match required ('cissp' != 'CISSP').",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-051 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "CISSP"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "certifications": [
+        {
+          "name": "cissp"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CER-052",
+    "dimension": "certification",
+    "expectedStatus": "eligible",
+    "rationale": "Missing certifications field with no requirement passes.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-052 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "certification",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-053",
+    "dimension": "education",
+    "expectedStatus": "eligible",
+    "rationale": "Bachelor meets bachelor minimum.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-053 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Computer Science"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-054",
+    "dimension": "education",
+    "expectedStatus": "eligible",
+    "rationale": "Master exceeds bachelor minimum.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-054 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "master",
+          "field": "Data Science"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-055",
+    "dimension": "education",
+    "expectedStatus": "ineligible",
+    "rationale": "Associate below bachelor minimum.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-055 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "associate",
+          "field": "IT"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "ineligible",
+        "reason_contains": "minimum required education"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-056",
+    "dimension": "education",
+    "expectedStatus": "ineligible",
+    "rationale": "High school below master minimum.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-056 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "master"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "high_school"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-057",
+    "dimension": "education",
+    "expectedStatus": "eligible",
+    "rationale": "Doctorate satisfies doctorate minimum.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-057 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "doctorate"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "doctorate",
+          "field": "Physics"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-058",
+    "dimension": "education",
+    "expectedStatus": "eligible",
+    "rationale": "Field requirement satisfied (case-insensitive contains).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-058 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "requiredFields": [
+            "computer science"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Computer Science"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-059",
+    "dimension": "education",
+    "expectedStatus": "ineligible",
+    "rationale": "Wrong field of study.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-059 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "requiredFields": [
+            "law"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "master",
+          "field": "Business"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "ineligible",
+        "reason_contains": "field of study"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-060",
+    "dimension": "education",
+    "expectedStatus": "eligible",
+    "rationale": "Any-of fields matched by second entry.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-060 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "requiredFields": [
+            "mathematics",
+            "engineering"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Engineering"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-061",
+    "dimension": "education",
+    "expectedStatus": "ineligible",
+    "rationale": "Combined degree+field: degree ok, field wrong.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-061 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor",
+          "requiredFields": [
+            "physics"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Chemistry"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-062",
+    "dimension": "education",
+    "expectedStatus": "eligible",
+    "rationale": "Multiple degrees; highest satisfies requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-062 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "master"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": [
+        {
+          "degree": "bachelor"
+        },
+        {
+          "degree": "master"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-063",
+    "dimension": "education",
+    "expectedStatus": "ineligible",
+    "rationale": "Empty education history against degree requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-063 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "high_school"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EDU-064",
+    "dimension": "education",
+    "expectedStatus": "eligible",
+    "rationale": "No conditions configured; auto-pass even with empty education.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-064 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "education": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "education",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-065",
+    "dimension": "experience",
+    "expectedStatus": "eligible",
+    "rationale": "5 years continuous experience meets 3-year minimum.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-065 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 3
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "startDate": "2021-09-15",
+          "endDate": "2026-09-14"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-066",
+    "dimension": "experience",
+    "expectedStatus": "ineligible",
+    "rationale": "1 year falls short of 3-year minimum.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-066 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 3
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "startDate": "2025-10-14",
+          "endDate": "2026-10-13"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "ineligible",
+        "reason_contains": "years of experience"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-067",
+    "dimension": "experience",
+    "expectedStatus": "eligible",
+    "rationale": "Current open-ended role counts to today (~2.9y vs 2y min).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-067 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 2
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "startDate": "2023-11-21"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-068",
+    "dimension": "experience",
+    "expectedStatus": "eligible",
+    "rationale": "Summed overlapping roles exceed threshold.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-068 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 4
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "startDate": "2023-10-15",
+          "endDate": "2025-10-14"
+        },
+        {
+          "startDate": "2024-08-15",
+          "endDate": "2026-08-15"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-069",
+    "dimension": "experience",
+    "expectedStatus": "ineligible",
+    "rationale": "Empty experience against requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-069 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 1
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-070",
+    "dimension": "experience",
+    "expectedStatus": "eligible",
+    "rationale": "No minimum configured; auto-pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-070 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-071",
+    "dimension": "experience",
+    "expectedStatus": "ineligible",
+    "rationale": "Entry-level applicant vs senior 7-year requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-071 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 7
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "startDate": "2024-04-17"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": true
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-072",
+    "dimension": "experience",
+    "expectedStatus": "eligible",
+    "rationale": "Comfortably-above-threshold: ~4.1 years vs 4-year min.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-072 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 4
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "startDate": "2022-09-09",
+          "endDate": "2026-10-11"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-073",
+    "dimension": "experience",
+    "expectedStatus": "ineligible",
+    "rationale": "Entries without startDate contribute zero years.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-073 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 2
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "endDate": "2026-07-06"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-EXP-074",
+    "dimension": "experience",
+    "expectedStatus": "eligible",
+    "rationale": "Long career well past requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-074 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 5
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "experience": [
+        {
+          "startDate": "2017-10-16",
+          "endDate": "2022-10-15"
+        },
+        {
+          "startDate": "2022-10-15",
+          "endDate": "2026-10-13"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "experience",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-075",
+    "dimension": "skill",
+    "expectedStatus": "eligible",
+    "rationale": "All required skills present (case-insensitive).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-075 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "JavaScript",
+            "React"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "javascript"
+        },
+        {
+          "name": "React"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-076",
+    "dimension": "skill",
+    "expectedStatus": "ineligible",
+    "rationale": "Missing one required skill.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-076 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Go",
+            "Kubernetes"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "go"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "ineligible",
+        "reason_contains": "required skills"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-077",
+    "dimension": "skill",
+    "expectedStatus": "ineligible",
+    "rationale": "Empty skill list against requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-077 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Python"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-078",
+    "dimension": "skill",
+    "expectedStatus": "eligible",
+    "rationale": "No required skills configured; auto-pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-078 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "rust"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-079",
+    "dimension": "skill",
+    "expectedStatus": "eligible",
+    "rationale": "Broad stack covers narrow requirement list.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-079 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "SQL",
+            "Python"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "Python"
+        },
+        {
+          "name": "SQL"
+        },
+        {
+          "name": "AWS"
+        },
+        {
+          "name": "Docker"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-080",
+    "dimension": "skill",
+    "expectedStatus": "ineligible",
+    "rationale": "Near-miss names ('node' vs 'node.js') fail exact match.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-080 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Node.js"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "node"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-081",
+    "dimension": "skill",
+    "expectedStatus": "eligible",
+    "rationale": "Mixed-case requirement matched via lowercase comparison.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-081 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "TYPESCRIPT"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "TypeScript"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-082",
+    "dimension": "skill",
+    "expectedStatus": "ineligible",
+    "rationale": "Multiple missing skills reported together.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-082 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Rust",
+            "Terraform",
+            "AWS"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "AWS"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-083",
+    "dimension": "skill",
+    "expectedStatus": "eligible",
+    "rationale": "Missing skills field with no requirement passes.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-083 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-SKI-084",
+    "dimension": "skill",
+    "expectedStatus": "eligible",
+    "rationale": "Single required skill satisfied exactly.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-084 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Java"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "java"
+        },
+        {
+          "name": "c++"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "DE",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "skill",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-085",
+    "dimension": "language",
+    "expectedStatus": "eligible",
+    "rationale": "Fluent meets fluent requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-085 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "English",
+              "proficiency": "fluent"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "english",
+          "proficiency": "fluent"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-086",
+    "dimension": "language",
+    "expectedStatus": "eligible",
+    "rationale": "Native exceeds professional requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-086 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "German",
+              "proficiency": "professional"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "German",
+          "proficiency": "native"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "DE",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-087",
+    "dimension": "language",
+    "expectedStatus": "ineligible",
+    "rationale": "Intermediate below professional requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-087 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "French",
+              "proficiency": "professional"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "french",
+          "proficiency": "intermediate"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "FR",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "ineligible",
+        "reason_contains": "language proficiency"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-088",
+    "dimension": "language",
+    "expectedStatus": "ineligible",
+    "rationale": "Required language absent entirely.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-088 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "Japanese"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "english",
+          "proficiency": "native"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-089",
+    "dimension": "language",
+    "expectedStatus": "eligible",
+    "rationale": "Unspecified requirement defaults to intermediate; user fluent passes.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-089 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "Spanish"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "spanish",
+          "proficiency": "fluent"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "ES",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-090",
+    "dimension": "language",
+    "expectedStatus": "ineligible",
+    "rationale": "Unspecified requirement defaults to intermediate; user basic fails.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-090 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "Mandarin"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "mandarin",
+          "proficiency": "basic"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-091",
+    "dimension": "language",
+    "expectedStatus": "eligible",
+    "rationale": "Multi-language requirement both satisfied.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-091 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "English",
+              "proficiency": "fluent"
+            },
+            {
+              "language": "Portuguese",
+              "proficiency": "intermediate"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "English",
+          "proficiency": "native"
+        },
+        {
+          "language": "Portuguese",
+          "proficiency": "professional"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "BR",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-092",
+    "dimension": "language",
+    "expectedStatus": "ineligible",
+    "rationale": "Multi-language requirement partially satisfied.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-092 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "English",
+              "proficiency": "fluent"
+            },
+            {
+              "language": "German",
+              "proficiency": "intermediate"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "English",
+          "proficiency": "fluent"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "DE",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-093",
+    "dimension": "language",
+    "expectedStatus": "eligible",
+    "rationale": "No required languages configured; auto-pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-093 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": []
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-LAN-094",
+    "dimension": "language",
+    "expectedStatus": "eligible",
+    "rationale": "User proficiency missing defaults to basic; requirement basic passes.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-094 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "Italian",
+              "proficiency": "basic"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "languages": [
+        {
+          "language": "italian"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "IT",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "language",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-095",
+    "dimension": "clearance",
+    "expectedStatus": "eligible",
+    "rationale": "Secret clearance meets secret requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-095 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "secret"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "secret"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-096",
+    "dimension": "clearance",
+    "expectedStatus": "eligible",
+    "rationale": "TS/SCI exceeds secret requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-096 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "secret"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "ts_sci"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-097",
+    "dimension": "clearance",
+    "expectedStatus": "ineligible",
+    "rationale": "Confidential below secret requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-097 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "secret"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "confidential"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "ineligible",
+        "reason_contains": "clearance"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-098",
+    "dimension": "clearance",
+    "expectedStatus": "ineligible",
+    "rationale": "No clearance declared (defaults none) vs top_secret requirement.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-098 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "top_secret"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-099",
+    "dimension": "clearance",
+    "expectedStatus": "eligible",
+    "rationale": "Requirement 'none' always satisfied.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-099 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "none"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "none"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-100",
+    "dimension": "clearance",
+    "expectedStatus": "eligible",
+    "rationale": "Higher holder passes lower tier confidential.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-100 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "confidential"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "top_secret"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-101",
+    "dimension": "clearance",
+    "expectedStatus": "ineligible",
+    "rationale": "Downward tier mismatch: secret vs ts_sci.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-101 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "ts_sci"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "secret"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-102",
+    "dimension": "clearance",
+    "expectedStatus": "eligible",
+    "rationale": "No clearance condition configured; auto-pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-102 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {},
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-103",
+    "dimension": "clearance",
+    "expectedStatus": "eligible",
+    "rationale": "Case-insensitive clearance values ('SECRET' == 'secret').",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-103 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "SECRET"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "Secret"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-CLE-104",
+    "dimension": "clearance",
+    "expectedStatus": "ineligible",
+    "rationale": "Unknown clearance string maps below requirement level.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-104 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "confidential"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "interim-pending"
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "type": "clearance",
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-105",
+    "dimension": "multi_rule",
+    "expectedStatus": "eligible",
+    "rationale": "All six hard requirements met for onsite US senior role.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-105 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-106 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen",
+            "Green Card"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-107 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-108 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-109 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 5
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-110 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Python",
+            "React"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US"
+      },
+      "workAuthorization": {
+        "authorizations": [
+          "US Citizen"
+        ]
+      },
+      "needsSponsorship": false,
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Computer Science"
+        }
+      ],
+      "experience": [
+        {
+          "startDate": "2020-10-15"
+        }
+      ],
+      "skills": [
+        {
+          "name": "python"
+        },
+        {
+          "name": "react"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-106",
+    "dimension": "multi_rule",
+    "expectedStatus": "ineligible",
+    "rationale": "Skill gap fails one required rule among five.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-111 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-112 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-113 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-114 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 5
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-115 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Kubernetes"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US"
+      },
+      "workAuthorization": {
+        "authorizations": [
+          "US Citizen"
+        ]
+      },
+      "needsSponsorship": false,
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Computer Science"
+        }
+      ],
+      "experience": [
+        {
+          "startDate": "2020-10-15"
+        }
+      ],
+      "skills": [
+        {
+          "name": "python"
+        },
+        {
+          "name": "react"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-107",
+    "dimension": "multi_rule",
+    "expectedStatus": "unknown",
+    "rationale": "Missing work-authorization data makes one required rule unverifiable.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-116 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-117 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-118 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Python"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US"
+      },
+      "skills": [
+        {
+          "name": "python"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "unknown"
+      },
+      {
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-108",
+    "dimension": "multi_rule",
+    "expectedStatus": "eligible",
+    "rationale": "Unknown non-required rule does not gate outcome.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-119 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-120 work_authorization",
+        "checkType": "work_authorization",
+        "required": false,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US"
+      }
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-109",
+    "dimension": "multi_rule",
+    "expectedStatus": "ineligible",
+    "rationale": "Two independent blockers (country + sponsorship).",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-121 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-122 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "IN"
+      },
+      "needsSponsorship": true
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      },
+      "visaSponsorship": false
+    },
+    "checks": [
+      {
+        "status": "ineligible"
+      },
+      {
+        "status": "ineligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-110",
+    "dimension": "multi_rule",
+    "expectedStatus": "eligible",
+    "rationale": "Remote-friendly composite: abroad user, remote job, skills+education OK.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-123 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "US"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-124 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-125 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "Go"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-126 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {
+          "requiredLanguages": [
+            {
+              "language": "English",
+              "proficiency": "professional"
+            }
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "CA"
+      },
+      "education": [
+        {
+          "degree": "master",
+          "field": "Engineering"
+        }
+      ],
+      "skills": [
+        {
+          "name": "go"
+        }
+      ],
+      "languages": [
+        {
+          "language": "english",
+          "proficiency": "fluent"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": true
+      }
+    },
+    "checks": [
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-111",
+    "dimension": "multi_rule",
+    "expectedStatus": "ineligible",
+    "rationale": "Government role: clearance + citizenship both fail.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-127 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {
+          "requiredClearance": "top_secret"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-128 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {
+          "requiredAuthorizations": [
+            "US Citizen"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-129 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {
+          "minimumDegree": "bachelor"
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "securityClearance": "secret",
+      "workAuthorization": {
+        "authorizations": [
+          "Green Card"
+        ]
+      },
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Physics"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "ineligible"
+      },
+      {
+        "status": "ineligible"
+      },
+      {
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-112",
+    "dimension": "multi_rule",
+    "expectedStatus": "eligible",
+    "rationale": "Healthcare licensure bundle fully satisfied.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-130 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {
+          "requiredLicenses": [
+            "RN"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-131 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {
+          "requiredCertifications": [
+            "CISSP"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-132 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {
+          "minimumYears": 2
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "licenses": [
+        {
+          "name": "RN",
+          "valid": true
+        }
+      ],
+      "certifications": [
+        {
+          "name": "CISSP"
+        }
+      ],
+      "experience": [
+        {
+          "startDate": "2023-10-15"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-113",
+    "dimension": "multi_rule",
+    "expectedStatus": "unknown",
+    "rationale": "Mixed unknown + eligible: unverifiable location gates as unknown.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-133 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {
+          "countries": [
+            "GB"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-134 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {
+          "requiredSkills": [
+            "SQL"
+          ]
+        },
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "skills": [
+        {
+          "name": "sql"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "GB",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "unknown"
+      },
+      {
+        "status": "eligible"
+      }
+    ]
+  },
+  {
+    "id": "ELG-MUL-114",
+    "dimension": "multi_rule",
+    "expectedStatus": "eligible",
+    "rationale": "Ten-rule stress case: all default-condition rules pass.",
+    "rules": [
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-135 location",
+        "checkType": "location",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-136 work_authorization",
+        "checkType": "work_authorization",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-137 sponsorship",
+        "checkType": "sponsorship",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-138 license",
+        "checkType": "license",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-139 certification",
+        "checkType": "certification",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-140 education",
+        "checkType": "education",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-141 experience",
+        "checkType": "experience",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-142 skill",
+        "checkType": "skill",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-143 language",
+        "checkType": "language",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      },
+      {
+        "tenantId": "00000000-0000-4000-8000-0000000000e1",
+        "name": "rule-144 clearance",
+        "checkType": "clearance",
+        "required": true,
+        "condition": {},
+        "userId": "00000000-0000-4000-8000-0000000000e2"
+      }
+    ],
+    "profile": {
+      "location": {
+        "country": "US"
+      },
+      "workAuthorization": {
+        "authorizations": [
+          "US Citizen"
+        ]
+      },
+      "needsSponsorship": false,
+      "education": [
+        {
+          "degree": "bachelor",
+          "field": "Computer Science"
+        }
+      ],
+      "experience": [
+        {
+          "startDate": "2020-10-15"
+        }
+      ],
+      "skills": [
+        {
+          "name": "python"
+        },
+        {
+          "name": "react"
+        }
+      ]
+    },
+    "job": {
+      "location": {
+        "country": "US",
+        "city": "New York",
+        "remote": false
+      }
+    },
+    "checks": [
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      },
+      {
+        "status": "eligible"
+      }
+    ]
+  }
+]
