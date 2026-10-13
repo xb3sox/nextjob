@@ -31,7 +31,9 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 34/120 tasks complete (28.3%)
+**Progress:** 27/118 tasks complete (22.9%)
+
+> Note: The count above reflects the actual task checkboxes in TASKS.md (118 tasks across 33 phases; T-03f and T-03g are still open). Earlier figures of "34/120" were stale. Next up: T-13 (eligibility evaluation dataset), then T-14/T-15 (matching & job cards).
 
 ## Agent Skills
 

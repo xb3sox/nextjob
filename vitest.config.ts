@@ -30,7 +30,12 @@ export default defineConfig({
         test: {
           name: 'node',
           environment: 'node',
-          include: ['packages/**/*.{test,spec}.{ts,tsx}', 'src/lib/**/*.{test,spec}.{ts,tsx}'],
+          include: [
+            'packages/**/*.{test,spec}.{ts,tsx}',
+            'src/lib/**/*.{test,spec}.{ts,tsx}',
+            // T-13: evaluation harnesses (eligibility G-04 gate, future tailoring evals)
+            'evals/**/*.{test,spec}.{ts,tsx}',
+          ],
           server: {
             deps: {
               // Externalize all node_modules deps (Vitest default behavior,
