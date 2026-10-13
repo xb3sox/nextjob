@@ -69,12 +69,17 @@ const UserProfileSchema = z.object({
   securityClearance: z.string().optional(),
 });
 
+// All fields optional by design: checkEligibility is rule-driven, and each
+// per-rule checker already handles missing job data gracefully (e.g.
+// checkLocation returns 'unknown' when job.location is absent). Requiring a
+// full location here would reject valid sparse-job calls such as sponsorship-
+// only checks with `{}`.
 const JobSchema = z.object({
   location: z.object({
     country: z.string(),
     city: z.string().optional(),
     remote: z.boolean().optional(),
-  }),
+  }).optional(),
   visaSponsorship: z.boolean().optional(),
 });
 

@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (34/120 tasks complete - 28.3%)  
-**Last Updated:** 2026-01-15  
-**Latest Update:** T-12 Code Review Fixes Applied (Eligibility Engine improved from B+ to A-)  
+**Status:** In Progress (27/118 tasks complete - 22.9%)  
+**Last Updated:** 2026-10-13  
+**Latest Update:** Documentation review & cleanup — corrected stale task counts, refreshed "Next Unblocked Task" and priorities (T-04 through T-12 are now complete), synced Requirement Coverage table with actual task statuses.  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -50,7 +50,7 @@ Comprehensive product review completed. Critical issues fixed:
 - **Bundle size:** 208.62 KB JS (61.67 KB gzipped), 36.65 KB CSS (7.14 KB gzipped)
 
 ### 📄 Documentation
-- **Review report:** `PRODUCT_REVIEW_REPORT.md` - Complete review with all findings
+- **Review report:** Findings recorded in this section and in `SESSION_SUMMARY.md` (full report file no longer retained)
 - **Updated files:** App.tsx, package.json, TASKS.md, PrivacyPolicy.tsx, TermsOfService.tsx, NotFound.tsx, Loading.tsx, Skeleton.tsx, index.css
 
 ## Toolchain Upgrade (2026-01-15)
@@ -1734,26 +1734,26 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 
 | PRD Requirement | Task(s) | Status |
 |----------------|---------|--------|
-| FR-01 (Evidence-constrained generation) | T-08, T-17 | Not started |
-| FR-02 (Eligibility before ranking) | T-12, T-14 | Not started |
+| FR-01 (Evidence-constrained generation) | T-08, T-17 | Partially Complete (T-08 done) |
+| FR-02 (Eligibility before ranking) | T-12, T-14 | Partially Complete (T-12 done) |
 | FR-03 (Sensitive fields user-only) | T-19, T-20 | Not started |
 | FR-04 (Verified submission receipts) | T-26 | Not started |
 | FR-05 (Duplicate prevention) | T-23, T-24, T-25 | Not started |
 | FR-06 (Explainable actions) | T-14, T-15, T-20 | Not started |
-| FR-07 (Policy precedence) | T-19, T-09b | Not started |
+| FR-07 (Policy precedence) | T-19, T-09b | Partially Complete (T-09b done) |
 | FR-08 (No auto-retry ambiguous) | T-25, T-45 | Not started |
 | FR-09 (Aggregate-only reporting) | T-30, T-31 | Not started |
 | FR-10 (Privacy controls) | T-36 | Not started |
 | FR-11 (Answer reuse) | T-19 | Not started |
-| FR-12 (Capability dimensions) | T-14, T-15, T-09a | Not started |
+| FR-12 (Capability dimensions) | T-14, T-15, T-09a | Partially Complete (T-09a done) |
 | FR-13 (Actionable notifications) | T-28 | Not started |
 | FR-14 (Interview prep) | Not in MVP scope | N/A |
-| FR-ONB-01 (Account creation) | T-04 | Not started |
-| FR-ONB-02 (Profile import) | T-07 | Not started |
-| FR-ONB-03 (Claim verification) | T-09 | Not started |
-| FR-ONB-04 (Preferences) | T-09a | Not started |
-| FR-ONB-05 (Eligibility capture) | T-09a, T-12 | Not started |
-| FR-ONB-06 (Automation policy) | T-09b | Not started |
+| FR-ONB-01 (Account creation) | T-04 | Complete |
+| FR-ONB-02 (Profile import) | T-07 | Complete |
+| FR-ONB-03 (Claim verification) | T-09 | Complete |
+| FR-ONB-04 (Preferences) | T-09a | Complete |
+| FR-ONB-05 (Eligibility capture) | T-09a, T-12 | Complete |
+| FR-ONB-06 (Automation policy) | T-09b | Complete |
 | FR-ASM-01 (State progression) | T-25, T-44 | Not started |
 | FR-ASM-02 (Outcome states) | T-25, T-44 | Not started |
 | FR-ASM-03 (Exception states) | T-25, T-44, T-45 | Not started |
@@ -1856,7 +1856,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-MON-05 (A/B testing results) | T-54 | Not started |
 | FR-MON-06 (Heatmaps) | T-109 | Not started |
 | FR-MON-07 (Session recording) | T-109 | Not started |
-| G-04 (Eligibility false-positive ≤2%) | T-12, T-13 | Not started |
+| G-04 (Eligibility false-positive ≤2%) | T-12, T-13 | In Progress (T-12 done; T-13 pending) |
 | G-09 (Autopilot evidence ≥80%) | T-24, T-25, T-09b | Not started |
 | G-10 (Min cohort size ≥5) | T-30, T-31 | Not started |
 
@@ -1888,12 +1888,13 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 
 ### High Priority (Next 30 Days)
 1. ~~**T-03: Set up database schema and migrations**~~ ✅ Complete
-2. **T-04: Set up authentication and tenant isolation** - Critical for security (NEXT)
-3. **T-07: Implement profile import and extraction** - Core user flow
-4. **T-08: Implement Your Profile with evidence provenance** - Core differentiator
-5. **T-12: Implement eligibility engine** - Key feature (≤2% false-positive rate)
-6. **T-17: Implement tailoring engine with evidence constraints** - Core AI feature
-7. **T-54: Complete analytics integration** - Track conversion metrics
+2. ~~**T-04: Set up authentication and tenant isolation**~~ ✅ Complete
+3. ~~**T-07: Implement profile import and extraction**~~ ✅ Complete
+4. ~~**T-08: Implement Your Profile with evidence provenance**~~ ✅ Complete
+5. ~~**T-12: Implement eligibility engine**~~ ✅ Complete (code-review fixes applied)
+6. **T-13: Create eligibility evaluation dataset** - Validates ≤2% false-positive rate (NEXT)
+7. **T-17: Implement tailoring engine with evidence constraints** - Core AI feature (blocked by T-16 eval dataset)
+8. **T-54: Complete analytics integration** - Track conversion metrics
 
 ### Medium Priority (30-60 Days)
 8. **T-14: Implement matching and ranking engine** - Job discovery
@@ -1945,26 +1946,30 @@ Due to ultra-minimal redesign, several tasks are no longer needed or simplified:
 ## Next Actions
 
 ### Immediate (This Week)
-1. **T-04: Authentication** - Implement OAuth 2.0 with tenant isolation
+1. **T-13: Eligibility evaluation dataset** - ≥100 test cases with known outcomes (validates T-12; supports G-04 ≤2% false-positive gate)
 2. **T-54: Analytics** - Complete PostHog/Plausible integration
 3. **Test landing page** - Get user feedback on new minimal design
 
 ### Short-term (Next 2 Weeks)
-4. **T-07: Profile import** - Build PDF/DOCX extraction pipeline
-5. **T-08: Your Profile** - Implement evidence provenance tracking
-6. **T-12: Eligibility engine** - Build rule-based eligibility checks
+4. **T-14: Matching & ranking engine** - Rank jobs by fit, eligibility, freshness (deps T-08, T-11, T-12 now complete)
+5. **T-15: Job card UI** - Display capability model per DESIGN.md
+6. **T-19: Risk & policy engine** - Prerequisite for approvals and automation safety
 
 ### Medium-term (Next Month)
-7. **T-17: Tailoring engine** - Implement evidence-constrained AI generation
-8. **T-23: ATS connector** - Build first connector (Greenhouse or Lever)
-9. **T-54: Analytics** - Complete PostHog/Plausible integration
+7. **T-17: Tailoring engine** - Implement evidence-constrained AI generation (requires T-16 eval dataset first — blocker B-02)
+8. **T-23: ATS connector** - Build first connector (Greenhouse or Lever) after T-22 synthetic test framework (blocker B-03)
 
 ---
 
 ## Next Unblocked Task
 
-**T-04: Set up authentication and tenant isolation**
+**T-13: Create eligibility evaluation dataset**
 
-Dependencies: T-01, T-02, T-03 (Complete)  
+Dependencies: T-12 (Complete)  
 Blockers: None  
-Estimated effort: 12 hours
+Estimated effort: 8 hours  
+
+Notes:
+- T-04 through T-12 were completed since the last update (see evidence sections under each task and the session summaries).
+- PRD blocker B-02 still applies to the tailoring track: T-16 (AI evaluation dataset) must be created before T-17 (tailoring engine).
+- T-13 produces the evaluation data needed to verify the G-04 eligibility accuracy gate (false-positive ≤2%).

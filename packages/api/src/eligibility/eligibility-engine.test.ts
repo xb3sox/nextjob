@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { EligibilityEngineService } from './eligibility-engine.js';
 
 describe('EligibilityEngineService', () => {
@@ -11,7 +11,7 @@ describe('EligibilityEngineService', () => {
   describe('createRule', () => {
     it('should create a location rule', async () => {
       const rule = await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Location Required',
         description: 'Job must be in United States',
         checkType: 'location',
@@ -19,7 +19,7 @@ describe('EligibilityEngineService', () => {
         condition: {
           countries: ['US'],
         },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       expect(rule.id).toBeDefined();
@@ -31,14 +31,14 @@ describe('EligibilityEngineService', () => {
 
     it('should create a work authorization rule', async () => {
       const rule = await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Work Authorization',
         checkType: 'work_authorization',
         required: true,
         condition: {
           requiredAuthorizations: ['US Citizen', 'Green Card'],
         },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       expect(rule.checkType).toBe('work_authorization');
@@ -47,14 +47,14 @@ describe('EligibilityEngineService', () => {
 
     it('should create a skills rule', async () => {
       const rule = await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Required Skills',
         checkType: 'skill',
         required: true,
         condition: {
           requiredSkills: ['JavaScript', 'TypeScript', 'React'],
         },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       expect(rule.checkType).toBe('skill');
@@ -66,26 +66,30 @@ describe('EligibilityEngineService', () => {
     it('should return eligible when all checks pass', async () => {
       // Create rules
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Location',
         checkType: 'location',
         required: true,
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Required Skills',
         checkType: 'skill',
         required: true,
         condition: { requiredSkills: ['JavaScript'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       // Check eligibility
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         {
           location: { country: 'US', city: 'San Francisco' },
           skills: [{ name: 'JavaScript' }, { name: 'React' }],
@@ -105,17 +109,21 @@ describe('EligibilityEngineService', () => {
     it('should return ineligible when required check fails', async () => {
       // Create rules
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Location',
         checkType: 'location',
         required: true,
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       // Check eligibility
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         {
           location: { country: 'UK', city: 'London' },
         },
@@ -133,17 +141,21 @@ describe('EligibilityEngineService', () => {
     it('should return unknown when required check cannot be verified', async () => {
       // Create rules
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Work Authorization',
         checkType: 'work_authorization',
         required: true,
         condition: { requiredAuthorizations: ['US Citizen'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       // Check eligibility (user has no work authorization info)
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         {},
         {}
       );
@@ -155,16 +167,20 @@ describe('EligibilityEngineService', () => {
 
     it('should check location eligibility', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Only',
         checkType: 'location',
         required: true,
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { location: { country: 'US' } },
         { location: { country: 'US', remote: false } }
       );
@@ -175,16 +191,20 @@ describe('EligibilityEngineService', () => {
 
     it('should check work authorization eligibility', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Work Auth',
         checkType: 'work_authorization',
         required: true,
         condition: { requiredAuthorizations: ['US Citizen', 'Green Card'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { workAuthorization: { authorizations: ['US Citizen'] } },
         {}
       );
@@ -194,16 +214,20 @@ describe('EligibilityEngineService', () => {
 
     it('should check sponsorship eligibility', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'No Sponsorship Required',
         checkType: 'sponsorship',
         required: true,
         condition: { requireNoSponsorship: true },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { needsSponsorship: true },
         { visaSponsorship: false }
       );
@@ -213,16 +237,20 @@ describe('EligibilityEngineService', () => {
 
     it('should check education eligibility', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Bachelor Required',
         checkType: 'education',
         required: true,
         condition: { minimumDegree: 'bachelor' },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { education: [{ degree: 'Master', field: 'Computer Science' }] },
         {}
       );
@@ -232,16 +260,20 @@ describe('EligibilityEngineService', () => {
 
     it('should check experience eligibility', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: '5 Years Experience',
         checkType: 'experience',
         required: true,
         condition: { minimumYears: 5 },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         {
           experience: [
             { startDate: '2018-01-01', endDate: '2023-01-01' }, // 5 years
@@ -255,16 +287,20 @@ describe('EligibilityEngineService', () => {
 
     it('should check skills eligibility', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Required Skills',
         checkType: 'skill',
         required: true,
         condition: { requiredSkills: ['JavaScript', 'React'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { skills: [{ name: 'JavaScript' }, { name: 'React' }, { name: 'Node.js' }] },
         {}
       );
@@ -274,18 +310,22 @@ describe('EligibilityEngineService', () => {
 
     it('should check language eligibility', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'English Required',
         checkType: 'language',
         required: true,
         condition: {
           requiredLanguages: [{ language: 'English', proficiency: 'professional' }],
         },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { languages: [{ language: 'English', proficiency: 'fluent' }] },
         {}
       );
@@ -295,40 +335,44 @@ describe('EligibilityEngineService', () => {
 
     it('should handle multiple rules', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Location',
         checkType: 'location',
         required: true,
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'JavaScript Required',
         checkType: 'skill',
         required: true,
         condition: { requiredSkills: ['JavaScript'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Bachelor Required',
         checkType: 'education',
         required: true,
         condition: { minimumDegree: 'bachelor' },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         {
           location: { country: 'US' },
           skills: [{ name: 'JavaScript' }],
           education: [{ degree: 'Bachelor' }],
         },
-        {}
+        { location: { country: 'US', remote: false } }
       );
 
       expect(result.eligible).toBe(true);
@@ -338,18 +382,22 @@ describe('EligibilityEngineService', () => {
 
     it('should calculate confidence score', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'US Location',
         checkType: 'location',
         required: true,
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { location: { country: 'US' } },
-        {}
+        { location: { country: 'US', remote: false } }
       );
 
       expect(result.assessment.confidence).toBeGreaterThan(0);
@@ -360,22 +408,22 @@ describe('EligibilityEngineService', () => {
   describe('listRules', () => {
     it('should list all rules for tenant', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Rule 1',
         checkType: 'location',
         condition: {},
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Rule 2',
         checkType: 'skill',
         condition: {},
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
-      const result = await service.listRules({ tenantId: 'tenant-1' });
+      const result = await service.listRules({ tenantId: '00000000-0000-4000-8000-0000000000a1' });
 
       expect(result.rules).toHaveLength(2);
       expect(result.total).toBe(2);
@@ -383,23 +431,23 @@ describe('EligibilityEngineService', () => {
 
     it('should filter by check type', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Location Rule',
         checkType: 'location',
         condition: {},
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Skill Rule',
         checkType: 'skill',
         condition: {},
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.listRules({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         checkType: 'location',
       });
 
@@ -409,24 +457,24 @@ describe('EligibilityEngineService', () => {
 
     it('should sort by priority', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Low Priority',
         checkType: 'location',
         condition: {},
         priority: 0,
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'High Priority',
         checkType: 'skill',
         condition: {},
         priority: 10,
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
-      const result = await service.listRules({ tenantId: 'tenant-1' });
+      const result = await service.listRules({ tenantId: '00000000-0000-4000-8000-0000000000a1' });
 
       expect(result.rules[0].name).toBe('High Priority');
       expect(result.rules[1].name).toBe('Low Priority');
@@ -436,18 +484,18 @@ describe('EligibilityEngineService', () => {
   describe('updateRule', () => {
     it('should update rule', async () => {
       const created = await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Original Name',
         checkType: 'location',
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const updated = await service.updateRule(
         created.id,
-        'tenant-1',
+        '00000000-0000-4000-8000-0000000000a1',
         { name: 'Updated Name', condition: { countries: ['US', 'CA'] } },
-        'user-1'
+        '00000000-0000-4000-8000-0000000000b1'
       );
 
       expect(updated.name).toBe('Updated Name');
@@ -459,17 +507,21 @@ describe('EligibilityEngineService', () => {
   describe('deleteRule', () => {
     it('should soft delete rule', async () => {
       const created = await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Test Rule',
         checkType: 'location',
         condition: {},
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
-      await service.deleteRule(created.id, 'tenant-1', 'user-1');
+      await service.deleteRule(
+        created.id,
+        '00000000-0000-4000-8000-0000000000a1',
+        '00000000-0000-4000-8000-0000000000b1'
+      );
 
       await expect(
-        service.getRule(created.id, 'tenant-1')
+        service.getRule(created.id, '00000000-0000-4000-8000-0000000000a1')
       ).rejects.toThrow();
     });
   });
@@ -477,23 +529,27 @@ describe('EligibilityEngineService', () => {
   describe('getAssessment', () => {
     it('should retrieve assessment by ID', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Test Rule',
         checkType: 'location',
         required: true,
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       const result = await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { location: { country: 'US' } },
-        {}
+        { location: { country: 'US', remote: false } }
       );
 
       const assessment = await service.getAssessment(
         result.assessment.id,
-        'tenant-1'
+        '00000000-0000-4000-8000-0000000000a1'
       );
 
       expect(assessment.id).toBe(result.assessment.id);
@@ -504,27 +560,38 @@ describe('EligibilityEngineService', () => {
   describe('listAssessments', () => {
     it('should list assessments for user', async () => {
       await service.createRule({
-        tenantId: 'tenant-1',
+        tenantId: '00000000-0000-4000-8000-0000000000a1',
         name: 'Test Rule',
         checkType: 'location',
         required: true,
         condition: { countries: ['US'] },
-        userId: 'user-1',
+        userId: '00000000-0000-4000-8000-0000000000b1',
       });
 
       await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-1' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c1',
+        },
         { location: { country: 'US' } },
-        {}
+        { location: { country: 'US', remote: false } }
       );
 
       await service.checkEligibility(
-        { userId: 'user-1', tenantId: 'tenant-1', jobId: 'job-2' },
+        {
+          userId: '00000000-0000-4000-8000-0000000000b1',
+          tenantId: '00000000-0000-4000-8000-0000000000a1',
+          jobId: '00000000-0000-4000-8000-0000000000c2',
+        },
         { location: { country: 'US' } },
-        {}
+        { location: { country: 'US', remote: false } }
       );
 
-      const result = await service.listAssessments('user-1', 'tenant-1');
+      const result = await service.listAssessments(
+        '00000000-0000-4000-8000-0000000000b1',
+        '00000000-0000-4000-8000-0000000000a1'
+      );
 
       expect(result.assessments).toHaveLength(2);
       expect(result.total).toBe(2);
