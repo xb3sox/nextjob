@@ -1,0 +1,23 @@
+{
+  "name": "eligibility-eval-dataset",
+  "version": "1.0.0",
+  "taskId": "T-13",
+  "targetMetric": "false-positive rate <= 2% (G-04)",
+  "engineUnderTest": "packages/api/src/eligibility/eligibility-engine.ts",
+  "totalCases": 114,
+  "dimensions": [
+    "certification",
+    "clearance",
+    "education",
+    "experience",
+    "language",
+    "license",
+    "location",
+    "multi_rule",
+    "skill",
+    "sponsorship",
+    "work_authorization"
+  ],
+  "generatedBy": "generate_dataset.py (seed=20261014)",
+  "notes": "A false positive = engine reports 'eligible' where expectedStatus is 'ineligible'. Overall-status expectation: any required ineligible => ineligible; else any required unknown => unknown; else eligible (matches calculateOverallStatus)."
+}

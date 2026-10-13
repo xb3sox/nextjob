@@ -11,6 +11,7 @@
     "lint": "biome check .",
     "lint:fix": "biome check --apply .",
     "test": "vitest",
+    "test:eval": "vitest run --project node evals",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "format": "biome format --write .",
