@@ -1,0 +1,245 @@
+{
+  "dataset": "skills_section",
+  "description": "Skills section generation test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ss-001",
+      "description": "Generate skills section with verified skills",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "expert",
+              "yearsOfExperience": 5
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-2",
+            "type": "skill",
+            "title": "React",
+            "content": {
+              "level": "advanced",
+              "yearsOfExperience": 3
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Frontend Developer",
+        "requiredSkills": ["JavaScript", "React"]
+      },
+      "tailoringType": "skills_section",
+      "expectedOutput": {
+        "skills": [
+          {
+            "name": "JavaScript",
+            "level": "expert",
+            "evidenceClaimId": "claim-1"
+          },
+          {
+            "name": "React",
+            "level": "advanced",
+            "evidenceClaimId": "claim-2"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ss-002",
+      "description": "Prioritize job-required skills",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-3",
+            "type": "skill",
+            "title": "Python",
+            "content": {
+              "level": "expert"
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-4",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "intermediate"
+            },
+            "evidenceId": "evidence-4",
+            "verificationStatus": "verified",
+            "confidence": 0.8
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "JavaScript Developer",
+        "requiredSkills": ["JavaScript"]
+      },
+      "tailoringType": "skills_section",
+      "expectedOutput": {
+        "skills": [
+          {
+            "name": "JavaScript",
+            "level": "intermediate",
+            "evidenceClaimId": "claim-4",
+            "priority": "high"
+          },
+          {
+            "name": "Python",
+            "level": "expert",
+            "evidenceClaimId": "claim-3",
+            "priority": "low"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ss-003",
+      "description": "Reject unverified skills",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-5",
+            "type": "skill",
+            "title": "Machine Learning",
+            "content": {
+              "level": "beginner"
+            },
+            "evidenceId": null,
+            "verificationStatus": "unverified",
+            "confidence": 0.3
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "ML Engineer",
+        "requiredSkills": ["Machine Learning"]
+      },
+      "tailoringType": "skills_section",
+      "expectedOutput": {
+        "skills": [],
+        "unsupportedClaims": ["claim-5"],
+        "evidenceCoverage": 0.0,
+        "reason": "Unverified skill should not be listed"
+      }
+    },
+    {
+      "id": "ss-004",
+      "description": "Handle skill categories",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-6",
+            "type": "skill",
+            "title": "React",
+            "content": {
+              "category": "Frontend",
+              "level": "expert"
+            },
+            "evidenceId": "evidence-6",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-7",
+            "type": "skill",
+            "title": "Node.js",
+            "content": {
+              "category": "Backend",
+              "level": "advanced"
+            },
+            "evidenceId": "evidence-7",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Full Stack Developer"
+      },
+      "tailoringType": "skills_section",
+      "expectedOutput": {
+        "skills": [
+          {
+            "name": "React",
+            "category": "Frontend",
+            "level": "expert",
+            "evidenceClaimId": "claim-6"
+          },
+          {
+            "name": "Node.js",
+            "category": "Backend",
+            "level": "advanced",
+            "evidenceClaimId": "claim-7"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ss-005",
+      "description": "Limit skills to relevant ones",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-8",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "expert"
+            },
+            "evidenceId": "evidence-8",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-9",
+            "type": "skill",
+            "title": "Cooking",
+            "content": {
+              "level": "advanced"
+            },
+            "evidenceId": "evidence-9",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Developer",
+        "requiredSkills": ["JavaScript"]
+      },
+      "tailoringType": "skills_section",
+      "expectedOutput": {
+        "skills": [
+          {
+            "name": "JavaScript",
+            "level": "expert",
+            "evidenceClaimId": "claim-8"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "excludedSkills": ["Cooking"],
+        "reason": "Irrelevant skills should be excluded"
+      }
+    }
+  ]
+}

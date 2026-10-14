@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "description": "Expected outcomes summary for all tailoring test cases",
+  "generatedAt": "2026-01-15T00:00:00Z",
+  "summary": {
+    "totalTestCases": 50,
+    "byDataset": {
+      "resume_tailoring": 10,
+      "cover_letter": 10,
+      "application_answers": 10,
+      "professional_summary": 5,
+      "skills_section": 5
+    },
+    "byScenario": {
+      "evidence_complete": 5,
+      "evidence_partial": 5,
+      "evidence_constraints": 10
+    },
+    "byTailoringType": {
+      "resume": 20,
+      "cover_letter": 15,
+      "application_answer": 10,
+      "professional_summary": 5,
+      "skills_section": 10
+    }
+  },
+  "successCriteria": {
+    "unsupportedClaims": {
+      "target": 0,
+      "description": "Zero unsupported claims in all outputs"
+    },
+    "evidenceCoverage": {
+      "target": 1.0,
+      "description": "100% of outputs must be traceable to evidence"
+    },
+    "datePreservation": {
+      "target": 1.0,
+      "description": "100% of dates must be preserved exactly"
+    },
+    "employerPreservation": {
+      "target": 1.0,
+      "description": "100% of employer names must be preserved exactly"
+    },
+    "qualificationPreservation": {
+      "target": 1.0,
+      "description": "100% of qualifications must be preserved exactly"
+    },
+    "noSkillUpgrade": {
+      "target": 1.0,
+      "description": "No skill levels upgraded beyond evidence"
+    },
+    "noFabricatedAchievements": {
+      "target": 1.0,
+      "description": "No achievements fabricated beyond evidence"
+    }
+  },
+  "testExecution": {
+    "command": "npm run test:eval -- tailoring",
+    "expectedDuration": "45s",
+    "parallelExecution": true,
+    "retryOnFailure": 2
+  },
+  "validation": {
+    "schemaValidation": true,
+    "typeChecking": true,
+    "runtimeValidation": true,
+    "evidenceTraceability": true
+  },
+  "reporting": {
+    "format": "json",
+    "includeDetails": true,
+    "includeCoverage": true,
+    "includePerformance": true,
+    "includeEvidenceTraceability": true
+  }
+}
