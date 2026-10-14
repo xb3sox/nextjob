@@ -1,0 +1,259 @@
+{
+  "scenario": "evidence_complete",
+  "description": "Test cases with complete evidence coverage",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ec-001",
+      "description": "Complete evidence for all sections",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "experience",
+            "title": "Senior Developer",
+            "content": {
+              "company": "Tech Corp",
+              "startDate": "2020-01-01",
+              "endDate": "2023-12-31",
+              "achievements": ["Led team", "Improved performance"]
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-2",
+            "type": "education",
+            "title": "MS Computer Science",
+            "content": {
+              "institution": "MIT",
+              "graduationDate": "2020-06-01"
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          },
+          {
+            "id": "claim-3",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "expert",
+              "yearsOfExperience": 5
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Senior Software Engineer",
+        "requiredSkills": ["JavaScript"],
+        "education": "Master's degree"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Senior Developer at Tech Corp",
+            "evidenceClaimId": "claim-1"
+          },
+          {
+            "type": "education",
+            "content": "MS Computer Science from MIT",
+            "evidenceClaimId": "claim-2"
+          },
+          {
+            "type": "skills",
+            "content": "JavaScript (expert, 5 years)",
+            "evidenceClaimId": "claim-3"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ec-002",
+      "description": "Complete evidence for cover letter",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-4",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "DevCo",
+              "achievements": ["Built scalable systems"]
+            },
+            "evidenceId": "evidence-4",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-5",
+            "type": "project",
+            "title": "E-commerce Platform",
+            "content": {
+              "description": "Built platform with 1M users"
+            },
+            "evidenceId": "evidence-5",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Engineer",
+        "company": "Innovate Inc"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Built scalable systems at DevCo",
+            "evidenceClaimIds": ["claim-4"]
+          },
+          {
+            "type": "project",
+            "content": "Developed e-commerce platform serving 1M users",
+            "evidenceClaimIds": ["claim-5"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ec-003",
+      "description": "Complete evidence for application answers",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-6",
+            "type": "experience",
+            "title": "Engineer",
+            "content": {
+              "company": "TechCo",
+              "years": 5
+            },
+            "evidenceId": "evidence-6",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-7",
+            "type": "skill",
+            "title": "Python",
+            "content": {
+              "level": "expert"
+            },
+            "evidenceId": "evidence-7",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "question": "Why are you qualified for this role?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "With 5 years of engineering experience at TechCo and expert-level Python skills, I am well-qualified for this role",
+        "evidenceClaimIds": ["claim-6", "claim-7"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ec-004",
+      "description": "Complete evidence for professional summary",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-8",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "years": 7
+            },
+            "evidenceId": "evidence-8",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-9",
+            "type": "certification",
+            "title": "AWS Certified",
+            "content": {
+              "issuer": "Amazon"
+            },
+            "evidenceId": "evidence-9",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "tailoringType": "professional_summary",
+      "expectedOutput": {
+        "summary": "Experienced developer with 7 years and AWS certification",
+        "evidenceClaimIds": ["claim-8", "claim-9"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ec-005",
+      "description": "Complete evidence for skills section",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-10",
+            "type": "skill",
+            "title": "React",
+            "content": {
+              "level": "expert"
+            },
+            "evidenceId": "evidence-10",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-11",
+            "type": "skill",
+            "title": "Node.js",
+            "content": {
+              "level": "advanced"
+            },
+            "evidenceId": "evidence-11",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Full Stack Developer",
+        "requiredSkills": ["React", "Node.js"]
+      },
+      "tailoringType": "skills_section",
+      "expectedOutput": {
+        "skills": [
+          {
+            "name": "React",
+            "level": "expert",
+            "evidenceClaimId": "claim-10"
+          },
+          {
+            "name": "Node.js",
+            "level": "advanced",
+            "evidenceClaimId": "claim-11"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    }
+  ]
+}

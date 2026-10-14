@@ -1,0 +1,317 @@
+{
+  "dataset": "application_answers",
+  "description": "Application Q&A test cases with evidence constraints",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "aa-001",
+      "description": "Answer 'Why are you interested?' with experience evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "experience",
+            "title": "Software Engineer",
+            "content": {
+              "company": "Tech Corp",
+              "achievements": ["Built scalable systems"]
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Engineer",
+        "company": "Innovate Inc",
+        "description": "Build innovative solutions"
+      },
+      "question": "Why are you interested in this position?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "I am interested in this position because my experience building scalable systems at Tech Corp aligns with your mission to build innovative solutions",
+        "evidenceClaimIds": ["claim-1"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "aa-002",
+      "description": "Answer 'Describe your experience' with multiple claims",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-2",
+            "type": "experience",
+            "title": "Senior Developer",
+            "content": {
+              "company": "DevCorp",
+              "startDate": "2020-01-01",
+              "endDate": "2023-01-01"
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-3",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "expert",
+              "yearsOfExperience": 5
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "question": "Describe your relevant experience",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "I have 3 years of experience as a Senior Developer at DevCorp, with 5 years of expert-level JavaScript experience",
+        "evidenceClaimIds": ["claim-2", "claim-3"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "aa-003",
+      "description": "Answer salary question with preferences",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-4",
+            "type": "preference",
+            "title": "Salary Expectation",
+            "content": {
+              "minSalary": 120000,
+              "maxSalary": 150000,
+              "currency": "USD"
+            },
+            "evidenceId": "evidence-4",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "question": "What are your salary expectations?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "My salary expectations are between $120,000 and $150,000 USD",
+        "evidenceClaimIds": ["claim-4"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "aa-004",
+      "description": "Reject answer without evidence",
+      "careerGraph": {
+        "claims": []
+      },
+      "question": "What is your greatest achievement?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": null,
+        "evidenceClaimIds": [],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 0.0,
+        "reason": "No evidence available to answer this question"
+      }
+    },
+    {
+      "id": "aa-005",
+      "description": "Answer with education evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-5",
+            "type": "education",
+            "title": "Bachelor of Science",
+            "content": {
+              "institution": "MIT",
+              "field": "Computer Science",
+              "graduationDate": "2020-06-01"
+            },
+            "evidenceId": "evidence-5",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "question": "Describe your educational background",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "I hold a Bachelor of Science in Computer Science from MIT, graduating in June 2020",
+        "evidenceClaimIds": ["claim-5"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "aa-006",
+      "description": "Answer with project evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-6",
+            "type": "project",
+            "title": "Mobile App",
+            "content": {
+              "description": "Developed iOS app with 100k downloads",
+              "technologies": ["Swift", "UIKit"]
+            },
+            "evidenceId": "evidence-6",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "question": "Tell us about a project you're proud of",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "I developed a mobile app using Swift and UIKit that achieved 100k downloads",
+        "evidenceClaimIds": ["claim-6"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "aa-007",
+      "description": "Answer with certification evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-7",
+            "type": "certification",
+            "title": "PMP",
+            "content": {
+              "issuer": "PMI",
+              "issueDate": "2022-01-01"
+            },
+            "evidenceId": "evidence-7",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "question": "What certifications do you hold?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "I hold a PMP certification from PMI, issued in January 2022",
+        "evidenceClaimIds": ["claim-7"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "aa-008",
+      "description": "Answer availability question with preference",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-8",
+            "type": "preference",
+            "title": "Availability",
+            "content": {
+              "noticePeriod": "2 weeks",
+              "startDate": "2024-02-01"
+            },
+            "evidenceId": "evidence-8",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "question": "When can you start?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "I can start after a 2-week notice period, available from February 1, 2024",
+        "evidenceClaimIds": ["claim-8"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "aa-009",
+      "description": "Reject unverified claim in answer",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-9",
+            "type": "achievement",
+            "title": "Award Winner",
+            "content": {
+              "description": "Won industry award"
+            },
+            "evidenceId": null,
+            "verificationStatus": "unverified",
+            "confidence": 0.2
+          }
+        ]
+      },
+      "question": "What awards have you received?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": null,
+        "evidenceClaimIds": [],
+        "unsupportedClaims": ["claim-9"],
+        "evidenceCoverage": 0.0,
+        "reason": "Unverified achievement should not be mentioned"
+      }
+    },
+    {
+      "id": "aa-010",
+      "description": "Answer with multiple evidence types",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-10",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "TechCo",
+              "years": 3
+            },
+            "evidenceId": "evidence-10",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-11",
+            "type": "skill",
+            "title": "Python",
+            "content": {
+              "level": "advanced"
+            },
+            "evidenceId": "evidence-11",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          },
+          {
+            "id": "claim-12",
+            "type": "education",
+            "title": "BS Computer Science",
+            "content": {
+              "institution": "State University"
+            },
+            "evidenceId": "evidence-12",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "question": "Why should we hire you?",
+      "tailoringType": "application_answer",
+      "expectedOutput": {
+        "answer": "With 3 years of development experience at TechCo, advanced Python skills, and a BS in Computer Science from State University, I bring a strong technical foundation",
+        "evidenceClaimIds": ["claim-10", "claim-11", "claim-12"],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    }
+  ]
+}

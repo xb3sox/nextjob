@@ -1,0 +1,436 @@
+{
+  "dataset": "cover_letter",
+  "description": "Cover letter generation test cases with evidence constraints",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "cl-001",
+      "description": "Generate cover letter with experience evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "experience",
+            "title": "Senior Software Engineer",
+            "content": {
+              "company": "Tech Corp",
+              "startDate": "2020-01-01",
+              "endDate": "2023-12-31",
+              "achievements": [
+                "Led team of 5 engineers",
+                "Improved system performance by 40%"
+              ]
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Engineer",
+        "company": "Innovate Inc",
+        "description": "Looking for experienced software engineer to lead projects"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "introduction",
+            "content": "I am writing to express my interest in the Software Engineer position at Innovate Inc",
+            "evidenceClaimIds": []
+          },
+          {
+            "type": "experience",
+            "content": "As a Senior Software Engineer at Tech Corp, I led a team of 5 engineers and improved system performance by 40%",
+            "evidenceClaimIds": ["claim-1"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "cl-002",
+      "description": "Generate cover letter with skills and education",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-2",
+            "type": "education",
+            "title": "Master of Science in Computer Science",
+            "content": {
+              "institution": "MIT",
+              "startDate": "2018-09-01",
+              "endDate": "2020-06-01"
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          },
+          {
+            "id": "claim-3",
+            "type": "skill",
+            "title": "Python",
+            "content": {
+              "level": "expert",
+              "yearsOfExperience": 5
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Data Scientist",
+        "company": "DataCo",
+        "requiredSkills": ["Python", "Machine Learning"],
+        "education": "Master's degree"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "education",
+            "content": "I hold a Master of Science in Computer Science from MIT",
+            "evidenceClaimIds": ["claim-2"]
+          },
+          {
+            "type": "skills",
+            "content": "My expertise in Python, developed over 5 years",
+            "evidenceClaimIds": ["claim-3"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "cl-003",
+      "description": "Generate cover letter with projects",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-4",
+            "type": "project",
+            "title": "E-commerce Platform",
+            "content": {
+              "description": "Built scalable e-commerce platform handling 10k daily transactions",
+              "technologies": ["React", "Node.js", "PostgreSQL"],
+              "role": "Lead Developer"
+            },
+            "evidenceId": "evidence-4",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Full Stack Developer",
+        "company": "ShopTech",
+        "description": "Build e-commerce solutions"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "project",
+            "content": "I led the development of an e-commerce platform that handles 10k daily transactions using React, Node.js, and PostgreSQL",
+            "evidenceClaimIds": ["claim-4"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "cl-004",
+      "description": "Reject unverified claims in cover letter",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-5",
+            "type": "experience",
+            "title": "Manager",
+            "content": {
+              "company": "Unknown Corp",
+              "achievements": ["Managed large team"]
+            },
+            "evidenceId": null,
+            "verificationStatus": "unverified",
+            "confidence": 0.3
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Engineering Manager",
+        "company": "TechCo"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [],
+        "unsupportedClaims": ["claim-5"],
+        "evidenceCoverage": 0.0,
+        "reason": "Unverified management experience should not be mentioned"
+      }
+    },
+    {
+      "id": "cl-005",
+      "description": "Generate cover letter with certifications",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-6",
+            "type": "certification",
+            "title": "AWS Solutions Architect",
+            "content": {
+              "issuer": "Amazon",
+              "issueDate": "2022-01-01"
+            },
+            "evidenceId": "evidence-6",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Cloud Architect",
+        "company": "CloudCorp",
+        "certifications": ["AWS Certified"]
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "certification",
+            "content": "I am an AWS Certified Solutions Architect",
+            "evidenceClaimIds": ["claim-6"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "cl-006",
+      "description": "Preserve exact company names",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-7",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "Acme Corporation International",
+              "startDate": "2020-01-01",
+              "endDate": "2023-01-01"
+            },
+            "evidenceId": "evidence-7",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Developer"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Acme Corporation International",
+            "evidenceClaimIds": ["claim-7"],
+            "exactMatch": true
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "cl-007",
+      "description": "Generate cover letter with achievements",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-8",
+            "type": "achievement",
+            "title": "Employee of the Year",
+            "content": {
+              "issuer": "Tech Corp",
+              "date": "2022-12-01",
+              "description": "Recognized for outstanding performance"
+            },
+            "evidenceId": "evidence-8",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Senior Developer",
+        "company": "InnovateCo"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "achievement",
+            "content": "I was recognized as Employee of the Year at Tech Corp for outstanding performance",
+            "evidenceClaimIds": ["claim-8"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "cl-008",
+      "description": "Handle multiple claim types",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-9",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "DevCorp",
+              "startDate": "2020-01-01",
+              "endDate": "2023-01-01"
+            },
+            "evidenceId": "evidence-9",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-10",
+            "type": "education",
+            "title": "Bachelor in CS",
+            "content": {
+              "institution": "State University"
+            },
+            "evidenceId": "evidence-10",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          },
+          {
+            "id": "claim-11",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "expert"
+            },
+            "evidenceId": "evidence-11",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Full Stack Developer",
+        "company": "WebCo"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at DevCorp",
+            "evidenceClaimIds": ["claim-9"]
+          },
+          {
+            "type": "education",
+            "content": "Bachelor in CS from State University",
+            "evidenceClaimIds": ["claim-10"]
+          },
+          {
+            "type": "skills",
+            "content": "Expert in JavaScript",
+            "evidenceClaimIds": ["claim-11"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "cl-009",
+      "description": "Reject low confidence claims",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-12",
+            "type": "skill",
+            "title": "Kubernetes",
+            "content": {
+              "level": "intermediate"
+            },
+            "evidenceId": "evidence-12",
+            "verificationStatus": "verified",
+            "confidence": 0.45
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "DevOps Engineer",
+        "requiredSkills": ["Kubernetes"]
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [],
+        "unsupportedClaims": ["claim-12"],
+        "evidenceCoverage": 0.0,
+        "reason": "Low confidence skill should not be mentioned"
+      }
+    },
+    {
+      "id": "cl-010",
+      "description": "Generate professional tone cover letter",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-13",
+            "type": "experience",
+            "title": "Software Engineer",
+            "content": {
+              "company": "TechStart",
+              "startDate": "2021-01-01",
+              "endDate": "2023-01-01",
+              "achievements": ["Developed microservices architecture"]
+            },
+            "evidenceId": "evidence-13",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Senior Software Engineer",
+        "company": "Enterprise Corp",
+        "description": "Looking for experienced engineer"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "introduction",
+            "content": "I am writing to express my strong interest",
+            "evidenceClaimIds": [],
+            "tone": "professional"
+          },
+          {
+            "type": "experience",
+            "content": "developed microservices architecture at TechStart",
+            "evidenceClaimIds": ["claim-13"],
+            "tone": "professional"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "tone": "professional"
+      }
+    }
+  ]
+}

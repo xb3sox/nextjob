@@ -1,0 +1,424 @@
+{
+  "dataset": "resume_tailoring",
+  "description": "Resume tailoring test cases with evidence constraints",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "rt-001",
+      "description": "Tailor resume with complete experience evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "experience",
+            "title": "Senior Software Engineer",
+            "content": {
+              "company": "Tech Corp",
+              "startDate": "2020-01-01",
+              "endDate": "2023-12-31",
+              "location": "San Francisco, CA",
+              "achievements": [
+                "Led team of 5 engineers",
+                "Improved system performance by 40%"
+              ]
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Engineer",
+        "requiredSkills": ["JavaScript", "React"],
+        "experience": "3+ years",
+        "description": "Looking for experienced software engineer"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Senior Software Engineer at Tech Corp",
+            "evidenceClaimId": "claim-1",
+            "preserved": ["company", "startDate", "endDate", "achievements"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "rt-002",
+      "description": "Tailor resume with education evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-2",
+            "type": "education",
+            "title": "Bachelor of Science in Computer Science",
+            "content": {
+              "institution": "Stanford University",
+              "startDate": "2016-09-01",
+              "endDate": "2020-06-01",
+              "gpa": "3.8"
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Engineer",
+        "education": "Bachelor's in Computer Science",
+        "requiredSkills": ["Python"]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "education",
+            "content": "Bachelor of Science in Computer Science",
+            "evidenceClaimId": "claim-2",
+            "preserved": ["institution", "startDate", "endDate", "gpa"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "rt-003",
+      "description": "Tailor resume with skills evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-3",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "expert",
+              "yearsOfExperience": 5
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          },
+          {
+            "id": "claim-4",
+            "type": "skill",
+            "title": "React",
+            "content": {
+              "level": "advanced",
+              "yearsOfExperience": 3
+            },
+            "evidenceId": "evidence-4",
+            "verificationStatus": "verified",
+            "confidence": 0.85
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Frontend Developer",
+        "requiredSkills": ["JavaScript", "React", "TypeScript"]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "skills",
+            "content": "JavaScript, React",
+            "evidenceClaimIds": ["claim-3", "claim-4"],
+            "preserved": ["level", "yearsOfExperience"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "rt-004",
+      "description": "Reject unverified experience claim",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-5",
+            "type": "experience",
+            "title": "Software Engineer",
+            "content": {
+              "company": "Unknown Company",
+              "startDate": "2019-01-01",
+              "endDate": "2020-01-01"
+            },
+            "evidenceId": null,
+            "verificationStatus": "unverified",
+            "confidence": 0.3
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Software Engineer",
+        "experience": "2+ years"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [],
+        "unsupportedClaims": ["claim-5"],
+        "evidenceCoverage": 0.0,
+        "reason": "Unverified claim should not be included"
+      }
+    },
+    {
+      "id": "rt-005",
+      "description": "Preserve exact dates from evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-6",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "Startup Inc",
+              "startDate": "2021-03-15",
+              "endDate": "2022-08-20"
+            },
+            "evidenceId": "evidence-6",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Developer"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at Startup Inc",
+            "evidenceClaimId": "claim-6",
+            "preserved": ["startDate", "endDate"],
+            "exactDates": {
+              "startDate": "2021-03-15",
+              "endDate": "2022-08-20"
+            }
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "rt-006",
+      "description": "Handle multiple experience claims",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-7",
+            "type": "experience",
+            "title": "Senior Developer",
+            "content": {
+              "company": "Company A",
+              "startDate": "2020-01-01",
+              "endDate": "2023-01-01"
+            },
+            "evidenceId": "evidence-7",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-8",
+            "type": "experience",
+            "title": "Junior Developer",
+            "content": {
+              "company": "Company B",
+              "startDate": "2018-01-01",
+              "endDate": "2020-01-01"
+            },
+            "evidenceId": "evidence-8",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Developer",
+        "experience": "5+ years"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Senior Developer at Company A",
+            "evidenceClaimId": "claim-7"
+          },
+          {
+            "type": "experience",
+            "content": "Junior Developer at Company B",
+            "evidenceClaimId": "claim-8"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "rt-007",
+      "description": "Include certifications with evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-9",
+            "type": "certification",
+            "title": "AWS Certified Solutions Architect",
+            "content": {
+              "issuer": "Amazon Web Services",
+              "issueDate": "2022-05-01",
+              "expirationDate": "2025-05-01"
+            },
+            "evidenceId": "evidence-9",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Cloud Engineer",
+        "certifications": ["AWS Certified"]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "certification",
+            "content": "AWS Certified Solutions Architect",
+            "evidenceClaimId": "claim-9",
+            "preserved": ["issuer", "issueDate", "expirationDate"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "rt-008",
+      "description": "Handle projects with evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-10",
+            "type": "project",
+            "title": "E-commerce Platform",
+            "content": {
+              "description": "Built scalable e-commerce platform",
+              "technologies": ["React", "Node.js", "PostgreSQL"],
+              "role": "Lead Developer"
+            },
+            "evidenceId": "evidence-10",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Full Stack Developer",
+        "requiredSkills": ["React", "Node.js"]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "project",
+            "content": "E-commerce Platform",
+            "evidenceClaimId": "claim-10",
+            "preserved": ["description", "technologies", "role"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "rt-009",
+      "description": "Reject claim with low confidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-11",
+            "type": "skill",
+            "title": "Machine Learning",
+            "content": {
+              "level": "intermediate"
+            },
+            "evidenceId": "evidence-11",
+            "verificationStatus": "verified",
+            "confidence": 0.4
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "ML Engineer",
+        "requiredSkills": ["Machine Learning"]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [],
+        "unsupportedClaims": ["claim-11"],
+        "evidenceCoverage": 0.0,
+        "reason": "Low confidence claim should not be included"
+      }
+    },
+    {
+      "id": "rt-010",
+      "description": "Mix of verified and unverified claims",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-12",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "Verified Corp",
+              "startDate": "2020-01-01",
+              "endDate": "2023-01-01"
+            },
+            "evidenceId": "evidence-12",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-13",
+            "type": "experience",
+            "title": "Consultant",
+            "content": {
+              "company": "Unverified Inc",
+              "startDate": "2019-01-01",
+              "endDate": "2020-01-01"
+            },
+            "evidenceId": null,
+            "verificationStatus": "unverified",
+            "confidence": 0.2
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Developer"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at Verified Corp",
+            "evidenceClaimId": "claim-12"
+          }
+        ],
+        "unsupportedClaims": ["claim-13"],
+        "evidenceCoverage": 0.5
+      }
+    }
+  ]
+}

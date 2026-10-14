@@ -1,0 +1,363 @@
+{
+  "scenario": "evidence_constraints",
+  "description": "Edge cases and constraint validation test cases",
+  "version": "1.0.0",
+  "testCases": [
+    {
+      "id": "ec-001",
+      "description": "No fabricated company names",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-1",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "Actual Corp"
+            },
+            "evidenceId": "evidence-1",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Developer",
+        "company": "Target Company"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at Actual Corp",
+            "evidenceClaimId": "claim-1",
+            "noFabrication": true
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "validation": "Company name must match evidence exactly"
+      }
+    },
+    {
+      "id": "ec-002",
+      "description": "No skill level upgrades",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-2",
+            "type": "skill",
+            "title": "JavaScript",
+            "content": {
+              "level": "intermediate"
+            },
+            "evidenceId": "evidence-2",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Developer",
+        "requiredSkills": ["JavaScript"]
+      },
+      "tailoringType": "skills_section",
+      "expectedOutput": {
+        "skills": [
+          {
+            "name": "JavaScript",
+            "level": "intermediate",
+            "evidenceClaimId": "claim-2",
+            "noUpgrade": true
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "validation": "Skill level must not be upgraded beyond evidence"
+      }
+    },
+    {
+      "id": "ec-003",
+      "description": "No fabricated achievements",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-3",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "TechCo",
+              "achievements": ["Built feature X"]
+            },
+            "evidenceId": "evidence-3",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Senior Developer"
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Built feature X at TechCo",
+            "evidenceClaimIds": ["claim-3"],
+            "noFabrication": true
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "validation": "Only verified achievements should be mentioned"
+      }
+    },
+    {
+      "id": "ec-004",
+      "description": "Preserve exact dates",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-4",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "TechCo",
+              "startDate": "2020-03-15",
+              "endDate": "2023-07-20"
+            },
+            "evidenceId": "evidence-4",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at TechCo (2020-03-15 to 2023-07-20)",
+            "evidenceClaimId": "claim-4",
+            "exactDates": {
+              "startDate": "2020-03-15",
+              "endDate": "2023-07-20"
+            }
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "validation": "Dates must be preserved exactly as in evidence"
+      }
+    },
+    {
+      "id": "ec-005",
+      "description": "Handle conflicting evidence",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-5",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "Company A",
+              "startDate": "2020-01-01",
+              "endDate": "2021-01-01"
+            },
+            "evidenceId": "evidence-5a",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          },
+          {
+            "id": "claim-6",
+            "type": "experience",
+            "title": "Developer",
+            "content": {
+              "company": "Company A",
+              "startDate": "2019-01-01",
+              "endDate": "2022-01-01"
+            },
+            "evidenceId": "evidence-5b",
+            "verificationStatus": "verified",
+            "confidence": 0.85
+          }
+        ]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Developer at Company A",
+            "evidenceClaimId": "claim-5",
+            "conflictResolution": "higher_confidence"
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "validation": "Should use higher confidence claim when conflicts exist"
+      }
+    },
+    {
+      "id": "ec-006",
+      "description": "No exaggeration of metrics",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-7",
+            "type": "achievement",
+            "title": "Performance Improvement",
+            "content": {
+              "metric": "Improved performance by 20%"
+            },
+            "evidenceId": "evidence-7",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "tailoringType": "cover_letter",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "achievement",
+            "content": "Improved performance by 20%",
+            "evidenceClaimIds": ["claim-7"],
+            "noExaggeration": true
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "validation": "Metrics must not be exaggerated beyond evidence"
+      }
+    },
+    {
+      "id": "ec-007",
+      "description": "Handle expired certifications",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-8",
+            "type": "certification",
+            "title": "Old Cert",
+            "content": {
+              "issuer": "CertOrg",
+              "expirationDate": "2020-01-01"
+            },
+            "evidenceId": "evidence-8",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [],
+        "unsupportedClaims": ["claim-8"],
+        "evidenceCoverage": 0.0,
+        "validation": "Expired certifications should not be included"
+      }
+    },
+    {
+      "id": "ec-008",
+      "description": "No fabrication of job titles",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-9",
+            "type": "experience",
+            "title": "Junior Developer",
+            "content": {
+              "company": "TechCo"
+            },
+            "evidenceId": "evidence-9",
+            "verificationStatus": "verified",
+            "confidence": 0.95
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Senior Developer"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "experience",
+            "content": "Junior Developer at TechCo",
+            "evidenceClaimId": "claim-9",
+            "noTitleUpgrade": true
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0,
+        "validation": "Job title must not be upgraded beyond evidence"
+      }
+    },
+    {
+      "id": "ec-009",
+      "description": "Handle multiple languages",
+      "careerGraph": {
+        "claims": [
+          {
+            "id": "claim-10",
+            "type": "language",
+            "title": "English",
+            "content": {
+              "proficiency": "native"
+            },
+            "evidenceId": "evidence-10",
+            "verificationStatus": "verified",
+            "confidence": 1.0
+          },
+          {
+            "id": "claim-11",
+            "type": "language",
+            "title": "Spanish",
+            "content": {
+              "proficiency": "intermediate"
+            },
+            "evidenceId": "evidence-11",
+            "verificationStatus": "verified",
+            "confidence": 0.9
+          }
+        ]
+      },
+      "jobRequirements": {
+        "title": "Translator",
+        "requiredLanguages": ["English", "Spanish"]
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [
+          {
+            "type": "languages",
+            "content": "English (native), Spanish (intermediate)",
+            "evidenceClaimIds": ["claim-10", "claim-11"]
+          }
+        ],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 1.0
+      }
+    },
+    {
+      "id": "ec-010",
+      "description": "Empty career graph",
+      "careerGraph": {
+        "claims": []
+      },
+      "jobRequirements": {
+        "title": "Developer"
+      },
+      "tailoringType": "resume",
+      "expectedOutput": {
+        "sections": [],
+        "unsupportedClaims": [],
+        "evidenceCoverage": 0.0,
+        "validation": "Should handle empty career graph gracefully"
+      }
+    }
+  ]
+}
