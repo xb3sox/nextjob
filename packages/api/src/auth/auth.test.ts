@@ -145,28 +145,20 @@ vi.mock('../db/index', () => {
       }
     ),
     insert: (table: any) => ({
-      values: (vals: Row | Row[]) => ({
-        returning: async () => {
+      values: (vals: Row | Row[]) => {
+        const doInsert = () => {
           const name = tableName(table);
           const arr = Array.isArray(vals) ? vals : [vals];
-          // Normalize camelCase property keys to physical column names so
-          // later eq/like predicates (which carry snake_case names) match.
-          // Defaults are merged AFTER normalization — otherwise `createdAt`
-          // would be re-added in camelCase and remapKeys would rename it to
-          // `created_at` while shadowing the real `createdAt` value, and any
-          // caller reading `.createdAt` off the returned row would get
-          // undefined (this silently zeroed session expiry dates).
           const inserted = arr.map((v) => ({
             ...remapKeys(v, toSnake),
             id: `${name}-${++insertSeq}`,
             created_at: new Date(),
           }));
           (store[name] ??= []).push(...inserted);
-          // `.returning()` yields rows keyed by the property names callers
-          // passed in (plus defaults), mirroring drizzle's typed row shape.
           return inserted.map((r) => remapKeys(r, toCamel));
-        },
-      }),
+        };
+        return makeThenable(doInsert);
+      },
     }),
     update: (table: any) => ({
       set: (patch: Row) => ({

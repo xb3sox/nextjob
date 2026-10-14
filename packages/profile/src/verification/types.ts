@@ -50,19 +50,19 @@ export interface BulkVerificationResult {
 // ============================================================================
 
 export const VerificationRequestSchema = z.object({
-  claimId: z.string().uuid(),
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  claimId: z.string().min(1),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   action: z.enum(['confirm', 'edit', 'remove', 'mark_unverified']),
   editedContent: z.record(z.any()).optional(),
   notes: z.string().optional(),
 });
 
 export const BulkVerificationRequestSchema = z.object({
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   claims: z.array(z.object({
-    claimId: z.string().uuid(),
+    claimId: z.string().min(1),
     action: z.enum(['confirm', 'edit', 'remove', 'mark_unverified']),
     editedContent: z.record(z.any()).optional(),
     notes: z.string().optional(),

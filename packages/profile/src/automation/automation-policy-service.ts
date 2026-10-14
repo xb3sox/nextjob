@@ -68,6 +68,7 @@ export class AutomationPolicyService {
 
     // Store policy
     this.policiesStore.set(request.userId, validatedPolicy);
+    this.policiesStore.set(policyId, validatedPolicy);
 
     return {
       policy: validatedPolicy,
@@ -142,6 +143,8 @@ export class AutomationPolicyService {
 
     // Store updated policy
     this.policiesStore.set(userId, validatedPolicy);
+    this.policiesStore.set(newPolicyId, validatedPolicy);
+    this.policiesStore.set(currentPolicy.policy.id, currentPolicy.policy);
 
     return {
       policy: validatedPolicy,

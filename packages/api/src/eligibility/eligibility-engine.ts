@@ -539,7 +539,7 @@ export class EligibilityEngineService {
     const userLocation = userProfile.location;
     const jobLocation = job.location;
 
-    if (!userLocation || !jobLocation) {
+    if (!userLocation) {
       return {
         type: 'location',
         status: 'unknown',
@@ -549,7 +549,7 @@ export class EligibilityEngineService {
     }
 
     // Check if job is remote
-    if (jobLocation.remote && condition.allowRemote !== false) {
+    if (jobLocation?.remote && condition.allowRemote !== false) {
       return {
         type: 'location',
         status: 'eligible',

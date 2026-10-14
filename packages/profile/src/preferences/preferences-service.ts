@@ -69,6 +69,7 @@ export class PreferencesService {
 
     // Store preferences
     this.preferencesStore.set(request.userId, validatedPreferences);
+    this.preferencesStore.set(preferencesId, validatedPreferences);
 
     return {
       preferences: validatedPreferences,
@@ -153,6 +154,8 @@ export class PreferencesService {
 
     // Store updated preferences
     this.preferencesStore.set(userId, validatedPreferences);
+    this.preferencesStore.set(newPreferencesId, validatedPreferences);
+    this.preferencesStore.set(currentPreferences.preferences.id, currentPreferences.preferences);
 
     return {
       preferences: validatedPreferences,

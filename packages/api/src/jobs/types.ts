@@ -17,8 +17,8 @@ export type SeniorityLevel = 'entry' | 'mid' | 'senior' | 'lead' | 'executive';
 // ============================================================================
 
 export const JobSchema = z.object({
-  id: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  tenantId: z.string().min(1),
   
   // Source information
   source: z.enum(['linkedin', 'indeed', 'glassdoor', 'company_website', 'api', 'manual']),
@@ -26,7 +26,7 @@ export const JobSchema = z.object({
   sourceUrl: z.string().url().optional(),
   
   // Company information
-  companyId: z.string().uuid().optional(),
+  companyId: z.string().min(1).optional(),
   companyName: z.string().min(1),
   companyWebsite: z.string().url().optional(),
   companySize: z.enum(['startup', 'small', 'medium', 'large', 'enterprise']).optional(),
@@ -87,16 +87,16 @@ export const JobSchema = z.object({
   freshnessScore: z.number().min(0).max(1).default(1), // 1 = fresh, 0 = stale
   
   // Deduplication
-  canonicalId: z.string().uuid().optional(), // Points to canonical version if duplicate
-  duplicateOf: z.string().uuid().optional(), // Points to original if this is a duplicate
+  canonicalId: z.string().min(1).optional(), // Points to canonical version if duplicate
+  duplicateOf: z.string().min(1).optional(), // Points to original if this is a duplicate
   
   // Metadata
   version: z.number().int().positive().default(1),
-  previousVersionId: z.string().uuid().optional(),
+  previousVersionId: z.string().min(1).optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
-  updatedBy: z.string().uuid(),
+  createdBy: z.string().min(1),
+  updatedBy: z.string().min(1),
   
   // Soft delete
   deleted: z.boolean().default(false),
@@ -110,8 +110,8 @@ export type Job = z.infer<typeof JobSchema>;
 // ============================================================================
 
 export const CompanySchema = z.object({
-  id: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  tenantId: z.string().min(1),
   
   name: z.string().min(1),
   website: z.string().url().optional(),
