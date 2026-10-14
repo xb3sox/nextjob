@@ -14,7 +14,13 @@ export function isSafeInternalPath(p: unknown): p is string {
 }
 
 export function safeReturnPath(raw: unknown, fallback = '/dashboard'): string {
-  const candidate =
-    typeof raw === 'string' ? raw : typeof raw === 'object' && raw !== null ? (raw as { pathname?: unknown }).pathname : undefined;
-  return isSafeInternalPath(candidate) ? candidate : fallback;
+  if (typeof raw === 'object' && raw !== null) {
+    const obj = raw as { pathname?: unknown; hash?: unknown };
+    if (typeof obj.hash === 'string' && obj.hash.length > 0) {
+      return fallback;
+    }
+    return isSafeInternalPath(obj.pathname) ? obj.pathname : fallback;
+  }
+  return isSafeInternalPath(raw) ? raw : fallback;
 }
+
