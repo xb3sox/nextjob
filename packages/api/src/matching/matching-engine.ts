@@ -402,10 +402,12 @@ export class MatchingEngineService {
     // Calculate overlap percentage
     const overlapMin = Math.max(userMin, jobMin);
     const overlapMax = Math.min(userMax, jobMax);
-    const overlapRange = overlapMax - overlapMin;
+    const overlapRange = Math.max(0, overlapMax - overlapMin);
     const userRange = userMax - userMin;
+    const jobRange = jobMax - jobMin;
+    const relevantRange = Math.min(userRange, jobRange) || userRange || jobRange;
     
-    const score = userRange > 0 ? (overlapRange / userRange) * 100 : 100;
+    const score = relevantRange > 0 ? (overlapRange / relevantRange) * 100 : 100;
 
     return {
       name: 'salary',

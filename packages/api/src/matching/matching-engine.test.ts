@@ -78,9 +78,9 @@ describe('MatchingEngineService', () => {
         job: {
           title: 'Software Engineer',
           description: 'Software engineer position',
-          requiredSkills: ['JavaScript', 'React'],
+          requiredSkills: ['JavaScript', 'React', 'TypeScript'],
           experience: { min: 2, max: 5 },
-          location: { country: 'US', city: 'San Francisco', remote: false },
+          location: { country: 'CA', city: 'Toronto', remote: false },
         },
       };
 
@@ -99,15 +99,15 @@ describe('MatchingEngineService', () => {
         eligibilityId: 'elig-1',
         userProfile: {
           skills: [
-            { name: 'Python', level: 'advanced' },
+            { name: 'JavaScript', level: 'junior' },
           ],
           experience: [
-            { title: 'Junior Developer', years: 1 },
+            { title: 'Junior Developer', years: 3 },
           ],
           education: [
             { degree: 'Associate', field: 'Business' },
           ],
-          location: { country: 'UK', city: 'London' },
+          location: { country: 'US', city: 'Chicago' },
         },
         job: {
           title: 'Senior JavaScript Developer',

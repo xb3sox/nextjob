@@ -171,7 +171,6 @@
             "title": "Developer",
             "content": {
               "company": "TechCo"
-              // Missing startDate and endDate
             },
             "evidenceId": "evidence-7",
             "verificationStatus": "verified",
