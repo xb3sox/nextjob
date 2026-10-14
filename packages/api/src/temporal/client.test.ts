@@ -25,7 +25,9 @@ vi.mock('@temporalio/client', () => {
     Connection: {
       connect: vi.fn().mockResolvedValue(mockConnection),
     },
-    Client: vi.fn().mockImplementation(() => mockClient),
+    Client: vi.fn().mockImplementation(function (this: any) {
+      return mockClient;
+    }),
   };
 });
 

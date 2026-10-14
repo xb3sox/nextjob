@@ -20,9 +20,9 @@ export type EvidenceCategory =
 // ============================================================================
 
 export const EvidenceFileSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   
   // File metadata
   fileName: z.string().min(1),
@@ -43,14 +43,14 @@ export const EvidenceFileSchema = z.object({
   // Access control
   isPublic: z.boolean().default(false),
   accessControl: z.object({
-    read: z.array(z.string().uuid()).optional(), // User IDs with read access
-    write: z.array(z.string().uuid()).optional(), // User IDs with write access
+    read: z.array(z.string().min(1)).optional(), // User IDs with read access
+    write: z.array(z.string().min(1)).optional(), // User IDs with write access
   }).optional(),
   
   // Verification
   verified: z.boolean().default(false),
   verifiedAt: z.string().datetime().optional(),
-  verifiedBy: z.string().uuid().optional(),
+  verifiedBy: z.string().min(1).optional(),
   verificationNotes: z.string().optional(),
   
   // URLs
@@ -60,11 +60,11 @@ export const EvidenceFileSchema = z.object({
   
   // Metadata
   version: z.number().int().positive().default(1),
-  previousVersionId: z.string().uuid().optional(),
+  previousVersionId: z.string().min(1).optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
-  updatedBy: z.string().uuid(),
+  createdBy: z.string().min(1),
+  updatedBy: z.string().min(1),
   
   // Soft delete
   deleted: z.boolean().default(false),

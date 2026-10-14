@@ -28,9 +28,9 @@ export type FieldOverride = z.infer<typeof FieldOverrideSchema>;
 // ============================================================================
 
 export const AutomationPolicySchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   
   // Default mode
   defaultMode: z.enum(['manual', 'copilot', 'autopilot']),
@@ -65,11 +65,11 @@ export const AutomationPolicySchema = z.object({
   
   // Metadata
   version: z.number().int().positive().default(1),
-  previousVersionId: z.string().uuid().optional(),
+  previousVersionId: z.string().min(1).optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
-  updatedBy: z.string().uuid(),
+  createdBy: z.string().min(1),
+  updatedBy: z.string().min(1),
   
   // Soft delete
   deleted: z.boolean().default(false),

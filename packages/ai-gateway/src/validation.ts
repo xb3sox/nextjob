@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { ValidationResult } from '../types.js';
-import { ValidationError } from '../types.js';
+import { ValidationError, type ValidationResult } from './types.js';
+export { ValidationError };
 
 // ============================================================================
 // Schema Validation Functions

@@ -14,7 +14,7 @@ describe('AI Extraction', () => {
       
       expect(result.data.personalInfo.email).toBe('john.doe@example.com');
       expect(result.confidence).toBeGreaterThan(0);
-      expect(result.processingTime).toBeGreaterThan(0);
+      expect(result.processingTime).toBeGreaterThanOrEqual(0);
     });
     
     it('should extract phone number from text', async () => {

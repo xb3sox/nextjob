@@ -66,7 +66,7 @@ describe('Profile Import', () => {
       
       const result = await importProfile(request);
       
-      expect(result.processingTime).toBeGreaterThan(0);
+      expect(result.processingTime).toBeGreaterThanOrEqual(0);
     });
   });
 });

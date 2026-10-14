@@ -31,8 +31,8 @@ export interface EligibilityCheck {
 // ============================================================================
 
 export const EligibilityRuleSchema = z.object({
-  id: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  tenantId: z.string().min(1),
   
   // Rule metadata
   name: z.string().min(1),
@@ -61,8 +61,8 @@ export const EligibilityRuleSchema = z.object({
   version: z.number().int().positive().default(1),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
-  updatedBy: z.string().uuid(),
+  createdBy: z.string().min(1),
+  updatedBy: z.string().min(1),
   
   // Soft delete
   deleted: z.boolean().default(false),
@@ -76,10 +76,10 @@ export type EligibilityRule = z.infer<typeof EligibilityRuleSchema>;
 // ============================================================================
 
 export const EligibilityAssessmentSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
-  jobId: z.string().uuid(),
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
+  jobId: z.string().min(1),
   
   // Overall status
   status: z.enum(['eligible', 'ineligible', 'unknown']),

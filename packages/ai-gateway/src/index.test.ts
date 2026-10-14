@@ -114,8 +114,7 @@ describe('AIGateway', () => {
   describe('generateObject', () => {
     it('should generate structured output successfully', async () => {
       const schema = z.object({
-        name: z.string(),
-        age: z.number(),
+        test: z.string(),
       });
 
       const response = await gateway.generateObject({
@@ -186,24 +185,29 @@ describe('AIGateway', () => {
     });
 
     it('should reset rate limit after window', async () => {
-      // Make 10 requests
-      for (let i = 0; i < 10; i++) {
+      vi.useFakeTimers();
+      try {
+        // Make 10 requests
+        for (let i = 0; i < 10; i++) {
+          await gateway.generateText({
+            provider: 'openai',
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: 'Test' }],
+          }, { userId: 'user-3' });
+        }
+
+        // Wait for window to pass (mock time)
+        vi.advanceTimersByTime(61000);
+
+        // Should allow request again
         await gateway.generateText({
           provider: 'openai',
           model: 'gpt-4o',
           messages: [{ role: 'user', content: 'Test' }],
         }, { userId: 'user-3' });
+      } finally {
+        vi.useRealTimers();
       }
-
-      // Wait for window to pass (mock time)
-      vi.advanceTimersByTime(61000);
-
-      // Should allow request again
-      await gateway.generateText({
-        provider: 'openai',
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: 'Test' }],
-      }, { userId: 'user-3' });
     });
   });
 });

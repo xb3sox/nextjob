@@ -24,9 +24,9 @@ export type VerificationStatus =
 // ============================================================================
 
 export const ProfileClaimSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   
   // Claim metadata
   type: z.enum(['experience', 'education', 'skill', 'certification', 'project', 'achievement', 'language']),
@@ -34,19 +34,19 @@ export const ProfileClaimSchema = z.object({
   description: z.string().optional(),
   
   // Evidence tracking
-  evidenceId: z.string().uuid().optional(),
+  evidenceId: z.string().min(1).optional(),
   evidenceSource: z.string().optional(), // e.g., "resume.pdf", "linkedin.com", "manual"
   evidenceConfidence: z.number().min(0).max(1).optional(),
   
   // Verification
   verificationStatus: z.enum(['unverified', 'verified', 'rejected', 'pending_review']).default('unverified'),
   verifiedAt: z.string().datetime().optional(),
-  verifiedBy: z.string().uuid().optional(),
+  verifiedBy: z.string().min(1).optional(),
   verificationNotes: z.string().optional(),
   
   // Versioning
   version: z.number().int().positive().default(1),
-  previousVersionId: z.string().uuid().optional(),
+  previousVersionId: z.string().min(1).optional(),
   
   // Content (varies by type)
   content: z.record(z.any()),
@@ -54,8 +54,8 @@ export const ProfileClaimSchema = z.object({
   // Metadata
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
-  updatedBy: z.string().uuid(),
+  createdBy: z.string().min(1),
+  updatedBy: z.string().min(1),
   
   // Soft delete
   deleted: z.boolean().default(false),
@@ -147,9 +147,9 @@ export type EvidenceType =
   | 'other';
 
 export const EvidenceSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   
   // Evidence metadata
   type: z.enum(['resume', 'certificate', 'transcript', 'portfolio', 'reference', 'verification_link', 'other']),
@@ -169,12 +169,12 @@ export const EvidenceSchema = z.object({
   // Verification
   verified: z.boolean().default(false),
   verifiedAt: z.string().datetime().optional(),
-  verifiedBy: z.string().uuid().optional(),
+  verifiedBy: z.string().min(1).optional(),
   
   // Metadata
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
+  createdBy: z.string().min(1),
   
   // Soft delete
   deleted: z.boolean().default(false),
@@ -188,19 +188,19 @@ export type Evidence = z.infer<typeof EvidenceSchema>;
 // ============================================================================
 
 export const ProfileVersionSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   
   version: z.number().int().positive(),
-  claimIds: z.array(z.string().uuid()),
+  claimIds: z.array(z.string().min(1)),
   
   // Snapshot of profile at this version
   snapshot: z.record(z.any()),
   
   // Metadata
   createdAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
+  createdBy: z.string().min(1),
   changeDescription: z.string().optional(),
 });
 

@@ -12,8 +12,9 @@ export type SeniorityLevel = 'entry' | 'mid' | 'senior' | 'lead' | 'executive';
 // ============================================================================
 
 export const PreferencesSchema = z.object({
-  userId: z.string().uuid(),
-  tenantId: z.string().uuid(),
+  id: z.string().min(1).optional(),
+  userId: z.string().min(1),
+  tenantId: z.string().min(1),
   
   // Target roles
   targetRoles: z.array(z.string().min(1)).min(1, 'At least one target role required'),
@@ -79,11 +80,11 @@ export const PreferencesSchema = z.object({
   
   // Metadata
   version: z.number().int().positive().default(1),
-  previousVersionId: z.string().uuid().optional(),
+  previousVersionId: z.string().min(1).optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
-  createdBy: z.string().uuid(),
-  updatedBy: z.string().uuid(),
+  createdBy: z.string().min(1),
+  updatedBy: z.string().min(1),
   
   // Soft delete
   deleted: z.boolean().default(false),
