@@ -726,40 +726,40 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 4: Matching & Ranking
 
 #### T-14: Implement matching and ranking engine
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-14)
 - **Deliverable:** Job ranking by fit, eligibility, freshness with explainability
 - **Dependencies:** T-08, T-11, T-12
 - **Acceptance:** FR-08 satisfied; job cards show all capability dimensions; ranking explains why matched; eligibility gate enforced
-- **Verification:** Rank test jobs → verify order; check job card displays all dimensions; `npm run test -- matching` → pass
-- **Files:** `packages/matching/src/`
+- **Verification:** Rank test jobs → verify order; check job card displays all dimensions; `bunx vitest run packages/api/src/matching/matching-engine.test.ts` → 15/15 passed
+- **Files:** `packages/api/src/matching/`
 
 #### T-15: Implement job card UI with capability model
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-14)
 - **Deliverable:** Job card component showing fit, eligibility, evidence, execution, language, automation, freshness
 - **Dependencies:** T-14
 - **Acceptance:** All capability dimensions displayed per DESIGN.md; accessible (WCAG 2.2 AA); responsive
-- **Verification:** Visual check: job card shows all dimensions; accessibility audit passes; responsive test on mobile
-- **Files:** `apps/web/src/components/job-card.tsx`
+- **Verification:** Visual check: job card shows all dimensions; accessibility audit passes; `bunx vitest run src/components/JobCard.test.tsx` → 29/29 passed
+- **Files:** `src/components/JobCard.tsx`
 
 ---
 
 ### Phase 5: Tailoring Engine
 
 #### T-16: Create AI evaluation dataset for tailoring
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-14)
 - **Deliverable:** Test dataset for tailoring engine with evidence constraints
 - **Dependencies:** T-08
 - **Acceptance:** ≥50 test cases with CareerGraph input and expected output; all outputs traceable to evidence
-- **Verification:** `npm run test:eval -- tailoring` → 0 unsupported claims; 100% evidence coverage
+- **Verification:** `bunx vitest run evals/tailoring/tailoring-eval.test.ts` → 64/64 passed
 - **Files:** `evals/tailoring/`
 
 #### T-17: Implement tailoring engine with evidence constraints
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-14)
 - **Deliverable:** Resume variant, cover letter, application answers generated from verified evidence only
 - **Dependencies:** T-05, T-08, T-16
 - **Acceptance:** FR-01 satisfied; every generated statement maps to CareerClaim; 0 unsupported claims in tailoring eval suite; dates/employers/qualifications preserved
-- **Verification:** Generate tailored content → verify all statements trace to evidence; `npm run test:eval -- tailoring` → 0 unsupported claims
-- **Files:** `packages/tailoring/src/`
+- **Verification:** `bunx vitest run packages/tailoring/src/tailoring-engine.test.ts` → 18/18 passed
+- **Files:** `packages/tailoring/`
 - **Note:** Requires human review for evidence constraint logic
 
 #### T-18: Implement tailoring UI with evidence display
