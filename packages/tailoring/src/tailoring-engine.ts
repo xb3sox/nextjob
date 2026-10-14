@@ -75,6 +75,12 @@ export class TailoringEngine {
         throw new InvalidTailoringRequestError({ type: `Unsupported tailoring type: ${validatedRequest.type}` });
     }
 
+    // Collect all unsupported claims from original career graph
+    const usedClaimIds = new Set(result.evidenceTraceability.map(t => t.claimId));
+    result.unsupportedClaims = validatedRequest.careerGraph.claims
+      .map(c => c.id)
+      .filter(id => !usedClaimIds.has(id));
+
     // Validate evidence constraints
     this.validateEvidenceConstraints(result, verifiedClaims);
 
@@ -501,8 +507,8 @@ export class TailoringEngine {
 
     // Sort skills by priority
     skills.sort((a, b) => {
-      const priorityOrder = { high: 0, medium: 1, low: 2 };
-      return (priorityOrder[a.priority || 'low'] || 2) - (priorityOrder[b.priority || 'low'] || 2);
+      const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
+      return (priorityOrder[a.priority ?? 'low'] ?? 2) - (priorityOrder[b.priority ?? 'low'] ?? 2);
     });
 
     // Track unsupported claims
@@ -768,7 +774,8 @@ export class TailoringEngine {
       try {
         if (claim.type === 'experience') {
           const company = claim.content?.company || 'Unknown Company';
-          parts.push(`${claim.title} at ${company}`);
+          const years = claim.content?.years ? ` (${claim.content.years} years)` : '';
+          parts.push(`${claim.title} at ${company}${years}`);
           preserved.push('company', 'title');
         } else if (claim.type === 'skill') {
           const level = claim.content?.level || 'proficient';

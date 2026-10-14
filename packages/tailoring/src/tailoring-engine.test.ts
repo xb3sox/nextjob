@@ -256,7 +256,6 @@ describe('TailoringEngine', () => {
 
       const jobRequirements: JobRequirements = {
         title: 'Developer',
-        company: 'Target Company',
       };
 
       const request: TailoringRequest = {
@@ -590,7 +589,7 @@ describe('TailoringEngine', () => {
       // Should contain actual company name
       expect(result.content).toContain('Actual Corp');
       // Should not contain any other company name
-      expect(result.content).not.toMatch(/Company|Corp|Inc/i);
+      expect(result.content.replace('Actual Corp', '')).not.toMatch(/Company|Corp|Inc/i);
     });
 
     it('should throw error for unsupported claims', async () => {
