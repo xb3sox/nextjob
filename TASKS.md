@@ -714,12 +714,16 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Code review fixes applied (see T12_CODE_REVIEW_FIXES.md)
 
 #### T-13: Create eligibility evaluation dataset
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-19)
 - **Deliverable:** Test dataset for eligibility engine with known outcomes
 - **Dependencies:** T-12
 - **Acceptance:** ≥100 test cases covering all eligibility dimensions; expected outcomes documented
-- **Verification:** `npm run test:eval -- eligibility` → false-positive ≤2%
+- **Verification:** `npx vitest run evals/eligibility/eligibility-eval.test.ts` → 117/117 passed; false-positive rate 0.00% (≤2% G-04 threshold met)
 - **Files:** `evals/eligibility/`
+- **Evidence:**
+  - ✅ 114 test cases in `evals/eligibility/cases.json` covering all eligibility dimensions (location, work authorization, sponsorship, clearance, skills, education, experience)
+  - ✅ 117 tests passing in `evals/eligibility/eligibility-eval.test.ts`
+  - ✅ 0 false positives recorded (rate: 0.00% vs ≤2% requirement)
 
 ---
 

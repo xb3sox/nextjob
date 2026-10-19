@@ -27,13 +27,18 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-10: Evidence storage (S3/local/memory, signed URLs, access control, 30+ tests)
 - ✅ T-11: Job ingestion & normalization (normalization, deduplication, freshness tracking, 50+ tests)
 - ✅ T-12: Eligibility engine (10 check types, rule management, confidence scoring, 25+ tests)
+- ✅ T-13: Create eligibility evaluation dataset (114 cases, 117 tests, 0% false-positive rate)
+- ✅ T-14: Matching and ranking engine (ranking by fit, eligibility, freshness, explainability, 15 tests)
+- ✅ T-15: Job card UI with capability model (29 tests)
+- ✅ T-16: AI evaluation dataset for tailoring (64 tests)
+- ✅ T-17: Tailoring engine with evidence constraints (18 tests)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 27/118 tasks complete (22.9%)
+**Progress:** 32/118 tasks complete (27.1%)
 
-> Note: The count above reflects the actual task checkboxes in TASKS.md (118 tasks across 33 phases; T-03f and T-03g are still open). Earlier figures of "34/120" were stale. Next up: T-13 (eligibility evaluation dataset), then T-14/T-15 (matching & job cards).
+> Note: T-13 through T-17 are complete with all eval/unit tests passing. Next up: T-18 (tailoring UI with evidence display) or T-03f/T-03g.
 
 ## Agent Skills
 
