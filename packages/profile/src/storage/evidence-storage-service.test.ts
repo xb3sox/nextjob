@@ -256,7 +256,10 @@ describe('EvidenceStorageService', () => {
 
       // Attempt unkeyed SHA-256 forgery
       const crypto = await import('crypto');
-      const forgedSig = crypto.createHash('sha256').update(`${uploaded.file.id}:${expires}`).digest('hex');
+      const forgedSig = crypto
+        .createHash('sha256')
+        .update(`${uploaded.file.id}:${expires}`)
+        .digest('hex');
 
       const isValid = await service.validateSignedUrl(uploaded.file.id, forgedSig, expires);
       expect(isValid).toBe(false);

@@ -34,10 +34,13 @@ export class EvidenceStorageService {
 
   constructor(config: Partial<StorageConfig> = {}) {
     this.config = { ...DEFAULT_STORAGE_CONFIG, ...config };
+    // A hardcoded fallback would make every signature forgeable. Without an
+    // explicit secret, generate a per-process key: signed URLs then stop
+    // working across restarts/instances, which is the safe failure mode.
     this.secretKey =
       this.config.secretKey ||
       process.env.STORAGE_SECRET_KEY ||
-      'evidence-storage-default-secret-key';
+      crypto.randomBytes(32).toString('hex');
   }
 
   /**
