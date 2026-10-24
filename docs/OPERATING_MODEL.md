@@ -59,23 +59,30 @@ Agents never push to `main`. Every agent change arrives as a PR with evidence, a
 Locally and in CI: `bun run typecheck`, `bun run lint`, `bunx vitest run --maxWorkers 2`,
 `bun run build`, plus `bun audit` (critical blocks, high reports).
 
-## What this repository cannot enforce
+## Enforcement on a free private repo
 
-Private repo, free plan, personal account: GitHub returns **403** for rulesets and branch
-protection, and environments/deployment approvals are Pro-gated. Therefore:
+GitHub returns **403** for rulesets and branch protection on a private repo on the free plan
+("Upgrade to GitHub Pro or make this repository public"), so nothing can block a merge. Two free
+substitutes carry the load instead:
+
+| Control | How | Weakness |
+| --- | --- | --- |
+| Red `main` | `.github/workflows/main-guard.yml` — on a failed CI run for `main`, it reverts the offending commit and opens a `type:bug` issue. Skips commits whose message starts with `Revert`, so it cannot loop. | Acts after the push, not before. A conflicting revert needs a human. |
+| Direct push to `main` | `scripts/git-hooks/pre-push` — refuses `refs/heads/main`. Install per clone with `bun run hooks:install`; override with `ALLOW_MAIN_PUSH=1`. | Client-side only; a clone without the hook is not covered. |
+| Agents | No token with write access to `main`; work arrives as PRs. | Policy, not a technical lock. |
+
+Still impossible without Pro or a public repo:
 
 | Desired control | Status |
 | --- | --- |
-| Required status check before merge | Not enforceable — treat red CI as a hard stop by convention |
+| Required status check before merge | Not enforceable — red CI is a hard stop by convention |
 | Required reviewer / CODEOWNERS enforcement | Advisory only (`.github/CODEOWNERS` documents intent) |
 | Linear history, no force-push on `main` | Not enforceable |
-| Deploy approval gate | Not available — deploy is manual (`workflow_dispatch`) and uses repo-level secrets |
 
-Substitutes: humans only merge green PRs, agents hold no write access to `main`, deploy stays
-manual, and `CODEOWNERS` names the reviewer who must be pinged.
-
-Unblocking all of it costs either GitHub Pro (rulesets on a private repo) or making the repo
-public. Neither is a code change.
+Ranked alternatives if policy must be technically enforced: (1) make the repo public — rulesets
+are free for public repositories; (2) GitHub Pro at $4/month for this account — unlocks rulesets
+on private repos; (3) a second, public mirror whose CI gates promotion. Only the first two are
+real enforcement; everything else is detection after the fact.
 
 ## Placeholders that are real
 
