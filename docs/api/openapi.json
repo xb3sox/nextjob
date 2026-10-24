@@ -1,0 +1,1202 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "NextJob REST API",
+    "version": "1.0.0",
+    "description": "API documentation for NextJob — candidate career profile management, AI job eligibility assessment, evidence-constrained tailoring, application execution, and organization management per TECH.md §API Domains."
+  },
+  "servers": [
+    {
+      "url": "https://api.nextjob.app/v1",
+      "description": "Production API Server"
+    },
+    {
+      "url": "http://localhost:8799/v1",
+      "description": "Development API Server"
+    }
+  ],
+  "tags": [
+    { "name": "Authentication", "description": "Auth, OAuth, and session management (/auth)" },
+    { "name": "Users", "description": "User profile and search preferences (/users)" },
+    {
+      "name": "Your Profile",
+      "description": "Career claims, evidence, and document import (/profile)"
+    },
+    { "name": "Jobs", "description": "Job discovery, search, and company profiles (/jobs)" },
+    { "name": "Eligibility", "description": "Deterministic eligibility checks (/eligibility)" },
+    { "name": "Matches", "description": "Job fit scoring and ranking engine (/matches)" },
+    {
+      "name": "Applications",
+      "description": "Application state machine and submission receipts (/applications)"
+    },
+    { "name": "Approvals", "description": "High-risk field approval workflow (/approvals)" },
+    {
+      "name": "Organizations",
+      "description": "B2B cohorts and aggregate reporting (/organizations)"
+    },
+    { "name": "Billing", "description": "Subscriptions and entitlement plans (/billing)" },
+    {
+      "name": "Notifications",
+      "description": "Actionable notifications and channel preferences (/notifications)"
+    },
+    {
+      "name": "Admin",
+      "description": "Operations, user support, and connector kill-switches (/admin)"
+    },
+    { "name": "Privacy", "description": "GDPR export, deletion, and consent records (/privacy)" }
+  ],
+  "security": [{ "BearerAuth": [] }],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register candidate account",
+        "operationId": "registerUser",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password", "fullName"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "candidate@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "SecurePassword123!"
+                  },
+                  "fullName": { "type": "string", "example": "Alex Mercer" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": { "$ref": "#/components/schemas/User" },
+                    "accessToken": { "type": "string", "example": "eyJhbGciOiJIUzI1Ni..." },
+                    "expiresIn": { "type": "integer", "example": 3600 }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "User login",
+        "operationId": "loginUser",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "candidate@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "SecurePassword123!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": { "$ref": "#/components/schemas/User" },
+                    "accessToken": { "type": "string" },
+                    "expiresIn": { "type": "integer", "example": 3600 }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "User logout",
+        "operationId": "logoutUser",
+        "responses": {
+          "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Successfully logged out" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Get authenticated user session",
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "Authenticated user details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get user profile",
+        "operationId": "getUserProfile",
+        "responses": {
+          "200": {
+            "description": "User profile retrieved",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserProfile" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update user profile",
+        "operationId": "updateUserProfile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserProfileUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserProfile" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/preferences": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get job search preferences",
+        "operationId": "getPreferences",
+        "responses": {
+          "200": {
+            "description": "Search preferences retrieved",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserPreferences" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update job search preferences",
+        "operationId": "updatePreferences",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserPreferences" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search preferences updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserPreferences" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/claims": {
+      "get": {
+        "tags": ["Your Profile"],
+        "summary": "List career claims with evidence status",
+        "operationId": "getClaims",
+        "responses": {
+          "200": {
+            "description": "Career claims list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "claims": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/CareerClaim" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/verify": {
+      "post": {
+        "tags": ["Your Profile"],
+        "summary": "Verify or edit career claim",
+        "operationId": "verifyClaim",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["claimId", "action"],
+                "properties": {
+                  "claimId": { "type": "string", "example": "clm_exp_001" },
+                  "action": {
+                    "type": "string",
+                    "enum": ["confirm", "edit", "remove", "mark_unverified"],
+                    "example": "confirm"
+                  },
+                  "updates": { "type": "object" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Claim verification processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "claim": { "$ref": "#/components/schemas/CareerClaim" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/evidence": {
+      "post": {
+        "tags": ["Your Profile"],
+        "summary": "Upload evidence document",
+        "operationId": "uploadEvidence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "documentType": { "type": "string", "example": "resume" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Evidence document uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "evidence": { "$ref": "#/components/schemas/EvidenceDocument" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/import": {
+      "post": {
+        "tags": ["Your Profile"],
+        "summary": "Import resume and AI extract claims",
+        "operationId": "importResume",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resume extracted into claims",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "importedEvidenceId": { "type": "string", "example": "evd_doc_99182" },
+                    "extractedClaims": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/CareerClaim" }
+                    },
+                    "processingTimeMs": { "type": "integer", "example": 1420 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "Search normalized jobs",
+        "operationId": "searchJobs",
+        "parameters": [
+          { "name": "query", "in": "query", "schema": { "type": "string" } },
+          { "name": "workMode", "in": "query", "schema": { "type": "string" } },
+          { "name": "minSalary", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of normalized jobs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "jobs": { "type": "array", "items": { "$ref": "#/components/schemas/Job" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{id}": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "Get job details",
+        "operationId": "getJobById",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detailed job posting",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Job" }
+              }
+            }
+          },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/jobs/companies": {
+      "get": {
+        "tags": ["Jobs"],
+        "summary": "List companies",
+        "operationId": "getCompanies",
+        "responses": {
+          "200": {
+            "description": "Company list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "companies": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/eligibility/assess": {
+      "post": {
+        "tags": ["Eligibility"],
+        "summary": "Assess candidate eligibility",
+        "operationId": "assessEligibility",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["jobId"],
+                "properties": {
+                  "jobId": { "type": "string", "example": "job_77218" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Eligibility assessment result",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EligibilityAssessment" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/eligibility/assessments": {
+      "get": {
+        "tags": ["Eligibility"],
+        "summary": "List assessment history",
+        "operationId": "getAssessmentHistory",
+        "responses": {
+          "200": {
+            "description": "Assessment history",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "assessments": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/EligibilityAssessment" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/matches": {
+      "get": {
+        "tags": ["Matches"],
+        "summary": "Get job matches and ranking",
+        "operationId": "getMatches",
+        "responses": {
+          "200": {
+            "description": "Ranked job matches",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "matches": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/JobMatch" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/matches/{id}": {
+      "get": {
+        "tags": ["Matches"],
+        "summary": "Get single match fit breakdown",
+        "operationId": "getMatchById",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Match fit breakdown",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/JobMatch" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications": {
+      "get": {
+        "tags": ["Applications"],
+        "summary": "List candidate applications",
+        "operationId": "getApplications",
+        "responses": {
+          "200": {
+            "description": "Applications list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applications": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Application" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/apply": {
+      "post": {
+        "tags": ["Applications"],
+        "summary": "Initiate application workflow",
+        "operationId": "applyToJob",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["jobId"],
+                "properties": {
+                  "jobId": { "type": "string", "example": "job_77218" },
+                  "automationMode": {
+                    "type": "string",
+                    "enum": ["manual", "copilot", "autopilot"],
+                    "example": "copilot"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Application workflow initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applicationId": { "type": "string", "example": "app_554102" },
+                    "state": { "type": "string", "example": "PLANNED" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/receipts": {
+      "get": {
+        "tags": ["Applications"],
+        "summary": "List submission receipts",
+        "operationId": "getReceipts",
+        "responses": {
+          "200": {
+            "description": "Submission receipts list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "receipts": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/SubmissionReceipt" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/approvals/pending": {
+      "get": {
+        "tags": ["Approvals"],
+        "summary": "List pending approvals",
+        "operationId": "getPendingApprovals",
+        "responses": {
+          "200": {
+            "description": "Pending approval items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pendingApprovals": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/approvals/approve": {
+      "post": {
+        "tags": ["Approvals"],
+        "summary": "Approve field or tailoring statement",
+        "operationId": "approveField",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["approvalId"],
+                "properties": {
+                  "approvalId": { "type": "string", "example": "appr_10092" },
+                  "scope": { "type": "string", "enum": ["once", "always"], "example": "always" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Approval granted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "approvalId": { "type": "string", "example": "appr_10092" },
+                    "status": { "type": "string", "example": "APPROVED" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organizations/orgs": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "Get organization details",
+        "operationId": "getOrganization",
+        "responses": {
+          "200": {
+            "description": "Organization details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Organization" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organizations/reports": {
+      "get": {
+        "tags": ["Organizations"],
+        "summary": "Get aggregate cohort analytics",
+        "operationId": "getCohortReport",
+        "parameters": [
+          { "name": "cohortId", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aggregate cohort report",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" }
+        }
+      }
+    },
+    "/billing/plans": {
+      "get": {
+        "tags": ["Billing"],
+        "summary": "List available plans",
+        "operationId": "getBillingPlans",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Available subscription plans",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "plans": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/billing/subscribe": {
+      "post": {
+        "tags": ["Billing"],
+        "summary": "Create Stripe Checkout session",
+        "operationId": "createSubscription",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["planId"],
+                "properties": {
+                  "planId": { "type": "string", "example": "plan_search_pass" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "checkoutUrl": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "List notifications",
+        "operationId": "getNotifications",
+        "responses": {
+          "200": {
+            "description": "Notifications list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "notifications": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/connectors": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Monitor connector status",
+        "operationId": "getConnectorStatus",
+        "responses": {
+          "200": {
+            "description": "Connector status list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "connectors": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/kill-switch": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Toggle connector kill-switch",
+        "operationId": "toggleKillSwitch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["connectorName", "enabled"],
+                "properties": {
+                  "connectorName": { "type": "string", "example": "workday" },
+                  "enabled": { "type": "boolean", "example": true },
+                  "reason": { "type": "string", "example": "UI breakage" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Kill switch status updated",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/export": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Request GDPR candidate data export",
+        "operationId": "requestDataExport",
+        "responses": {
+          "202": {
+            "description": "Data export request scheduled",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/delete": {
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Request permanent account deletion",
+        "operationId": "requestAccountDeletion",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["confirmationText"],
+                "properties": {
+                  "confirmationText": { "type": "string", "example": "DELETE MY ACCOUNT AND DATA" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account deletion scheduled",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/consent": {
+      "get": {
+        "tags": ["Privacy"],
+        "summary": "Get consent record status",
+        "operationId": "getConsentStatus",
+        "responses": {
+          "200": {
+            "description": "Active consents",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Privacy"],
+        "summary": "Grant or revoke processing consent",
+        "operationId": "updateConsent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["purpose", "action"],
+                "properties": {
+                  "purpose": { "type": "string", "example": "anonymized_model_learning" },
+                  "action": { "type": "string", "enum": ["grant", "revoke"], "example": "revoke" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consent updated",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Standard Bearer JWT Token"
+      },
+      "TenantHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Tenant-ID",
+        "description": "Multi-tenant context header"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "usr_987654321" },
+          "email": { "type": "string", "format": "email", "example": "candidate@example.com" },
+          "fullName": { "type": "string", "example": "Alex Mercer" },
+          "role": {
+            "type": "string",
+            "enum": ["candidate", "organization_admin", "admin", "super_admin"],
+            "example": "candidate"
+          },
+          "tenantId": { "type": "string", "example": "tnt_cnd_98765" }
+        }
+      },
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "usr_987654321" },
+          "fullName": { "type": "string", "example": "Alex Mercer" },
+          "phone": { "type": "string", "example": "+1-555-019-2834" },
+          "location": { "type": "string", "example": "San Francisco, CA" }
+        }
+      },
+      "UserProfileUpdate": {
+        "type": "object",
+        "properties": {
+          "fullName": { "type": "string", "example": "Alex Mercer" },
+          "phone": { "type": "string", "example": "+1-555-019-2834" },
+          "location": { "type": "string", "example": "San Francisco, CA, USA" }
+        }
+      },
+      "UserPreferences": {
+        "type": "object",
+        "properties": {
+          "targetRoles": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["Senior Full Stack Engineer"]
+          },
+          "minimumSalary": { "type": "integer", "example": 180000 },
+          "currency": { "type": "string", "example": "USD" },
+          "workModes": {
+            "type": "array",
+            "items": { "type": "string" },
+            "example": ["remote", "hybrid"]
+          }
+        }
+      },
+      "CareerClaim": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "clm_exp_001" },
+          "claimType": {
+            "type": "string",
+            "enum": ["employment", "skill", "education", "certification"],
+            "example": "employment"
+          },
+          "title": { "type": "string", "example": "Senior Software Engineer" },
+          "organization": { "type": "string", "example": "Acme Corp" },
+          "verificationStatus": {
+            "type": "string",
+            "enum": ["unverified", "verified", "rejected"],
+            "example": "verified"
+          },
+          "confidence": { "type": "number", "example": 0.98 }
+        }
+      },
+      "EvidenceDocument": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "evd_doc_99182" },
+          "fileName": { "type": "string", "example": "Alex_Mercer_Resume_2026.pdf" },
+          "mimeType": { "type": "string", "example": "application/pdf" },
+          "signedUrl": { "type": "string" }
+        }
+      },
+      "Job": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "job_77218" },
+          "title": { "type": "string", "example": "Senior Staff Engineer" },
+          "workMode": { "type": "string", "example": "hybrid" },
+          "location": { "type": "string", "example": "San Francisco, CA" },
+          "freshnessScore": { "type": "number", "example": 0.95 }
+        }
+      },
+      "EligibilityAssessment": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "elg_991823" },
+          "jobId": { "type": "string", "example": "job_77218" },
+          "overallStatus": {
+            "type": "string",
+            "enum": ["ELIGIBLE", "INELIGIBLE", "UNKNOWN"],
+            "example": "ELIGIBLE"
+          },
+          "confidenceScore": { "type": "number", "example": 0.98 }
+        }
+      },
+      "JobMatch": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "mtc_881920" },
+          "jobId": { "type": "string", "example": "job_77218" },
+          "overallFitScore": { "type": "number", "example": 0.92 },
+          "eligibilityStatus": { "type": "string", "example": "ELIGIBLE" }
+        }
+      },
+      "Application": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "app_554102" },
+          "jobId": { "type": "string", "example": "job_77218" },
+          "state": { "type": "string", "example": "SUBMITTED_VERIFIED" },
+          "automationMode": { "type": "string", "example": "copilot" }
+        }
+      },
+      "SubmissionReceipt": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "rcp_990182" },
+          "applicationId": { "type": "string", "example": "app_554102" },
+          "confirmationNumber": { "type": "string", "example": "GH-CONF-88912" },
+          "verificationStatus": { "type": "string", "example": "verified" }
+        }
+      },
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "org_4412" },
+          "name": { "type": "string", "example": "Bay Area Career Accelerator" },
+          "allocatedLicenses": { "type": "integer", "example": 100 }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string", "example": "VALIDATION_ERROR" },
+              "message": { "type": "string", "example": "Invalid input payload" },
+              "correlationId": { "type": "string", "example": "req_881a293f" }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid input payload or parameters",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authentication token missing or invalid",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Requested resource not found",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      }
+    }
+  }
+}

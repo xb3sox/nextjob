@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (33/118 tasks complete - 28.0%)  
+**Status:** In Progress (34/118 tasks complete - 28.8%)
 **Last Updated:** 2026-10-24  
-**Latest Update:** T-18 complete — tailoring review UI (`/tailor`) renders original claim → proposed statement → linked evidence with accept/edit/reject. Task count re-derived from the file itself (was stale at 27).  
+**Latest Update:** T-43 complete — API documentation created in `docs/api/` covering all 13 domains from `TECH.md §API Domains` with OpenAPI 3.0 specification and automated vitest test suite.
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -1019,12 +1019,17 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `docs/user-guide/`
 
 #### T-43: Create API documentation
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** API documentation for all endpoints per TECH.md §API Domains
 - **Dependencies:** T-04
 - **Acceptance:** All endpoints documented; examples provided; authentication explained
-- **Verification:** Review API docs → verify completeness; test examples → verify work
+- **Verification:** `bun x vitest run docs/api/api-docs.test.ts` → 5/5 passed; all 13 TECH.md API domains documented in `docs/api/*.md` and `docs/api/openapi.json`
 - **Files:** `docs/api/`
+- **Evidence:**
+  - ✅ Standardized API documentation structure created in `docs/api/README.md` covering architecture, authentication (Bearer JWT & OAuth 2.0), multi-tenant isolation (`X-Tenant-ID`), RBAC roles (`candidate`, `organization_admin`, `admin`, `super_admin`), rate limiting, standard error formats, and domain index
+  - ✅ 13 domain-specific Markdown documentation files created covering all key endpoints with parameters, request/response schemas, and concrete cURL/JSON examples (`auth.md`, `users.md`, `profile.md`, `jobs.md`, `eligibility.md`, `matches.md`, `applications.md`, `approvals.md`, `organizations.md`, `billing.md`, `notifications.md`, `admin.md`, `privacy.md`)
+  - ✅ Complete machine-readable OpenAPI 3.0 specification generated in `docs/api/openapi.json` covering 32 endpoints, security definitions, response schemas, and example payloads
+  - ✅ Automated Vitest verification test suite implemented in `docs/api/api-docs.test.ts` (5/5 tests passing)
 
 ---
 
