@@ -137,29 +137,38 @@ npx shadcn@latest diff             # Show component differences
 
 ## Structure
 
+What is in the repo today:
+
 ```
 ./
-├── apps/
-│   ├── web/                # Next.js + TypeScript (FR-ONB, matching, tracker, marketing)
-│   │   └── src/app/
-│   │       ├── (marketing)/  # Landing page, B2B section
-│   │       ├── (legal)/      # Privacy policy, terms of service
-│   │       └── (app)/        # Authenticated app (dashboard, applications, etc.)
-│   └── extension/          # WXT browser extension (ATS execution)
+├── src/                    # Vite + React 18 SPA — the shipped application
+│   ├── pages/              # landing (App.tsx), auth/*, dashboard, tailor, legal
+│   ├── components/         # JobCard, WaitlistForm, ProtectedRoute, ui/ (shadcn)
+│   ├── contexts/           # AuthContext (Supabase session)
+│   ├── lib/                # supabase client, cn(), redirect helpers
+│   └── test/               # vitest setup (happy-dom)
 ├── packages/
-│   ├── api/                # Fastify modular monolith
-│   ├── career-graph/       # Career claims, evidence, verification
-│   ├── eligibility/        # Eligibility engine (rules + provenance)
-│   ├── matching/           # Job ranking and fit scoring
-│   ├── tailoring/          # Evidence-constrained generation
-│   ├── policy/             # Risk engine, approval workflow
-│   ├── applications/       # State machine, receipts, tracking
-│   ├── connectors/         # ATS integrations (Temporal workers)
-│   ├── ai-gateway/         # Model routing, eval, observability
-│   └── shared/             # Types, schemas, utilities
-├── docs/                   # PRD, TECH, DESIGN
-└── evals/                  # AI evaluation datasets
+│   ├── api/                # Fastify modular monolith, Temporal workflows, jobs, auth
+│   ├── profile/            # claims, evidence, import/extraction
+│   ├── tailoring/          # evidence-constrained generation (T-17 engine)
+│   └── ai-gateway/         # model routing, Zod schemas, PII redaction
+├── evals/                  # evaluation datasets (protected)
+├── supabase/               # local stack config and migrations
+├── docs/                   # PRD, TECH, DESIGN (PRD and TECH are protected)
+└── public/
 ```
+
+**Target architecture vs. today.** `docs/TECH.md` describes a Next.js `apps/web` and a WXT
+`apps/extension`. Neither exists yet. Until they do:
+
+- A task that names `apps/web/src/...` means the equivalent path under `src/` (e.g.
+  `apps/web/src/app/tailor/` → `src/pages/TailorPage.tsx`).
+- A task that names `apps/extension/...` means a new top-level `extension/` directory (T-21).
+- A task that names a `packages/<name>/` that does not exist yet means create that package
+  (plain TypeScript, `src/index.ts` entry, vitest next to source).
+
+Do not create an `apps/` tree to satisfy a path in a task brief. Ask on the issue if the
+mapping is unclear.
 
 ## Rules
 
