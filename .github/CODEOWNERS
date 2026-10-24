@@ -1,0 +1,9 @@
+# Advisory only: this private repo on the free plan has no branch protection or
+# rulesets, so GitHub will not block a merge that ignores these owners.
+# Enable required reviews when the repo moves to Pro (or goes public).
+/docs/PRD.md            @xb3sox
+/docs/TECH.md           @xb3sox
+/evals/                 @xb3sox
+/packages/policy/       @xb3sox
+/packages/eligibility/  @xb3sox
+/.github/               @xb3sox
