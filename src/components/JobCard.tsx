@@ -309,8 +309,13 @@ export function JobCard({
             type="button"
             onClick={onApply}
             disabled={eligibility === 'ineligible'}
+            aria-label={
+              eligibility === 'ineligible'
+                ? `Not eligible to apply for ${title} at ${company}`
+                : `Review and apply for ${title} at ${company}`
+            }
             className={cn(
-              'flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors',
+              'flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
               eligibility === 'ineligible'
                 ? 'bg-white/5 text-white/30 cursor-not-allowed'
                 : 'bg-emerald-500 hover:bg-emerald-600 text-white'
@@ -323,7 +328,8 @@ export function JobCard({
           <button
             type="button"
             onClick={onSave}
-            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors"
+            aria-label={`Save ${title} at ${company}`}
+            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Save
           </button>
@@ -332,7 +338,8 @@ export function JobCard({
           <button
             type="button"
             onClick={onSkip}
-            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white/60 text-sm font-medium transition-colors"
+            aria-label={`Skip ${title} at ${company}`}
+            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white/60 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Skip
           </button>
@@ -341,7 +348,8 @@ export function JobCard({
           <button
             type="button"
             onClick={onView}
-            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors"
+            aria-label={`View details for ${title} at ${company}`}
+            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             View Details
           </button>

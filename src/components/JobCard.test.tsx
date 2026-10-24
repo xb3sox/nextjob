@@ -142,7 +142,7 @@ describe('JobCard', () => {
     expect(screen.getByText('95%')).toBeInTheDocument();
   });
 
-  it('renders action buttons when handlers provided', () => {
+  it('renders action buttons when handlers provided with proper accessible labels', () => {
     const onApply = vi.fn();
     const onSave = vi.fn();
     const onSkip = vi.fn();
@@ -157,11 +157,46 @@ describe('JobCard', () => {
         onView={onView}
       />
     );
+    expect(
+      screen.getByRole('button', {
+        name: 'Review and apply for Senior Software Engineer at Tech Corp',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: 'Save Senior Software Engineer at Tech Corp',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: 'Skip Senior Software Engineer at Tech Corp',
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: 'View details for Senior Software Engineer at Tech Corp',
+      })
+    ).toBeInTheDocument();
+  });
 
-    expect(screen.getByText('Review & Apply')).toBeInTheDocument();
-    expect(screen.getByText('Save')).toBeInTheDocument();
-    expect(screen.getByText('Skip')).toBeInTheDocument();
-    expect(screen.getByText('View Details')).toBeInTheDocument();
+  it('renders ineligible apply button with descriptive inaccessible aria-label', () => {
+    const onApply = vi.fn();
+    render(
+      <JobCard
+        {...defaultProps}
+        onApply={onApply}
+        capabilities={{
+          ...mockCapabilities,
+          eligibility: 'ineligible',
+        }}
+      />
+    );
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Not eligible to apply for Senior Software Engineer at Tech Corp',
+      })
+    ).toBeDisabled();
   });
 
   it('calls onApply when apply button clicked', () => {
