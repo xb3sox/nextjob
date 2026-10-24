@@ -21,7 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: alibaba/open-code-review@v1.13.3
+      # Pinned by commit SHA: this repo requires SHA pinning and allows this
+      # action pattern explicitly. Tag v1.13.3 = 375f64c.
+      - uses: alibaba/open-code-review@375f64cd6f67a48a135da83cfcf59c52669a09cb
         with:
           # Pin the CLI too; `latest` drifts under you.
           ocr_version: '1.13.3'
