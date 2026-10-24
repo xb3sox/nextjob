@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: NextJob Roadmap board
+    url: https://github.com/users/xb3sox/projects/11
+    about: Every open task in TASKS.md, grouped by phase. Check here before opening a new issue.
+  - name: Build plan (TASKS.md)
+    url: https://github.com/xb3sox/nextjob/blob/main/TASKS.md
+    about: Task definitions, dependencies, and the evidence required to mark a task complete.
+  - name: Agent rules (AGENTS.md)
+    url: https://github.com/xb3sox/nextjob/blob/main/AGENTS.md
+    about: Gates, protected paths, and the PR workflow agents must follow.

@@ -137,29 +137,38 @@ npx shadcn@latest diff             # Show component differences
 
 ## Structure
 
+What is in the repo today:
+
 ```
 ./
-├── apps/
-│   ├── web/                # Next.js + TypeScript (FR-ONB, matching, tracker, marketing)
-│   │   └── src/app/
-│   │       ├── (marketing)/  # Landing page, B2B section
-│   │       ├── (legal)/      # Privacy policy, terms of service
-│   │       └── (app)/        # Authenticated app (dashboard, applications, etc.)
-│   └── extension/          # WXT browser extension (ATS execution)
+├── src/                    # Vite + React 18 SPA — the shipped application
+│   ├── pages/              # landing (App.tsx), auth/*, dashboard, tailor, legal
+│   ├── components/         # JobCard, WaitlistForm, ProtectedRoute, ui/ (shadcn)
+│   ├── contexts/           # AuthContext (Supabase session)
+│   ├── lib/                # supabase client, cn(), redirect helpers
+│   └── test/               # vitest setup (happy-dom)
 ├── packages/
-│   ├── api/                # Fastify modular monolith
-│   ├── career-graph/       # Career claims, evidence, verification
-│   ├── eligibility/        # Eligibility engine (rules + provenance)
-│   ├── matching/           # Job ranking and fit scoring
-│   ├── tailoring/          # Evidence-constrained generation
-│   ├── policy/             # Risk engine, approval workflow
-│   ├── applications/       # State machine, receipts, tracking
-│   ├── connectors/         # ATS integrations (Temporal workers)
-│   ├── ai-gateway/         # Model routing, eval, observability
-│   └── shared/             # Types, schemas, utilities
-├── docs/                   # PRD, TECH, DESIGN
-└── evals/                  # AI evaluation datasets
+│   ├── api/                # Fastify modular monolith, Temporal workflows, jobs, auth
+│   ├── profile/            # claims, evidence, import/extraction
+│   ├── tailoring/          # evidence-constrained generation (T-17 engine)
+│   └── ai-gateway/         # model routing, Zod schemas, PII redaction
+├── evals/                  # evaluation datasets (protected)
+├── supabase/               # local stack config and migrations
+├── docs/                   # PRD, TECH, DESIGN (PRD and TECH are protected)
+└── public/
 ```
+
+**Target architecture vs. today.** `docs/TECH.md` describes a Next.js `apps/web` and a WXT
+`apps/extension`. Neither exists yet. Until they do:
+
+- A task that names `apps/web/src/...` means the equivalent path under `src/` (e.g.
+  `apps/web/src/app/tailor/` → `src/pages/TailorPage.tsx`).
+- A task that names `apps/extension/...` means a new top-level `extension/` directory (T-21).
+- A task that names a `packages/<name>/` that does not exist yet means create that package
+  (plain TypeScript, `src/index.ts` entry, vitest next to source).
+
+Do not create an `apps/` tree to satisfy a path in a task brief. Ask on the issue if the
+mapping is unclear.
 
 ## Rules
 
@@ -173,6 +182,49 @@ npx shadcn@latest diff             # Show component differences
 - Higher-level policy restrictions cannot be overridden by lower levels.
 - Follow WCAG 2.2 AA for all user-facing interfaces.
 - Use Zod schemas for all API boundaries and AI structured output.
+
+## GitHub Workflow
+
+Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/projects/11)
+(`#11`). Every open task in [TASKS.md](TASKS.md) has exactly one issue.
+
+**One issue = one task = one PR.** Do not bundle tasks; do not open a PR without an issue.
+
+### Labels
+
+| Label | Meaning |
+| --- | --- |
+| `agent:jules` | Ready for the async coding agent. Dependencies merged, acceptance testable in-repo. |
+| `agent:jules-queued` | Good agent work, but a dependency has not merged. Do not start. |
+| `agent:human` | Needs a person: approval, credentials, legal/compliance judgement, or an unresolved decision. |
+| `phase:NN` | Phase grouping used by the board. |
+
+### Workflow
+
+1. Pick an issue labelled `agent:jules` (or assigned to you). Read its brief.
+2. Branch from `main`: `feat/<task-id>-<slug>` (e.g. `feat/t-18-tailoring-review-ui`).
+3. Implement only the scope in the issue. Protected paths stay untouched.
+4. Run the gates below; paste the output into the PR body.
+5. Open the PR against `main`, link the issue (`Refs T-XX`), and move the board item to `In Progress` then `Done`.
+
+### Gates before any PR
+
+```bash
+bun run typecheck
+bun run lint
+bunx vitest run --maxWorkers 2
+bun run build
+```
+
+`bun.lock` is the single lockfile — never run `npm install`/`npx`. Install with
+`bun install --frozen-lockfile` (CI does).
+
+### Stop and comment instead of guessing when
+
+- A dependency listed on the issue is still open.
+- Acceptance criteria conflict with `docs/PRD.md` or `docs/TECH.md`.
+- The change would touch a protected path or need a new dependency.
+- The work needs a credential, a paid service, or a production action.
 
 ## Completion Gates
 

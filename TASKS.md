@@ -1578,7 +1578,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 #### T-96: Implement error boundaries
 - [x] **Status:** Complete
 - **Deliverable:** React error boundaries for all major sections; user-friendly error messages; error logging to monitoring service; retry option
-- **Dependencies:** T-52, T-107
+- **Dependencies:** T-52
 - **Acceptance:** FR-TECH-03 satisfied; errors caught gracefully; user-friendly messages displayed; errors logged; retry option available
 - **Verification:** Trigger errors → verify boundaries catch; check user experience → verify friendly messages; check logs → verify error capture
 - **Files:** `src/App.tsx` (ErrorBoundary component)
