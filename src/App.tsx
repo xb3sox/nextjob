@@ -10,6 +10,7 @@ import SignupPage from './pages/auth/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFound from './pages/NotFound';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import TailorPage from './pages/TailorPage';
 import TermsOfService from './pages/TermsOfService';
 
 /* ------------------------------------------------------------------ */
@@ -502,6 +503,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tailor"
+          element={
+            <ProtectedRoute>
+              <TailorPage />
             </ProtectedRoute>
           }
         />

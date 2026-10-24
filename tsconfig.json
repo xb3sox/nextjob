@@ -13,7 +13,8 @@
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@nextjob/tailoring": ["./packages/tailoring/src/index.ts"]
     }
   },
   "include": ["src"]

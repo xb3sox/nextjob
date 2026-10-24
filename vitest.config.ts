@@ -10,6 +10,7 @@ export default defineConfig({
     // Mirror vite.config.js so `@/…` imports work under Vitest too.
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@nextjob/tailoring': path.resolve(__dirname, './packages/tailoring/src/index.ts'),
     },
   },
   test: {

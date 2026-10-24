@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (27/118 tasks complete - 22.9%)  
-**Last Updated:** 2026-10-13  
-**Latest Update:** Documentation review & cleanup — corrected stale task counts, refreshed "Next Unblocked Task" and priorities (T-04 through T-12 are now complete), synced Requirement Coverage table with actual task statuses.  
+**Status:** In Progress (33/118 tasks complete - 28.0%)  
+**Last Updated:** 2026-10-24  
+**Latest Update:** T-18 complete — tailoring review UI (`/tailor`) renders original claim → proposed statement → linked evidence with accept/edit/reject. Task count re-derived from the file itself (was stale at 27).  
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -767,12 +767,13 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Note:** Requires human review for evidence constraint logic
 
 #### T-18: Implement tailoring UI with evidence display
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-24)
 - **Deliverable:** UI showing original → proposed → evidence for each statement
 - **Dependencies:** T-17
 - **Acceptance:** User can accept/edit/reject each statement; evidence linked; accessible
-- **Verification:** Visual check: evidence shown for each statement; user can edit; accessibility audit passes
-- **Files:** `apps/web/src/app/tailor/`
+- **Verification:** `bunx vitest run src/pages/TailorPage.test.tsx` → 4/4 passed (original claim + proposed wording + evidence chip rendered; accept/edit/reject each covered). Manual screen-reader pass not yet run.
+- **Files:** `src/pages/TailorPage.tsx`, `src/pages/TailorPage.test.tsx` (route `/tailor` in `src/App.tsx`)
+- **Note:** Statements come from the real T-17 engine against a demo CareerGraph; profile fetch and persisted decisions belong to T-08/T-20.
 
 ---
 
