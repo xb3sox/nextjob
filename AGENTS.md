@@ -107,41 +107,25 @@ Webpack, Jest, ESLint, npm, Create React App, Redux, GraphQL, Docker, AWS - all 
 
 ## Commands
 
-### Current (npm-based)
+### Commands (Bun — the only package manager)
+
 ```bash
-# Frontend (Landing Page)
-npm install                    # Install dependencies
-npm run dev                    # Start development server (http://localhost:3000)
-npm run build                  # Production build
-npm run typecheck              # TypeScript validation
-npm run lint                   # ESLint check
-
-# Backend (API)
-cd packages/api
-npm install                    # Install API dependencies
-npm run dev                    # Start API server (http://localhost:4000)
-npm run db:generate            # Generate database migrations
-npm run db:migrate             # Run database migrations
-npm run db:seed                # Seed test data
-npm run db:studio              # Open Drizzle Studio
-
-# Testing (coming soon)
-npm run test                   # Unit and integration tests
-npm run test:eval              # AI evaluation suite
-```
-
-### Planned (Bun-based - T-03a)
-```bash
-bun install                    # Install dependencies (30x faster)
-bun run dev                    # Start development server
-bun run build                  # Production build
-bun run typecheck              # TypeScript validation
-bun run lint                   # Lint check (Biome - 56x faster)
-bun run format                 # Format code (Biome)
-bun run test                   # Unit and integration tests (Vitest - 5x faster)
-bun run test:coverage          # Generate coverage report
+bun install                    # CI uses --frozen-lockfile
+bun run dev                    # dev server
+bun run build                  # production build -> dist/
+bun run typecheck              # tsc --noEmit
+bun run test                   # vitest
+bun run test:coverage          # coverage report
 bun run test:eval              # AI evaluation suite
+bunx wrangler dev --port 8799  # serve dist/ exactly as Workers does
 ```
+
+`bun.lock` is the single lockfile. `npm install` or `npx` re-creates
+`package-lock.json` and breaks CI's `--frozen-lockfile` gate.
+
+`bun run lint` currently reports ~285 errors in application code (vendored
+`.agents` skills and generated `.wrangler` output are excluded). It is
+deliberately **not** a CI gate yet. Do not add it until the backlog is cleared.
 
 ### shadcn/ui Commands (T-03e)
 ```bash
