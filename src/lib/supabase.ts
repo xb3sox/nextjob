@@ -26,7 +26,7 @@ if (!isSupabaseConfigured) {
   );
 }
 
-export const supabase = createClient(url ?? 'http://localhost:54321', anonKey ?? '', {
+export const supabase = createClient(url ?? 'http://localhost:54321', anonKey || 'placeholder-key', {
   auth: {
     // Persist sessions in localStorage; auto-refresh keeps tokens valid.
     persistSession: true,
