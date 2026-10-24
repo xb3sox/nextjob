@@ -9,7 +9,13 @@ One page. How work moves through this repository, and what GitHub can and cannot
 - **Goal** — a milestone is an outcome, not a phase. `MVP`: one real application submitted
   end-to-end. `Beta`: ten external users.
 - **Project** — one board, four fields: `Status` (Todo / In Progress / Blocked / Done), `Phase`,
-  `Priority` (P0–P2), `Size` (S/M/L). Views: board, backlog, agent queue, blocked.
+  `Priority` (P0–P2), `Size` (S/M/L). Views: **Ready to dispatch** (`-label:"jules-queued"
+  -label:"human"`), **Dispatched to Jules** (`label:"jules"`), **Blocked (waiting)**
+  (`label:"jules-queued"`), **Needs a human** (`label:"human"`), **By phase**.
+  - `Priority`: `P0` = MVP critical, `P1` = blocks two or more other tasks, `P2` = everything else.
+    Recomputed when dependencies change, not by feel.
+  - `Size`: assigned at dispatch by whoever picks the task up. Never bulk-filled — a guess made
+    for 85 issues at once is worse than an empty field.
 - **Issue** — one task, one owner, one PR. Body carries deliverable, scope, acceptance checklist,
   verification commands, files, definition of done. Decompose with sub-issues; express
   ordering with native "blocked by", not prose.
