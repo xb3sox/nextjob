@@ -8,21 +8,32 @@ on NextJob.
 
 1. Sign in at jules.google.com with the GitHub account that owns the repo (`xb3sox`).
 2. Install the **Jules GitHub app** and grant it access to `nextjob` only.
-3. Confirm it took: `gh api repos/xb3sox/nextjob/assignees -q '.[].login'` starts returning
-   `google-labs-jules` alongside `xb3sox`.
+3. Confirm it took: `nextjob` appears in the Jules repo picker, and adding the `jules` label to a
+   test issue produces a Jules run within a minute.
 
-Until step 3 is true, nothing can be assigned to Jules — the API only lists `xb3sox` today.
+Installation state cannot be confirmed from this repo's API surface: `repos/xb3sox/nextjob/assignees`
+returned only `xb3sox` when checked, which is consistent with the app not being installed, but the
+label trigger is the real test.
 
 ## 2. Dispatch
 
-Two routes, same result:
+**A label is the trigger.** Per the [Jules changelog](https://jules.google/docs/changelog/2025-06-26/):
+"Add the label 'jules' to any GitHub issue to start a task in Jules. That's it — label on, task live."
 
-- **From the board:** open an issue labelled `agent:jules`, assign it to Jules. Use that label as
-  the gate — it already means "dependencies merged, acceptance testable in-repo".
-- **From Jules:** pick repository `nextjob`, branch `main`, and paste the issue URL plus the one-line
-  goal. Prefer route one; the issue is the spec.
+1. The issue must already be labelled `jules-queued`-free and ready — dependencies merged.
+2. Add the label **`jules`** (exactly that, no prefix). Removing it and re-adding it starts a new task.
+3. Jules clones `main`, works the issue, and opens a PR for review.
 
-Do **not** dispatch `agent:jules-queued` (blocked) or `agent:human` (needs a decision first).
+Assignment is not required, and the label name is not configurable — `agent:jules` would never fire,
+which is why this repo renamed it to `jules`.
+
+The label is deliberately **not** pre-applied to ready issues: otherwise installing the app could
+retroactively start twenty-two tasks. Ready work is found by excluding `jules-queued` and `human`;
+adding `jules` is always a deliberate dispatch.
+
+Optional: from the Jules UI you can also start a task from the issue URL directly.
+
+Do **not** add `jules` to an issue also carrying `jules-queued` (blocked) or `human` (needs a decision).
 
 ## 3. What the agent gets
 
