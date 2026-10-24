@@ -298,18 +298,22 @@ export class JobNormalizationService {
 
   /**
    * Normalize skills list
+   * Optimized: single pass with Set lookup to achieve O(N) time complexity instead of O(N^2),
+   * eliminating intermediate array allocations (.map, .filter) and redundant toLowerCase calls.
    */
   private normalizeSkills(skills: string[]): string[] {
-    return skills
-      .map((skill) => skill.trim().toLowerCase())
-      .filter((skill) => skill.length > 0)
-      .reduce((acc: string[], skill) => {
-        // Remove duplicates (case-insensitive)
-        if (!acc.some((s) => s.toLowerCase() === skill)) {
-          acc.push(skill);
-        }
-        return acc;
-      }, []);
+    const result: string[] = [];
+    const seen = new Set<string>();
+
+    for (const rawSkill of skills) {
+      const skill = rawSkill.trim().toLowerCase();
+      if (skill.length > 0 && !seen.has(skill)) {
+        seen.add(skill);
+        result.push(skill);
+      }
+    }
+
+    return result;
   }
 
   /**
