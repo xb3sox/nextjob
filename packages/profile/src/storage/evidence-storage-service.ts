@@ -28,11 +28,19 @@ import {
  */
 export class EvidenceStorageService {
   private config: StorageConfig;
+  private secretKey: string;
   private filesStore: Map<string, EvidenceFile> = new Map();
   private fileContentStore: Map<string, Buffer> = new Map(); // For memory provider
 
   constructor(config: Partial<StorageConfig> = {}) {
     this.config = { ...DEFAULT_STORAGE_CONFIG, ...config };
+    // A hardcoded fallback would make every signature forgeable. Without an
+    // explicit secret, generate a per-process key: signed URLs then stop
+    // working across restarts/instances, which is the safe failure mode.
+    this.secretKey =
+      this.config.secretKey ||
+      process.env.STORAGE_SECRET_KEY ||
+      crypto.randomBytes(32).toString('hex');
   }
 
   /**
@@ -192,9 +200,16 @@ export class EvidenceStorageService {
       throw new SignedUrlExpiredError(fileId);
     }
 
-    // Verify signature
+    // Verify signature using constant-time comparison to prevent timing attacks
     const expectedSignature = this.generateSignature(fileId, expiresAt);
-    return signature === expectedSignature;
+    const sigBuf = Buffer.from(signature, 'utf8');
+    const expectedBuf = Buffer.from(expectedSignature, 'utf8');
+
+    if (sigBuf.length !== expectedBuf.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(sigBuf, expectedBuf);
   }
 
   /**
@@ -400,11 +415,11 @@ export class EvidenceStorageService {
   }
 
   /**
-   * Generate signature for signed URL
+   * Generate signature for signed URL using HMAC-SHA256
    */
   private generateSignature(fileId: string, expiresAt: string): string {
     const data = `${fileId}:${expiresAt}`;
-    return crypto.createHash('sha256').update(data).digest('hex');
+    return crypto.createHmac('sha256', this.secretKey).update(data).digest('hex');
   }
 
   /**

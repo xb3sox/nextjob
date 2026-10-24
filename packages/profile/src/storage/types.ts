@@ -159,6 +159,7 @@ export interface DeleteEvidenceRequest {
 
 export interface StorageConfig {
   provider: StorageProvider;
+  secretKey?: string;
 
   // S3 configuration
   s3?: {

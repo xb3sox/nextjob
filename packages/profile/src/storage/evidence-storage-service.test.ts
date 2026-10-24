@@ -240,6 +240,57 @@ describe('EvidenceStorageService', () => {
       const isValid = await service.validateSignedUrl(uploaded.file.id, signature, expires);
       expect(isValid).toBe(true);
     });
+
+    it('should reject forged signed URL created without HMAC secret', async () => {
+      const uploadRequest = {
+        userId: 'user-123',
+        tenantId: 'tenant-456',
+        file: Buffer.from('test'),
+        fileName: 'test.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const uploaded = await service.uploadEvidence(uploadRequest);
+      const expires = new Date(Date.now() + 3600 * 1000).toISOString();
+
+      // Attempt unkeyed SHA-256 forgery
+      const crypto = await import('crypto');
+      const forgedSig = crypto
+        .createHash('sha256')
+        .update(`${uploaded.file.id}:${expires}`)
+        .digest('hex');
+
+      const isValid = await service.validateSignedUrl(uploaded.file.id, forgedSig, expires);
+      expect(isValid).toBe(false);
+    });
+
+    it('should reject invalid or tampered signature', async () => {
+      const uploadRequest = {
+        userId: 'user-123',
+        tenantId: 'tenant-456',
+        file: Buffer.from('test'),
+        fileName: 'test.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const uploaded = await service.uploadEvidence(uploadRequest);
+      const signedUrl = await service.generateSignedUrl(
+        uploaded.file.id,
+        'user-123',
+        'tenant-456',
+        3600
+      );
+
+      const url = new URL(signedUrl.signedUrl);
+      const signature = url.searchParams.get('signature')!;
+      const expires = url.searchParams.get('expires')!;
+
+      const tamperedSig = signature.substring(0, signature.length - 2) + '00';
+      const isValid = await service.validateSignedUrl(uploaded.file.id, tamperedSig, expires);
+      expect(isValid).toBe(false);
+    });
   });
 
   describe('listEvidence', () => {
