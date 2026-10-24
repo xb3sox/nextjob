@@ -8,10 +8,21 @@ One page. How work moves through this repository, and what GitHub can and cannot
 
 - **Goal** — a milestone is an outcome, not a phase. `MVP`: one real application submitted
   end-to-end. `Beta`: ten external users.
-- **Project** — one board, four fields: `Status` (Todo / In Progress / Blocked / Done), `Phase`,
-  `Priority` (P0–P2), `Size` (S/M/L). Views: **Ready to dispatch** (`-label:"jules-queued"
-  -label:"human"`), **Dispatched to Jules** (`label:"jules"`), **Blocked (waiting)**
-  (`label:"jules-queued"`), **Needs a human** (`label:"human"`), **By phase**.
+- **Project** — one project, four fields: `Status` (Todo / In Progress / Blocked / Done), `Phase`,
+  `Priority` (P0–P2), `Size` (S/M/L). Seven views, all filtered `is:open` so finished work leaves
+  the board:
+
+  | View | Layout | Filter |
+  | --- | --- | --- |
+  | Backlog — by priority | Table | `is:open` |
+  | Flow | Board | `is:open` |
+  | Ready to dispatch | Table | `is:open -label:"jules-queued" -label:"human" -label:"jules"` |
+  | In flight | Table | `is:open label:"jules"` |
+  | Blocked | Table | `is:open label:"jules-queued"` |
+  | Needs a human | Table | `is:open label:"human"` |
+  | By phase | Board | `is:open` |
+
+  Grouping and sort order are per-view UI settings; the API only exposes name, layout and filter.
   - `Priority`: `P0` = MVP critical, `P1` = blocks two or more other tasks, `P2` = everything else.
     Recomputed when dependencies change, not by feel.
   - `Size`: assigned at dispatch by whoever picks the task up. Never bulk-filled — a guess made
