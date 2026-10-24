@@ -123,8 +123,9 @@ bunx wrangler dev --port 8799  # serve dist/ exactly as Workers does
 `bun.lock` is the single lockfile. `npm install` or `npx` re-creates
 `package-lock.json` and breaks CI's `--frozen-lockfile` gate.
 
-`bun run lint` currently reports ~460 errors and is deliberately **not** a CI
-gate yet. Do not add it until the backlog is cleared.
+`bun run lint` currently reports ~285 errors in application code (vendored
+`.agents` skills and generated `.wrangler` output are excluded). It is
+deliberately **not** a CI gate yet. Do not add it until the backlog is cleared.
 
 ### shadcn/ui Commands (T-03e)
 ```bash
