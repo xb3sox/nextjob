@@ -837,12 +837,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 8: Applications & Receipts
 
 #### T-25: Implement application state machine
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-24)
 - **Deliverable:** State machine managing lifecycle from DISCOVERED to SUBMITTED_VERIFIED with all states per PRD §Application State Machine
 - **Dependencies:** T-06
 - **Acceptance:** All states implemented; transitions valid; exception states handled; FR-08 satisfied (ambiguous results don't auto-retry)
-- **Verification:** Test state transitions; simulate failure → verify exception state; `npm run test -- state-machine` → pass
-- **Files:** `packages/applications/src/state-machine.ts`
+- **Verification:** `bunx vitest run packages/applications` → 16/16 passed (pipeline, outcome and exception states; guards for ineligible, approvals and verification evidence; ambiguous submission unretryable; retry cap; audit trail)
+- **Files:** `packages/applications/src/state-machine.ts` (+ `index.ts`, `state-machine.test.ts`)
 
 #### T-26: Implement submission receipt generation
 - [ ] **Status:** Not started
