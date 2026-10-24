@@ -184,38 +184,45 @@ export class MatchingEngineService {
 
   /**
    * Calculate skills match factor
+   * Optimized with Set lookup to achieve O(U + R + P) time complexity instead of O(U * (R + P))
+   * and avoid intermediate array allocations during filtering.
    */
   private calculateSkillsMatch(
     userSkills: Array<{ name: string; level?: string }>,
     requiredSkills: string[],
     preferredSkills?: string[]
   ): MatchFactor {
-    const userSkillNames = userSkills.map((s) => s.name.toLowerCase());
-    const requiredSkillNames = requiredSkills.map((s) => s.toLowerCase());
-    const preferredSkillNames = (preferredSkills || []).map((s) => s.toLowerCase());
+    const userSkillNames = new Set(userSkills.map((s) => s.name.toLowerCase()));
 
     // Calculate required skills match
-    const matchedRequired = requiredSkillNames.filter((skill) =>
-      userSkillNames.includes(skill)
-    ).length;
+    let matchedRequired = 0;
+    for (const skill of requiredSkills) {
+      if (userSkillNames.has(skill.toLowerCase())) {
+        matchedRequired++;
+      }
+    }
     const requiredScore =
-      requiredSkillNames.length > 0 ? (matchedRequired / requiredSkillNames.length) * 100 : 100;
+      requiredSkills.length > 0 ? (matchedRequired / requiredSkills.length) * 100 : 100;
 
     // Calculate preferred skills match (bonus)
-    const matchedPreferred = preferredSkillNames.filter((skill) =>
-      userSkillNames.includes(skill)
-    ).length;
+    let matchedPreferred = 0;
+    const preferredList = preferredSkills || [];
+    for (const skill of preferredList) {
+      if (userSkillNames.has(skill.toLowerCase())) {
+        matchedPreferred++;
+      }
+    }
     const preferredBonus =
-      preferredSkillNames.length > 0
-        ? (matchedPreferred / preferredSkillNames.length) * 20 // 20% bonus
+      preferredList.length > 0
+        ? (matchedPreferred / preferredList.length) * 20 // 20% bonus
         : 0;
 
     const score = Math.min(100, requiredScore + preferredBonus);
 
     const explanation =
-      `Matched ${matchedRequired}/${requiredSkillNames.length} required skills` +
-      (preferredSkillNames.length > 0
-        ? ` and ${matchedPreferred}/${preferredSkillNames.length} preferred skills`
+      `Matched ${matchedRequired}/${requiredSkills.length} required skills` +
+      (preferredList.length > 0
+        ? ` and ${matchedPreferred}/${preferredList.length} preferred skills`
         : '');
 
     return {
@@ -309,7 +316,7 @@ export class MatchingEngineService {
     // Check field of study
     if (jobEducation.requiredFields && jobEducation.requiredFields.length > 0) {
       const hasRequiredField = userEducation.some((edu) =>
-        jobEducation.requiredFields?.some((field) =>
+        jobEducation.requiredFields!.some((field) =>
           edu.field?.toLowerCase().includes(field.toLowerCase())
         )
       );
@@ -605,7 +612,7 @@ export class MatchingEngineService {
   /**
    * Generate recommendations based on weaknesses
    */
-  private generateRecommendations(factors: MatchFactor[], _weaknesses: string[]): string[] {
+  private generateRecommendations(factors: MatchFactor[], weaknesses: string[]): string[] {
     const recommendations: string[] = [];
 
     factors.forEach((factor) => {
