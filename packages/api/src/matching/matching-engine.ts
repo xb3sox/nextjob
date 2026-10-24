@@ -1,14 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
-  JobMatch,
-  MatchFactor,
-  MatchStatus,
-  CalculateMatchRequest,
-  CalculateMatchResponse,
-  RankJobsRequest,
-  RankJobsResponse,
-  MatchingConfig,
+  type CalculateMatchRequest,
+  type CalculateMatchResponse,
   DEFAULT_MATCHING_CONFIG,
+  type JobMatch,
+  type MatchFactor,
+  type MatchingConfig,
+  type MatchStatus,
+  type RankJobsRequest,
+  type RankJobsResponse,
 } from './types.js';
 
 // ============================================================================
@@ -124,7 +124,7 @@ export class MatchingEngineService {
    * Rank multiple jobs for a user
    */
   async rankJobs(request: RankJobsRequest): Promise<RankJobsResponse> {
-    const { userId, tenantId, jobIds, userProfile, jobs } = request;
+    const { userId, tenantId, userProfile, jobs } = request;
 
     const matches: RankJobsResponse['matches'] = [];
 
