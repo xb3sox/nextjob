@@ -80,7 +80,13 @@ export default function DashboardPage() {
           />
         </div>
 
-        <p className="mt-10 text-xs text-fog/70">
+        <p className="mt-10 text-sm">
+          <Link to="/tailor" className="text-moss hover:text-paper transition-colors">
+            Review a tailored draft →
+          </Link>
+        </p>
+
+        <p className="mt-4 text-xs text-fog/70">
           You’re signed in with a verified session (email confirmed). Profile import and job
           discovery are the next milestones — see TASKS.md T-07 / T-08.
         </p>

@@ -32,13 +32,14 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-15: Job card UI with capability model (29 tests)
 - ✅ T-16: AI evaluation dataset for tailoring (64 tests)
 - ✅ T-17: Tailoring engine with evidence constraints (18 tests)
+- ✅ T-18: Tailoring UI with evidence display (original → proposed → evidence, 4 tests)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 32/118 tasks complete (27.1%)
+**Progress:** 33/118 tasks complete (28.0%)
 
-> Note: T-13 through T-17 are complete with all eval/unit tests passing. Next up: T-18 (tailoring UI with evidence display) or T-03f/T-03g.
+> Note: T-13 through T-18 are complete with all eval/unit tests passing. Next up: T-19 (risk & policy engine) or T-03f/T-03g.
 
 ## Agent Skills
 
