@@ -28,9 +28,12 @@ Phase lives in the `Phase` field, not in labels — one source of truth.
 ## Ownership
 
 - `jules` — **dispatch trigger**: adding this exact label starts a task in the Jules GitHub App.
-  Use it only when dependencies are merged and acceptance is testable in-repo.
+  It is never pre-applied; the repo keeps it off ready issues so installing the app cannot start
+  twenty tasks at once.
 - `jules-queued` — agent work, blocked on another issue. Do not dispatch yet.
 - `human` — needs a person: approval, credentials, legal judgement, or an open decision.
+
+**Ready work** = open, without `jules-queued` and without `human`.
 
 Agents never push to `main`. Every agent change arrives as a PR with evidence, and a human merges.
 

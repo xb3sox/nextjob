@@ -27,6 +27,10 @@ label trigger is the real test.
 Assignment is not required, and the label name is not configurable — `agent:jules` would never fire,
 which is why this repo renamed it to `jules`.
 
+The label is deliberately **not** pre-applied to ready issues: otherwise installing the app could
+retroactively start twenty-two tasks. Ready work is found by excluding `jules-queued` and `human`;
+adding `jules` is always a deliberate dispatch.
+
 Optional: from the Jules UI you can also start a task from the issue URL directly.
 
 Do **not** add `jules` to an issue also carrying `jules-queued` (blocked) or `human` (needs a decision).

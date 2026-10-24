@@ -194,15 +194,17 @@ Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/p
 
 | Label | Meaning |
 | --- | --- |
-| `jules` | **Dispatch trigger.** Adding it starts a task in the Jules GitHub App ([docs](https://jules.google/docs/changelog/2025-06-26/)). Only use it when dependencies are merged and acceptance is testable in-repo. |
+| `jules` | **Dispatch trigger.** Adding it starts a task in the Jules GitHub App ([docs](https://jules.google/docs/changelog/2025-06-26/)). Never pre-applied: the repo keeps it off ready issues so installing the app cannot spray tasks. |
 | `jules-queued` | Good agent work, but a dependency has not merged. Do not dispatch yet. |
 | `human` | Needs a person: approval, credentials, legal/compliance judgement, or an unresolved decision. |
 
 Phase lives in the project's `Phase` field, not in labels.
 
+**Ready work** = open, no `jules-queued`, no `human` (22 issues today), MVP milestone first.
+
 ### Workflow
 
-1. Pick an issue labelled `jules`. Read its brief. (Adding that label is what dispatches Jules — the label name must be exactly `jules`.)
+1. Pick ready work. Read its brief. **Adding `jules` dispatches the agent** — that single label is the trigger, never an assignment.
 2. Branch from `main`: `feat/<task-id>-<slug>` (e.g. `feat/t-18-tailoring-review-ui`).
 3. Implement only the scope in the issue. Protected paths stay untouched.
 4. Run the gates below; paste the output into the PR body.
