@@ -128,6 +128,11 @@ bunx wrangler dev --port 8799  # serve dist/ exactly as Workers does
 174 warnings (mostly `noExplicitAny`, `noNonNullAssertion`) are tolerated for
 now. Keep it that way — do not add `--error-on-warnings` until they're fixed.
 
+**Always lint through `bun run lint`.** Running `bunx biome` resolves the newest biome from the
+registry, not the version in `bun.lock`; a newer formatter rewrites ~16 files and turns a
+one-line fix into a repo-wide diff. If you need the binary directly, pin it:
+`bunx --bun @biomejs/biome@<version-from-bun.lock> check --write <files>`.
+
 ### shadcn/ui Commands (T-03e)
 ```bash
 npx shadcn@latest add <component>  # Add shadcn/ui component
