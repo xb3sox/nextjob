@@ -1,4 +1,4 @@
-import { MapPin, Briefcase, DollarSign, Globe, CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { AlertCircle, CheckCircle, Clock, DollarSign, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // ============================================================================
@@ -20,11 +20,11 @@ export interface JobCapabilityModel {
   language: 'supported' | 'review_required';
   automation: AutomationStatus;
   freshness: FreshnessStatus;
-  
+
   // Scores
   matchScore: number; // 0-100
   confidence: number; // 0-1
-  
+
   // Details
   strengths: string[];
   weaknesses: string[];
@@ -39,16 +39,16 @@ export interface JobCardProps {
   location: string;
   remote?: boolean;
   salary?: { min?: number; max?: number; currency?: string };
-  
+
   // Capability model
   capabilities: JobCapabilityModel;
-  
+
   // Actions
   onView?: () => void;
   onApply?: () => void;
   onSave?: () => void;
   onSkip?: () => void;
-  
+
   // Styling
   className?: string;
 }
@@ -108,13 +108,13 @@ function EligibilityBadge({ status }: { status: EligibilityStatus }) {
   );
 }
 
-function CapabilityIndicator({ 
-  label, 
-  value, 
-  color 
-}: { 
-  label: string; 
-  value: string; 
+function CapabilityIndicator({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
   color: string;
 }) {
   return (
@@ -159,10 +159,12 @@ export function JobCard({
   } = capabilities;
 
   return (
-    <div className={cn(
-      'rounded-xl border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-all',
-      className
-    )}>
+    <div
+      className={cn(
+        'rounded-xl border border-white/10 bg-white/[0.02] p-6 hover:border-white/20 transition-all',
+        className
+      )}
+    >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
@@ -201,8 +203,8 @@ export function JobCard({
         <h4 className="text-sm font-medium text-white mb-2">Why it fits</h4>
         {strengths.length > 0 ? (
           <ul className="space-y-1">
-            {strengths.slice(0, 3).map((strength, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-white/60">
+            {strengths.slice(0, 3).map((strength) => (
+              <li key={strength} className="flex items-start gap-2 text-sm text-white/60">
                 <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
                 <span>{strength}</span>
               </li>
@@ -220,21 +222,19 @@ export function JobCard({
             {missingRequirements && missingRequirements.length > 0 ? 'Missing' : 'Gaps'}
           </h4>
           <ul className="space-y-1">
-            {missingRequirements && missingRequirements.length > 0 ? (
-              missingRequirements.slice(0, 2).map((req, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-white/60">
-                  <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
-                  <span>{req}</span>
-                </li>
-              ))
-            ) : (
-              weaknesses.slice(0, 2).map((weakness, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-white/60">
-                  <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
-                  <span>{weakness}</span>
-                </li>
-              ))
-            )}
+            {missingRequirements && missingRequirements.length > 0
+              ? missingRequirements.slice(0, 2).map((req) => (
+                  <li key={req} className="flex items-start gap-2 text-sm text-white/60">
+                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                    <span>{req}</span>
+                  </li>
+                ))
+              : weaknesses.slice(0, 2).map((weakness) => (
+                  <li key={weakness} className="flex items-start gap-2 text-sm text-white/60">
+                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                    <span>{weakness}</span>
+                  </li>
+                ))}
           </ul>
         </div>
       )}
@@ -252,7 +252,13 @@ export function JobCard({
           />
           <CapabilityIndicator
             label="Execution"
-            value={execution === 'verified' ? 'Verified' : execution === 'assisted' ? 'Assisted' : 'Manual'}
+            value={
+              execution === 'verified'
+                ? 'Verified'
+                : execution === 'assisted'
+                  ? 'Assisted'
+                  : 'Manual'
+            }
             color={execution === 'verified' ? 'text-emerald-400' : 'text-cyan-400'}
           />
           <CapabilityIndicator
@@ -262,18 +268,36 @@ export function JobCard({
           />
           <CapabilityIndicator
             label="Automation"
-            value={automation === 'automatic' ? 'Automatic' : automation === 'review_required' ? 'Review' : 'Manual'}
+            value={
+              automation === 'automatic'
+                ? 'Automatic'
+                : automation === 'review_required'
+                  ? 'Review'
+                  : 'Manual'
+            }
             color={automation === 'automatic' ? 'text-emerald-400' : 'text-cyan-400'}
           />
           <CapabilityIndicator
             label="Freshness"
             value={freshness === 'fresh' ? 'Fresh' : freshness === 'aging' ? 'Aging' : 'Unknown'}
-            color={freshness === 'fresh' ? 'text-emerald-400' : freshness === 'aging' ? 'text-amber-400' : 'text-slate-400'}
+            color={
+              freshness === 'fresh'
+                ? 'text-emerald-400'
+                : freshness === 'aging'
+                  ? 'text-amber-400'
+                  : 'text-slate-400'
+            }
           />
           <CapabilityIndicator
             label="Confidence"
             value={`${Math.round(confidence * 100)}%`}
-            color={confidence > 0.8 ? 'text-emerald-400' : confidence > 0.6 ? 'text-cyan-400' : 'text-amber-400'}
+            color={
+              confidence > 0.8
+                ? 'text-emerald-400'
+                : confidence > 0.6
+                  ? 'text-cyan-400'
+                  : 'text-amber-400'
+            }
           />
         </div>
       </div>
@@ -282,6 +306,7 @@ export function JobCard({
       <div className="flex items-center gap-3">
         {onApply && (
           <button
+            type="button"
             onClick={onApply}
             disabled={eligibility === 'ineligible'}
             className={cn(
@@ -296,6 +321,7 @@ export function JobCard({
         )}
         {onSave && (
           <button
+            type="button"
             onClick={onSave}
             className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors"
           >
@@ -304,6 +330,7 @@ export function JobCard({
         )}
         {onSkip && (
           <button
+            type="button"
             onClick={onSkip}
             className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white/60 text-sm font-medium transition-colors"
           >
@@ -312,6 +339,7 @@ export function JobCard({
         )}
         {onView && (
           <button
+            type="button"
             onClick={onView}
             className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors"
           >

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { Request, Response, NextFunction } from 'express';
-import { requirePermission, requireRole, hasPermission } from './rbac';
+import type { NextFunction, Request, Response } from 'express';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { hasPermission, requirePermission, requireRole } from './rbac';
 
 describe('RBAC Middleware', () => {
   describe('hasPermission', () => {

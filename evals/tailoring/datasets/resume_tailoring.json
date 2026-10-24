@@ -17,10 +17,7 @@
               "startDate": "2020-01-01",
               "endDate": "2023-12-31",
               "location": "San Francisco, CA",
-              "achievements": [
-                "Led team of 5 engineers",
-                "Improved system performance by 40%"
-              ]
+              "achievements": ["Led team of 5 engineers", "Improved system performance by 40%"]
             },
             "evidenceId": "evidence-1",
             "verificationStatus": "verified",

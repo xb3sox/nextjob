@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import type { z } from 'zod';
 
 // ============================================================================
 // Provider Types
@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 export type AIProvider = 'openai' | 'anthropic' | 'google';
 
-export type AIModel = 
+export type AIModel =
   | 'gpt-4o'
   | 'gpt-4o-mini'
   | 'claude-3-5-sonnet-20241022'

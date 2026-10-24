@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
 import { AlertCircle, Check, Mail } from 'lucide-react';
+import { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import AuthLayout from '@/components/AuthLayout';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -26,11 +26,15 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout
       title={sent ? 'Check your email' : 'Reset your password'}
-      subtitle={sent ? undefined : "Enter the email on your account and we'll send you a reset link."}
+      subtitle={
+        sent ? undefined : "Enter the email on your account and we'll send you a reset link."
+      }
       footer={
         <>
           Remembered it?{' '}
-          <Link to="/login" className="text-moss hover:text-paper transition-colors font-medium">Back to sign in</Link>
+          <Link to="/login" className="text-moss hover:text-paper transition-colors font-medium">
+            Back to sign in
+          </Link>
         </>
       }
     >
@@ -45,11 +49,19 @@ export default function ForgotPasswordPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           <div>
-            <label htmlFor="forgot-email" className="block text-sm font-medium mb-1.5">Email</label>
+            <label htmlFor="forgot-email" className="block text-sm font-medium mb-1.5">
+              Email
+            </label>
             <input
-              id="forgot-email" type="email" autoComplete="email" required
+              id="forgot-email"
+              type="email"
+              autoComplete="email"
+              required
               value={email}
-              onChange={(e) => { setEmail(e.target.value); setError(''); }}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError('');
+              }}
               placeholder="you@company.com"
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-fog/70 focus:outline-none focus:border-moss/50 focus:ring-1 focus:ring-moss/30 transition-colors"
             />
@@ -68,7 +80,10 @@ export default function ForgotPasswordPage() {
             className="w-full py-3 px-4 rounded-lg bg-moss-deep hover:bg-moss disabled:opacity-60 disabled:cursor-not-allowed text-moss-dark font-semibold transition-colors flex items-center justify-center gap-2"
           >
             {loading ? (
-              <span className="w-4 h-4 rounded-full border-2 border-moss-dark/30 border-t-moss-dark animate-spin motion-reduce:animate-none" aria-hidden="true" />
+              <span
+                className="w-4 h-4 rounded-full border-2 border-moss-dark/30 border-t-moss-dark animate-spin motion-reduce:animate-none"
+                aria-hidden="true"
+              />
             ) : (
               <Check className="w-4 h-4" aria-hidden="true" />
             )}

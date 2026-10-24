@@ -1,5 +1,5 @@
+import { ClipboardCheck, FileText, LogOut, Search, Zap } from 'lucide-react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { Zap, FileText, Search, ClipboardCheck, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 /**
@@ -13,7 +13,8 @@ export default function DashboardPage() {
 
   if (!user) return <Navigate to="/login" replace />;
 
-  const displayName = (user.user_metadata?.full_name as string | undefined) ?? user.email?.split('@')[0] ?? 'there';
+  const displayName =
+    (user.user_metadata?.full_name as string | undefined) ?? user.email?.split('@')[0] ?? 'there';
 
   const handleSignOut = async () => {
     await signOut();
@@ -24,13 +25,17 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-ink text-paper">
       <header className="border-b border-white/5 bg-ink/80 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-sm hover:opacity-90 transition-opacity">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-2 font-semibold text-sm hover:opacity-90 transition-opacity"
+          >
             <Zap className="w-5 h-5 text-moss" aria-hidden="true" />
             NextJob
           </Link>
           <div className="flex items-center gap-4">
             <span className="hidden sm:block text-sm text-fog truncate max-w-48">{user.email}</span>
             <button
+              type="button"
               onClick={handleSignOut}
               className="inline-flex items-center gap-1.5 text-sm text-fog hover:text-paper transition-colors"
             >
@@ -102,14 +107,18 @@ function NextCard({
   return (
     <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <span className="w-9 h-9 rounded-lg bg-moss/10 text-moss flex items-center justify-center">{icon}</span>
+        <span className="w-9 h-9 rounded-lg bg-moss/10 text-moss flex items-center justify-center">
+          {icon}
+        </span>
         <span className="text-xs text-fog tnum">Step {step}</span>
       </div>
       <h2 className="font-medium mb-1.5">{title}</h2>
       <p className="text-sm text-fog leading-relaxed flex-1">{body}</p>
       <span
         className={`mt-4 inline-flex text-sm font-medium ${
-          disabled ? 'text-fog/50 cursor-not-allowed' : 'text-moss hover:text-paper transition-colors'
+          disabled
+            ? 'text-fog/50 cursor-not-allowed'
+            : 'text-moss hover:text-paper transition-colors'
         }`}
         aria-disabled={disabled}
       >

@@ -1,6 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { PreferencesService } from './preferences-service.js';
-import { PreferencesNotFoundError, InvalidPreferencesError, VersionConflictError } from './types.js';
+import {
+  InvalidPreferencesError,
+  PreferencesNotFoundError,
+  VersionConflictError,
+} from './types.js';
 
 describe('PreferencesService', () => {
   let service: PreferencesService;
@@ -179,15 +183,15 @@ describe('PreferencesService', () => {
         targetRoles: ['Software Engineer'],
       };
 
-      const result = await service.createPreferences(request);
+      const _result = await service.createPreferences(request);
 
       const updateRequest = {
         targetRoles: ['Senior Software Engineer'],
       };
 
-      await expect(
-        service.updatePreferences('user-123', updateRequest, 999)
-      ).rejects.toThrow(VersionConflictError);
+      await expect(service.updatePreferences('user-123', updateRequest, 999)).rejects.toThrow(
+        VersionConflictError
+      );
     });
 
     it('should succeed if expected version matches', async () => {
@@ -304,9 +308,7 @@ describe('PreferencesService', () => {
         tenantId: 'tenant-456',
         targetRoles: ['Software Engineer'],
         seniorityLevels: ['senior' as const],
-        targetLocations: [
-          { city: 'San Francisco', state: 'CA', country: 'US' },
-        ],
+        targetLocations: [{ city: 'San Francisco', state: 'CA', country: 'US' }],
         workMode: 'hybrid' as const,
         salaryExpectations: {
           min: 120000,

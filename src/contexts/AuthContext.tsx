@@ -1,15 +1,15 @@
+import type { Session, User } from '@supabase/supabase-js';
 import {
   createContext,
+  type ReactNode,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from 'react';
-import type { Session, User } from '@supabase/supabase-js';
-import { isSupabaseConfigured, supabase, hasActiveSession } from '@/lib/supabase';
+import { hasActiveSession, isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
@@ -26,7 +26,9 @@ interface AuthContextValue {
   /** False when env keys are missing — UI degrades gracefully. */
   configured: boolean;
   signInWithPassword: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (input: SignUpInput) => Promise<{ error: string | null; needsEmailConfirmation: boolean }>;
+  signUp: (
+    input: SignUpInput
+  ) => Promise<{ error: string | null; needsEmailConfirmation: boolean }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: string | null }>;
 }
@@ -38,8 +40,10 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function friendlyAuthError(message: string | undefined, fallback: string): string {
   const m = (message ?? '').toLowerCase();
   if (m.includes('invalid login credentials')) return 'Incorrect email or password.';
-  if (m.includes('email not confirmed')) return 'Please confirm your email address first (check your inbox).';
-  if (m.includes('already registered') || m.includes('already exists')) return 'An account with this email already exists — sign in instead.';
+  if (m.includes('email not confirmed'))
+    return 'Please confirm your email address first (check your inbox).';
+  if (m.includes('already registered') || m.includes('already exists'))
+    return 'An account with this email already exists — sign in instead.';
   if (m.includes('rate limit')) return 'Too many attempts. Please wait a minute and try again.';
   return message ? fallback : fallback;
 }
@@ -96,7 +100,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!password) return { error: 'Enter your password.' };
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return { error: friendlyAuthError(error.message, 'Sign in failed. Please try again.') };
+    if (error)
+      return { error: friendlyAuthError(error.message, 'Sign in failed. Please try again.') };
     // Post-sign-in navigation is driven by the login page using this result;
     // don't rely on the async onAuthStateChange handler to flip `status`.
     return { error: hasActiveSession(data.session) ? null : 'Sign in failed. Please try again.' };
@@ -104,10 +109,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = useCallback(async ({ email, password, name }: SignUpInput) => {
     if (!isSupabaseConfigured) {
-      return { error: 'Authentication is not configured on this deployment.', needsEmailConfirmation: false };
+      return {
+        error: 'Authentication is not configured on this deployment.',
+        needsEmailConfirmation: false,
+      };
     }
-    if (!EMAIL_RE.test(email)) return { error: 'Enter a valid email address.', needsEmailConfirmation: false };
-    if (password.length < 8) return { error: 'Password must be at least 8 characters.', needsEmailConfirmation: false };
+    if (!EMAIL_RE.test(email))
+      return { error: 'Enter a valid email address.', needsEmailConfirmation: false };
+    if (password.length < 8)
+      return { error: 'Password must be at least 8 characters.', needsEmailConfirmation: false };
 
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -115,7 +125,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/signup` },
     });
     if (error) {
-      return { error: friendlyAuthError(error.message, 'Sign up failed. Please try again.'), needsEmailConfirmation: false };
+      return {
+        error: friendlyAuthError(error.message, 'Sign up failed. Please try again.'),
+        needsEmailConfirmation: false,
+      };
     }
     // Supabase returns a session only when email confirmation is disabled.
     const needsEmailConfirmation = !data.session;
@@ -139,7 +152,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const resetPassword = useCallback(async (email: string) => {
-    if (!isSupabaseConfigured) return { error: 'Authentication is not configured on this deployment.' };
+    if (!isSupabaseConfigured)
+      return { error: 'Authentication is not configured on this deployment.' };
     if (!EMAIL_RE.test(email)) return { error: 'Enter a valid email address.' };
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/reset-password`,

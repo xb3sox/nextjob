@@ -23,4 +23,3 @@ export function safeReturnPath(raw: unknown, fallback = '/dashboard'): string {
   }
   return isSafeInternalPath(raw) ? raw : fallback;
 }
-

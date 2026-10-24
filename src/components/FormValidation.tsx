@@ -1,5 +1,5 @@
+import { AlertCircle, CheckCircle } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { CheckCircle, AlertCircle } from 'lucide-react';
 
 // Pure validator: never call side-effectful code (custom validators) inside a
 // React state updater — updaters must be pure and may run twice in StrictMode.
@@ -53,15 +53,18 @@ export function useFormValidation<T extends Record<string, string>>(
   rules: Record<keyof T, ValidationRule>
 ) {
   const [fields, setFields] = useState<Record<keyof T, FieldValidation>>(
-    Object.keys(initialValues).reduce((acc, key) => {
-      acc[key as keyof T] = {
-        value: initialValues[key as keyof T],
-        error: null,
-        touched: false,
-        valid: false,
-      };
-      return acc;
-    }, {} as Record<keyof T, FieldValidation>)
+    Object.keys(initialValues).reduce(
+      (acc, key) => {
+        acc[key as keyof T] = {
+          value: initialValues[key as keyof T],
+          error: null,
+          touched: false,
+          valid: false,
+        };
+        return acc;
+      },
+      {} as Record<keyof T, FieldValidation>
+    )
   );
 
   const fieldsRef = useRef(fields);
@@ -126,15 +129,18 @@ export function useFormValidation<T extends Record<string, string>>(
 
   const reset = () => {
     commitFields(
-      Object.keys(initialValues).reduce((acc, key) => {
-        acc[key as keyof T] = {
-          value: initialValues[key as keyof T],
-          error: null,
-          touched: false,
-          valid: false,
-        };
-        return acc;
-      }, {} as Record<keyof T, FieldValidation>)
+      Object.keys(initialValues).reduce(
+        (acc, key) => {
+          acc[key as keyof T] = {
+            value: initialValues[key as keyof T],
+            error: null,
+            touched: false,
+            valid: false,
+          };
+          return acc;
+        },
+        {} as Record<keyof T, FieldValidation>
+      )
     );
   };
 
@@ -144,7 +150,7 @@ export function useFormValidation<T extends Record<string, string>>(
     handleBlur,
     validateAll,
     reset,
-    isValid: Object.values(fields).every(f => f.valid),
+    isValid: Object.values(fields).every((f) => f.valid),
   };
 }
 
@@ -195,8 +201,8 @@ export function FormField({
             hasError
               ? 'border-danger bg-danger/5 text-paper focus:border-danger focus:ring-danger/20'
               : isValid
-              ? 'border-moss-deep bg-moss/5 text-paper focus:border-moss-deep focus:ring-moss/20'
-              : 'border-white/15 bg-panel text-paper focus:border-moss-deep focus:ring-moss/20'
+                ? 'border-moss-deep bg-moss/5 text-paper focus:border-moss-deep focus:ring-moss/20'
+                : 'border-white/15 bg-panel text-paper focus:border-moss-deep focus:ring-moss/20'
           } focus:outline-none focus:ring-2`}
         />
         {isValid && (
@@ -217,7 +223,7 @@ export function FormField({
 
 export function FormSuccess({ message }: { message: string }) {
   return (
-    <div 
+    <div
       className="flex items-center gap-3 p-4 rounded-lg bg-moss/10 border border-moss/20"
       role="alert"
       aria-live="polite"
@@ -230,7 +236,7 @@ export function FormSuccess({ message }: { message: string }) {
 
 export function FormError({ message }: { message: string }) {
   return (
-    <div 
+    <div
       className="flex items-center gap-3 p-4 rounded-lg bg-danger/10 border border-danger/20"
       role="alert"
       aria-live="assertive"

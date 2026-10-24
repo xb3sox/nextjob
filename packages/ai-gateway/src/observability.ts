@@ -39,12 +39,9 @@ function getClient(): Langfuse {
 /**
  * Creates a trace for an AI request
  */
-export function createTrace(
-  request: AIRequest,
-  context?: RequestContext
-): string {
+export function createTrace(request: AIRequest, context?: RequestContext): string {
   const client = getClient();
-  
+
   const trace = client.trace({
     name: context?.operation || 'ai-generation',
     sessionId: context?.sessionId,
@@ -56,7 +53,7 @@ export function createTrace(
       ...context?.metadata,
     },
   });
-  
+
   return trace.id;
 }
 
@@ -74,11 +71,11 @@ export function recordGeneration(
   }
 ): void {
   const client = getClient();
-  
+
   const trace = client.trace({
     id: traceId,
   });
-  
+
   trace.generation({
     name: `${request.provider}/${request.model}`,
     model: request.model,
@@ -101,7 +98,7 @@ export function recordGeneration(
       ...options?.metadata,
     },
   });
-  
+
   // Flush to ensure data is sent
   client.flushAsync();
 }
@@ -116,11 +113,11 @@ export function recordError(
   context?: RequestContext
 ): void {
   const client = getClient();
-  
+
   const trace = client.trace({
     id: traceId,
   });
-  
+
   trace.span({
     name: 'error',
     startTime: new Date(),
@@ -135,7 +132,7 @@ export function recordError(
       ...context?.metadata,
     },
   });
-  
+
   client.flushAsync();
 }
 
@@ -149,11 +146,11 @@ export function recordValidation(
   errors?: any
 ): void {
   const client = getClient();
-  
+
   const trace = client.trace({
     id: traceId,
   });
-  
+
   trace.span({
     name: 'validation',
     startTime: new Date(),
@@ -165,7 +162,7 @@ export function recordValidation(
       errors,
     },
   });
-  
+
   client.flushAsync();
 }
 
@@ -176,47 +173,38 @@ export function recordValidation(
 /**
  * Records a score for a trace
  */
-export function recordScore(
-  traceId: string,
-  name: string,
-  value: number,
-  comment?: string
-): void {
+export function recordScore(traceId: string, name: string, value: number, comment?: string): void {
   const client = getClient();
-  
+
   const trace = client.trace({
     id: traceId,
   });
-  
+
   trace.score({
     name,
     value,
     comment,
   });
-  
+
   client.flushAsync();
 }
 
 /**
  * Records cost for a generation
  */
-export function recordCost(
-  traceId: string,
-  cost: number,
-  currency: string = 'USD'
-): void {
+export function recordCost(traceId: string, cost: number, currency: string = 'USD'): void {
   const client = getClient();
-  
+
   const trace = client.trace({
     id: traceId,
   });
-  
+
   trace.score({
     name: 'cost',
     value: cost,
     comment: `${currency}`,
   });
-  
+
   client.flushAsync();
 }
 

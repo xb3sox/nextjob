@@ -1,4 +1,4 @@
-import { ArrowLeft, Shield, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, CheckCircle, FileText, Shield } from 'lucide-react';
 
 export default function TermsOfService() {
   return (
@@ -7,7 +7,10 @@ export default function TermsOfService() {
       <header className="border-b border-white/5 bg-ink/95 backdrop-blur-xl sticky top-0 z-50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <a href="/" className="flex items-center gap-2 text-sm text-fog hover:text-white transition-colors">
+            <a
+              href="/"
+              className="flex items-center gap-2 text-sm text-fog hover:text-white transition-colors"
+            >
               <ArrowLeft size={16} />
               Back to Home
             </a>
@@ -36,8 +39,8 @@ export default function TermsOfService() {
             <div>
               <h2 className="text-2xl font-semibold mb-2">Welcome to NextJob</h2>
               <p className="text-fog">
-                These terms govern your use of NextJob's AI career agent platform. By using our service, 
-                you agree to these terms. Please read them carefully.
+                These terms govern your use of NextJob's AI career agent platform. By using our
+                service, you agree to these terms. Please read them carefully.
               </p>
             </div>
           </div>
@@ -47,9 +50,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">1. Service Description</h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-              <p className="text-fog mb-4">
-                NextJob is an AI-powered career agent that helps you:
-              </p>
+              <p className="text-fog mb-4">NextJob is an AI-powered career agent that helps you:</p>
               <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
                   <CheckCircle size={16} className="text-moss mt-1 shrink-0" />
@@ -157,7 +158,9 @@ export default function TermsOfService() {
               <ul className="space-y-2 text-fog mt-3">
                 <li className="flex items-start gap-2">
                   <span className="text-amber-400 mt-1">•</span>
-                  <span>You are responsible for reviewing all AI-generated content before submission</span>
+                  <span>
+                    You are responsible for reviewing all AI-generated content before submission
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-amber-400 mt-1">•</span>
@@ -213,8 +216,8 @@ export default function TermsOfService() {
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
               <h3 className="font-semibold mb-3">Your Content</h3>
               <p className="text-fog mb-4">
-                You retain all rights to your career data, CV, and personal information. 
-                By using NextJob, you grant us a limited license to:
+                You retain all rights to your career data, CV, and personal information. By using
+                NextJob, you grant us a limited license to:
               </p>
               <ul className="space-y-2 text-fog">
                 <li>Process your data to provide the service</li>
@@ -224,8 +227,9 @@ export default function TermsOfService() {
 
               <h3 className="font-semibold mb-3 mt-6">Our Content</h3>
               <p className="text-fog">
-                NextJob's platform, algorithms, designs, and documentation are protected by intellectual property laws. 
-                You may not copy, modify, or distribute our proprietary technology.
+                NextJob's platform, algorithms, designs, and documentation are protected by
+                intellectual property laws. You may not copy, modify, or distribute our proprietary
+                technology.
               </p>
             </div>
           </section>
@@ -233,9 +237,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">7. Limitation of Liability</h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-              <p className="text-fog mb-4">
-                To the maximum extent permitted by law:
-              </p>
+              <p className="text-fog mb-4">To the maximum extent permitted by law:</p>
               <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">•</span>
@@ -243,15 +245,21 @@ export default function TermsOfService() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">•</span>
-                  <span>We are not liable for any indirect, incidental, or consequential damages</span>
+                  <span>
+                    We are not liable for any indirect, incidental, or consequential damages
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">•</span>
-                  <span>Our total liability is limited to the amount you paid in the last 12 months</span>
+                  <span>
+                    Our total liability is limited to the amount you paid in the last 12 months
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">•</span>
-                  <span>We are not responsible for job offers, rejections, or employment outcomes</span>
+                  <span>
+                    We are not responsible for job offers, rejections, or employment outcomes
+                  </span>
                 </li>
               </ul>
             </div>
@@ -262,15 +270,15 @@ export default function TermsOfService() {
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
               <h3 className="font-semibold mb-3">You May Terminate</h3>
               <p className="text-fog mb-4">
-                You can delete your account at any time from your account settings. 
-                All your data will be permanently deleted within 30 days.
+                You can delete your account at any time from your account settings. All your data
+                will be permanently deleted within 30 days.
               </p>
 
               <h3 className="font-semibold mb-3">We May Terminate</h3>
               <p className="text-fog">
-                We may suspend or terminate your account if you violate these terms, 
-                engage in fraudulent activity, or fail to pay subscription fees. 
-                We'll provide notice when possible.
+                We may suspend or terminate your account if you violate these terms, engage in
+                fraudulent activity, or fail to pay subscription fees. We'll provide notice when
+                possible.
               </p>
             </div>
           </section>
@@ -279,7 +287,8 @@ export default function TermsOfService() {
             <h2 className="text-2xl font-semibold mb-4">9. Dispute Resolution</h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
               <p className="text-fog mb-4">
-                Any disputes arising from these terms or your use of NextJob will be resolved through:
+                Any disputes arising from these terms or your use of NextJob will be resolved
+                through:
               </p>
               <ol className="space-y-2 text-fog list-decimal list-inside">
                 <li>Good faith negotiation between you and NextJob</li>
@@ -287,7 +296,8 @@ export default function TermsOfService() {
                 <li>Binding arbitration in accordance with applicable laws</li>
               </ol>
               <p className="text-sm text-fog mt-4">
-                These terms are governed by the laws of the jurisdiction where NextJob is incorporated.
+                These terms are governed by the laws of the jurisdiction where NextJob is
+                incorporated.
               </p>
             </div>
           </section>
@@ -296,7 +306,8 @@ export default function TermsOfService() {
             <h2 className="text-2xl font-semibold mb-4">10. Changes to Terms</h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
               <p className="text-fog">
-                We may update these terms from time to time. We'll notify you of material changes via:
+                We may update these terms from time to time. We'll notify you of material changes
+                via:
               </p>
               <ul className="space-y-2 text-fog mt-3">
                 <li className="flex items-start gap-2">
@@ -323,13 +334,19 @@ export default function TermsOfService() {
               <div className="space-y-2">
                 <p className="text-fog">
                   <strong>Email:</strong>{' '}
-                  <a href="mailto:legal@nextjob.ai" className="text-moss hover:text-paper transition-colors">
+                  <a
+                    href="mailto:legal@nextjob.ai"
+                    className="text-moss hover:text-paper transition-colors"
+                  >
                     legal@nextjob.ai
                   </a>
                 </p>
                 <p className="text-fog">
                   <strong>Privacy inquiries:</strong>{' '}
-                  <a href="mailto:privacy@nextjob.ai" className="text-moss hover:text-paper transition-colors">
+                  <a
+                    href="mailto:privacy@nextjob.ai"
+                    className="text-moss hover:text-paper transition-colors"
+                  >
                     privacy@nextjob.ai
                   </a>
                 </p>
@@ -340,7 +357,7 @@ export default function TermsOfService() {
 
         <div className="mt-12 pt-8 border-t border-white/5 text-center">
           <p className="text-sm text-fog">
-            © 2026 NextJob. All rights reserved. | 
+            © 2026 NextJob. All rights reserved. |
             <a href="/privacy" className="text-moss hover:text-paper ml-2 transition-colors">
               Privacy Policy
             </a>

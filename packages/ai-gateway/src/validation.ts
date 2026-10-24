@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ValidationError, type ValidationResult } from './types.js';
+
 export { ValidationError };
 
 // ============================================================================
@@ -9,13 +10,10 @@ export { ValidationError };
 /**
  * Validates data against a Zod schema
  */
-export function validateSchema<T>(
-  data: unknown,
-  schema: z.ZodSchema<T>
-): ValidationResult<T> {
+export function validateSchema<T>(data: unknown, schema: z.ZodSchema<T>): ValidationResult<T> {
   try {
     const result = schema.safeParse(data);
-    
+
     if (result.success) {
       return {
         success: true,
@@ -30,9 +28,10 @@ export function validateSchema<T>(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof z.ZodError 
-        ? error 
-        : new z.ZodError([{ code: 'custom', path: [], message: 'Unknown validation error' }]),
+      error:
+        error instanceof z.ZodError
+          ? error
+          : new z.ZodError([{ code: 'custom', path: [], message: 'Unknown validation error' }]),
     };
   }
 }
@@ -46,14 +45,14 @@ export function validateSchemaOrThrow<T>(
   context?: string
 ): T {
   const result = validateSchema(data, schema);
-  
+
   if (!result.success) {
-    const message = context 
+    const message = context
       ? `Validation failed for ${context}: ${result.error.message}`
       : `Validation failed: ${result.error.message}`;
     throw new ValidationError(message, result.error);
   }
-  
+
   return result.data!;
 }
 
@@ -66,11 +65,11 @@ export function createStructuredSchema<T extends z.ZodRawShape>(
   shape: T
 ): z.ZodObject<T> {
   const schema = z.object(shape);
-  
+
   // Attach metadata for documentation
   (schema as any)._def.name = name;
   (schema as any)._def.description = description;
-  
+
   return schema;
 }
 
@@ -126,18 +125,24 @@ export type JobMatch = z.infer<typeof JobMatchSchema>;
  */
 export const TailoredResumeSchema = z.object({
   summary: z.string(),
-  experience: z.array(z.object({
-    title: z.string(),
-    company: z.string(),
-    description: z.string(),
-    achievements: z.array(z.string()),
-  })),
+  experience: z.array(
+    z.object({
+      title: z.string(),
+      company: z.string(),
+      description: z.string(),
+      achievements: z.array(z.string()),
+    })
+  ),
   skills: z.array(z.string()),
-  education: z.array(z.object({
-    degree: z.string(),
-    institution: z.string(),
-    year: z.string().optional(),
-  })).optional(),
+  education: z
+    .array(
+      z.object({
+        degree: z.string(),
+        institution: z.string(),
+        year: z.string().optional(),
+      })
+    )
+    .optional(),
   certifications: z.array(z.string()).optional(),
 });
 
@@ -172,12 +177,14 @@ export type ApplicationAnswer = z.infer<typeof ApplicationAnswerSchema>;
  * Schema for interview preparation
  */
 export const InterviewPrepSchema = z.object({
-  likelyQuestions: z.array(z.object({
-    question: z.string(),
-    category: z.enum(['behavioral', 'technical', 'situational', 'general']),
-    difficulty: z.enum(['easy', 'medium', 'hard']),
-    suggestedAnswer: z.string().optional(),
-  })),
+  likelyQuestions: z.array(
+    z.object({
+      question: z.string(),
+      category: z.enum(['behavioral', 'technical', 'situational', 'general']),
+      difficulty: z.enum(['easy', 'medium', 'hard']),
+      suggestedAnswer: z.string().optional(),
+    })
+  ),
   keyPoints: z.array(z.string()),
   questionsToAsk: z.array(z.string()),
 });

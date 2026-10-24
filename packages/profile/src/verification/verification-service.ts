@@ -1,13 +1,12 @@
-import { v4 as uuidv4 } from 'uuid';
 import { claimsService } from '../claims/claims-service.js';
 import {
-  VerificationRequest,
-  VerificationResult,
-  BulkVerificationRequest,
-  BulkVerificationResult,
+  type BulkVerificationRequest,
+  type BulkVerificationResult,
   ClaimAlreadyVerifiedError,
-  InvalidVerificationActionError,
   ClaimNotFoundError,
+  InvalidVerificationActionError,
+  type VerificationRequest,
+  type VerificationResult,
 } from './types.js';
 
 // ============================================================================
@@ -123,16 +122,14 @@ export class VerificationService {
 
     const stats = {
       total: allClaims.length,
-      verified: allClaims.filter(c => c.verificationStatus === 'verified').length,
-      unverified: allClaims.filter(c => c.verificationStatus === 'unverified').length,
-      rejected: allClaims.filter(c => c.verificationStatus === 'rejected').length,
-      pendingReview: allClaims.filter(c => c.verificationStatus === 'pending_review').length,
+      verified: allClaims.filter((c) => c.verificationStatus === 'verified').length,
+      unverified: allClaims.filter((c) => c.verificationStatus === 'unverified').length,
+      rejected: allClaims.filter((c) => c.verificationStatus === 'rejected').length,
+      pendingReview: allClaims.filter((c) => c.verificationStatus === 'pending_review').length,
       verificationRate: 0,
     };
 
-    stats.verificationRate = stats.total > 0 
-      ? (stats.verified / stats.total) * 100 
-      : 0;
+    stats.verificationRate = stats.total > 0 ? (stats.verified / stats.total) * 100 : 0;
 
     return stats;
   }

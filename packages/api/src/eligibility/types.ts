@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 export type EligibilityStatus = 'eligible' | 'ineligible' | 'unknown';
 
-export type EligibilityCheckType = 
+export type EligibilityCheckType =
   | 'location'
   | 'work_authorization'
   | 'sponsorship'
@@ -33,7 +33,7 @@ export interface EligibilityCheck {
 export const EligibilityRuleSchema = z.object({
   id: z.string().min(1),
   tenantId: z.string().min(1),
-  
+
   // Rule metadata
   name: z.string().min(1),
   description: z.string().optional(),
@@ -49,21 +49,21 @@ export const EligibilityRuleSchema = z.object({
     'language',
     'clearance',
   ]),
-  
+
   // Rule configuration
   required: z.boolean().default(true),
   condition: z.record(z.any()), // Rule-specific condition
-  
+
   // Priority and ordering
   priority: z.number().int().default(0), // Higher = checked first
-  
+
   // Metadata
   version: z.number().int().positive().default(1),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   createdBy: z.string().min(1),
   updatedBy: z.string().min(1),
-  
+
   // Soft delete
   deleted: z.boolean().default(false),
   deletedAt: z.string().datetime().optional(),
@@ -80,30 +80,32 @@ export const EligibilityAssessmentSchema = z.object({
   userId: z.string().min(1),
   tenantId: z.string().min(1),
   jobId: z.string().min(1),
-  
+
   // Overall status
   status: z.enum(['eligible', 'ineligible', 'unknown']),
   confidence: z.number().min(0).max(1),
-  
+
   // Detailed checks
-  checks: z.array(z.object({
-    type: z.string(),
-    status: z.enum(['eligible', 'ineligible', 'unknown']),
-    required: z.boolean(),
-    reason: z.string().optional(),
-    details: z.any().optional(),
-  })),
-  
+  checks: z.array(
+    z.object({
+      type: z.string(),
+      status: z.enum(['eligible', 'ineligible', 'unknown']),
+      required: z.boolean(),
+      reason: z.string().optional(),
+      details: z.any().optional(),
+    })
+  ),
+
   // Missing requirements
   missingRequirements: z.array(z.string()).optional(),
-  
+
   // Warnings
   warnings: z.array(z.string()).optional(),
-  
+
   // Metadata
   assessedAt: z.string().datetime(),
   ruleVersion: z.number().int(),
-  
+
   // Soft delete
   deleted: z.boolean().default(false),
   deletedAt: z.string().datetime().optional(),
@@ -200,12 +202,7 @@ export class AssessmentNotFoundError extends EligibilityError {
 
 export class InvalidRuleError extends EligibilityError {
   constructor(validationErrors: any) {
-    super(
-      'Invalid eligibility rule',
-      'INVALID_RULE',
-      400,
-      { validationErrors }
-    );
+    super('Invalid eligibility rule', 'INVALID_RULE', 400, { validationErrors });
     this.name = 'InvalidRuleError';
   }
 }

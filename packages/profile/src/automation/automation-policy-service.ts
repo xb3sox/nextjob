@@ -1,15 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
-  AutomationPolicy,
-  AutomationPolicySchema,
-  CreateAutomationPolicyRequest,
-  UpdateAutomationPolicyRequest,
-  AutomationPolicyResponse,
+  type AutomationMode,
+  type AutomationPolicy,
   AutomationPolicyNotFoundError,
+  type AutomationPolicyResponse,
+  AutomationPolicySchema,
+  type CreateAutomationPolicyRequest,
+  type FieldOverride,
   InvalidAutomationPolicyError,
+  type UpdateAutomationPolicyRequest,
   VersionConflictError,
-  AutomationMode,
-  FieldOverride,
 } from './types.js';
 
 // ============================================================================
@@ -45,8 +45,10 @@ export class AutomationPolicyService {
       },
       safetySettings: {
         alwaysAskForSensitiveFields: request.safetySettings?.alwaysAskForSensitiveFields ?? true,
-        blockAutoApplyWithoutVerification: request.safetySettings?.blockAutoApplyWithoutVerification ?? true,
-        requireExplicitApprovalForHighRisk: request.safetySettings?.requireExplicitApprovalForHighRisk ?? true,
+        blockAutoApplyWithoutVerification:
+          request.safetySettings?.blockAutoApplyWithoutVerification ?? true,
+        requireExplicitApprovalForHighRisk:
+          request.safetySettings?.requireExplicitApprovalForHighRisk ?? true,
         maxRetries: request.safetySettings?.maxRetries ?? 3,
       },
       notifications: {
@@ -190,7 +192,7 @@ export class AutomationPolicyService {
     while (current.previousVersionId) {
       const previous = this.policiesStore.get(current.previousVersionId);
       if (!previous) break;
-      
+
       history.unshift(previous);
       current = previous;
     }
@@ -310,10 +312,7 @@ export class AutomationPolicyService {
   /**
    * Remove a field override
    */
-  async removeFieldOverride(
-    userId: string,
-    fieldName: string
-  ): Promise<AutomationPolicyResponse> {
+  async removeFieldOverride(userId: string, fieldName: string): Promise<AutomationPolicyResponse> {
     const policyResponse = await this.getPolicy(userId);
     const policy = policyResponse.policy;
 

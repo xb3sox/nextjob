@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import resumeTailoringData from './datasets/resume_tailoring.json';
-import coverLetterData from './datasets/cover_letter.json';
+import { describe, expect, it } from 'vitest';
 import applicationAnswersData from './datasets/application_answers.json';
+import coverLetterData from './datasets/cover_letter.json';
 import professionalSummaryData from './datasets/professional_summary.json';
+import resumeTailoringData from './datasets/resume_tailoring.json';
 import skillsSectionData from './datasets/skills_section.json';
-import evidenceCompleteData from './scenarios/evidence_complete.json';
-import evidencePartialData from './scenarios/evidence_partial.json';
-import evidenceConstraintsData from './scenarios/evidence_constraints.json';
 import expectedOutcomes from './expected_outcomes.json';
+import evidenceCompleteData from './scenarios/evidence_complete.json';
+import evidenceConstraintsData from './scenarios/evidence_constraints.json';
+import evidencePartialData from './scenarios/evidence_partial.json';
 
 // Mock tailoring engine for testing
 // In production, this would import the actual tailoring engine
@@ -54,8 +54,18 @@ class MockTailoringEngine {
         sections: expected.sections || [],
         unsupportedClaims: expected.unsupportedClaims || [],
         evidenceCoverage: expected.evidenceCoverage ?? 0,
-        answer: expected.answer !== undefined ? expected.answer : (expected.sections?.length ? 'answer' : null),
-        summary: expected.summary !== undefined ? expected.summary : (expected.sections?.length ? 'summary' : null),
+        answer:
+          expected.answer !== undefined
+            ? expected.answer
+            : expected.sections?.length
+              ? 'answer'
+              : null,
+        summary:
+          expected.summary !== undefined
+            ? expected.summary
+            : expected.sections?.length
+              ? 'summary'
+              : null,
         skills: expected.skills || [],
       };
     }
@@ -100,7 +110,10 @@ class MockTailoringEngine {
       }
     }
 
-    let evidenceCoverage = careerGraph.claims.length > 0 ? (careerGraph.claims.length - unsupportedClaims.length) / careerGraph.claims.length : 0;
+    let evidenceCoverage =
+      careerGraph.claims.length > 0
+        ? (careerGraph.claims.length - unsupportedClaims.length) / careerGraph.claims.length
+        : 0;
     if (requirements) {
       if (requirements.requiredSkills && requirements.requiredSkills.length > 0) {
         const hasSkill = verifiedClaims.some((c: any) => c.type === 'skill');
@@ -115,7 +128,11 @@ class MockTailoringEngine {
         }
       }
     }
-    if (verifiedClaims.some((c: any) => c.type === 'experience' && (!c.content.startDate || !c.content.endDate))) {
+    if (
+      verifiedClaims.some(
+        (c: any) => c.type === 'experience' && (!c.content.startDate || !c.content.endDate)
+      )
+    ) {
       evidenceCoverage = Math.min(evidenceCoverage, 0.8);
     }
 
@@ -124,12 +141,15 @@ class MockTailoringEngine {
       unsupportedClaims,
       evidenceCoverage,
       summary: sections.length > 0 ? this.generateSummary(sections) : null,
-      answer: type === 'application_answer' ? this.generateAnswer(sections, requirements?.question) : null,
+      answer:
+        type === 'application_answer'
+          ? this.generateAnswer(sections, requirements?.question)
+          : null,
       skills: type === 'skills_section' ? this.generateSkills(sections, requirements) : [],
     };
   }
 
-  private generateContent(claim: any, type: string): string {
+  private generateContent(claim: any, _type: string): string {
     if (claim.type === 'experience') {
       return `${claim.title} at ${claim.content.company}`;
     }
@@ -155,7 +175,7 @@ class MockTailoringEngine {
     return sections.map((s: any) => s.content).join(', ');
   }
 
-  private generateAnswer(sections: any[], question?: string): string | null {
+  private generateAnswer(sections: any[], _question?: string): string | null {
     if (sections.length === 0) return null;
     return `Based on my ${sections.map((s: any) => s.content).join(' and ')}`;
   }
@@ -164,7 +184,9 @@ class MockTailoringEngine {
     let skillSections = sections.filter((s: any) => s.type === 'skill');
     if (requirements?.requiredSkills?.length > 0) {
       const reqLower = requirements.requiredSkills.map((r: string) => r.toLowerCase());
-      const filtered = skillSections.filter((s: any) => reqLower.includes(s.content.split(' ')[0].toLowerCase()));
+      const filtered = skillSections.filter((s: any) =>
+        reqLower.includes(s.content.split(' ')[0].toLowerCase())
+      );
       if (filtered.length > 0) {
         skillSections = filtered;
       }
@@ -196,7 +218,7 @@ describe('Tailoring Evaluation Dataset', () => {
 
         // Verify each section has evidence
         result.sections.forEach((section: any, index: number) => {
-          const expectedSection = testCase.expectedOutput.sections[index];
+          const _expectedSection = testCase.expectedOutput.sections[index];
           expect(section.evidenceClaimId || section.evidenceClaimIds).toBeDefined();
         });
       });
@@ -206,7 +228,10 @@ describe('Tailoring Evaluation Dataset', () => {
   describe('Cover Letter Dataset', () => {
     coverLetterData.testCases.forEach((testCase) => {
       it(`should pass ${testCase.id}: ${testCase.description}`, async () => {
-        const result = await engine.tailorCoverLetter(testCase.careerGraph, testCase.jobRequirements);
+        const result = await engine.tailorCoverLetter(
+          testCase.careerGraph,
+          testCase.jobRequirements
+        );
 
         expect(result.unsupportedClaims).toEqual(testCase.expectedOutput.unsupportedClaims);
         expect(result.evidenceCoverage).toBeCloseTo(testCase.expectedOutput.evidenceCoverage, 2);
@@ -273,7 +298,7 @@ describe('Tailoring Evaluation Dataset', () => {
   describe('Evidence Complete Scenarios', () => {
     evidenceCompleteData.testCases.forEach((testCase) => {
       it(`should pass ${testCase.id}: ${testCase.description}`, async () => {
-        let result;
+        let result: Awaited<ReturnType<MockTailoringEngine['tailorResume']>>;
         if (testCase.tailoringType === 'resume') {
           result = await engine.tailorResume(testCase.careerGraph, testCase.jobRequirements);
         } else if (testCase.tailoringType === 'cover_letter') {
@@ -281,7 +306,10 @@ describe('Tailoring Evaluation Dataset', () => {
         } else if (testCase.tailoringType === 'application_answer') {
           result = await engine.tailorApplicationAnswer(testCase.careerGraph, testCase.question);
         } else if (testCase.tailoringType === 'professional_summary') {
-          result = await engine.tailorProfessionalSummary(testCase.careerGraph, testCase.jobRequirements);
+          result = await engine.tailorProfessionalSummary(
+            testCase.careerGraph,
+            testCase.jobRequirements
+          );
         } else if (testCase.tailoringType === 'skills_section') {
           result = await engine.tailorSkillsSection(testCase.careerGraph, testCase.jobRequirements);
         }
@@ -295,13 +323,16 @@ describe('Tailoring Evaluation Dataset', () => {
   describe('Evidence Partial Scenarios', () => {
     evidencePartialData.testCases.forEach((testCase) => {
       it(`should pass ${testCase.id}: ${testCase.description}`, async () => {
-        let result;
+        let result: Awaited<ReturnType<MockTailoringEngine['tailorResume']>>;
         if (testCase.tailoringType === 'resume') {
           result = await engine.tailorResume(testCase.careerGraph, testCase.jobRequirements);
         } else if (testCase.tailoringType === 'cover_letter') {
           result = await engine.tailorCoverLetter(testCase.careerGraph, testCase.jobRequirements);
         } else if (testCase.tailoringType === 'professional_summary') {
-          result = await engine.tailorProfessionalSummary(testCase.careerGraph, testCase.jobRequirements);
+          result = await engine.tailorProfessionalSummary(
+            testCase.careerGraph,
+            testCase.jobRequirements
+          );
         }
 
         expect(result.unsupportedClaims).toEqual(testCase.expectedOutput.unsupportedClaims);
@@ -321,9 +352,15 @@ describe('Tailoring Evaluation Dataset', () => {
         } else if (testCase.tailoringType === 'skills_section') {
           result = await engine.tailorSkillsSection(testCase.careerGraph, testCase.jobRequirements);
         } else if (testCase.tailoringType === 'professional_summary') {
-          result = await engine.tailorProfessionalSummary(testCase.careerGraph, testCase.jobRequirements);
+          result = await engine.tailorProfessionalSummary(
+            testCase.careerGraph,
+            testCase.jobRequirements
+          );
         } else if (testCase.tailoringType === 'application_answer') {
-          result = await engine.tailorApplicationAnswer(testCase.careerGraph, (testCase as any).question);
+          result = await engine.tailorApplicationAnswer(
+            testCase.careerGraph,
+            (testCase as any).question
+          );
         }
 
         expect(result.unsupportedClaims).toEqual(testCase.expectedOutput.unsupportedClaims);
@@ -342,11 +379,11 @@ describe('Tailoring Evaluation Dataset', () => {
         ...skillsSectionData.testCases,
         ...evidenceCompleteData.testCases,
         ...evidencePartialData.testCases,
-        ...evidenceConstraintsData.testCases
+        ...evidenceConstraintsData.testCases,
       ];
 
       for (const testCase of allTestCases) {
-        let result;
+        let result: Awaited<ReturnType<MockTailoringEngine['tailorResume']>>;
         if (testCase.tailoringType === 'resume') {
           result = await engine.tailorResume(testCase.careerGraph, testCase.jobRequirements);
         } else if (testCase.tailoringType === 'cover_letter') {
@@ -354,7 +391,10 @@ describe('Tailoring Evaluation Dataset', () => {
         } else if (testCase.tailoringType === 'application_answer') {
           result = await engine.tailorApplicationAnswer(testCase.careerGraph, testCase.question);
         } else if (testCase.tailoringType === 'professional_summary') {
-          result = await engine.tailorProfessionalSummary(testCase.careerGraph, testCase.jobRequirements);
+          result = await engine.tailorProfessionalSummary(
+            testCase.careerGraph,
+            testCase.jobRequirements
+          );
         } else if (testCase.tailoringType === 'skills_section') {
           result = await engine.tailorSkillsSection(testCase.careerGraph, testCase.jobRequirements);
         }
@@ -366,7 +406,7 @@ describe('Tailoring Evaluation Dataset', () => {
 
     it('should maintain 100% evidence coverage for complete evidence scenarios', async () => {
       for (const testCase of evidenceCompleteData.testCases) {
-        let result;
+        let result: Awaited<ReturnType<MockTailoringEngine['tailorResume']>>;
         if (testCase.tailoringType === 'resume') {
           result = await engine.tailorResume(testCase.careerGraph, testCase.jobRequirements);
         } else if (testCase.tailoringType === 'cover_letter') {
@@ -374,7 +414,10 @@ describe('Tailoring Evaluation Dataset', () => {
         } else if (testCase.tailoringType === 'application_answer') {
           result = await engine.tailorApplicationAnswer(testCase.careerGraph, testCase.question);
         } else if (testCase.tailoringType === 'professional_summary') {
-          result = await engine.tailorProfessionalSummary(testCase.careerGraph, testCase.jobRequirements);
+          result = await engine.tailorProfessionalSummary(
+            testCase.careerGraph,
+            testCase.jobRequirements
+          );
         } else if (testCase.tailoringType === 'skills_section') {
           result = await engine.tailorSkillsSection(testCase.careerGraph, testCase.jobRequirements);
         }
@@ -401,14 +444,14 @@ describe('Tailoring Evaluation Dataset', () => {
 
     it('should cover all tailoring types', () => {
       const tailoringTypes = new Set([
-        ...resumeTailoringData.testCases.map(tc => tc.tailoringType),
-        ...coverLetterData.testCases.map(tc => tc.tailoringType),
-        ...applicationAnswersData.testCases.map(tc => tc.tailoringType),
-        ...professionalSummaryData.testCases.map(tc => tc.tailoringType),
-        ...skillsSectionData.testCases.map(tc => tc.tailoringType),
-        ...evidenceCompleteData.testCases.map(tc => tc.tailoringType),
-        ...evidencePartialData.testCases.map(tc => tc.tailoringType),
-        ...evidenceConstraintsData.testCases.map(tc => tc.tailoringType)
+        ...resumeTailoringData.testCases.map((tc) => tc.tailoringType),
+        ...coverLetterData.testCases.map((tc) => tc.tailoringType),
+        ...applicationAnswersData.testCases.map((tc) => tc.tailoringType),
+        ...professionalSummaryData.testCases.map((tc) => tc.tailoringType),
+        ...skillsSectionData.testCases.map((tc) => tc.tailoringType),
+        ...evidenceCompleteData.testCases.map((tc) => tc.tailoringType),
+        ...evidencePartialData.testCases.map((tc) => tc.tailoringType),
+        ...evidenceConstraintsData.testCases.map((tc) => tc.tailoringType),
       ]);
 
       expect(tailoringTypes.has('resume')).toBe(true);

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { ClaimsService } from './claims-service.js';
 import { ClaimNotFoundError, InvalidClaimContentError } from './types.js';
 

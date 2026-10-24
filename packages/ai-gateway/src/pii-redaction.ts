@@ -8,31 +8,32 @@
 const PII_PATTERNS = {
   // Email addresses
   email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
-  
+
   // Phone numbers (various formats)
   phone: /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g,
-  
+
   // Credit card numbers (basic pattern)
   creditCard: /\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g,
-  
+
   // Social Security Numbers (US format)
   ssn: /\b\d{3}-\d{2}-\d{4}\b/g,
-  
+
   // IP addresses
   ipAddress: /\b(?:\d{1,3}\.){3}\d{1,3}\b/g,
-  
+
   // Dates of birth (various formats)
   dob: /\b(?:0[1-9]|1[0-2])\/(?:0[1-9]|[12]\d|3[01])\/(?:19|20)\d{2}\b/g,
-  
+
   // Passport numbers (generic pattern)
   passport: /\b[A-Z]{1,2}\d{6,9}\b/g,
-  
+
   // Bank account numbers (generic pattern)
   bankAccount: /\b\d{8,17}\b/g,
-  
+
   // Addresses (street patterns)
-  streetAddress: /\b\d+\s+[A-Za-z]+\s+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Place|Pl)\b/gi,
-  
+  streetAddress:
+    /\b\d+\s+[A-Za-z]+\s+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Court|Ct|Place|Pl)\b/gi,
+
   // ZIP codes (US format)
   zipCode: /\b\d{5}(?:-\d{4})?\b/g,
 };
@@ -51,37 +52,40 @@ const REDACTION_PLACEHOLDER = '[REDACTED]';
  */
 export function detectPII(text: string): Record<string, string[]> {
   const found: Record<string, string[]> = {};
-  
+
   for (const [type, pattern] of Object.entries(PII_PATTERNS)) {
     const matches = text.match(pattern);
     if (matches && matches.length > 0) {
       found[type] = [...new Set(matches)]; // Remove duplicates
     }
   }
-  
+
   return found;
 }
 
 /**
  * Redacts PII from text
  */
-export function redactPII(text: string, options?: {
-  preserveEmail?: boolean;
-  preservePhone?: boolean;
-  customPatterns?: Array<{ name: string; pattern: RegExp }>;
-}): string {
+export function redactPII(
+  text: string,
+  options?: {
+    preserveEmail?: boolean;
+    preservePhone?: boolean;
+    customPatterns?: Array<{ name: string; pattern: RegExp }>;
+  }
+): string {
   let redacted = text;
-  
+
   // Redact emails
   if (!options?.preserveEmail) {
     redacted = redacted.replace(PII_PATTERNS.email, REDACTION_PLACEHOLDER);
   }
-  
+
   // Redact phone numbers
   if (!options?.preservePhone) {
     redacted = redacted.replace(PII_PATTERNS.phone, REDACTION_PLACEHOLDER);
   }
-  
+
   // Always redact sensitive data
   redacted = redacted.replace(PII_PATTERNS.creditCard, REDACTION_PLACEHOLDER);
   redacted = redacted.replace(PII_PATTERNS.ssn, REDACTION_PLACEHOLDER);
@@ -91,14 +95,14 @@ export function redactPII(text: string, options?: {
   redacted = redacted.replace(PII_PATTERNS.bankAccount, REDACTION_PLACEHOLDER);
   redacted = redacted.replace(PII_PATTERNS.streetAddress, REDACTION_PLACEHOLDER);
   redacted = redacted.replace(PII_PATTERNS.zipCode, REDACTION_PLACEHOLDER);
-  
+
   // Apply custom patterns
   if (options?.customPatterns) {
     for (const { pattern } of options.customPatterns) {
       redacted = redacted.replace(pattern, REDACTION_PLACEHOLDER);
     }
   }
-  
+
   return redacted;
 }
 
@@ -109,7 +113,7 @@ export function redactMessages(
   messages: Array<{ role: string; content: string }>,
   options?: Parameters<typeof redactPII>[1]
 ): Array<{ role: string; content: string }> {
-  return messages.map(msg => ({
+  return messages.map((msg) => ({
     role: msg.role,
     content: redactPII(msg.content, options),
   }));
@@ -118,18 +122,15 @@ export function redactMessages(
 /**
  * Redacts PII from an object (recursively)
  */
-export function redactObject<T>(
-  obj: T,
-  options?: Parameters<typeof redactPII>[1]
-): T {
+export function redactObject<T>(obj: T, options?: Parameters<typeof redactPII>[1]): T {
   if (typeof obj === 'string') {
     return redactPII(obj, options) as T;
   }
-  
+
   if (Array.isArray(obj)) {
-    return obj.map(item => redactObject(item, options)) as T;
+    return obj.map((item) => redactObject(item, options)) as T;
   }
-  
+
   if (obj !== null && typeof obj === 'object') {
     const redacted: any = {};
     for (const [key, value] of Object.entries(obj)) {
@@ -137,7 +138,7 @@ export function redactObject<T>(
     }
     return redacted;
   }
-  
+
   return obj;
 }
 
@@ -160,21 +161,21 @@ export function redactWithContext(
         preserveEmail: true,
         preservePhone: true,
       });
-    
+
     case 'application':
       // For applications, redact most PII
       return redactPII(text, {
         preserveEmail: false,
         preservePhone: false,
       });
-    
+
     case 'interview':
       // For interviews, preserve minimal PII
       return redactPII(text, {
         preserveEmail: false,
         preservePhone: false,
       });
-    
+
     case 'general':
     default:
       // For general text, redact all PII
@@ -195,7 +196,7 @@ export function validateNoPII(text: string): {
 } {
   const detected = detectPII(text);
   const hasPII = Object.keys(detected).length > 0;
-  
+
   return {
     valid: !hasPII,
     detected,
@@ -207,7 +208,7 @@ export function validateNoPII(text: string): {
  */
 export function assertNoPII(text: string, context?: string): void {
   const { valid, detected } = validateNoPII(text);
-  
+
   if (!valid) {
     const piiTypes = Object.keys(detected).join(', ');
     const message = context

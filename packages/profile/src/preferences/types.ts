@@ -15,69 +15,81 @@ export const PreferencesSchema = z.object({
   id: z.string().min(1).optional(),
   userId: z.string().min(1),
   tenantId: z.string().min(1),
-  
+
   // Target roles
   targetRoles: z.array(z.string().min(1)).min(1, 'At least one target role required'),
   targetRoleFamilies: z.array(z.string()).optional(),
-  
+
   // Seniority
   seniorityLevels: z.array(z.enum(['entry', 'mid', 'senior', 'lead', 'executive'])).optional(),
   yearsOfExperience: z.number().min(0).optional(),
-  
+
   // Industries
   targetIndustries: z.array(z.string()).optional(),
   excludedIndustries: z.array(z.string()).optional(),
-  
+
   // Locations
-  targetLocations: z.array(z.object({
-    city: z.string().optional(),
-    state: z.string().optional(),
-    country: z.string().min(1),
-    remote: z.boolean().optional(),
-  })).optional(),
-  
+  targetLocations: z
+    .array(
+      z.object({
+        city: z.string().optional(),
+        state: z.string().optional(),
+        country: z.string().min(1),
+        remote: z.boolean().optional(),
+      })
+    )
+    .optional(),
+
   // Work mode
   workMode: z.enum(['remote', 'hybrid', 'on-site', 'any']).default('any'),
   workModePreference: z.string().optional(), // e.g., "3 days in office"
-  
+
   // Salary expectations
-  salaryExpectations: z.object({
-    min: z.number().positive().optional(),
-    max: z.number().positive().optional(),
-    currency: z.string().default('USD'),
-    period: z.enum(['hourly', 'daily', 'monthly', 'yearly']).default('yearly'),
-    flexible: z.boolean().default(false),
-  }).optional(),
-  
+  salaryExpectations: z
+    .object({
+      min: z.number().positive().optional(),
+      max: z.number().positive().optional(),
+      currency: z.string().default('USD'),
+      period: z.enum(['hourly', 'daily', 'monthly', 'yearly']).default('yearly'),
+      flexible: z.boolean().default(false),
+    })
+    .optional(),
+
   // Company preferences
-  preferredCompanySizes: z.array(z.enum(['startup', 'small', 'medium', 'large', 'enterprise'])).optional(),
-  preferredCompanyStages: z.array(z.enum(['pre-seed', 'seed', 'series-a', 'series-b', 'series-c', 'public'])).optional(),
+  preferredCompanySizes: z
+    .array(z.enum(['startup', 'small', 'medium', 'large', 'enterprise']))
+    .optional(),
+  preferredCompanyStages: z
+    .array(z.enum(['pre-seed', 'seed', 'series-a', 'series-b', 'series-c', 'public']))
+    .optional(),
   targetCompanies: z.array(z.string()).optional(),
   excludedCompanies: z.array(z.string()).optional(),
-  
+
   // Relocation
   willingToRelocate: z.boolean().default(false),
   relocationLocations: z.array(z.string()).optional(),
   relocationAssistance: z.boolean().optional(),
-  
+
   // Notice period
-  noticePeriod: z.object({
-    weeks: z.number().min(0).optional(),
-    months: z.number().min(0).optional(),
-    immediate: z.boolean().default(false),
-    negotiable: z.boolean().default(false),
-  }).optional(),
-  
+  noticePeriod: z
+    .object({
+      weeks: z.number().min(0).optional(),
+      months: z.number().min(0).optional(),
+      immediate: z.boolean().default(false),
+      negotiable: z.boolean().default(false),
+    })
+    .optional(),
+
   // Job search preferences
   jobSearchIntensity: z.enum(['casual', 'active', 'urgent']).default('active'),
   applicationFrequency: z.number().min(0).optional(), // applications per week
-  
+
   // Additional preferences
   keywords: z.array(z.string()).optional(),
   excludedKeywords: z.array(z.string()).optional(),
   mustHaveSkills: z.array(z.string()).optional(),
   niceToHaveSkills: z.array(z.string()).optional(),
-  
+
   // Metadata
   version: z.number().int().positive().default(1),
   previousVersionId: z.string().min(1).optional(),
@@ -85,7 +97,7 @@ export const PreferencesSchema = z.object({
   updatedAt: z.string().datetime(),
   createdBy: z.string().min(1),
   updatedBy: z.string().min(1),
-  
+
   // Soft delete
   deleted: z.boolean().default(false),
   deletedAt: z.string().datetime().optional(),
@@ -122,7 +134,9 @@ export interface CreatePreferencesRequest {
     flexible?: boolean;
   };
   preferredCompanySizes?: Array<'startup' | 'small' | 'medium' | 'large' | 'enterprise'>;
-  preferredCompanyStages?: Array<'pre-seed' | 'seed' | 'series-a' | 'series-b' | 'series-c' | 'public'>;
+  preferredCompanyStages?: Array<
+    'pre-seed' | 'seed' | 'series-a' | 'series-b' | 'series-c' | 'public'
+  >;
   targetCompanies?: string[];
   excludedCompanies?: string[];
   willingToRelocate?: boolean;
@@ -165,7 +179,9 @@ export interface UpdatePreferencesRequest {
     flexible?: boolean;
   };
   preferredCompanySizes?: Array<'startup' | 'small' | 'medium' | 'large' | 'enterprise'>;
-  preferredCompanyStages?: Array<'pre-seed' | 'seed' | 'series-a' | 'series-b' | 'series-c' | 'public'>;
+  preferredCompanyStages?: Array<
+    'pre-seed' | 'seed' | 'series-a' | 'series-b' | 'series-c' | 'public'
+  >;
   targetCompanies?: string[];
   excludedCompanies?: string[];
   willingToRelocate?: boolean;
@@ -217,12 +233,7 @@ export class PreferencesNotFoundError extends PreferencesError {
 
 export class InvalidPreferencesError extends PreferencesError {
   constructor(validationErrors: any) {
-    super(
-      'Invalid preferences data',
-      'INVALID_PREFERENCES',
-      400,
-      { validationErrors }
-    );
+    super('Invalid preferences data', 'INVALID_PREFERENCES', 400, { validationErrors });
     this.name = 'InvalidPreferencesError';
   }
 }

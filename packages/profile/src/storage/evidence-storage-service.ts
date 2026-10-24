@@ -1,23 +1,22 @@
+import crypto from 'node:crypto';
 import { v4 as uuidv4 } from 'uuid';
-import crypto from 'crypto';
 import {
-  EvidenceFile,
-  EvidenceFileSchema,
-  UploadEvidenceRequest,
-  UploadEvidenceResponse,
-  GetSignedUrlRequest,
-  GetSignedUrlResponse,
-  ListEvidenceRequest,
-  ListEvidenceResponse,
-  VerifyEvidenceRequest,
-  DeleteEvidenceRequest,
-  StorageConfig,
   DEFAULT_STORAGE_CONFIG,
+  type DeleteEvidenceRequest,
+  type EvidenceFile,
+  EvidenceFileSchema,
   EvidenceNotFoundError,
   FileAccessDeniedError,
   FileSizeExceededError,
+  type GetSignedUrlResponse,
   InvalidFileTypeError,
+  type ListEvidenceRequest,
+  type ListEvidenceResponse,
   SignedUrlExpiredError,
+  type StorageConfig,
+  type UploadEvidenceRequest,
+  type UploadEvidenceResponse,
+  type VerifyEvidenceRequest,
 } from './types.js';
 
 // ============================================================================
@@ -40,7 +39,17 @@ export class EvidenceStorageService {
    * Upload evidence file
    */
   async uploadEvidence(request: UploadEvidenceRequest): Promise<UploadEvidenceResponse> {
-    const { userId, tenantId, file, fileName, mimeType, category, description, isPublic, accessControl } = request;
+    const {
+      userId,
+      tenantId,
+      file,
+      fileName,
+      mimeType,
+      category,
+      description,
+      isPublic,
+      accessControl,
+    } = request;
 
     // Validate file size
     if (file.length > this.config.maxFileSize) {
@@ -135,7 +144,7 @@ export class EvidenceStorageService {
    * Get file content
    */
   async getFileContent(fileId: string, userId: string, tenantId: string): Promise<Buffer> {
-    const file = await this.getEvidenceFile(fileId, userId, tenantId);
+    const _file = await this.getEvidenceFile(fileId, userId, tenantId);
 
     if (this.config.provider === 'memory') {
       const content = this.fileContentStore.get(fileId);
@@ -147,7 +156,7 @@ export class EvidenceStorageService {
 
     // For S3 or local, would fetch from storage
     // This is a placeholder implementation
-    throw new Error('File content retrieval not implemented for provider: ' + this.config.provider);
+    throw new Error(`File content retrieval not implemented for provider: ${this.config.provider}`);
   }
 
   /**
@@ -159,7 +168,7 @@ export class EvidenceStorageService {
     tenantId: string,
     expiresIn?: number
   ): Promise<GetSignedUrlResponse> {
-    const file = await this.getEvidenceFile(fileId, userId, tenantId);
+    const _file = await this.getEvidenceFile(fileId, userId, tenantId);
 
     const expirationSeconds = expiresIn || this.config.signedUrlExpiration;
     const expiresAt = new Date(Date.now() + expirationSeconds * 1000).toISOString();
@@ -195,7 +204,7 @@ export class EvidenceStorageService {
     const { userId, tenantId, category, verified, page = 1, pageSize = 20 } = request;
 
     let files = Array.from(this.filesStore.values()).filter(
-      file =>
+      (file) =>
         file.userId === userId &&
         file.tenantId === tenantId &&
         !file.deleted &&
@@ -204,11 +213,11 @@ export class EvidenceStorageService {
 
     // Apply filters
     if (category) {
-      files = files.filter(file => file.category === category);
+      files = files.filter((file) => file.category === category);
     }
 
     if (verified !== undefined) {
-      files = files.filter(file => file.verified === verified);
+      files = files.filter((file) => file.verified === verified);
     }
 
     // Sort by createdAt (newest first)
@@ -326,7 +335,10 @@ export class EvidenceStorageService {
   /**
    * Get storage statistics
    */
-  async getStorageStats(userId: string, tenantId: string): Promise<{
+  async getStorageStats(
+    userId: string,
+    tenantId: string
+  ): Promise<{
     totalFiles: number;
     totalSize: number;
     byCategory: Record<string, number>;
@@ -334,10 +346,7 @@ export class EvidenceStorageService {
     unverifiedFiles: number;
   }> {
     const files = Array.from(this.filesStore.values()).filter(
-      file =>
-        file.userId === userId &&
-        file.tenantId === tenantId &&
-        !file.deleted
+      (file) => file.userId === userId && file.tenantId === tenantId && !file.deleted
     );
 
     const byCategory: Record<string, number> = {};
@@ -379,7 +388,12 @@ export class EvidenceStorageService {
   /**
    * Generate storage key for file
    */
-  private generateStorageKey(userId: string, tenantId: string, fileName: string, hash: string): string {
+  private generateStorageKey(
+    userId: string,
+    tenantId: string,
+    fileName: string,
+    hash: string
+  ): string {
     const timestamp = Date.now();
     const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
     return `${tenantId}/${userId}/${timestamp}-${hash.substring(0, 8)}-${sanitizedFileName}`;
@@ -426,8 +440,9 @@ export class EvidenceStorageService {
 
     // Check access control
     if (file.accessControl) {
-      const allowedUsers = permission === 'read' ? file.accessControl.read : file.accessControl.write;
-      if (allowedUsers && allowedUsers.includes(userId)) {
+      const allowedUsers =
+        permission === 'read' ? file.accessControl.read : file.accessControl.write;
+      if (allowedUsers?.includes(userId)) {
         return true;
       }
     }
@@ -438,7 +453,12 @@ export class EvidenceStorageService {
   /**
    * Check access and throw error if denied
    */
-  private checkAccess(file: EvidenceFile, userId: string, tenantId: string, permission: 'read' | 'write'): void {
+  private checkAccess(
+    file: EvidenceFile,
+    userId: string,
+    tenantId: string,
+    permission: 'read' | 'write'
+  ): void {
     // Check tenant isolation
     if (file.tenantId !== tenantId) {
       throw new FileAccessDeniedError(file.id, userId);

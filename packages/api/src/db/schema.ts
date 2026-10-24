@@ -1,4 +1,13 @@
-import { pgTable, index, text, timestamp, uuid, jsonb, uniqueIndex, primaryKey } from 'drizzle-orm/pg-core';
+import {
+  index,
+  jsonb,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from 'drizzle-orm/pg-core';
 
 // ============================================================================
 // Auth / tenancy tables (referenced by packages/api/src/auth and middleware)
@@ -34,7 +43,10 @@ export const users = pgTable(
     name: text('name'),
     passwordHash: text('password_hash'),
     avatarUrl: text('avatar_url'),
-    role: text('role').$type<'candidate' | 'admin' | 'organization_admin'>().notNull().default('candidate'),
+    role: text('role')
+      .$type<'candidate' | 'admin' | 'organization_admin'>()
+      .notNull()
+      .default('candidate'),
     status: text('status').$type<'active' | 'inactive' | 'suspended'>().notNull().default('active'),
     emailVerified: timestamp('email_verified', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -110,9 +122,10 @@ export const applications = pgTable('applications', {
   jobId: uuid('job_id'),
   atsName: text('ats_name'),
   url: text('url'),
-  status: text('status').$type<
-    'draft' | 'ready' | 'submitting' | 'submitted' | 'needs_user' | 'failed' | 'unknown'
-  >().notNull().default('draft'),
+  status: text('status')
+    .$type<'draft' | 'ready' | 'submitting' | 'submitted' | 'needs_user' | 'failed' | 'unknown'>()
+    .notNull()
+    .default('draft'),
   payload: jsonb('payload'),
   submittedAt: timestamp('submitted_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
@@ -131,9 +144,9 @@ export const receipts = pgTable('receipts', {
   confirmationCode: text('confirmation_code'),
   screenshotUrl: text('screenshot_url'),
   submittedAt: timestamp('submitted_at', { withTimezone: true }),
-  verificationStatus: text('verification_status').$type<
-    'pending' | 'verified' | 'failed'
-  >().default('pending'),
+  verificationStatus: text('verification_status')
+    .$type<'pending' | 'verified' | 'failed'>()
+    .default('pending'),
   metadata: jsonb('metadata'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 });

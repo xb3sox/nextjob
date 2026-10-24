@@ -1,12 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TailoringEngine } from './tailoring-engine.js';
 import {
-  CareerGraph,
-  JobRequirements,
-  TailoringRequest,
-  EvidenceConstraintViolationError,
+  type CareerGraph,
   InsufficientEvidenceError,
   InvalidTailoringRequestError,
+  type JobRequirements,
+  type TailoringRequest,
 } from './types.js';
 
 describe('TailoringEngine', () => {
@@ -62,7 +61,7 @@ describe('TailoringEngine', () => {
       expect(result.type).toBe('resume');
       expect(result.content).toBeDefined();
       expect(result.sections).toBeDefined();
-      expect(result.sections!.length).toBeGreaterThan(0);
+      expect(result.sections?.length).toBeGreaterThan(0);
       expect(result.evidenceTraceability.length).toBeGreaterThan(0);
       expect(result.confidence).toBeGreaterThan(0);
       expect(result.unsupportedClaims).toEqual([]);
@@ -475,11 +474,11 @@ describe('TailoringEngine', () => {
 
       expect(result.type).toBe('skills_section');
       expect(result.skills).toBeDefined();
-      expect(result.skills!.length).toBe(2);
-      expect(result.skills![0].name).toBe('JavaScript');
-      expect(result.skills![0].priority).toBe('high');
-      expect(result.skills![1].name).toBe('React');
-      expect(result.skills![1].priority).toBe('high');
+      expect(result.skills?.length).toBe(2);
+      expect(result.skills?.[0].name).toBe('JavaScript');
+      expect(result.skills?.[0].priority).toBe('high');
+      expect(result.skills?.[1].name).toBe('React');
+      expect(result.skills?.[1].priority).toBe('high');
     });
 
     it('should prioritize job-required skills', async () => {
@@ -519,8 +518,8 @@ describe('TailoringEngine', () => {
 
       const result = await engine.tailor(request);
 
-      expect(result.skills![0].name).toBe('JavaScript');
-      expect(result.skills![0].priority).toBe('high');
+      expect(result.skills?.[0].name).toBe('JavaScript');
+      expect(result.skills?.[0].priority).toBe('high');
     });
 
     it('should not upgrade skill levels', async () => {
@@ -551,8 +550,8 @@ describe('TailoringEngine', () => {
 
       const result = await engine.tailor(request);
 
-      expect(result.skills![0].level).toBe('intermediate');
-      expect(result.skills![0].level).not.toBe('expert');
+      expect(result.skills?.[0].level).toBe('intermediate');
+      expect(result.skills?.[0].level).not.toBe('expert');
     });
   });
 

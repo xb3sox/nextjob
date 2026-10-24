@@ -1,22 +1,17 @@
-import { z } from 'zod';
-import type {
-  AIRequest,
-  AIResponse,
-  GatewayConfig,
-  RequestContext,
-} from './types.js';
-import { AIGatewayError, RateLimitError } from './types.js';
-import { createProvider, type Provider } from './providers/index.js';
-import { validateSchemaOrThrow } from './validation.js';
-import { redactMessages, redactObject } from './pii-redaction.js';
+import type { z } from 'zod';
 import {
-  initLangfuse,
   createTrace,
-  recordGeneration,
-  recordError,
-  recordValidation,
+  initLangfuse,
   isLangfuseInitialized,
+  recordError,
+  recordGeneration,
+  recordValidation,
 } from './observability.js';
+import { redactMessages } from './pii-redaction.js';
+import { createProvider, type Provider } from './providers/index.js';
+import type { AIRequest, AIResponse, GatewayConfig, RequestContext } from './types.js';
+import { AIGatewayError, RateLimitError } from './types.js';
+import { validateSchemaOrThrow } from './validation.js';
 
 // ============================================================================
 // AI Gateway Class
@@ -29,7 +24,7 @@ export class AIGateway {
 
   constructor(config: GatewayConfig) {
     this.config = config;
-    
+
     // Initialize providers
     for (const [name, providerConfig] of Object.entries(config.providers)) {
       if (providerConfig) {
@@ -37,7 +32,7 @@ export class AIGateway {
         this.providers.set(name, provider);
       }
     }
-    
+
     // Initialize Langfuse if configured
     if (config.langfuse) {
       initLangfuse(config.langfuse);
@@ -51,10 +46,7 @@ export class AIGateway {
   /**
    * Generates text using the specified provider and model
    */
-  async generateText(
-    request: AIRequest,
-    context?: RequestContext
-  ): Promise<AIResponse<string>> {
+  async generateText(request: AIRequest, context?: RequestContext): Promise<AIResponse<string>> {
     const startTime = Date.now();
     let traceId: string | undefined;
 
@@ -74,14 +66,10 @@ export class AIGateway {
       const redactedMessages = redactMessages(request.messages);
 
       // Generate text
-      const rawContent = await provider.generateText(
-        redactedMessages,
-        request.model,
-        {
-          temperature: request.temperature,
-          maxTokens: request.maxTokens,
-        }
-      );
+      const rawContent = await provider.generateText(redactedMessages, request.model, {
+        temperature: request.temperature,
+        maxTokens: request.maxTokens,
+      });
 
       const latency = Date.now() - startTime;
 
@@ -157,11 +145,7 @@ export class AIGateway {
       );
 
       // Validate output against schema
-      const validatedObject = validateSchemaOrThrow(
-        rawObject,
-        request.schema,
-        'AI output'
-      );
+      const validatedObject = validateSchemaOrThrow(rawObject, request.schema, 'AI output');
 
       // Record validation in Langfuse
       if (traceId) {
@@ -215,11 +199,7 @@ export class AIGateway {
   private getProvider(name: string): Provider {
     const provider = this.providers.get(name);
     if (!provider) {
-      throw new AIGatewayError(
-        `Provider "${name}" not configured`,
-        'PROVIDER_NOT_FOUND',
-        400
-      );
+      throw new AIGatewayError(`Provider "${name}" not configured`, 'PROVIDER_NOT_FOUND', 400);
     }
     return provider;
   }
@@ -324,8 +304,8 @@ export function createAIGateway(config: GatewayConfig): AIGateway {
 // Exports
 // ============================================================================
 
-export * from './types.js';
-export * from './providers/index.js';
-export * from './validation.js';
-export * from './pii-redaction.js';
 export * from './observability.js';
+export * from './pii-redaction.js';
+export * from './providers/index.js';
+export * from './types.js';
+export * from './validation.js';

@@ -5,8 +5,8 @@
  * a single moss-green accent, Instrument Serif for display, Figtree for body/UI.
  */
 @theme {
-  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
-  --font-sans: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --color-ink: #0b0d0c; /* page background: off-black with a green undertone */
   --color-panel: #101312; /* raised surface */
@@ -75,16 +75,20 @@ body {
 
 /* Custom Animations */
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fade-in-up {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(20px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0);
   }
@@ -113,8 +117,12 @@ body {
 }
 
 @keyframes progress {
-  from { width: 0; }
-  to { width: 92%; }
+  from {
+    width: 0;
+  }
+  to {
+    width: 92%;
+  }
 }
 
 .animate-fade-in {
@@ -148,7 +156,7 @@ body {
     opacity: 1;
     transform: none;
   }
-  
+
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

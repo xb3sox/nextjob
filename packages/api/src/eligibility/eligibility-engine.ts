@@ -1,21 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import {
-  EligibilityRule,
-  EligibilityRuleSchema,
-  EligibilityAssessment,
-  EligibilityAssessmentSchema,
-  EligibilityCheck,
-  EligibilityStatus,
-  CheckEligibilityRequest,
-  CheckEligibilityResponse,
-  CreateRuleRequest,
-  UpdateRuleRequest,
-  ListRulesRequest,
-  ListRulesResponse,
-  RuleNotFoundError,
   AssessmentNotFoundError,
+  type CheckEligibilityRequest,
+  type CheckEligibilityResponse,
+  type CreateRuleRequest,
+  type EligibilityAssessment,
+  EligibilityAssessmentSchema,
+  type EligibilityCheck,
+  type EligibilityRule,
+  EligibilityRuleSchema,
+  type EligibilityStatus,
   InvalidRuleError,
+  type ListRulesRequest,
+  type ListRulesResponse,
+  RuleNotFoundError,
+  type UpdateRuleRequest,
 } from './types.js';
 
 // ============================================================================
@@ -34,38 +34,66 @@ const CLEARANCE_LEVELS = ['none', 'confidential', 'secret', 'top_secret', 'ts_sc
 // ============================================================================
 
 const UserProfileSchema = z.object({
-  location: z.object({
-    country: z.string(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-  }).optional(),
+  location: z
+    .object({
+      country: z.string(),
+      city: z.string().optional(),
+      state: z.string().optional(),
+    })
+    .optional(),
   willingToRelocate: z.boolean().optional(),
-  workAuthorization: z.object({
-    authorizations: z.array(z.string()),
-  }).optional(),
+  workAuthorization: z
+    .object({
+      authorizations: z.array(z.string()),
+    })
+    .optional(),
   needsSponsorship: z.boolean().optional(),
-  licenses: z.array(z.object({
-    name: z.string(),
-    valid: z.boolean(),
-  })).optional(),
-  certifications: z.array(z.object({
-    name: z.string(),
-  })).optional(),
-  education: z.array(z.object({
-    degree: z.string().optional(),
-    field: z.string().optional(),
-  })).optional(),
-  experience: z.array(z.object({
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-  })).optional(),
-  skills: z.array(z.object({
-    name: z.string(),
-  })).optional(),
-  languages: z.array(z.object({
-    language: z.string(),
-    proficiency: z.string().optional(),
-  })).optional(),
+  licenses: z
+    .array(
+      z.object({
+        name: z.string(),
+        valid: z.boolean(),
+      })
+    )
+    .optional(),
+  certifications: z
+    .array(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .optional(),
+  education: z
+    .array(
+      z.object({
+        degree: z.string().optional(),
+        field: z.string().optional(),
+      })
+    )
+    .optional(),
+  experience: z
+    .array(
+      z.object({
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      })
+    )
+    .optional(),
+  skills: z
+    .array(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .optional(),
+  languages: z
+    .array(
+      z.object({
+        language: z.string(),
+        proficiency: z.string().optional(),
+      })
+    )
+    .optional(),
   securityClearance: z.string().optional(),
 });
 
@@ -75,11 +103,13 @@ const UserProfileSchema = z.object({
 // full location here would reject valid sparse-job calls such as sponsorship-
 // only checks with `{}`.
 const JobSchema = z.object({
-  location: z.object({
-    country: z.string(),
-    city: z.string().optional(),
-    remote: z.boolean().optional(),
-  }).optional(),
+  location: z
+    .object({
+      country: z.string(),
+      city: z.string().optional(),
+      remote: z.boolean().optional(),
+    })
+    .optional(),
   visaSponsorship: z.boolean().optional(),
 });
 
@@ -100,11 +130,11 @@ export class EligibilityEngineService {
 
   /**
    * Create a new eligibility rule
-   * 
+   *
    * @param request - The rule creation request
    * @returns The created eligibility rule
    * @throws {InvalidRuleError} If the rule data is invalid
-   * 
+   *
    * @example
    * ```typescript
    * const rule = await service.createRule({
@@ -155,7 +185,7 @@ export class EligibilityEngineService {
 
   /**
    * Get rule by ID
-   * 
+   *
    * @param ruleId - The ID of the rule to retrieve
    * @param tenantId - The tenant ID for isolation
    * @returns The eligibility rule
@@ -173,7 +203,7 @@ export class EligibilityEngineService {
 
   /**
    * Update an existing eligibility rule
-   * 
+   *
    * @param ruleId - The ID of the rule to update
    * @param tenantId - The tenant ID for isolation
    * @param request - The update request
@@ -221,7 +251,7 @@ export class EligibilityEngineService {
 
   /**
    * Delete rule (soft delete)
-   * 
+   *
    * @param ruleId - The ID of the rule to delete
    * @param tenantId - The tenant ID for isolation
    * @param userId - The ID of the user performing the deletion
@@ -244,10 +274,10 @@ export class EligibilityEngineService {
 
   /**
    * List rules with filters
-   * 
+   *
    * @param request - The list request with filters and pagination
    * @returns Paginated list of eligibility rules
-   * 
+   *
    * @example
    * ```typescript
    * const result = await service.listRules({
@@ -262,16 +292,16 @@ export class EligibilityEngineService {
     const { tenantId, checkType, required, page = 1, pageSize = 20 } = request;
 
     let rules = Array.from(this.rulesStore.values()).filter(
-      rule => rule.tenantId === tenantId && !rule.deleted
+      (rule) => rule.tenantId === tenantId && !rule.deleted
     );
 
     // Apply filters
     if (checkType) {
-      rules = rules.filter(rule => rule.checkType === checkType);
+      rules = rules.filter((rule) => rule.checkType === checkType);
     }
 
     if (required !== undefined) {
-      rules = rules.filter(rule => rule.required === required);
+      rules = rules.filter((rule) => rule.required === required);
     }
 
     // Sort by priority (descending) then by name
@@ -299,13 +329,13 @@ export class EligibilityEngineService {
 
   /**
    * Check eligibility for a job
-   * 
+   *
    * @param request - The eligibility check request
    * @param userProfile - The user's profile data
    * @param job - The job data to check eligibility against
    * @returns The eligibility assessment with detailed checks
    * @throws {z.ZodError} If the input data is invalid
-   * 
+   *
    * @example
    * ```typescript
    * const result = await service.checkEligibility(
@@ -370,7 +400,7 @@ export class EligibilityEngineService {
       missingRequirements: missingRequirements.length > 0 ? missingRequirements : undefined,
       warnings: warnings.length > 0 ? warnings : undefined,
       assessedAt: now,
-      ruleVersion: rules.length > 0 ? Math.max(...rules.map(r => r.version)) : 1,
+      ruleVersion: rules.length > 0 ? Math.max(...rules.map((r) => r.version)) : 1,
       deleted: false,
     };
 
@@ -384,15 +414,15 @@ export class EligibilityEngineService {
       }
       throw error;
     }
-    
+
     this.assessmentsStore.set(assessmentId, validatedAssessment);
 
     // Calculate summary
     const summary = {
       total: checks.length,
-      passed: checks.filter(c => c.status === 'eligible').length,
-      failed: checks.filter(c => c.status === 'ineligible').length,
-      unknown: checks.filter(c => c.status === 'unknown').length,
+      passed: checks.filter((c) => c.status === 'eligible').length,
+      failed: checks.filter((c) => c.status === 'ineligible').length,
+      unknown: checks.filter((c) => c.status === 'unknown').length,
     };
 
     return {
@@ -405,7 +435,7 @@ export class EligibilityEngineService {
 
   /**
    * Get assessment by ID
-   * 
+   *
    * @param assessmentId - The ID of the assessment to retrieve
    * @param tenantId - The tenant ID for isolation
    * @returns The eligibility assessment
@@ -423,13 +453,13 @@ export class EligibilityEngineService {
 
   /**
    * List assessments for a user
-   * 
+   *
    * @param userId - The ID of the user
    * @param tenantId - The tenant ID for isolation
    * @param page - The page number (default: 1)
    * @param pageSize - The number of items per page (default: 20)
    * @returns Paginated list of eligibility assessments
-   * 
+   *
    * @example
    * ```typescript
    * const result = await service.listAssessments('user-1', 'tenant-1', 1, 20);
@@ -447,17 +477,13 @@ export class EligibilityEngineService {
     pageSize: number;
     hasMore: boolean;
   }> {
-    let assessments = Array.from(this.assessmentsStore.values()).filter(
-      assessment =>
-        assessment.userId === userId &&
-        assessment.tenantId === tenantId &&
-        !assessment.deleted
+    const assessments = Array.from(this.assessmentsStore.values()).filter(
+      (assessment) =>
+        assessment.userId === userId && assessment.tenantId === tenantId && !assessment.deleted
     );
 
     // Sort by assessedAt (newest first)
-    assessments.sort((a, b) => 
-      new Date(b.assessedAt).getTime() - new Date(a.assessedAt).getTime()
-    );
+    assessments.sort((a, b) => new Date(b.assessedAt).getTime() - new Date(a.assessedAt).getTime());
 
     // Paginate
     const total = assessments.length;
@@ -480,7 +506,7 @@ export class EligibilityEngineService {
 
   /**
    * Run a single eligibility check
-   * 
+   *
    * @param rule - The eligibility rule to check
    * @param userProfile - The user's profile data
    * @param job - The job data to check against
@@ -524,7 +550,7 @@ export class EligibilityEngineService {
 
   /**
    * Check location eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -588,7 +614,7 @@ export class EligibilityEngineService {
 
   /**
    * Check work authorization eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -613,8 +639,8 @@ export class EligibilityEngineService {
 
     // Check if user has required authorization
     if (condition.requiredAuthorizations) {
-      const hasAuth = condition.requiredAuthorizations.some(
-        (auth: string) => userAuth.authorizations?.includes(auth)
+      const hasAuth = condition.requiredAuthorizations.some((auth: string) =>
+        userAuth.authorizations?.includes(auth)
       );
 
       if (!hasAuth) {
@@ -637,7 +663,7 @@ export class EligibilityEngineService {
 
   /**
    * Check sponsorship eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -679,7 +705,7 @@ export class EligibilityEngineService {
 
   /**
    * Check license eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -694,9 +720,8 @@ export class EligibilityEngineService {
     const userLicenses = userProfile.licenses || [];
 
     if (condition.requiredLicenses) {
-      const hasAllLicenses = condition.requiredLicenses.every(
-        (required: string) => 
-          userLicenses.some((user: any) => user.name === required && user.valid)
+      const hasAllLicenses = condition.requiredLicenses.every((required: string) =>
+        userLicenses.some((user: any) => user.name === required && user.valid)
       );
 
       if (!hasAllLicenses) {
@@ -719,7 +744,7 @@ export class EligibilityEngineService {
 
   /**
    * Check certification eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -734,9 +759,8 @@ export class EligibilityEngineService {
     const userCerts = userProfile.certifications || [];
 
     if (condition.requiredCertifications) {
-      const hasAllCerts = condition.requiredCertifications.every(
-        (required: string) => 
-          userCerts.some((user: any) => user.name === required)
+      const hasAllCerts = condition.requiredCertifications.every((required: string) =>
+        userCerts.some((user: any) => user.name === required)
       );
 
       if (!hasAllCerts) {
@@ -759,7 +783,7 @@ export class EligibilityEngineService {
 
   /**
    * Check education eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -775,7 +799,7 @@ export class EligibilityEngineService {
 
     if (condition.minimumDegree) {
       const requiredLevel = DEGREE_LEVELS.indexOf(condition.minimumDegree as any);
-      
+
       const hasRequiredEducation = userEducation.some((edu) => {
         const userLevel = DEGREE_LEVELS.indexOf(edu.degree?.toLowerCase() as any);
         return userLevel >= requiredLevel;
@@ -818,7 +842,7 @@ export class EligibilityEngineService {
 
   /**
    * Check experience eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -860,17 +884,13 @@ export class EligibilityEngineService {
 
   /**
    * Check skill eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
    * @returns The eligibility check result
    */
-  private checkSkill(
-    rule: EligibilityRule,
-    userProfile: UserProfile,
-    job: Job
-  ): EligibilityCheck {
+  private checkSkill(rule: EligibilityRule, userProfile: UserProfile, job: Job): EligibilityCheck {
     const condition = rule.condition;
     const userSkills = (userProfile.skills || []).map((s: any) => s.name?.toLowerCase());
 
@@ -899,7 +919,7 @@ export class EligibilityEngineService {
 
   /**
    * Check language eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -914,22 +934,21 @@ export class EligibilityEngineService {
     const userLanguages = userProfile.languages || [];
 
     if (condition.requiredLanguages) {
-      const hasAllLanguages = condition.requiredLanguages.every(
-        (required: any) => 
-          userLanguages.some((user) => {
-            if (user.language.toLowerCase() !== required.language.toLowerCase()) {
-              return false;
-            }
-            
-            const requiredLevel = PROFICIENCY_LEVELS.indexOf(
-              (required.proficiency?.toLowerCase() || 'intermediate') as any
-            );
-            const userLevel = PROFICIENCY_LEVELS.indexOf(
-              (user.proficiency?.toLowerCase() || 'basic') as any
-            );
-            
-            return userLevel >= requiredLevel;
-          })
+      const hasAllLanguages = condition.requiredLanguages.every((required: any) =>
+        userLanguages.some((user) => {
+          if (user.language.toLowerCase() !== required.language.toLowerCase()) {
+            return false;
+          }
+
+          const requiredLevel = PROFICIENCY_LEVELS.indexOf(
+            (required.proficiency?.toLowerCase() || 'intermediate') as any
+          );
+          const userLevel = PROFICIENCY_LEVELS.indexOf(
+            (user.proficiency?.toLowerCase() || 'basic') as any
+          );
+
+          return userLevel >= requiredLevel;
+        })
       );
 
       if (!hasAllLanguages) {
@@ -952,7 +971,7 @@ export class EligibilityEngineService {
 
   /**
    * Check security clearance eligibility
-   * 
+   *
    * @param rule - The eligibility rule
    * @param userProfile - The user's profile data
    * @param job - The job data
@@ -970,9 +989,7 @@ export class EligibilityEngineService {
       const requiredLevel = CLEARANCE_LEVELS.indexOf(
         condition.requiredClearance.toLowerCase() as any
       );
-      const userLevel = CLEARANCE_LEVELS.indexOf(
-        (userClearance?.toLowerCase() || 'none') as any
-      );
+      const userLevel = CLEARANCE_LEVELS.indexOf((userClearance?.toLowerCase() || 'none') as any);
 
       if (userLevel < requiredLevel) {
         return {
@@ -993,18 +1010,18 @@ export class EligibilityEngineService {
 
   /**
    * Calculate overall eligibility status based on individual checks
-   * 
+   *
    * @param checks - Array of eligibility checks
    * @returns The overall eligibility status
-   * 
+   *
    * Logic:
    * - If any required check is ineligible, return 'ineligible'
    * - If any required check is unknown, return 'unknown'
    * - Otherwise, return 'eligible'
    */
   private calculateOverallStatus(checks: EligibilityCheck[]): EligibilityStatus {
-    const hasIneligible = checks.some(c => c.status === 'ineligible' && c.required);
-    const hasUnknown = checks.some(c => c.status === 'unknown' && c.required);
+    const hasIneligible = checks.some((c) => c.status === 'ineligible' && c.required);
+    const hasUnknown = checks.some((c) => c.status === 'unknown' && c.required);
 
     if (hasIneligible) {
       return 'ineligible';
@@ -1019,7 +1036,7 @@ export class EligibilityEngineService {
 
   /**
    * Calculate confidence score for eligibility assessment
-   * 
+   *
    * @param checks - Array of eligibility checks
    * @returns Confidence score between 0 and 1
    */
@@ -1028,8 +1045,8 @@ export class EligibilityEngineService {
       return 0;
     }
 
-    const eligibleChecks = checks.filter(c => c.status === 'eligible').length;
-    const unknownChecks = checks.filter(c => c.status === 'unknown').length;
+    const eligibleChecks = checks.filter((c) => c.status === 'eligible').length;
+    const unknownChecks = checks.filter((c) => c.status === 'unknown').length;
 
     // Confidence is based on percentage of eligible checks
     // Unknown checks reduce confidence

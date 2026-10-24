@@ -4,7 +4,7 @@ import { z } from 'zod';
 // Profile Claim Types
 // ============================================================================
 
-export type ClaimType = 
+export type ClaimType =
   | 'experience'
   | 'education'
   | 'skill'
@@ -13,11 +13,7 @@ export type ClaimType =
   | 'achievement'
   | 'language';
 
-export type VerificationStatus = 
-  | 'unverified'
-  | 'verified'
-  | 'rejected'
-  | 'pending_review';
+export type VerificationStatus = 'unverified' | 'verified' | 'rejected' | 'pending_review';
 
 // ============================================================================
 // Profile Claim Schema
@@ -27,36 +23,46 @@ export const ProfileClaimSchema = z.object({
   id: z.string().min(1),
   userId: z.string().min(1),
   tenantId: z.string().min(1),
-  
+
   // Claim metadata
-  type: z.enum(['experience', 'education', 'skill', 'certification', 'project', 'achievement', 'language']),
+  type: z.enum([
+    'experience',
+    'education',
+    'skill',
+    'certification',
+    'project',
+    'achievement',
+    'language',
+  ]),
   title: z.string().min(1),
   description: z.string().optional(),
-  
+
   // Evidence tracking
   evidenceId: z.string().min(1).optional(),
   evidenceSource: z.string().optional(), // e.g., "resume.pdf", "linkedin.com", "manual"
   evidenceConfidence: z.number().min(0).max(1).optional(),
-  
+
   // Verification
-  verificationStatus: z.enum(['unverified', 'verified', 'rejected', 'pending_review']).default('unverified'),
+  verificationStatus: z
+    .enum(['unverified', 'verified', 'rejected', 'pending_review'])
+    .default('unverified'),
   verifiedAt: z.string().datetime().optional(),
   verifiedBy: z.string().min(1).optional(),
   verificationNotes: z.string().optional(),
-  
+
   // Versioning
   version: z.number().int().positive().default(1),
   previousVersionId: z.string().min(1).optional(),
-  
+
   // Content (varies by type)
   content: z.record(z.any()),
-  
+
   // Metadata
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   createdBy: z.string().min(1),
   updatedBy: z.string().min(1),
-  
+
   // Soft delete
   deleted: z.boolean().default(false),
   deletedAt: z.string().datetime().optional(),
@@ -137,7 +143,7 @@ export const LanguageClaimContentSchema = z.object({
 // Evidence Types
 // ============================================================================
 
-export type EvidenceType = 
+export type EvidenceType =
   | 'resume'
   | 'certificate'
   | 'transcript'
@@ -150,32 +156,40 @@ export const EvidenceSchema = z.object({
   id: z.string().min(1),
   userId: z.string().min(1),
   tenantId: z.string().min(1),
-  
+
   // Evidence metadata
-  type: z.enum(['resume', 'certificate', 'transcript', 'portfolio', 'reference', 'verification_link', 'other']),
+  type: z.enum([
+    'resume',
+    'certificate',
+    'transcript',
+    'portfolio',
+    'reference',
+    'verification_link',
+    'other',
+  ]),
   name: z.string().min(1),
   description: z.string().optional(),
-  
+
   // Storage
   storageType: z.enum(['s3', 'url', 'text']),
   storageKey: z.string().optional(), // S3 key or URL
   content: z.string().optional(), // For text-based evidence
-  
+
   // File metadata
   mimeType: z.string().optional(),
   fileSize: z.number().optional(),
   hash: z.string().optional(), // SHA-256 hash for integrity
-  
+
   // Verification
   verified: z.boolean().default(false),
   verifiedAt: z.string().datetime().optional(),
   verifiedBy: z.string().min(1).optional(),
-  
+
   // Metadata
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
   createdBy: z.string().min(1),
-  
+
   // Soft delete
   deleted: z.boolean().default(false),
   deletedAt: z.string().datetime().optional(),
@@ -191,13 +205,13 @@ export const ProfileVersionSchema = z.object({
   id: z.string().min(1),
   userId: z.string().min(1),
   tenantId: z.string().min(1),
-  
+
   version: z.number().int().positive(),
   claimIds: z.array(z.string().min(1)),
-  
+
   // Snapshot of profile at this version
   snapshot: z.record(z.any()),
-  
+
   // Metadata
   createdAt: z.string().datetime(),
   createdBy: z.string().min(1),
@@ -297,12 +311,10 @@ export class EvidenceNotFoundError extends ProfileError {
 
 export class InvalidClaimContentError extends ProfileError {
   constructor(claimType: ClaimType, validationErrors: any) {
-    super(
-      `Invalid content for claim type ${claimType}`,
-      'INVALID_CLAIM_CONTENT',
-      400,
-      { claimType, validationErrors }
-    );
+    super(`Invalid content for claim type ${claimType}`, 'INVALID_CLAIM_CONTENT', 400, {
+      claimType,
+      validationErrors,
+    });
     this.name = 'InvalidClaimContentError';
   }
 }

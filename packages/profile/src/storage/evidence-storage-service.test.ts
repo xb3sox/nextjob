@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { EvidenceStorageService } from './evidence-storage-service.js';
 import {
   EvidenceNotFoundError,
@@ -463,15 +463,10 @@ describe('EvidenceStorageService', () => {
         category: 'resume' as const,
       });
 
-      const updated = await service.updateFileMetadata(
-        uploaded.file.id,
-        'user-123',
-        'tenant-456',
-        {
-          description: 'Updated description',
-          category: 'certificate',
-        }
-      );
+      const updated = await service.updateFileMetadata(uploaded.file.id, 'user-123', 'tenant-456', {
+        description: 'Updated description',
+        category: 'certificate',
+      });
 
       expect(updated.description).toBe('Updated description');
       expect(updated.category).toBe('certificate');

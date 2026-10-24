@@ -1,9 +1,9 @@
+import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import AuthLayout from '@/components/AuthLayout';
-import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
 
 /**
  * Reached after the user clicks the emailed reset link. Supabase's
@@ -30,14 +30,23 @@ export default function ResetPasswordPage() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (session) setReady(true);
     });
-    return () => { cancelled = true; sub.subscription.unsubscribe(); };
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
-    if (password !== confirm) { setError('Passwords do not match.'); return; }
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
+    if (password !== confirm) {
+      setError('Passwords do not match.');
+      return;
+    }
 
     setLoading(true);
     const { error: updateError } = await supabase.auth.updateUser({ password });
@@ -68,26 +77,38 @@ export default function ResetPasswordPage() {
       title="Choose a new password"
       subtitle={ready ? undefined : 'Waiting for your reset link to activate…'}
       footer={
-        <Link to="/login" className="text-moss hover:text-paper transition-colors font-medium">Back to sign in</Link>
+        <Link to="/login" className="text-moss hover:text-paper transition-colors font-medium">
+          Back to sign in
+        </Link>
       }
     >
       {!ready ? (
         <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.02] px-4 py-4 text-sm text-fog">
-          <span className="w-4 h-4 rounded-full border-2 border-moss/30 border-t-moss animate-spin motion-reduce:animate-none shrink-0" aria-hidden="true" />
-          Open the “Reset password” link from your email to continue. If you clicked it already, refresh this page.
+          <span
+            className="w-4 h-4 rounded-full border-2 border-moss/30 border-t-moss animate-spin motion-reduce:animate-none shrink-0"
+            aria-hidden="true"
+          />
+          Open the “Reset password” link from your email to continue. If you clicked it already,
+          refresh this page.
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           <div>
-            <label htmlFor="reset-password" className="block text-sm font-medium mb-1.5">New password</label>
+            <label htmlFor="reset-password" className="block text-sm font-medium mb-1.5">
+              New password
+            </label>
             <div className="relative">
               <input
                 id="reset-password"
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="new-password"
-                required minLength={8}
+                required
+                minLength={8}
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(''); }}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError('');
+                }}
                 placeholder="At least 8 characters"
                 className="w-full px-4 py-3 pr-12 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-fog/70 focus:outline-none focus:border-moss/50 focus:ring-1 focus:ring-moss/30 transition-colors"
               />
@@ -103,14 +124,19 @@ export default function ResetPasswordPage() {
           </div>
 
           <div>
-            <label htmlFor="reset-confirm" className="block text-sm font-medium mb-1.5">Confirm new password</label>
+            <label htmlFor="reset-confirm" className="block text-sm font-medium mb-1.5">
+              Confirm new password
+            </label>
             <input
               id="reset-confirm"
               type={showPassword ? 'text' : 'password'}
               autoComplete="new-password"
               required
               value={confirm}
-              onChange={(e) => { setConfirm(e.target.value); setError(''); }}
+              onChange={(e) => {
+                setConfirm(e.target.value);
+                setError('');
+              }}
               placeholder="Repeat the new password"
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-fog/70 focus:outline-none focus:border-moss/50 focus:ring-1 focus:ring-moss/30 transition-colors"
             />

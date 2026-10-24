@@ -1,7 +1,7 @@
-import { db } from '../db/index';
-import { users, accounts, sessions, verificationTokens } from '../db/schema';
-import { eq, and, like } from 'drizzle-orm';
 import crypto from 'crypto';
+import { and, eq, like } from 'drizzle-orm';
+import { db } from '../db/index';
+import { accounts, sessions, users, verificationTokens } from '../db/schema';
 
 // ============================================================================
 // Types
@@ -64,10 +64,7 @@ export function isValidEmail(email: string): boolean {
 
 export function validatePasswordStrength(password: string): void {
   if (typeof password !== 'string' || password.length < 8 || password.length > 128) {
-    throw new AuthError(
-      'VALIDATION_FAILED',
-      'Password must be between 8 and 128 characters'
-    );
+    throw new AuthError('VALIDATION_FAILED', 'Password must be between 8 and 128 characters');
   }
 }
 
@@ -396,10 +393,7 @@ export async function deleteUserSessions(userId: string): Promise<void> {
  * a separate random credential stored alongside the session record so it can be
  * rotated and revoked server-side.
  */
-async function generateAuthTokens(
-  sessionToken: string,
-  _tenantId: string
-): Promise<AuthTokens> {
+async function generateAuthTokens(sessionToken: string, _tenantId: string): Promise<AuthTokens> {
   const refreshToken = generateToken();
 
   await db
@@ -481,10 +475,7 @@ export async function findOrCreateOAuthUser(params: {
 
   // Check if account already exists
   const existingAccount = await db.query.accounts.findFirst({
-    where: and(
-      eq(accounts.provider, provider),
-      eq(accounts.providerAccountId, profile.id)
-    ),
+    where: and(eq(accounts.provider, provider), eq(accounts.providerAccountId, profile.id)),
   });
 
   if (existingAccount) {
@@ -579,7 +570,9 @@ export async function requestPasswordReset(email: string): Promise<string | null
 
   // Generate reset token; store only its digest.
   const resetToken = generateToken();
-  await db.delete(verificationTokens).where(eq(verificationTokens.identifier, `reset:${normalized}`));
+  await db
+    .delete(verificationTokens)
+    .where(eq(verificationTokens.identifier, `reset:${normalized}`));
   await db.insert(verificationTokens).values({
     identifier: `reset:${normalized}`,
     token: hashActionToken('reset', resetToken),
@@ -655,7 +648,9 @@ export async function sendVerificationEmail(email: string): Promise<string | nul
 
   // Generate verification token; store only its digest.
   const verificationToken = generateToken();
-  await db.delete(verificationTokens).where(eq(verificationTokens.identifier, `verify:${normalized}`));
+  await db
+    .delete(verificationTokens)
+    .where(eq(verificationTokens.identifier, `verify:${normalized}`));
   await db.insert(verificationTokens).values({
     identifier: `verify:${normalized}`,
     token: hashActionToken('verify', verificationToken),
@@ -685,10 +680,7 @@ export async function verifyEmail(token: string): Promise<boolean> {
   });
   if (!user) throw new AuthError('INVALID_TOKEN', 'Verification token is invalid or expired');
 
-  await db
-    .update(users)
-    .set({ emailVerified: new Date() })
-    .where(eq(users.id, user.id));
+  await db.update(users).set({ emailVerified: new Date() }).where(eq(users.id, user.id));
 
   // Single-use cleanup.
   await db.delete(verificationTokens).where(eq(verificationTokens.identifier, record.identifier));

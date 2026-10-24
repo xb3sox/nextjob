@@ -177,7 +177,7 @@
   <body>
     <div id="root"></div>
     <script>
-      window.addEventListener('error', function(e) {
+      window.addEventListener('error', (e) => {
         var errDiv = document.getElementById('debug-error-banner');
         if (!errDiv) {
           errDiv = document.createElement('div');
@@ -187,7 +187,7 @@
         }
         errDiv.textContent += (e.error ? (e.error.stack || e.error.message) : e.message) + '\n';
       });
-      window.addEventListener('unhandledrejection', function(e) {
+      window.addEventListener('unhandledrejection', (e) => {
         var errDiv = document.getElementById('debug-error-banner');
         if (!errDiv) {
           errDiv = document.createElement('div');

@@ -1,9 +1,9 @@
-import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenAI } from '@ai-sdk/openai';
 import { generateObject, generateText } from 'ai';
-import { z } from 'zod';
-import type { AIProvider, AIModel, AIMessage, AIRequest, AIResponse, ProviderConfig } from '../types.js';
+import type { z } from 'zod';
+import type { AIMessage, AIModel, AIProvider, ProviderConfig } from '../types.js';
 import { ProviderError } from '../types.js';
 
 // ============================================================================
@@ -13,7 +13,12 @@ import { ProviderError } from '../types.js';
 export interface Provider {
   name: AIProvider;
   generateText(messages: AIMessage[], model: AIModel, options?: any): Promise<string>;
-  generateObject<T>(messages: AIMessage[], model: AIModel, schema: z.ZodSchema<T>, options?: any): Promise<T>;
+  generateObject<T>(
+    messages: AIMessage[],
+    model: AIModel,
+    schema: z.ZodSchema<T>,
+    options?: any
+  ): Promise<T>;
 }
 
 // ============================================================================

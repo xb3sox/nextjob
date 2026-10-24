@@ -1,14 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
-  JobMatch,
-  MatchFactor,
-  MatchStatus,
-  CalculateMatchRequest,
-  CalculateMatchResponse,
-  RankJobsRequest,
-  RankJobsResponse,
-  MatchingConfig,
+  type CalculateMatchRequest,
+  type CalculateMatchResponse,
   DEFAULT_MATCHING_CONFIG,
+  type JobMatch,
+  type MatchFactor,
+  type MatchingConfig,
+  type MatchStatus,
+  type RankJobsRequest,
+  type RankJobsResponse,
 } from './types.js';
 
 // ============================================================================
@@ -36,7 +36,11 @@ export class MatchingEngineService {
     const factors: MatchFactor[] = [];
 
     // 1. Skills match (30% weight)
-    const skillsFactor = this.calculateSkillsMatch(userProfile.skills, job.requiredSkills, job.preferredSkills);
+    const skillsFactor = this.calculateSkillsMatch(
+      userProfile.skills,
+      job.requiredSkills,
+      job.preferredSkills
+    );
     factors.push(skillsFactor);
 
     // 2. Experience match (25% weight)
@@ -52,15 +56,25 @@ export class MatchingEngineService {
     factors.push(locationFactor);
 
     // 5. Salary match (10% weight)
-    const salaryFactor = this.calculateSalaryMatch(userProfile.preferences?.salaryExpectations, job.salary);
+    const salaryFactor = this.calculateSalaryMatch(
+      userProfile.preferences?.salaryExpectations,
+      job.salary
+    );
     factors.push(salaryFactor);
 
     // 6. Role fit (5% weight)
-    const roleFitFactor = this.calculateRoleFitMatch(userProfile.preferences?.targetRoles, job.title, job.roleFamily);
+    const roleFitFactor = this.calculateRoleFitMatch(
+      userProfile.preferences?.targetRoles,
+      job.title,
+      job.roleFamily
+    );
     factors.push(roleFitFactor);
 
     // 7. Seniority fit (5% weight)
-    const seniorityFitFactor = this.calculateSeniorityMatch(userProfile.experience, job.seniorityLevel);
+    const seniorityFitFactor = this.calculateSeniorityMatch(
+      userProfile.experience,
+      job.seniorityLevel
+    );
     factors.push(seniorityFitFactor);
 
     // Calculate overall score
@@ -110,7 +124,7 @@ export class MatchingEngineService {
    * Rank multiple jobs for a user
    */
   async rankJobs(request: RankJobsRequest): Promise<RankJobsResponse> {
-    const { userId, tenantId, jobIds, userProfile, jobs } = request;
+    const { userId, tenantId, userProfile, jobs } = request;
 
     const matches: RankJobsResponse['matches'] = [];
 
@@ -160,7 +174,7 @@ export class MatchingEngineService {
    */
   async listMatches(userId: string, tenantId: string): Promise<JobMatch[]> {
     return Array.from(this.matchesStore.values())
-      .filter(match => match.userId === userId && match.tenantId === tenantId)
+      .filter((match) => match.userId === userId && match.tenantId === tenantId)
       .sort((a, b) => b.score - a.score);
   }
 
@@ -176,30 +190,33 @@ export class MatchingEngineService {
     requiredSkills: string[],
     preferredSkills?: string[]
   ): MatchFactor {
-    const userSkillNames = userSkills.map(s => s.name.toLowerCase());
-    const requiredSkillNames = requiredSkills.map(s => s.toLowerCase());
-    const preferredSkillNames = (preferredSkills || []).map(s => s.toLowerCase());
+    const userSkillNames = userSkills.map((s) => s.name.toLowerCase());
+    const requiredSkillNames = requiredSkills.map((s) => s.toLowerCase());
+    const preferredSkillNames = (preferredSkills || []).map((s) => s.toLowerCase());
 
     // Calculate required skills match
-    const matchedRequired = requiredSkillNames.filter(skill => 
+    const matchedRequired = requiredSkillNames.filter((skill) =>
       userSkillNames.includes(skill)
     ).length;
-    const requiredScore = requiredSkillNames.length > 0 
-      ? (matchedRequired / requiredSkillNames.length) * 100 
-      : 100;
+    const requiredScore =
+      requiredSkillNames.length > 0 ? (matchedRequired / requiredSkillNames.length) * 100 : 100;
 
     // Calculate preferred skills match (bonus)
-    const matchedPreferred = preferredSkillNames.filter(skill => 
+    const matchedPreferred = preferredSkillNames.filter((skill) =>
       userSkillNames.includes(skill)
     ).length;
-    const preferredBonus = preferredSkillNames.length > 0
-      ? (matchedPreferred / preferredSkillNames.length) * 20 // 20% bonus
-      : 0;
+    const preferredBonus =
+      preferredSkillNames.length > 0
+        ? (matchedPreferred / preferredSkillNames.length) * 20 // 20% bonus
+        : 0;
 
     const score = Math.min(100, requiredScore + preferredBonus);
 
-    const explanation = `Matched ${matchedRequired}/${requiredSkillNames.length} required skills` +
-      (preferredSkillNames.length > 0 ? ` and ${matchedPreferred}/${preferredSkillNames.length} preferred skills` : '');
+    const explanation =
+      `Matched ${matchedRequired}/${requiredSkillNames.length} required skills` +
+      (preferredSkillNames.length > 0
+        ? ` and ${matchedPreferred}/${preferredSkillNames.length} preferred skills`
+        : '');
 
     return {
       name: 'skills',
@@ -273,15 +290,17 @@ export class MatchingEngineService {
     if (jobEducation.minimumDegree) {
       const degreeLevels = ['high_school', 'associate', 'bachelor', 'master', 'doctorate'];
       const requiredLevel = degreeLevels.indexOf(jobEducation.minimumDegree.toLowerCase());
-      
-      const hasRequiredDegree = userEducation.some(edu => {
+
+      const hasRequiredDegree = userEducation.some((edu) => {
         const userLevel = degreeLevels.indexOf(edu.degree.toLowerCase());
         return userLevel >= requiredLevel;
       });
 
       if (!hasRequiredDegree) {
         score = 0;
-        explanations.push(`User does not have minimum required degree (${jobEducation.minimumDegree})`);
+        explanations.push(
+          `User does not have minimum required degree (${jobEducation.minimumDegree})`
+        );
       } else {
         explanations.push(`User meets minimum degree requirement`);
       }
@@ -289,8 +308,8 @@ export class MatchingEngineService {
 
     // Check field of study
     if (jobEducation.requiredFields && jobEducation.requiredFields.length > 0) {
-      const hasRequiredField = userEducation.some(edu =>
-        jobEducation.requiredFields!.some(field =>
+      const hasRequiredField = userEducation.some((edu) =>
+        jobEducation.requiredFields?.some((field) =>
           edu.field?.toLowerCase().includes(field.toLowerCase())
         )
       );
@@ -340,8 +359,11 @@ export class MatchingEngineService {
     // Same country
     if (userLocation.country.toLowerCase() === jobLocation.country.toLowerCase()) {
       // Same city - perfect match
-      if (userLocation.city && jobLocation.city && 
-          userLocation.city.toLowerCase() === jobLocation.city.toLowerCase()) {
+      if (
+        userLocation.city &&
+        jobLocation.city &&
+        userLocation.city.toLowerCase() === jobLocation.city.toLowerCase()
+      ) {
         return {
           name: 'location',
           score: 100,
@@ -349,7 +371,7 @@ export class MatchingEngineService {
           explanation: 'Perfect location match (same city)',
         };
       }
-      
+
       // Same country, different city
       return {
         name: 'location',
@@ -406,7 +428,7 @@ export class MatchingEngineService {
     const userRange = userMax - userMin;
     const jobRange = jobMax - jobMin;
     const relevantRange = Math.min(userRange, jobRange) || userRange || jobRange;
-    
+
     const score = relevantRange > 0 ? (overlapRange / relevantRange) * 100 : 100;
 
     return {
@@ -438,7 +460,7 @@ export class MatchingEngineService {
     const jobRoleFamilyLower = jobRoleFamily?.toLowerCase() || '';
 
     // Check if job title matches any target role
-    const matchesTargetRole = targetRoles.some(role => {
+    const matchesTargetRole = targetRoles.some((role) => {
       const roleLower = role.toLowerCase();
       return jobTitleLower.includes(roleLower) || roleLower.includes(jobTitleLower);
     });
@@ -454,9 +476,10 @@ export class MatchingEngineService {
 
     // Check if job role family matches
     if (jobRoleFamilyLower) {
-      const matchesRoleFamily = targetRoles.some(role =>
-        role.toLowerCase().includes(jobRoleFamilyLower) ||
-        jobRoleFamilyLower.includes(role.toLowerCase())
+      const matchesRoleFamily = targetRoles.some(
+        (role) =>
+          role.toLowerCase().includes(jobRoleFamilyLower) ||
+          jobRoleFamilyLower.includes(role.toLowerCase())
       );
 
       if (matchesRoleFamily) {
@@ -495,7 +518,7 @@ export class MatchingEngineService {
 
     // Estimate user seniority from experience
     const totalYears = userExperience.reduce((sum, exp) => sum + (exp.years || 0), 0);
-    
+
     const seniorityLevels = ['entry', 'mid', 'senior', 'lead', 'executive'];
     const userSeniority = this.estimateSeniority(totalYears);
     const requiredSeniority = jobSeniority.toLowerCase();
@@ -513,7 +536,7 @@ export class MatchingEngineService {
     }
 
     const levelDiff = Math.abs(userLevel - requiredLevel);
-    const score = Math.max(0, 100 - (levelDiff * 25));
+    const score = Math.max(0, 100 - levelDiff * 25);
 
     return {
       name: 'seniorityFit',
@@ -543,7 +566,7 @@ export class MatchingEngineService {
    */
   private calculateOverallScore(factors: MatchFactor[]): number {
     const weightedSum = factors.reduce((sum, factor) => {
-      return sum + (factor.score * factor.weight);
+      return sum + factor.score * factor.weight;
     }, 0);
 
     return Math.round(weightedSum);
@@ -564,8 +587,8 @@ export class MatchingEngineService {
    */
   private generateStrengths(factors: MatchFactor[]): string[] {
     return factors
-      .filter(f => f.score >= 80)
-      .map(f => f.explanation)
+      .filter((f) => f.score >= 80)
+      .map((f) => f.explanation)
       .slice(0, 3); // Top 3 strengths
   }
 
@@ -574,18 +597,18 @@ export class MatchingEngineService {
    */
   private generateWeaknesses(factors: MatchFactor[]): string[] {
     return factors
-      .filter(f => f.score < 70)
-      .map(f => f.explanation)
+      .filter((f) => f.score < 70)
+      .map((f) => f.explanation)
       .slice(0, 3); // Top 3 weaknesses
   }
 
   /**
    * Generate recommendations based on weaknesses
    */
-  private generateRecommendations(factors: MatchFactor[], weaknesses: string[]): string[] {
+  private generateRecommendations(factors: MatchFactor[], _weaknesses: string[]): string[] {
     const recommendations: string[] = [];
 
-    factors.forEach(factor => {
+    factors.forEach((factor) => {
       if (factor.score < 70) {
         switch (factor.name) {
           case 'skills':
@@ -615,7 +638,7 @@ export class MatchingEngineService {
    */
   private calculateConfidence(factors: MatchFactor[]): number {
     // Confidence is based on how many factors have complete data
-    const factorsWithData = factors.filter(f => f.score > 0).length;
+    const factorsWithData = factors.filter((f) => f.score > 0).length;
     const totalFactors = factors.length;
 
     return totalFactors > 0 ? factorsWithData / totalFactors : 0;

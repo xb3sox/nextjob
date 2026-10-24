@@ -1,16 +1,16 @@
+import { ArrowRight, Check, ChevronDown, FileSearch, Lock, ShieldCheck, Zap } from 'lucide-react';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
-import { Check, ChevronDown, ArrowRight, ShieldCheck, Zap, FileSearch, Lock } from 'lucide-react';
+import ProtectedRoute from './components/ProtectedRoute';
+import Reveal from './components/Reveal';
+import WaitlistForm from './components/WaitlistForm';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
+import LoginPage from './pages/auth/LoginPage';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage';
+import SignupPage from './pages/auth/SignupPage';
+import DashboardPage from './pages/DashboardPage';
+import NotFound from './pages/NotFound';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
-import NotFound from './pages/NotFound';
-import WaitlistForm from './components/WaitlistForm';
-import Reveal from './components/Reveal';
-import LoginPage from './pages/auth/LoginPage';
-import SignupPage from './pages/auth/SignupPage';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import ResetPasswordPage from './pages/auth/ResetPasswordPage';
-import DashboardPage from './pages/DashboardPage';
-import ProtectedRoute from './components/ProtectedRoute';
 
 /* ------------------------------------------------------------------ */
 /* Landing page                                                        */
@@ -30,18 +30,36 @@ function LandingPage() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-ink/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity" aria-label="NextJob home">
-            <span className="w-7 h-7 rounded-lg bg-moss-deep text-moss-dark flex items-center justify-center font-bold text-sm" aria-hidden="true">N</span>
+          <Link
+            to="/"
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+            aria-label="NextJob home"
+          >
+            <span
+              className="w-7 h-7 rounded-lg bg-moss-deep text-moss-dark flex items-center justify-center font-bold text-sm"
+              aria-hidden="true"
+            >
+              N
+            </span>
             <span className="font-semibold text-sm tracking-tight">NextJob</span>
           </Link>
           <div className="flex items-center gap-6">
-            <a href="#how-it-works" className="hidden sm:block text-sm text-fog hover:text-paper transition-colors">
+            <a
+              href="#how-it-works"
+              className="hidden sm:block text-sm text-fog hover:text-paper transition-colors"
+            >
               How it works
             </a>
-            <a href="#pricing" className="hidden sm:block text-sm text-fog hover:text-paper transition-colors">
+            <a
+              href="#pricing"
+              className="hidden sm:block text-sm text-fog hover:text-paper transition-colors"
+            >
               Pricing
             </a>
-            <Link to="/login" className="hidden sm:block text-sm text-fog hover:text-paper transition-colors">
+            <Link
+              to="/login"
+              className="hidden sm:block text-sm text-fog hover:text-paper transition-colors"
+            >
               Sign in
             </Link>
             <Link
@@ -65,23 +83,26 @@ function LandingPage() {
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <p className="inline-flex items-center gap-2 mb-8 px-3 py-1 rounded-full border border-moss/25 bg-moss/5 text-xs font-medium text-moss">
-              <span className="w-1.5 h-1.5 rounded-full bg-moss animate-pulse motion-reduce:animate-none" aria-hidden="true" />
+              <span
+                className="w-1.5 h-1.5 rounded-full bg-moss animate-pulse motion-reduce:animate-none"
+                aria-hidden="true"
+              />
               Now in private beta
             </p>
           </Reveal>
 
           <Reveal delay={80}>
             <h1 className="font-display text-6xl md:text-7xl leading-[1.04] mb-6">
-              Find better jobs.{' '}
-              <em className="not-italic text-moss">Apply smarter.</em> Get interviewed.
+              Find better jobs. <em className="not-italic text-moss">Apply smarter.</em> Get
+              interviewed.
             </h1>
           </Reveal>
 
           <Reveal delay={160}>
             <p className="text-xl text-fog leading-relaxed mb-10 max-w-2xl">
-              NextJob finds opportunities that genuinely fit, prepares truthful tailored applications,
-              and handles repetitive work while you stay in control. Every application eligible.
-              Every submission tracked. Every outcome learned from.
+              NextJob finds opportunities that genuinely fit, prepares truthful tailored
+              applications, and handles repetitive work while you stay in control. Every application
+              eligible. Every submission tracked. Every outcome learned from.
             </p>
           </Reveal>
 
@@ -129,8 +150,9 @@ function LandingPage() {
                     <div className="flex-1">
                       <div className="text-sm text-fog mb-1">Why you're a fit</div>
                       <p className="text-sm text-paper leading-relaxed">
-                        5+ years building distributed systems at scale. Led migration from monolith to microservices,
-                        reducing deployment time by 70%. Strong background in React, Node.js, and TypeScript.
+                        5+ years building distributed systems at scale. Led migration from monolith
+                        to microservices, reducing deployment time by 70%. Strong background in
+                        React, Node.js, and TypeScript.
                       </p>
                       <div className="mt-2 flex items-center gap-2 text-xs text-moss/90">
                         <Check className="w-3 h-3" aria-hidden="true" />
@@ -149,7 +171,10 @@ function LandingPage() {
                         Receipt on submit
                       </span>
                     </div>
-                    <Link to="/signup" className="text-xs font-medium text-moss hover:text-paper transition-colors">
+                    <Link
+                      to="/signup"
+                      className="text-xs font-medium text-moss hover:text-paper transition-colors"
+                    >
                       Start an application →
                     </Link>
                   </div>
@@ -167,7 +192,10 @@ function LandingPage() {
               className="inline-flex items-center gap-1.5 text-xs text-fog hover:text-moss transition-colors"
             >
               See how it works
-              <ChevronDown className="w-3.5 h-3.5 animate-bounce motion-reduce:animate-none" aria-hidden="true" />
+              <ChevronDown
+                className="w-3.5 h-3.5 animate-bounce motion-reduce:animate-none"
+                aria-hidden="true"
+              />
             </a>
           </div>
         </div>
@@ -180,7 +208,9 @@ function LandingPage() {
             <p className="text-sm text-fog mb-8">Built for people targeting teams at</p>
             <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-40">
               {['Google', 'Stripe', 'Vercel', 'Linear', 'Figma'].map((company) => (
-                <span key={company} className="text-lg font-medium text-fog">{company}</span>
+                <span key={company} className="text-lg font-medium text-fog">
+                  {company}
+                </span>
               ))}
             </div>
           </div>
@@ -191,7 +221,9 @@ function LandingPage() {
       <section className="py-24 px-6 border-t border-white/5">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <h2 className="font-display text-4xl mb-4 text-center">Honest automation, end to end</h2>
+            <h2 className="font-display text-4xl mb-4 text-center">
+              Honest automation, end to end
+            </h2>
             <p className="text-fog text-center mb-16 max-w-xl mx-auto">
               Most AI job tools hallucinate. NextJob is built so that can't happen.
             </p>
@@ -216,7 +248,9 @@ function LandingPage() {
             ].map((f, i) => (
               <Reveal key={f.title} delay={i * 100}>
                 <div className="h-full rounded-xl border border-white/10 bg-white/[0.02] hover:border-moss/25 hover:bg-moss/[0.03] p-6 transition-colors">
-                  <span className="inline-flex w-10 h-10 rounded-lg bg-moss/10 text-moss items-center justify-center mb-4">{f.icon}</span>
+                  <span className="inline-flex w-10 h-10 rounded-lg bg-moss/10 text-moss items-center justify-center mb-4">
+                    {f.icon}
+                  </span>
                   <h3 className="font-medium mb-2">{f.title}</h3>
                   <p className="text-sm text-fog leading-relaxed">{f.body}</p>
                 </div>
@@ -234,9 +268,21 @@ function LandingPage() {
           </Reveal>
           <ol className="space-y-10">
             {[
-              { n: 1, t: 'Build your profile', d: 'Import your resume; we extract and verify your experience, skills, and achievements with full provenance.' },
-              { n: 2, t: 'Discover eligible jobs', d: 'We surface opportunities where you actually qualify — authorization, location, and requirements checked first.' },
-              { n: 3, t: 'Apply smarter', d: 'AI drafts applications strictly from your verified profile. You approve, we submit, you get a receipt.' },
+              {
+                n: 1,
+                t: 'Build your profile',
+                d: 'Import your resume; we extract and verify your experience, skills, and achievements with full provenance.',
+              },
+              {
+                n: 2,
+                t: 'Discover eligible jobs',
+                d: 'We surface opportunities where you actually qualify — authorization, location, and requirements checked first.',
+              },
+              {
+                n: 3,
+                t: 'Apply smarter',
+                d: 'AI drafts applications strictly from your verified profile. You approve, we submit, you get a receipt.',
+              },
             ].map((step, i) => (
               <Reveal key={step.n} delay={i * 100}>
                 <li className="flex gap-5">
@@ -258,21 +304,35 @@ function LandingPage() {
       <section className="py-24 px-6 border-t border-white/5">
         <div className="max-w-4xl mx-auto">
           <Reveal>
-            <h2 id="pricing" className="font-display text-4xl mb-14 text-center scroll-mt-28">Simple pricing</h2>
+            <h2 id="pricing" className="font-display text-4xl mb-14 text-center scroll-mt-28">
+              Simple pricing
+            </h2>
           </Reveal>
           <div className="grid md:grid-cols-2 gap-6">
             <Reveal>
               <div className="h-full p-8 rounded-xl border border-white/10 bg-white/[0.02]">
                 <h3 className="font-medium mb-2">Free</h3>
-                <div className="text-3xl font-semibold mb-6 tnum">$0<span className="text-base text-fog font-normal">/forever</span></div>
+                <div className="text-3xl font-semibold mb-6 tnum">
+                  $0<span className="text-base text-fog font-normal">/forever</span>
+                </div>
                 <ul className="space-y-2.5 text-sm text-fog">
-                  {['Build your verified profile', 'Discover eligible jobs', 'Understand fit & eligibility', 'Track all applications', 'Limited application assistance'].map((li) => (
+                  {[
+                    'Build your verified profile',
+                    'Discover eligible jobs',
+                    'Understand fit & eligibility',
+                    'Track all applications',
+                    'Limited application assistance',
+                  ].map((li) => (
                     <li key={li} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />{li}
+                      <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
+                      {li}
                     </li>
                   ))}
                 </ul>
-                <Link to="/signup" className="mt-8 inline-flex w-full items-center justify-center px-4 py-2.5 rounded-lg border border-white/15 hover:border-white/30 font-medium text-sm transition-colors">
+                <Link
+                  to="/signup"
+                  className="mt-8 inline-flex w-full items-center justify-center px-4 py-2.5 rounded-lg border border-white/15 hover:border-white/30 font-medium text-sm transition-colors"
+                >
                   Create free account
                 </Link>
               </div>
@@ -283,15 +343,27 @@ function LandingPage() {
                   Most popular
                 </span>
                 <h3 className="font-medium mb-2">Search</h3>
-                <div className="text-3xl font-semibold mb-6 tnum">$39<span className="text-base text-fog font-normal">/30 days</span></div>
+                <div className="text-3xl font-semibold mb-6 tnum">
+                  $39<span className="text-base text-fog font-normal">/30 days</span>
+                </div>
                 <ul className="space-y-2.5 text-sm text-fog">
-                  {['Everything in Free, plus:', 'Full matching & ranking', 'Tailored evidence-backed applications', 'Submission receipts', 'Interview preparation'].map((li) => (
+                  {[
+                    'Everything in Free, plus:',
+                    'Full matching & ranking',
+                    'Tailored evidence-backed applications',
+                    'Submission receipts',
+                    'Interview preparation',
+                  ].map((li) => (
                     <li key={li} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />{li}
+                      <Check className="w-4 h-4 text-moss shrink-0" aria-hidden="true" />
+                      {li}
                     </li>
                   ))}
                 </ul>
-                <Link to="/signup" className="mt-8 inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark font-semibold text-sm transition-colors">
+                <Link
+                  to="/signup"
+                  className="mt-8 inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark font-semibold text-sm transition-colors"
+                >
                   Start Search Pass <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
               </div>
@@ -307,19 +379,33 @@ function LandingPage() {
       <section className="py-24 px-6 border-t border-white/5">
         <div className="max-w-3xl mx-auto">
           <Reveal>
-            <h2 id="faq" className="font-display text-4xl mb-12 text-center scroll-mt-28">Questions</h2>
+            <h2 id="faq" className="font-display text-4xl mb-12 text-center scroll-mt-28">
+              Questions
+            </h2>
           </Reveal>
           <div className="space-y-4">
             {[
-              { q: 'How is this different from other AI tools?', a: 'We only generate content from your verified profile — no hallucinated claims. We check eligibility before you apply, and every submission includes an immutable receipt.' },
-              { q: 'Is my data safe?', a: 'Yes. Encryption at rest and in transit, never sold, exportable or deletable at any time. GDPR compliant.' },
-              { q: "What if I'm an international candidate?", a: 'We check work authorization, sponsorship requirements, and location restrictions before showing you opportunities — no wasted applications.' },
+              {
+                q: 'How is this different from other AI tools?',
+                a: 'We only generate content from your verified profile — no hallucinated claims. We check eligibility before you apply, and every submission includes an immutable receipt.',
+              },
+              {
+                q: 'Is my data safe?',
+                a: 'Yes. Encryption at rest and in transit, never sold, exportable or deletable at any time. GDPR compliant.',
+              },
+              {
+                q: "What if I'm an international candidate?",
+                a: 'We check work authorization, sponsorship requirements, and location restrictions before showing you opportunities — no wasted applications.',
+              },
             ].map((item, i) => (
               <Reveal key={item.q} delay={i * 80}>
                 <details className="group rounded-xl border border-white/10 bg-white/[0.02] open:bg-white/[0.03] transition-colors">
                   <summary className="flex items-center justify-between cursor-pointer list-none px-6 py-4 font-medium [&::-webkit-details-marker]:hidden">
                     {item.q}
-                    <ChevronDown className="w-4 h-4 text-fog group-open:rotate-180 transition-transform shrink-0 ml-4" aria-hidden="true" />
+                    <ChevronDown
+                      className="w-4 h-4 text-fog group-open:rotate-180 transition-transform shrink-0 ml-4"
+                      aria-hidden="true"
+                    />
                   </summary>
                   <p className="px-6 pb-5 text-sm text-fog leading-relaxed">{item.a}</p>
                 </details>
@@ -331,10 +417,15 @@ function LandingPage() {
 
       {/* Final CTA */}
       <section className="py-28 px-6 border-t border-white/5 relative overflow-hidden">
-        <div aria-hidden="true" className="absolute bottom-[-40%] left-1/2 -translate-x-1/2 w-[720px] h-[420px] rounded-full bg-moss/[0.06] blur-[120px]" />
+        <div
+          aria-hidden="true"
+          className="absolute bottom-[-40%] left-1/2 -translate-x-1/2 w-[720px] h-[420px] rounded-full bg-moss/[0.06] blur-[120px]"
+        />
         <Reveal>
           <div className="max-w-3xl mx-auto text-center relative">
-            <h2 className="font-display text-5xl mb-4">Your next role is already listed somewhere.</h2>
+            <h2 className="font-display text-5xl mb-4">
+              Your next role is already listed somewhere.
+            </h2>
             <p className="text-fog mb-10 max-w-xl mx-auto">
               Create a free account and NextJob will find it, check you qualify, and have the
               application ready before you finish coffee.
@@ -347,14 +438,19 @@ function LandingPage() {
                 Start free
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
-              <Link to="/login" className="px-7 py-3.5 text-sm text-fog hover:text-paper transition-colors">
+              <Link
+                to="/login"
+                className="px-7 py-3.5 text-sm text-fog hover:text-paper transition-colors"
+              >
                 Already have an account? Sign in
               </Link>
             </div>
 
             {/* Waitlist kept for pre-launch visitors */}
             <div id="waitlist" className="mt-16 scroll-mt-24 border-t border-white/5 pt-10">
-              <p className="text-sm text-fog mb-4">Prefer early access without an account yet? Join the beta waitlist:</p>
+              <p className="text-sm text-fog mb-4">
+                Prefer early access without an account yet? Join the beta waitlist:
+              </p>
               <WaitlistForm />
             </div>
           </div>
@@ -369,9 +465,15 @@ function LandingPage() {
             <span>© 2026 NextJob</span>
           </div>
           <nav aria-label="Footer" className="flex gap-6 text-sm text-fog">
-            <Link to="/login" className="hover:text-paper transition-colors">Sign in</Link>
-            <Link to="/privacy" className="hover:text-paper transition-colors">Privacy</Link>
-            <Link to="/terms" className="hover:text-paper transition-colors">Terms</Link>
+            <Link to="/login" className="hover:text-paper transition-colors">
+              Sign in
+            </Link>
+            <Link to="/privacy" className="hover:text-paper transition-colors">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-paper transition-colors">
+              Terms
+            </Link>
           </nav>
         </div>
       </footer>

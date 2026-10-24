@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 // ============================================================================
 // Role Definitions
@@ -53,11 +53,7 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
 /**
  * Check if a role has a specific permission
  */
-export function hasPermission(
-  role: Role,
-  resource: string,
-  action: string
-): boolean {
+export function hasPermission(role: Role, resource: string, action: string): boolean {
   const permissions = ROLE_PERMISSIONS[role];
 
   if (!permissions) {
@@ -65,12 +61,12 @@ export function hasPermission(
   }
 
   // Check for wildcard permission (super_admin)
-  if (permissions.some(p => p.resource === '*' && p.actions.includes('*'))) {
+  if (permissions.some((p) => p.resource === '*' && p.actions.includes('*'))) {
     return true;
   }
 
   // Check for specific resource permission
-  const permission = permissions.find(p => p.resource === resource);
+  const permission = permissions.find((p) => p.resource === resource);
   if (!permission) {
     return false;
   }
@@ -150,7 +146,7 @@ export function requireAnyPermission(permissions: Array<{ resource: string; acti
       return;
     }
 
-    const hasAnyPermission = permissions.some(p =>
+    const hasAnyPermission = permissions.some((p) =>
       userHasPermission(req.user, p.resource, p.action)
     );
 
@@ -177,7 +173,7 @@ export function requireAllPermissions(permissions: Array<{ resource: string; act
       return;
     }
 
-    const hasAllPermissions = permissions.every(p =>
+    const hasAllPermissions = permissions.every((p) =>
       userHasPermission(req.user, p.resource, p.action)
     );
 

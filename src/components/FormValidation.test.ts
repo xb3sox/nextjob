@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { useFormValidation } from './FormValidation';
 
 describe('useFormValidation', () => {
@@ -22,10 +22,7 @@ describe('useFormValidation', () => {
 
   it('validates required fields', () => {
     const { result } = renderHook(() =>
-      useFormValidation(
-        { email: '' },
-        { email: { required: true } }
-      )
+      useFormValidation({ email: '' }, { email: { required: true } })
     );
 
     act(() => {
@@ -38,10 +35,7 @@ describe('useFormValidation', () => {
 
   it('validates minLength', () => {
     const { result } = renderHook(() =>
-      useFormValidation(
-        { password: '123' },
-        { password: { minLength: 8 } }
-      )
+      useFormValidation({ password: '123' }, { password: { minLength: 8 } })
     );
 
     act(() => {
@@ -68,10 +62,7 @@ describe('useFormValidation', () => {
 
   it('clears error when value is valid', () => {
     const { result } = renderHook(() =>
-      useFormValidation(
-        { email: '' },
-        { email: { required: true } }
-      )
+      useFormValidation({ email: '' }, { email: { required: true } })
     );
 
     act(() => {
@@ -131,10 +122,7 @@ describe('useFormValidation', () => {
 
   it('resets all fields', () => {
     const { result } = renderHook(() =>
-      useFormValidation(
-        { email: 'test@example.com' },
-        { email: { required: true } }
-      )
+      useFormValidation({ email: 'test@example.com' }, { email: { required: true } })
     );
 
     act(() => {
@@ -163,10 +151,7 @@ describe('useFormValidation', () => {
     };
 
     const { result } = renderHook(() =>
-      useFormValidation(
-        { password: 'wrong' },
-        { password: { custom: customValidator } }
-      )
+      useFormValidation({ password: 'wrong' }, { password: { custom: customValidator } })
     );
 
     act(() => {

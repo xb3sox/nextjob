@@ -11,20 +11,17 @@ import { FileParsingError } from '../types.js';
 export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   try {
     const data = await pdfParse(buffer);
-    
+
     if (!data.text || data.text.trim().length === 0) {
-      throw new FileParsingError(
-        'PDF file contains no extractable text',
-        'pdf'
-      );
+      throw new FileParsingError('PDF file contains no extractable text', 'pdf');
     }
-    
+
     return data.text;
   } catch (error) {
     if (error instanceof FileParsingError) {
       throw error;
     }
-    
+
     throw new FileParsingError(
       `Failed to parse PDF: ${error instanceof Error ? error.message : 'Unknown error'}`,
       'pdf',
@@ -43,13 +40,13 @@ export async function validatePDF(buffer: Buffer): Promise<{
 }> {
   try {
     const data = await pdfParse(buffer);
-    
+
     return {
       isValid: true,
       pageCount: data.numpages,
       info: data.info,
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       isValid: false,
       pageCount: 0,
@@ -72,7 +69,7 @@ export async function extractPDFMetadata(buffer: Buffer): Promise<{
 }> {
   try {
     const data = await pdfParse(buffer);
-    
+
     return {
       title: data.info?.Title,
       author: data.info?.Author,
@@ -82,7 +79,7 @@ export async function extractPDFMetadata(buffer: Buffer): Promise<{
       creationDate: data.info?.CreationDate ? new Date(data.info.CreationDate) : undefined,
       modificationDate: data.info?.ModDate ? new Date(data.info.ModDate) : undefined,
     };
-  } catch (error) {
+  } catch (_error) {
     return {};
   }
 }

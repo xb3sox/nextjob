@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 export type StorageProvider = 's3' | 'local' | 'memory';
 
-export type EvidenceCategory = 
+export type EvidenceCategory =
   | 'resume'
   | 'certificate'
   | 'transcript'
@@ -23,41 +23,51 @@ export const EvidenceFileSchema = z.object({
   id: z.string().min(1),
   userId: z.string().min(1),
   tenantId: z.string().min(1),
-  
+
   // File metadata
   fileName: z.string().min(1),
   originalFileName: z.string().min(1),
   mimeType: z.string().min(1),
   fileSize: z.number().positive(),
   hash: z.string().min(1), // SHA-256 hash
-  
+
   // Storage location
   storageProvider: z.enum(['s3', 'local', 'memory']),
   storageKey: z.string().min(1),
   storageBucket: z.string().optional(),
-  
+
   // Category and description
-  category: z.enum(['resume', 'certificate', 'transcript', 'portfolio', 'reference', 'verification_link', 'other']),
+  category: z.enum([
+    'resume',
+    'certificate',
+    'transcript',
+    'portfolio',
+    'reference',
+    'verification_link',
+    'other',
+  ]),
   description: z.string().optional(),
-  
+
   // Access control
   isPublic: z.boolean().default(false),
-  accessControl: z.object({
-    read: z.array(z.string().min(1)).optional(), // User IDs with read access
-    write: z.array(z.string().min(1)).optional(), // User IDs with write access
-  }).optional(),
-  
+  accessControl: z
+    .object({
+      read: z.array(z.string().min(1)).optional(), // User IDs with read access
+      write: z.array(z.string().min(1)).optional(), // User IDs with write access
+    })
+    .optional(),
+
   // Verification
   verified: z.boolean().default(false),
   verifiedAt: z.string().datetime().optional(),
   verifiedBy: z.string().min(1).optional(),
   verificationNotes: z.string().optional(),
-  
+
   // URLs
   downloadUrl: z.string().url().optional(),
   signedUrl: z.string().url().optional(),
   signedUrlExpiresAt: z.string().datetime().optional(),
-  
+
   // Metadata
   version: z.number().int().positive().default(1),
   previousVersionId: z.string().min(1).optional(),
@@ -65,7 +75,7 @@ export const EvidenceFileSchema = z.object({
   updatedAt: z.string().datetime(),
   createdBy: z.string().min(1),
   updatedBy: z.string().min(1),
-  
+
   // Soft delete
   deleted: z.boolean().default(false),
   deletedAt: z.string().datetime().optional(),
@@ -149,7 +159,7 @@ export interface DeleteEvidenceRequest {
 
 export interface StorageConfig {
   provider: StorageProvider;
-  
+
   // S3 configuration
   s3?: {
     bucket: string;
@@ -158,12 +168,12 @@ export interface StorageConfig {
     secretAccessKey: string;
     endpoint?: string;
   };
-  
+
   // Local storage configuration
   local?: {
     basePath: string;
   };
-  
+
   // Signed URL configuration
   signedUrlExpiration: number; // seconds
   maxFileSize: number; // bytes
@@ -210,11 +220,7 @@ export class EvidenceNotFoundError extends EvidenceStorageError {
 
 export class FileAccessDeniedError extends EvidenceStorageError {
   constructor(fileId: string, userId: string) {
-    super(
-      `Access denied to evidence file ${fileId} for user ${userId}`,
-      'ACCESS_DENIED',
-      403
-    );
+    super(`Access denied to evidence file ${fileId} for user ${userId}`, 'ACCESS_DENIED', 403);
     this.name = 'FileAccessDeniedError';
   }
 }
@@ -243,11 +249,7 @@ export class InvalidFileTypeError extends EvidenceStorageError {
 
 export class SignedUrlExpiredError extends EvidenceStorageError {
   constructor(fileId: string) {
-    super(
-      `Signed URL for file ${fileId} has expired`,
-      'SIGNED_URL_EXPIRED',
-      410
-    );
+    super(`Signed URL for file ${fileId} has expired`, 'SIGNED_URL_EXPIRED', 410);
     this.name = 'SignedUrlExpiredError';
   }
 }

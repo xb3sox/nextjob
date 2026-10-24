@@ -1,11 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { VerificationService } from './verification-service.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { claimsService } from '../claims/claims-service.js';
-import {
-  ClaimAlreadyVerifiedError,
-  InvalidVerificationActionError,
-  ClaimNotFoundError,
-} from './types.js';
+import { ClaimNotFoundError, InvalidVerificationActionError } from './types.js';
+import { VerificationService } from './verification-service.js';
 
 // Mock claims service
 vi.mock('../claims/claims-service.js', () => ({
@@ -148,9 +144,7 @@ describe('VerificationService', () => {
     });
 
     it('should throw error if claim not found', async () => {
-      vi.mocked(claimsService.getClaim).mockRejectedValue(
-        new ClaimNotFoundError('claim-123')
-      );
+      vi.mocked(claimsService.getClaim).mockRejectedValue(new ClaimNotFoundError('claim-123'));
 
       await expect(
         service.verifyClaim({
