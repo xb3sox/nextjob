@@ -1,0 +1,112 @@
+name: Task
+description: One task from TASKS.md. One issue = one task = one PR.
+title: "[TASK]: T-XX "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for work tracked in `TASKS.md`. Keep the scope to a single task — if it needs two PRs, open two issues.
+
+  - type: input
+    id: task-id
+    attributes:
+      label: Task ID
+      description: The TASKS.md identifier (e.g. T-19)
+      placeholder: T-19
+    validations:
+      required: true
+
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - "1. Environment & Infrastructure"
+        - "6. Policy & Approvals"
+        - "7. Browser Extension & Connectors"
+        - "8. Applications & Receipts"
+        - "9. Notifications & Outcomes"
+        - "10. Organizations & B2B"
+        - "11. Billing"
+        - "12. Admin Console"
+        - "13. Testing & Evaluation"
+        - "14. Security & Privacy"
+        - "15. Observability & Monitoring"
+        - "16. CI/CD & Deployment"
+        - "17. Documentation"
+        - "18. Application State Machine"
+        - "19. Failure & Edge Cases"
+        - "20. Accessibility & Localization"
+        - "21. Analytics & Experimentation"
+        - "22. Monetization"
+        - "23. Rollout & Documentation"
+        - "24. Marketing & Landing Page"
+        - "25. Performance Excellence"
+        - "26. Advanced SEO"
+        - "27. Conversion Optimization"
+        - "28. Visual Excellence"
+        - "29. Content Strategy"
+        - "30. Trust & Credibility"
+        - "31. Technical Excellence"
+        - "32. Growth Infrastructure"
+        - "33. Monitoring & Optimization"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: owner
+    attributes:
+      label: Owner
+      description: See AGENTS.md §GitHub Workflow for what each label means.
+      options:
+        - agent:jules (ready for the async agent)
+        - agent:jules-queued (agent work, dependency open)
+        - agent:human (approval, credentials, legal, judgement)
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliverable
+    attributes:
+      label: Deliverable
+      description: One paragraph. What exists when this is done?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: One checklist item per verifiable outcome.
+      value: |
+        - [ ] 
+        - [ ] 
+    validations:
+      required: true
+
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: Exact commands or artefacts that prove the criteria.
+      value: |
+        ```bash
+        bun run typecheck && bun run lint
+        bunx vitest run --maxWorkers 2
+        bun run build
+        ```
+    validations:
+      required: true
+
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Task IDs that must merge first, or "None".
+
+  - type: input
+    id: files
+    attributes:
+      label: Files / areas
+      description: Where the change should live.

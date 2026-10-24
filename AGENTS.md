@@ -174,6 +174,49 @@ npx shadcn@latest diff             # Show component differences
 - Follow WCAG 2.2 AA for all user-facing interfaces.
 - Use Zod schemas for all API boundaries and AI structured output.
 
+## GitHub Workflow
+
+Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/projects/11)
+(`#11`). Every open task in [TASKS.md](TASKS.md) has exactly one issue.
+
+**One issue = one task = one PR.** Do not bundle tasks; do not open a PR without an issue.
+
+### Labels
+
+| Label | Meaning |
+| --- | --- |
+| `agent:jules` | Ready for the async coding agent. Dependencies merged, acceptance testable in-repo. |
+| `agent:jules-queued` | Good agent work, but a dependency has not merged. Do not start. |
+| `agent:human` | Needs a person: approval, credentials, legal/compliance judgement, or an unresolved decision. |
+| `phase:NN` | Phase grouping used by the board. |
+
+### Workflow
+
+1. Pick an issue labelled `agent:jules` (or assigned to you). Read its brief.
+2. Branch from `main`: `feat/<task-id>-<slug>` (e.g. `feat/t-18-tailoring-review-ui`).
+3. Implement only the scope in the issue. Protected paths stay untouched.
+4. Run the gates below; paste the output into the PR body.
+5. Open the PR against `main`, link the issue (`Refs T-XX`), and move the board item to `In Progress` then `Done`.
+
+### Gates before any PR
+
+```bash
+bun run typecheck
+bun run lint
+bunx vitest run --maxWorkers 2
+bun run build
+```
+
+`bun.lock` is the single lockfile — never run `npm install`/`npx`. Install with
+`bun install --frozen-lockfile` (CI does).
+
+### Stop and comment instead of guessing when
+
+- A dependency listed on the issue is still open.
+- Acceptance criteria conflict with `docs/PRD.md` or `docs/TECH.md`.
+- The change would touch a protected path or need a new dependency.
+- The work needs a credential, a paid service, or a production action.
+
 ## Completion Gates
 
 Before any feature merges to main:
