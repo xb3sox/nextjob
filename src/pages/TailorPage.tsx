@@ -1,3 +1,4 @@
+// probe: rule regression check
 import {
   type CareerClaim,
   type CareerGraph,
