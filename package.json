@@ -1,7 +1,10 @@
 {
-  "name": "sandbox-workspace",
+  "name": "nextjob",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "packageManager": "bun@1.3.11",
   "scripts": {
     "dev": "vite",

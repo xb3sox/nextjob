@@ -120,7 +120,10 @@ export class TailoringEngine {
    */
   private validateRequest(request: TailoringRequest): TailoringRequest {
     try {
-      return TailoringRequestSchema.parse(request);
+      // Zod treats `z.any()` keys as optional, so the parsed type widens
+      // `content` to `content?`. The runtime shape is what CareerClaim
+      // requires; the cast keeps the validated request typed as the contract.
+      return TailoringRequestSchema.parse(request) as TailoringRequest;
     } catch (error) {
       if (error instanceof Error) {
         throw new InvalidTailoringRequestError(error.message);
