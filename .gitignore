@@ -79,3 +79,7 @@ temp/
 
 # Wrangler local state (generated)
 .wrangler/
+
+# Agent scratch notes (local only)
+.jules/
+.Jules/
