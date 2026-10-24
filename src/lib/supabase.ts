@@ -26,14 +26,18 @@ if (!isSupabaseConfigured) {
   );
 }
 
-export const supabase = createClient(url ?? 'http://localhost:54321', anonKey || 'placeholder-key', {
-  auth: {
-    // Persist sessions in localStorage; auto-refresh keeps tokens valid.
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true, // handles OAuth & email-confirm redirects
-  },
-});
+export const supabase = createClient(
+  url ?? 'http://localhost:54321',
+  anonKey || 'placeholder-key',
+  {
+    auth: {
+      // Persist sessions in localStorage; auto-refresh keeps tokens valid.
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true, // handles OAuth & email-confirm redirects
+    },
+  }
+);
 
 export function hasActiveSession(session: Session | null): boolean {
   if (!session) return false;
