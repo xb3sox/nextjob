@@ -36,6 +36,9 @@ jobs:
       - name: Typecheck (packages/tailoring)
         run: bunx tsc --noEmit -p packages/tailoring/tsconfig.json
 
+      - name: Typecheck (packages/applications)
+        run: bunx tsc --noEmit -p packages/applications/tsconfig.json
+
       - name: Lint
         run: bun run lint
 

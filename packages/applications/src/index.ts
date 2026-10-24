@@ -1,0 +1,16 @@
+export {
+  type ApplicationSnapshot,
+  type ApplicationState,
+  ApplicationStateMachine,
+  type AuditEntry,
+  EXCEPTION_STATES,
+  InvalidTransitionError,
+  MAX_RETRIES,
+  OUTCOME_STATES,
+  type OutcomeState,
+  PIPELINE_STATES,
+  type PipelineState,
+  TERMINAL_STATES,
+  TRANSITIONS,
+  type TransitionContext,
+} from './state-machine.js';
