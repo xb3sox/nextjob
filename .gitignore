@@ -76,3 +76,6 @@ $RECYCLE.BIN/
 tmp/
 temp/
 .codegraph/
+
+# Wrangler local state (generated)
+.wrangler/
