@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it } from 'vitest';
 import WaitlistForm from './WaitlistForm';
 
 describe('WaitlistForm', () => {
@@ -16,9 +16,7 @@ describe('WaitlistForm', () => {
 
     await user.click(screen.getByRole('button', { name: /start free/i }));
 
-    expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Please enter your email address.'
-    );
+    expect(await screen.findByRole('alert')).toHaveTextContent('Please enter your email address.');
     expect(screen.getByLabelText('Email address')).toHaveAttribute('aria-invalid', 'true');
   });
 

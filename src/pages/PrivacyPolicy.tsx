@@ -1,4 +1,4 @@
-import { ArrowLeft, Shield, Lock, Eye, Database, Trash2, Download, Mail } from 'lucide-react';
+import { ArrowLeft, Database, Download, Eye, Lock, Mail, Shield, Trash2 } from 'lucide-react';
 
 export default function PrivacyPolicy() {
   return (
@@ -7,7 +7,10 @@ export default function PrivacyPolicy() {
       <header className="border-b border-white/5 bg-ink/95 backdrop-blur-xl sticky top-0 z-50">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            <a href="/" className="flex items-center gap-2 text-sm text-fog hover:text-white transition-colors">
+            <a
+              href="/"
+              className="flex items-center gap-2 text-sm text-fog hover:text-white transition-colors"
+            >
               <ArrowLeft size={16} />
               Back to Home
             </a>
@@ -36,8 +39,8 @@ export default function PrivacyPolicy() {
             <div>
               <h2 className="text-2xl font-semibold mb-2">Our Commitment to Your Privacy</h2>
               <p className="text-fog">
-                At NextJob, we believe your career data is deeply personal. We're committed to protecting your privacy 
-                and being transparent about how we handle your information.
+                At NextJob, we believe your career data is deeply personal. We're committed to
+                protecting your privacy and being transparent about how we handle your information.
               </p>
             </div>
           </div>
@@ -54,23 +57,37 @@ export default function PrivacyPolicy() {
               <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Account Information:</strong> Email address, name, and authentication credentials</span>
+                  <span>
+                    <strong>Account Information:</strong> Email address, name, and authentication
+                    credentials
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Career Data:</strong> CV/resume content, work history, skills, education, and certifications that you upload</span>
+                  <span>
+                    <strong>Career Data:</strong> CV/resume content, work history, skills,
+                    education, and certifications that you upload
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Application Data:</strong> Job applications you create through our platform</span>
+                  <span>
+                    <strong>Application Data:</strong> Job applications you create through our
+                    platform
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Usage Data:</strong> How you interact with our service (pages visited, features used)</span>
+                  <span>
+                    <strong>Usage Data:</strong> How you interact with our service (pages visited,
+                    features used)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Technical Data:</strong> IP address, browser type, device information</span>
+                  <span>
+                    <strong>Technical Data:</strong> IP address, browser type, device information
+                  </span>
                 </li>
               </ul>
             </div>
@@ -107,19 +124,31 @@ export default function PrivacyPolicy() {
               <ul className="space-y-3 text-fog">
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">→</span>
-                  <span><strong>Provide our service:</strong> Process your CV, match you with jobs, generate applications</span>
+                  <span>
+                    <strong>Provide our service:</strong> Process your CV, match you with jobs,
+                    generate applications
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">→</span>
-                  <span><strong>Improve our product:</strong> Analyze usage patterns to enhance features (anonymized)</span>
+                  <span>
+                    <strong>Improve our product:</strong> Analyze usage patterns to enhance features
+                    (anonymized)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">→</span>
-                  <span><strong>Communicate with you:</strong> Send important updates about your account or service changes</span>
+                  <span>
+                    <strong>Communicate with you:</strong> Send important updates about your account
+                    or service changes
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">→</span>
-                  <span><strong>Ensure security:</strong> Detect and prevent fraud, abuse, and technical issues</span>
+                  <span>
+                    <strong>Ensure security:</strong> Detect and prevent fraud, abuse, and technical
+                    issues
+                  </span>
                 </li>
               </ul>
             </div>
@@ -137,19 +166,27 @@ export default function PrivacyPolicy() {
               <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Encryption:</strong> All data encrypted at rest and in transit (TLS 1.3)</span>
+                  <span>
+                    <strong>Encryption:</strong> All data encrypted at rest and in transit (TLS 1.3)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Access Controls:</strong> Strict authentication and authorization</span>
+                  <span>
+                    <strong>Access Controls:</strong> Strict authentication and authorization
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Regular Audits:</strong> Security assessments and penetration testing</span>
+                  <span>
+                    <strong>Regular Audits:</strong> Security assessments and penetration testing
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">✓</span>
-                  <span><strong>Minimal Access:</strong> Only essential personnel can access your data</span>
+                  <span>
+                    <strong>Minimal Access:</strong> Only essential personnel can access your data
+                  </span>
                 </li>
               </ul>
             </div>
@@ -175,16 +212,12 @@ export default function PrivacyPolicy() {
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
                 <Eye className="text-moss mb-2" size={20} />
                 <h3 className="font-semibold mb-2">View Your Data</h3>
-                <p className="text-sm text-fog">
-                  See exactly what data we have stored about you
-                </p>
+                <p className="text-sm text-fog">See exactly what data we have stored about you</p>
               </div>
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
                 <Lock className="text-moss mb-2" size={20} />
                 <h3 className="font-semibold mb-2">Restrict Processing</h3>
-                <p className="text-sm text-fog">
-                  Limit how we use your data for specific purposes
-                </p>
+                <p className="text-sm text-fog">Limit how we use your data for specific purposes</p>
               </div>
             </div>
           </section>
@@ -194,8 +227,8 @@ export default function PrivacyPolicy() {
             <div className="rounded-xl border border-moss/20 bg-moss/5 p-6">
               <h3 className="font-semibold mb-3 text-moss">We Never Sell Your Data</h3>
               <p className="text-fog">
-                We will never sell, rent, or share your personal data with third parties for advertising or marketing purposes. 
-                Your career data is yours alone.
+                We will never sell, rent, or share your personal data with third parties for
+                advertising or marketing purposes. Your career data is yours alone.
               </p>
             </div>
 
@@ -207,19 +240,26 @@ export default function PrivacyPolicy() {
               <ul className="space-y-2 text-fog">
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">•</span>
-                  <span><strong>Payment Processing:</strong> Stripe (for subscription billing)</span>
+                  <span>
+                    <strong>Payment Processing:</strong> Stripe (for subscription billing)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">•</span>
-                  <span><strong>Cloud Infrastructure:</strong> AWS and Vercel (for hosting and storage)</span>
+                  <span>
+                    <strong>Cloud Infrastructure:</strong> AWS and Vercel (for hosting and storage)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-moss mt-1">•</span>
-                  <span><strong>Analytics:</strong> PostHog (anonymized usage analytics)</span>
+                  <span>
+                    <strong>Analytics:</strong> PostHog (anonymized usage analytics)
+                  </span>
                 </li>
               </ul>
               <p className="text-sm text-fog mt-3">
-                All third-party providers are contractually obligated to protect your data and comply with GDPR.
+                All third-party providers are contractually obligated to protect your data and
+                comply with GDPR.
               </p>
             </div>
           </section>
@@ -232,16 +272,20 @@ export default function PrivacyPolicy() {
                   <strong>Account Data:</strong> Retained while your account is active
                 </li>
                 <li>
-                  <strong>Career Data:</strong> Retained while your account is active, deleted within 30 days of account deletion
+                  <strong>Career Data:</strong> Retained while your account is active, deleted
+                  within 30 days of account deletion
                 </li>
                 <li>
-                  <strong>Application History:</strong> Retained for 2 years after account deletion (for dispute resolution)
+                  <strong>Application History:</strong> Retained for 2 years after account deletion
+                  (for dispute resolution)
                 </li>
                 <li>
-                  <strong>Analytics Data:</strong> Anonymized after 90 days, retained indefinitely in anonymized form
+                  <strong>Analytics Data:</strong> Anonymized after 90 days, retained indefinitely
+                  in anonymized form
                 </li>
                 <li>
-                  <strong>Legal Requirements:</strong> Some data may be retained longer if required by law
+                  <strong>Legal Requirements:</strong> Some data may be retained longer if required
+                  by law
                 </li>
               </ul>
             </div>
@@ -251,11 +295,15 @@ export default function PrivacyPolicy() {
             <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
             <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
               <p className="text-fog mb-4">
-                If you have questions about this privacy policy or want to exercise your rights, contact us:
+                If you have questions about this privacy policy or want to exercise your rights,
+                contact us:
               </p>
               <div className="flex items-center gap-3">
                 <Mail className="text-moss" size={20} />
-                <a href="mailto:privacy@nextjob.ai" className="text-moss hover:text-paper transition-colors">
+                <a
+                  href="mailto:privacy@nextjob.ai"
+                  className="text-moss hover:text-paper transition-colors"
+                >
                   privacy@nextjob.ai
                 </a>
               </div>
@@ -268,7 +316,7 @@ export default function PrivacyPolicy() {
 
         <div className="mt-12 pt-8 border-t border-white/5 text-center">
           <p className="text-sm text-fog">
-            © 2026 NextJob. All rights reserved. | 
+            © 2026 NextJob. All rights reserved. |
             <a href="/terms" className="text-moss hover:text-paper ml-2 transition-colors">
               Terms of Service
             </a>

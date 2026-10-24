@@ -1,6 +1,6 @@
+import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import AuthLayout from '@/components/AuthLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { safeReturnPath } from '@/lib/redirect';
@@ -48,22 +48,31 @@ export default function LoginPage() {
       }
     >
       {!configured && (
-        <div role="alert" className="mb-6 flex items-start gap-2 rounded-lg border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
+        <div
+          role="alert"
+          className="mb-6 flex items-start gap-2 rounded-lg border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger"
+        >
           <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" aria-hidden="true" />
-          Authentication isn’t configured on this deployment. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable sign-in.
+          Authentication isn’t configured on this deployment. Set VITE_SUPABASE_URL and
+          VITE_SUPABASE_ANON_KEY to enable sign-in.
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div>
-          <label htmlFor="login-email" className="block text-sm font-medium mb-1.5">Email</label>
+          <label htmlFor="login-email" className="block text-sm font-medium mb-1.5">
+            Email
+          </label>
           <input
             id="login-email"
             type="email"
             autoComplete="email"
             required
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setError(''); }}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setError('');
+            }}
             placeholder="you@company.com"
             className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-fog/70 focus:outline-none focus:border-moss/50 focus:ring-1 focus:ring-moss/30 transition-colors"
           />
@@ -71,8 +80,13 @@ export default function LoginPage() {
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label htmlFor="login-password" className="block text-sm font-medium">Password</label>
-            <Link to="/forgot-password" className="text-xs text-fog hover:text-moss transition-colors">
+            <label htmlFor="login-password" className="block text-sm font-medium">
+              Password
+            </label>
+            <Link
+              to="/forgot-password"
+              className="text-xs text-fog hover:text-moss transition-colors"
+            >
               Forgot password?
             </Link>
           </div>
@@ -83,7 +97,10 @@ export default function LoginPage() {
               autoComplete="current-password"
               required
               value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(''); }}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError('');
+              }}
               placeholder="••••••••"
               className="w-full px-4 py-3 pr-12 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-fog/70 focus:outline-none focus:border-moss/50 focus:ring-1 focus:ring-moss/30 transition-colors"
             />
@@ -111,7 +128,10 @@ export default function LoginPage() {
           className="w-full py-3 px-4 rounded-lg bg-moss-deep hover:bg-moss disabled:opacity-60 disabled:cursor-not-allowed text-moss-dark font-semibold transition-colors flex items-center justify-center gap-2"
         >
           {loading && (
-            <span className="w-4 h-4 rounded-full border-2 border-moss-dark/30 border-t-moss-dark animate-spin motion-reduce:animate-none" aria-hidden="true" />
+            <span
+              className="w-4 h-4 rounded-full border-2 border-moss-dark/30 border-t-moss-dark animate-spin motion-reduce:animate-none"
+              aria-hidden="true"
+            />
           )}
           {loading ? 'Signing in…' : 'Sign in'}
         </button>

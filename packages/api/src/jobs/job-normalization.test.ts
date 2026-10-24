@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { JobNormalizationService } from './job-normalization.js';
 
 describe('JobNormalizationService', () => {
@@ -145,7 +145,7 @@ describe('JobNormalizationService', () => {
     it('should calculate lower freshness for older jobs', () => {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      
+
       const job = {
         postedAt: thirtyDaysAgo.toISOString(),
       };
@@ -171,15 +171,9 @@ describe('JobNormalizationService', () => {
       const result = service.normalizeJob(job);
 
       expect(result.changes.length).toBeGreaterThan(0);
-      expect(result.changes).toContainEqual(
-        expect.objectContaining({ field: 'workMode' })
-      );
-      expect(result.changes).toContainEqual(
-        expect.objectContaining({ field: 'location' })
-      );
-      expect(result.changes).toContainEqual(
-        expect.objectContaining({ field: 'requiredSkills' })
-      );
+      expect(result.changes).toContainEqual(expect.objectContaining({ field: 'workMode' }));
+      expect(result.changes).toContainEqual(expect.objectContaining({ field: 'location' }));
+      expect(result.changes).toContainEqual(expect.objectContaining({ field: 'requiredSkills' }));
     });
   });
 });

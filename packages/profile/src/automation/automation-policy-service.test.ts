@@ -1,6 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { AutomationPolicyService } from './automation-policy-service.js';
-import { AutomationPolicyNotFoundError, InvalidAutomationPolicyError, VersionConflictError } from './types.js';
+import {
+  AutomationPolicyNotFoundError,
+  InvalidAutomationPolicyError,
+  VersionConflictError,
+} from './types.js';
 
 describe('AutomationPolicyService', () => {
   let service: AutomationPolicyService;
@@ -167,15 +171,15 @@ describe('AutomationPolicyService', () => {
         defaultMode: 'copilot' as const,
       };
 
-      const result = await service.createPolicy(request);
+      const _result = await service.createPolicy(request);
 
       const updateRequest = {
         defaultMode: 'autopilot' as const,
       };
 
-      await expect(
-        service.updatePolicy('user-123', updateRequest, 999)
-      ).rejects.toThrow(VersionConflictError);
+      await expect(service.updatePolicy('user-123', updateRequest, 999)).rejects.toThrow(
+        VersionConflictError
+      );
     });
 
     it('should succeed if expected version matches', async () => {

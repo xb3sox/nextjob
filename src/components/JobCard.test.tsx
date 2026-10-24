@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { JobCard, JobCardSkeleton } from './JobCard';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import type { JobCapabilityModel } from './JobCard';
+import { JobCard, JobCardSkeleton } from './JobCard';
 
 describe('JobCard', () => {
   const mockCapabilities: JobCapabilityModel = {
@@ -19,9 +19,7 @@ describe('JobCard', () => {
       'Required skills verified',
       'Location matches preferences',
     ],
-    weaknesses: [
-      'Preferred certification not found',
-    ],
+    weaknesses: ['Preferred certification not found'],
   };
 
   const defaultProps = {
@@ -36,33 +34,33 @@ describe('JobCard', () => {
 
   it('renders job title and company', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('Senior Software Engineer')).toBeInTheDocument();
     expect(screen.getByText('Tech Corp')).toBeInTheDocument();
   });
 
   it('renders location with remote indicator', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('San Francisco, CA')).toBeInTheDocument();
     expect(screen.getByText('· Remote')).toBeInTheDocument();
   });
 
   it('renders salary range', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('$150k - $200k')).toBeInTheDocument();
   });
 
   it('renders match badge with correct status', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('Excellent match · 92%')).toBeInTheDocument();
   });
 
   it('renders eligibility badge for eligible job', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('You can apply')).toBeInTheDocument();
   });
 
@@ -76,7 +74,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Probably not eligible')).toBeInTheDocument();
   });
 
@@ -90,13 +88,13 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Check before applying')).toBeInTheDocument();
   });
 
   it('renders strengths', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('Why it fits')).toBeInTheDocument();
     expect(screen.getByText('Strong experience match')).toBeInTheDocument();
     expect(screen.getByText('Required skills verified')).toBeInTheDocument();
@@ -105,7 +103,7 @@ describe('JobCard', () => {
 
   it('renders weaknesses', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('Gaps')).toBeInTheDocument();
     expect(screen.getByText('Preferred certification not found')).toBeInTheDocument();
   });
@@ -121,14 +119,14 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Missing')).toBeInTheDocument();
     expect(screen.getByText('US work authorization')).toBeInTheDocument();
   });
 
   it('renders capability dimensions', () => {
     render(<JobCard {...defaultProps} />);
-    
+
     expect(screen.getByText('Capability Model')).toBeInTheDocument();
     expect(screen.getByText('Evidence')).toBeInTheDocument();
     expect(screen.getByText('Complete')).toBeInTheDocument();
@@ -159,7 +157,7 @@ describe('JobCard', () => {
         onView={onView}
       />
     );
-    
+
     expect(screen.getByText('Review & Apply')).toBeInTheDocument();
     expect(screen.getByText('Save')).toBeInTheDocument();
     expect(screen.getByText('Skip')).toBeInTheDocument();
@@ -169,7 +167,7 @@ describe('JobCard', () => {
   it('calls onApply when apply button clicked', () => {
     const onApply = vi.fn();
     render(<JobCard {...defaultProps} onApply={onApply} />);
-    
+
     fireEvent.click(screen.getByText('Review & Apply'));
     expect(onApply).toHaveBeenCalledTimes(1);
   });
@@ -177,7 +175,7 @@ describe('JobCard', () => {
   it('calls onSave when save button clicked', () => {
     const onSave = vi.fn();
     render(<JobCard {...defaultProps} onSave={onSave} />);
-    
+
     fireEvent.click(screen.getByText('Save'));
     expect(onSave).toHaveBeenCalledTimes(1);
   });
@@ -185,7 +183,7 @@ describe('JobCard', () => {
   it('calls onSkip when skip button clicked', () => {
     const onSkip = vi.fn();
     render(<JobCard {...defaultProps} onSkip={onSkip} />);
-    
+
     fireEvent.click(screen.getByText('Skip'));
     expect(onSkip).toHaveBeenCalledTimes(1);
   });
@@ -193,7 +191,7 @@ describe('JobCard', () => {
   it('calls onView when view button clicked', () => {
     const onView = vi.fn();
     render(<JobCard {...defaultProps} onView={onView} />);
-    
+
     fireEvent.click(screen.getByText('View Details'));
     expect(onView).toHaveBeenCalledTimes(1);
   });
@@ -210,30 +208,20 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     const applyButton = screen.getByText('Not Eligible');
     expect(applyButton).toBeDisabled();
   });
 
   it('renders without salary when not provided', () => {
-    render(
-      <JobCard
-        {...defaultProps}
-        salary={undefined}
-      />
-    );
-    
+    render(<JobCard {...defaultProps} salary={undefined} />);
+
     expect(screen.queryByText(/\$\d+k/)).not.toBeInTheDocument();
   });
 
   it('renders without remote indicator when not remote', () => {
-    render(
-      <JobCard
-        {...defaultProps}
-        remote={false}
-      />
-    );
-    
+    render(<JobCard {...defaultProps} remote={false} />);
+
     expect(screen.queryByText('· Remote')).not.toBeInTheDocument();
   });
 
@@ -248,7 +236,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Good match · 75%')).toBeInTheDocument();
   });
 
@@ -263,7 +251,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Weak match · 55%')).toBeInTheDocument();
   });
 
@@ -278,7 +266,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('No match · 20%')).toBeInTheDocument();
   });
 
@@ -292,7 +280,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Assisted')).toBeInTheDocument();
   });
 
@@ -306,7 +294,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Manual')).toBeInTheDocument();
   });
 
@@ -320,7 +308,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Review')).toBeInTheDocument();
   });
 
@@ -334,7 +322,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Aging')).toBeInTheDocument();
   });
 
@@ -348,7 +336,7 @@ describe('JobCard', () => {
         }}
       />
     );
-    
+
     expect(screen.getByText('Missing')).toBeInTheDocument();
   });
 });

@@ -1,12 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
+  assertNoPII,
   detectPII,
-  redactPII,
   redactMessages,
   redactObject,
+  redactPII,
   redactWithContext,
   validateNoPII,
-  assertNoPII,
 } from './pii-redaction.js';
 
 // ============================================================================
@@ -149,9 +149,7 @@ describe('redactPII', () => {
   it('should apply custom patterns', () => {
     const text = 'Code: ABC123XYZ';
     const redacted = redactPII(text, {
-      customPatterns: [
-        { name: 'code', pattern: /ABC\d+XYZ/g },
-      ],
+      customPatterns: [{ name: 'code', pattern: /ABC\d+XYZ/g }],
     });
 
     expect(redacted).not.toContain('ABC123XYZ');
@@ -199,9 +197,7 @@ describe('redactMessages', () => {
   });
 
   it('should apply options to all messages', () => {
-    const messages = [
-      { role: 'user', content: 'Email: test@example.com' },
-    ];
+    const messages = [{ role: 'user', content: 'Email: test@example.com' }];
 
     const redacted = redactMessages(messages, { preserveEmail: true });
 

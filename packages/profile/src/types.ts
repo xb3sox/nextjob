@@ -36,65 +36,95 @@ export const ExtractedProfileDataSchema = z.object({
     linkedin: z.string().url().optional(),
     website: z.string().url().optional(),
   }),
-  
+
   summary: z.string().optional(),
-  
-  experience: z.array(z.object({
-    title: z.string(),
-    company: z.string(),
-    location: z.string().optional(),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-    current: z.boolean().optional(),
-    description: z.string().optional(),
-    achievements: z.array(z.string()).optional(),
-  })).optional(),
-  
-  education: z.array(z.object({
-    degree: z.string(),
-    institution: z.string(),
-    location: z.string().optional(),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-    gpa: z.string().optional(),
-    honors: z.array(z.string()).optional(),
-  })).optional(),
-  
-  skills: z.array(z.object({
-    name: z.string(),
-    category: z.string().optional(),
-    level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']).optional(),
-    yearsOfExperience: z.number().optional(),
-  })).optional(),
-  
-  certifications: z.array(z.object({
-    name: z.string(),
-    issuer: z.string().optional(),
-    date: z.string().optional(),
-    expirationDate: z.string().optional(),
-    credentialId: z.string().optional(),
-  })).optional(),
-  
-  projects: z.array(z.object({
-    name: z.string(),
-    description: z.string().optional(),
-    technologies: z.array(z.string()).optional(),
-    url: z.string().url().optional(),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-  })).optional(),
-  
-  achievements: z.array(z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    date: z.string().optional(),
-    issuer: z.string().optional(),
-  })).optional(),
-  
-  languages: z.array(z.object({
-    language: z.string(),
-    proficiency: z.enum(['native', 'fluent', 'professional', 'intermediate', 'basic']).optional(),
-  })).optional(),
+
+  experience: z
+    .array(
+      z.object({
+        title: z.string(),
+        company: z.string(),
+        location: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        current: z.boolean().optional(),
+        description: z.string().optional(),
+        achievements: z.array(z.string()).optional(),
+      })
+    )
+    .optional(),
+
+  education: z
+    .array(
+      z.object({
+        degree: z.string(),
+        institution: z.string(),
+        location: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        gpa: z.string().optional(),
+        honors: z.array(z.string()).optional(),
+      })
+    )
+    .optional(),
+
+  skills: z
+    .array(
+      z.object({
+        name: z.string(),
+        category: z.string().optional(),
+        level: z.enum(['beginner', 'intermediate', 'advanced', 'expert']).optional(),
+        yearsOfExperience: z.number().optional(),
+      })
+    )
+    .optional(),
+
+  certifications: z
+    .array(
+      z.object({
+        name: z.string(),
+        issuer: z.string().optional(),
+        date: z.string().optional(),
+        expirationDate: z.string().optional(),
+        credentialId: z.string().optional(),
+      })
+    )
+    .optional(),
+
+  projects: z
+    .array(
+      z.object({
+        name: z.string(),
+        description: z.string().optional(),
+        technologies: z.array(z.string()).optional(),
+        url: z.string().url().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      })
+    )
+    .optional(),
+
+  achievements: z
+    .array(
+      z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        date: z.string().optional(),
+        issuer: z.string().optional(),
+      })
+    )
+    .optional(),
+
+  languages: z
+    .array(
+      z.object({
+        language: z.string(),
+        proficiency: z
+          .enum(['native', 'fluent', 'professional', 'intermediate', 'basic'])
+          .optional(),
+      })
+    )
+    .optional(),
 });
 
 export type ExtractedProfileData = z.infer<typeof ExtractedProfileDataSchema>;
@@ -133,14 +163,21 @@ export class ProfileImportError extends Error {
 }
 
 export class FileParsingError extends ProfileImportError {
-  constructor(message: string, public fileType: FileType, public originalError?: Error) {
+  constructor(
+    message: string,
+    public fileType: FileType,
+    public originalError?: Error
+  ) {
     super(message, 'FILE_PARSING_ERROR', 400, { fileType, originalError });
     this.name = 'FileParsingError';
   }
 }
 
 export class AIExtractionError extends ProfileImportError {
-  constructor(message: string, public originalError?: Error) {
+  constructor(
+    message: string,
+    public originalError?: Error
+  ) {
     super(message, 'AI_EXTRACTION_ERROR', 500, { originalError });
     this.name = 'AIExtractionError';
   }
@@ -199,6 +236,6 @@ export function isValidFileType(mimeType: string): FileType | null {
     'application/pdf': 'pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
   };
-  
+
   return mimeToType[mimeType] || null;
 }

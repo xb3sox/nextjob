@@ -1,20 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
-import {
-  Job,
-  JobSchema,
-  Company,
-  CompanySchema,
-  IngestJobRequest,
-  IngestJobResponse,
-  ListJobsRequest,
-  ListJobsResponse,
-  JobNotFoundError,
-  DuplicateJobError,
-  InvalidJobDataError,
-  CompanyNotFoundError,
-} from './types.js';
-import { jobNormalizationService } from './job-normalization.js';
 import { jobDeduplicationService } from './job-deduplication.js';
+import { jobNormalizationService } from './job-normalization.js';
+import {
+  type Company,
+  CompanyNotFoundError,
+  CompanySchema,
+  type IngestJobRequest,
+  type IngestJobResponse,
+  type Job,
+  JobNotFoundError,
+  JobSchema,
+  type ListJobsRequest,
+  type ListJobsResponse,
+} from './types.js';
 
 // ============================================================================
 // Job Ingestion Service
@@ -34,44 +32,46 @@ export class JobIngestionService {
    */
   async ingestJob(request: IngestJobRequest): Promise<IngestJobResponse> {
     const now = new Date().toISOString();
-    
+
     // Step 1: Normalize job data
     const normalizedData = jobNormalizationService.normalizeJob(request);
-    
+
     // Step 2: Check for duplicates
     const existingJobs = Array.from(this.jobsStore.values()).filter(
-      job => job.tenantId === request.tenantId && !job.deleted
+      (job) => job.tenantId === request.tenantId && !job.deleted
     );
-    
+
     const potentialDuplicates = jobDeduplicationService.findPotentialDuplicates(
       normalizedData.normalized,
       existingJobs,
       0.9 // High threshold for duplicate detection
     );
-    
+
     if (potentialDuplicates.length > 0) {
       // Job is a duplicate
       const canonicalJob = jobDeduplicationService.selectCanonicalJob(potentialDuplicates);
-      
+
       // Update canonical job with new data
-      const mergedJob = jobDeduplicationService.mergeDuplicateJobs(canonicalJob, [normalizedData.normalized as Job]);
+      const mergedJob = jobDeduplicationService.mergeDuplicateJobs(canonicalJob, [
+        normalizedData.normalized as Job,
+      ]);
       mergedJob.updatedAt = now;
       mergedJob.lastSeenAt = now;
-      
+
       // Store updated canonical job
       this.jobsStore.set(canonicalJob.id, mergedJob);
-      
+
       // Update fingerprint index
       const fingerprint = jobDeduplicationService.generateJobFingerprint(mergedJob);
       this.fingerprintIndex.set(fingerprint, canonicalJob.id);
-      
+
       return {
         job: mergedJob,
         isDuplicate: true,
         canonicalJobId: canonicalJob.id,
       };
     }
-    
+
     // Step 3: Create or find company
     const company = await this.findOrCreateCompany(
       request.tenantId,
@@ -81,7 +81,7 @@ export class JobIngestionService {
       request.companyIndustry,
       request.userId
     );
-    
+
     // Step 4: Create new job
     const jobId = uuidv4();
     const job: Job = {
@@ -126,17 +126,17 @@ export class JobIngestionService {
       updatedBy: request.userId,
       deleted: false,
     };
-    
+
     // Validate job
     const validatedJob = JobSchema.parse(job);
-    
+
     // Store job
     this.jobsStore.set(jobId, validatedJob);
-    
+
     // Update fingerprint index
     const fingerprint = jobDeduplicationService.generateJobFingerprint(validatedJob);
     this.fingerprintIndex.set(fingerprint, jobId);
-    
+
     return {
       job: validatedJob,
       isDuplicate: false,
@@ -149,16 +149,16 @@ export class JobIngestionService {
    */
   async getJob(jobId: string, tenantId: string): Promise<Job> {
     const job = this.jobsStore.get(jobId);
-    
+
     if (!job || job.deleted || job.tenantId !== tenantId) {
       throw new JobNotFoundError(jobId);
     }
-    
+
     // If job is a duplicate, return canonical job
     if (job.duplicateOf) {
       return this.getJob(job.duplicateOf, tenantId);
     }
-    
+
     return job;
   }
 
@@ -172,7 +172,7 @@ export class JobIngestionService {
     userId: string
   ): Promise<Job> {
     const job = await this.getJob(jobId, tenantId);
-    
+
     const now = new Date().toISOString();
     const updatedJob: Job = {
       ...job,
@@ -182,17 +182,17 @@ export class JobIngestionService {
       updatedAt: now,
       updatedBy: userId,
     };
-    
+
     // Validate updated job
     const validatedJob = JobSchema.parse(updatedJob);
-    
+
     // Store updated job
     this.jobsStore.set(jobId, validatedJob);
-    
+
     // Update fingerprint index
     const fingerprint = jobDeduplicationService.generateJobFingerprint(validatedJob);
     this.fingerprintIndex.set(fingerprint, jobId);
-    
+
     return validatedJob;
   }
 
@@ -201,7 +201,7 @@ export class JobIngestionService {
    */
   async deleteJob(jobId: string, tenantId: string, userId: string): Promise<void> {
     const job = await this.getJob(jobId, tenantId);
-    
+
     const now = new Date().toISOString();
     const deletedJob: Job = {
       ...job,
@@ -210,9 +210,9 @@ export class JobIngestionService {
       updatedAt: now,
       updatedBy: userId,
     };
-    
+
     this.jobsStore.set(jobId, deletedJob);
-    
+
     // Remove from fingerprint index
     const fingerprint = jobDeduplicationService.generateJobFingerprint(job);
     this.fingerprintIndex.delete(fingerprint);
@@ -222,54 +222,65 @@ export class JobIngestionService {
    * List jobs with filters
    */
   async listJobs(request: ListJobsRequest): Promise<ListJobsResponse> {
-    const { tenantId, status, source, location, workMode, seniorityLevel, requiredSkills, page = 1, pageSize = 20 } = request;
-    
+    const {
+      tenantId,
+      status,
+      source,
+      location,
+      workMode,
+      seniorityLevel,
+      requiredSkills,
+      page = 1,
+      pageSize = 20,
+    } = request;
+
     let jobs = Array.from(this.jobsStore.values()).filter(
-      job => job.tenantId === tenantId && !job.deleted
+      (job) => job.tenantId === tenantId && !job.deleted
     );
-    
+
     // Apply filters
     if (status) {
-      jobs = jobs.filter(job => job.status === status);
+      jobs = jobs.filter((job) => job.status === status);
     }
-    
+
     if (source) {
-      jobs = jobs.filter(job => job.source === source);
+      jobs = jobs.filter((job) => job.source === source);
     }
-    
+
     if (location) {
-      jobs = jobs.filter(job => 
-        job.location.country.toLowerCase().includes(location.toLowerCase()) ||
-        job.location.city?.toLowerCase().includes(location.toLowerCase()) ||
-        job.location.state?.toLowerCase().includes(location.toLowerCase())
+      jobs = jobs.filter(
+        (job) =>
+          job.location.country.toLowerCase().includes(location.toLowerCase()) ||
+          job.location.city?.toLowerCase().includes(location.toLowerCase()) ||
+          job.location.state?.toLowerCase().includes(location.toLowerCase())
       );
     }
-    
+
     if (workMode) {
-      jobs = jobs.filter(job => job.workMode === workMode);
+      jobs = jobs.filter((job) => job.workMode === workMode);
     }
-    
+
     if (seniorityLevel) {
-      jobs = jobs.filter(job => job.seniorityLevel === seniorityLevel);
+      jobs = jobs.filter((job) => job.seniorityLevel === seniorityLevel);
     }
-    
+
     if (requiredSkills && requiredSkills.length > 0) {
-      jobs = jobs.filter(job => 
-        requiredSkills.every(skill => 
-          job.requiredSkills?.some(s => s.toLowerCase().includes(skill.toLowerCase()))
+      jobs = jobs.filter((job) =>
+        requiredSkills.every((skill) =>
+          job.requiredSkills?.some((s) => s.toLowerCase().includes(skill.toLowerCase()))
         )
       );
     }
-    
+
     // Sort by postedAt (newest first)
     jobs.sort((a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime());
-    
+
     // Paginate
     const total = jobs.length;
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const paginatedJobs = jobs.slice(startIndex, endIndex);
-    
+
     return {
       jobs: paginatedJobs,
       total,
@@ -284,12 +295,12 @@ export class JobIngestionService {
    */
   async updateFreshnessScores(tenantId: string): Promise<void> {
     const jobs = Array.from(this.jobsStore.values()).filter(
-      job => job.tenantId === tenantId && !job.deleted
+      (job) => job.tenantId === tenantId && !job.deleted
     );
-    
+
     for (const job of jobs) {
       const freshnessScore = jobNormalizationService.normalizeJob(job).normalized.freshnessScore;
-      
+
       if (freshnessScore !== job.freshnessScore) {
         job.freshnessScore = freshnessScore!;
         job.updatedAt = new Date().toISOString();
@@ -304,24 +315,24 @@ export class JobIngestionService {
   async markStaleJobsAsExpired(tenantId: string, maxAgeDays: number = 90): Promise<number> {
     const now = new Date();
     const cutoffDate = new Date(now.getTime() - maxAgeDays * 24 * 60 * 60 * 1000);
-    
+
     let expiredCount = 0;
-    
+
     const jobs = Array.from(this.jobsStore.values()).filter(
-      job => 
-        job.tenantId === tenantId && 
-        !job.deleted && 
+      (job) =>
+        job.tenantId === tenantId &&
+        !job.deleted &&
         job.status === 'active' &&
         new Date(job.lastSeenAt) < cutoffDate
     );
-    
+
     for (const job of jobs) {
       job.status = 'expired';
       job.updatedAt = now.toISOString();
       this.jobsStore.set(job.id, job);
       expiredCount++;
     }
-    
+
     return expiredCount;
   }
 
@@ -330,11 +341,11 @@ export class JobIngestionService {
    */
   async getCompany(companyId: string, tenantId: string): Promise<Company> {
     const company = this.companiesStore.get(companyId);
-    
+
     if (!company || company.deleted || company.tenantId !== tenantId) {
       throw new CompanyNotFoundError(companyId);
     }
-    
+
     return company;
   }
 
@@ -347,20 +358,20 @@ export class JobIngestionService {
     companyWebsite?: string,
     companySize?: Company['size'],
     companyIndustry?: string,
-    userId?: string
+    _userId?: string
   ): Promise<Company> {
     // Try to find existing company by name and tenant
     const existingCompany = Array.from(this.companiesStore.values()).find(
-      company => 
+      (company) =>
         company.tenantId === tenantId &&
         !company.deleted &&
         company.name.toLowerCase() === companyName.toLowerCase()
     );
-    
+
     if (existingCompany) {
       return existingCompany;
     }
-    
+
     // Create new company
     const now = new Date().toISOString();
     const company: Company = {
@@ -375,13 +386,13 @@ export class JobIngestionService {
       updatedAt: now,
       deleted: false,
     };
-    
+
     // Validate company
     const validatedCompany = CompanySchema.parse(company);
-    
+
     // Store company
     this.companiesStore.set(company.id, validatedCompany);
-    
+
     return validatedCompany;
   }
 
@@ -398,31 +409,31 @@ export class JobIngestionService {
     averageFreshnessScore: number;
   }> {
     const jobs = Array.from(this.jobsStore.values()).filter(
-      job => job.tenantId === tenantId && !job.deleted
+      (job) => job.tenantId === tenantId && !job.deleted
     );
-    
+
     const bySource: Record<string, number> = {};
     const bySeniority: Record<string, number> = {};
     const byWorkMode: Record<string, number> = {};
     let totalFreshness = 0;
     let activeJobs = 0;
     let expiredJobs = 0;
-    
+
     for (const job of jobs) {
       // Count by source
       bySource[job.source] = (bySource[job.source] || 0) + 1;
-      
+
       // Count by seniority
       if (job.seniorityLevel) {
         bySeniority[job.seniorityLevel] = (bySeniority[job.seniorityLevel] || 0) + 1;
       }
-      
+
       // Count by work mode
       byWorkMode[job.workMode] = (byWorkMode[job.workMode] || 0) + 1;
-      
+
       // Sum freshness scores
       totalFreshness += job.freshnessScore;
-      
+
       // Count by status
       if (job.status === 'active') {
         activeJobs++;
@@ -430,7 +441,7 @@ export class JobIngestionService {
         expiredJobs++;
       }
     }
-    
+
     return {
       totalJobs: jobs.length,
       activeJobs,

@@ -1,4 +1,4 @@
-import { Job, WorkMode, SeniorityLevel, NormalizeJobResponse } from './types.js';
+import type { Job, NormalizeJobResponse, SeniorityLevel, WorkMode } from './types.js';
 
 // ============================================================================
 // Job Normalization Service
@@ -129,19 +129,23 @@ export class JobNormalizationService {
    */
   private normalizeWorkMode(workMode: string): WorkMode {
     const normalized = workMode.toLowerCase().trim();
-    
+
     if (normalized.includes('remote') || normalized === 'work from home' || normalized === 'wfh') {
       return 'remote';
     }
-    
+
     if (normalized.includes('hybrid') || normalized.includes('flexible')) {
       return 'hybrid';
     }
-    
-    if (normalized.includes('on-site') || normalized.includes('onsite') || normalized.includes('in-office')) {
+
+    if (
+      normalized.includes('on-site') ||
+      normalized.includes('onsite') ||
+      normalized.includes('in-office')
+    ) {
       return 'on-site';
     }
-    
+
     return 'any';
   }
 
@@ -150,7 +154,7 @@ export class JobNormalizationService {
    */
   private inferSeniorityFromTitle(title: string): SeniorityLevel | null {
     const normalizedTitle = title.toLowerCase();
-    
+
     // Executive level
     if (
       normalizedTitle.includes('cto') ||
@@ -162,7 +166,7 @@ export class JobNormalizationService {
     ) {
       return 'executive';
     }
-    
+
     // Lead level
     if (
       normalizedTitle.includes('lead') ||
@@ -172,7 +176,7 @@ export class JobNormalizationService {
     ) {
       return 'lead';
     }
-    
+
     // Senior level
     if (
       normalizedTitle.includes('senior') ||
@@ -181,7 +185,7 @@ export class JobNormalizationService {
     ) {
       return 'senior';
     }
-    
+
     // Mid level
     if (
       normalizedTitle.includes('mid') ||
@@ -191,7 +195,7 @@ export class JobNormalizationService {
     ) {
       return 'mid';
     }
-    
+
     // Entry level
     if (
       normalizedTitle.includes('junior') ||
@@ -203,7 +207,7 @@ export class JobNormalizationService {
     ) {
       return 'entry';
     }
-    
+
     return null;
   }
 
@@ -212,22 +216,22 @@ export class JobNormalizationService {
    */
   private normalizeLocation(location: Job['location']): Job['location'] {
     const normalized = { ...location };
-    
+
     // Normalize country names
     if (normalized.country) {
       normalized.country = this.normalizeCountryName(normalized.country);
     }
-    
+
     // Normalize state/province
     if (normalized.state) {
       normalized.state = this.normalizeStateName(normalized.state);
     }
-    
+
     // Normalize city
     if (normalized.city) {
       normalized.city = this.normalizeCityName(normalized.city);
     }
-    
+
     // Set remote flag based on location
     if (
       normalized.city?.toLowerCase() === 'remote' ||
@@ -238,7 +242,7 @@ export class JobNormalizationService {
       normalized.city = undefined;
       normalized.state = undefined;
     }
-    
+
     return normalized;
   }
 
@@ -247,17 +251,17 @@ export class JobNormalizationService {
    */
   private normalizeCountryName(country: string): string {
     const countryMap: Record<string, string> = {
-      'us': 'United States',
-      'usa': 'United States',
+      us: 'United States',
+      usa: 'United States',
       'u.s.': 'United States',
       'u.s.a.': 'United States',
       'united states of america': 'United States',
-      'uk': 'United Kingdom',
+      uk: 'United Kingdom',
       'u.k.': 'United Kingdom',
       'great britain': 'United Kingdom',
-      'england': 'United Kingdom',
+      england: 'United Kingdom',
     };
-    
+
     const normalized = country.toLowerCase().trim();
     return countryMap[normalized] || country;
   }
@@ -268,18 +272,18 @@ export class JobNormalizationService {
   private normalizeStateName(state: string): string {
     // Common state abbreviations
     const stateMap: Record<string, string> = {
-      'ca': 'California',
-      'ny': 'New York',
-      'tx': 'Texas',
-      'fl': 'Florida',
-      'wa': 'Washington',
-      'ma': 'Massachusetts',
-      'il': 'Illinois',
-      'pa': 'Pennsylvania',
-      'oh': 'Ohio',
-      'ga': 'Georgia',
+      ca: 'California',
+      ny: 'New York',
+      tx: 'Texas',
+      fl: 'Florida',
+      wa: 'Washington',
+      ma: 'Massachusetts',
+      il: 'Illinois',
+      pa: 'Pennsylvania',
+      oh: 'Ohio',
+      ga: 'Georgia',
     };
-    
+
     const normalized = state.toLowerCase().trim();
     return stateMap[normalized] || state;
   }
@@ -289,9 +293,7 @@ export class JobNormalizationService {
    */
   private normalizeCityName(city: string): string {
     // Remove common suffixes and normalize
-    return city
-      .replace(/\s+(city|town|village)$/i, '')
-      .trim();
+    return city.replace(/\s+(city|town|village)$/i, '').trim();
   }
 
   /**
@@ -299,11 +301,11 @@ export class JobNormalizationService {
    */
   private normalizeSkills(skills: string[]): string[] {
     return skills
-      .map(skill => skill.trim().toLowerCase())
-      .filter(skill => skill.length > 0)
+      .map((skill) => skill.trim().toLowerCase())
+      .filter((skill) => skill.length > 0)
       .reduce((acc: string[], skill) => {
         // Remove duplicates (case-insensitive)
-        if (!acc.some(s => s.toLowerCase() === skill)) {
+        if (!acc.some((s) => s.toLowerCase() === skill)) {
           acc.push(skill);
         }
         return acc;
@@ -315,19 +317,19 @@ export class JobNormalizationService {
    */
   private normalizeSalary(salary: Job['salary']): Job['salary'] {
     if (!salary) return salary;
-    
+
     const normalized = { ...salary };
-    
+
     // Normalize currency
     if (normalized.currency) {
       normalized.currency = normalized.currency.toUpperCase();
     }
-    
+
     // Ensure min < max
     if (normalized.min && normalized.max && normalized.min > normalized.max) {
       [normalized.min, normalized.max] = [normalized.max, normalized.min];
     }
-    
+
     return normalized;
   }
 
@@ -336,38 +338,37 @@ export class JobNormalizationService {
    */
   private inferRoleFamily(title?: string, skills?: string[]): string | null {
     const normalizedTitle = title?.toLowerCase() || '';
-    const normalizedSkills = skills?.map(s => s.toLowerCase()) || [];
-    
+    const normalizedSkills = skills?.map((s) => s.toLowerCase()) || [];
+
     // Engineering
     if (
       normalizedTitle.includes('engineer') ||
       normalizedTitle.includes('developer') ||
       normalizedTitle.includes('programmer') ||
-      normalizedSkills.some(s => 
-        s.includes('javascript') || 
-        s.includes('python') || 
-        s.includes('java') ||
-        s.includes('react') ||
-        s.includes('node')
+      normalizedSkills.some(
+        (s) =>
+          s.includes('javascript') ||
+          s.includes('python') ||
+          s.includes('java') ||
+          s.includes('react') ||
+          s.includes('node')
       )
     ) {
       return 'Engineering';
     }
-    
+
     // Design
     if (
       normalizedTitle.includes('designer') ||
       normalizedTitle.includes('ux') ||
       normalizedTitle.includes('ui') ||
-      normalizedSkills.some(s => 
-        s.includes('figma') || 
-        s.includes('sketch') || 
-        s.includes('adobe')
+      normalizedSkills.some(
+        (s) => s.includes('figma') || s.includes('sketch') || s.includes('adobe')
       )
     ) {
       return 'Design';
     }
-    
+
     // Product
     if (
       normalizedTitle.includes('product manager') ||
@@ -376,7 +377,7 @@ export class JobNormalizationService {
     ) {
       return 'Product';
     }
-    
+
     // Marketing
     if (
       normalizedTitle.includes('marketing') ||
@@ -386,7 +387,7 @@ export class JobNormalizationService {
     ) {
       return 'Marketing';
     }
-    
+
     // Sales
     if (
       normalizedTitle.includes('sales') ||
@@ -395,7 +396,7 @@ export class JobNormalizationService {
     ) {
       return 'Sales';
     }
-    
+
     // Data
     if (
       normalizedTitle.includes('data scientist') ||
@@ -406,7 +407,7 @@ export class JobNormalizationService {
     ) {
       return 'Data';
     }
-    
+
     // Operations
     if (
       normalizedTitle.includes('operations') ||
@@ -415,7 +416,7 @@ export class JobNormalizationService {
     ) {
       return 'Operations';
     }
-    
+
     // HR
     if (
       normalizedTitle.includes('hr') ||
@@ -425,7 +426,7 @@ export class JobNormalizationService {
     ) {
       return 'Human Resources';
     }
-    
+
     // Finance
     if (
       normalizedTitle.includes('finance') ||
@@ -435,7 +436,7 @@ export class JobNormalizationService {
     ) {
       return 'Finance';
     }
-    
+
     return null;
   }
 
@@ -446,14 +447,14 @@ export class JobNormalizationService {
     const posted = new Date(postedAt);
     const now = new Date();
     const daysDiff = Math.floor((now.getTime() - posted.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     // Freshness decays over time
     // 0-7 days: 1.0 (fresh)
     // 7-30 days: 0.8-1.0
     // 30-60 days: 0.5-0.8
     // 60-90 days: 0.2-0.5
     // 90+ days: 0.0-0.2
-    
+
     if (daysDiff <= 7) {
       return 1.0;
     } else if (daysDiff <= 30) {

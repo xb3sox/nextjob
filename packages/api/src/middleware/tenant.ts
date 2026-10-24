@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 // ============================================================================
 // Tenant Isolation Middleware
@@ -15,10 +15,7 @@ export function requireTenant(req: Request, res: Response, next: NextFunction): 
   }
 
   // Extract tenant ID from request (header, param, or body)
-  const requestedTenantId =
-    req.headers['x-tenant-id'] ||
-    req.params.tenantId ||
-    req.body.tenantId;
+  const requestedTenantId = req.headers['x-tenant-id'] || req.params.tenantId || req.body.tenantId;
 
   // If no tenant ID specified, use user's tenant
   if (!requestedTenantId) {
@@ -87,11 +84,7 @@ export function validateResourceOwnership<T extends { tenantId: string }>(
  * Middleware to enforce tenant isolation on all routes.
  * Automatically filters all database queries by tenant ID.
  */
-export function enforceTenantIsolation(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
+export function enforceTenantIsolation(req: Request, res: Response, next: NextFunction): void {
   if (!req.user) {
     res.status(401).json({ error: 'Authentication required' });
     return;

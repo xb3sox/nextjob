@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { JobDeduplicationService } from './job-deduplication.js';
-import { Job } from './types.js';
+import type { Job } from './types.js';
 
 describe('JobDeduplicationService', () => {
   let service: JobDeduplicationService;
@@ -343,7 +343,7 @@ describe('JobDeduplicationService', () => {
     it('should select newer job if completeness is equal', () => {
       const now = new Date();
       const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      
+
       const jobs: Job[] = [
         {
           id: 'job-1',

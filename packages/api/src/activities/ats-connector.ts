@@ -1,7 +1,7 @@
+import crypto from 'crypto';
+import { and, eq } from 'drizzle-orm';
 import { db } from '../db/index';
 import { applications, receipts } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
-import crypto from 'crypto';
 
 // ============================================================================
 // Types
@@ -59,9 +59,7 @@ export interface CheckDuplicateResult {
 /**
  * Checks if an application has already been submitted (idempotency check)
  */
-export async function checkDuplicate(
-  params: CheckDuplicateParams
-): Promise<CheckDuplicateResult> {
+export async function checkDuplicate(params: CheckDuplicateParams): Promise<CheckDuplicateResult> {
   try {
     // Check if application already has a verified receipt
     const existingApplication = await db.query.applications.findFirst({

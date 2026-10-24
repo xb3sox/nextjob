@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
+import { useState } from 'react';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -129,7 +129,10 @@ export default function WaitlistForm() {
       )}
 
       {status === 'success' && (
-        <div role="status" className="mt-3 p-3 bg-moss/10 border border-moss/20 rounded-lg text-sm text-moss">
+        <div
+          role="status"
+          className="mt-3 p-3 bg-moss/10 border border-moss/20 rounded-lg text-sm text-moss"
+        >
           You’re on the list — we’ll email {email} when your spot opens.
         </div>
       )}

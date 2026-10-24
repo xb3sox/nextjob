@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { AIGateway, createAIGateway } from './index.js';
+import { type AIGateway, createAIGateway } from './index.js';
 import type { GatewayConfig } from './types.js';
 
 // ============================================================================
@@ -73,9 +73,7 @@ describe('AIGateway', () => {
       const response = await gateway.generateText({
         provider: 'openai',
         model: 'gpt-4o',
-        messages: [
-          { role: 'user', content: 'Hello' },
-        ],
+        messages: [{ role: 'user', content: 'Hello' }],
       });
 
       expect(response).toBeDefined();
@@ -90,9 +88,7 @@ describe('AIGateway', () => {
         gateway.generateText({
           provider: 'google',
           model: 'gemini-1.5-pro',
-          messages: [
-            { role: 'user', content: 'Hello' },
-          ],
+          messages: [{ role: 'user', content: 'Hello' }],
         })
       ).rejects.toThrow('Provider "google" not configured');
     });
@@ -101,9 +97,7 @@ describe('AIGateway', () => {
       const response = await gateway.generateText({
         provider: 'openai',
         model: 'gpt-4o',
-        messages: [
-          { role: 'user', content: 'My email is test@example.com' },
-        ],
+        messages: [{ role: 'user', content: 'My email is test@example.com' }],
       });
 
       expect(response).toBeDefined();
@@ -120,9 +114,7 @@ describe('AIGateway', () => {
       const response = await gateway.generateObject({
         provider: 'openai',
         model: 'gpt-4o',
-        messages: [
-          { role: 'user', content: 'Generate a person' },
-        ],
+        messages: [{ role: 'user', content: 'Generate a person' }],
         schema,
       });
 
@@ -133,13 +125,13 @@ describe('AIGateway', () => {
     });
 
     it('should validate output against schema', async () => {
-      const schema = z.object({
+      const _schema = z.object({
         name: z.string(),
         age: z.number(),
       });
 
       // Mock provider returns invalid data
-      const mockProvider = {
+      const _mockProvider = {
         name: 'openai' as const,
         generateText: vi.fn(),
         generateObject: vi.fn().mockResolvedValue({ invalid: 'data' }),
@@ -154,11 +146,14 @@ describe('AIGateway', () => {
     it('should allow requests within limit', async () => {
       // Make 5 requests (within limit of 10)
       for (let i = 0; i < 5; i++) {
-        await gateway.generateText({
-          provider: 'openai',
-          model: 'gpt-4o',
-          messages: [{ role: 'user', content: 'Test' }],
-        }, { userId: 'user-1' });
+        await gateway.generateText(
+          {
+            provider: 'openai',
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: 'Test' }],
+          },
+          { userId: 'user-1' }
+        );
       }
 
       // Should not throw
@@ -167,20 +162,26 @@ describe('AIGateway', () => {
     it('should throw error when rate limit exceeded', async () => {
       // Make 10 requests (at limit)
       for (let i = 0; i < 10; i++) {
-        await gateway.generateText({
-          provider: 'openai',
-          model: 'gpt-4o',
-          messages: [{ role: 'user', content: 'Test' }],
-        }, { userId: 'user-2' });
+        await gateway.generateText(
+          {
+            provider: 'openai',
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: 'Test' }],
+          },
+          { userId: 'user-2' }
+        );
       }
 
       // 11th request should throw
       await expect(
-        gateway.generateText({
-          provider: 'openai',
-          model: 'gpt-4o',
-          messages: [{ role: 'user', content: 'Test' }],
-        }, { userId: 'user-2' })
+        gateway.generateText(
+          {
+            provider: 'openai',
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: 'Test' }],
+          },
+          { userId: 'user-2' }
+        )
       ).rejects.toThrow('Rate limit exceeded');
     });
 
@@ -189,22 +190,28 @@ describe('AIGateway', () => {
       try {
         // Make 10 requests
         for (let i = 0; i < 10; i++) {
-          await gateway.generateText({
-            provider: 'openai',
-            model: 'gpt-4o',
-            messages: [{ role: 'user', content: 'Test' }],
-          }, { userId: 'user-3' });
+          await gateway.generateText(
+            {
+              provider: 'openai',
+              model: 'gpt-4o',
+              messages: [{ role: 'user', content: 'Test' }],
+            },
+            { userId: 'user-3' }
+          );
         }
 
         // Wait for window to pass (mock time)
         vi.advanceTimersByTime(61000);
 
         // Should allow request again
-        await gateway.generateText({
-          provider: 'openai',
-          model: 'gpt-4o',
-          messages: [{ role: 'user', content: 'Test' }],
-        }, { userId: 'user-3' });
+        await gateway.generateText(
+          {
+            provider: 'openai',
+            model: 'gpt-4o',
+            messages: [{ role: 'user', content: 'Test' }],
+          },
+          { userId: 'user-3' }
+        );
       } finally {
         vi.useRealTimers();
       }

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { JobIngestionService } from './job-ingestion-service.js';
-import { JobNotFoundError, CompanyNotFoundError } from './types.js';
+import { JobNotFoundError } from './types.js';
 
 describe('JobIngestionService', () => {
   let service: JobIngestionService;
@@ -160,9 +160,7 @@ describe('JobIngestionService', () => {
     });
 
     it('should throw error if job not found', async () => {
-      await expect(
-        service.getJob('non-existent-id', 'tenant-1')
-      ).rejects.toThrow(JobNotFoundError);
+      await expect(service.getJob('non-existent-id', 'tenant-1')).rejects.toThrow(JobNotFoundError);
     });
 
     it('should throw error if job belongs to different tenant', async () => {
@@ -178,9 +176,7 @@ describe('JobIngestionService', () => {
 
       const ingested = await service.ingestJob(request);
 
-      await expect(
-        service.getJob(ingested.job.id, 'tenant-2')
-      ).rejects.toThrow(JobNotFoundError);
+      await expect(service.getJob(ingested.job.id, 'tenant-2')).rejects.toThrow(JobNotFoundError);
     });
 
     it('should return canonical job if job is duplicate', async () => {
@@ -253,9 +249,7 @@ describe('JobIngestionService', () => {
       const ingested = await service.ingestJob(request);
       await service.deleteJob(ingested.job.id, 'tenant-1', 'user-1');
 
-      await expect(
-        service.getJob(ingested.job.id, 'tenant-1')
-      ).rejects.toThrow(JobNotFoundError);
+      await expect(service.getJob(ingested.job.id, 'tenant-1')).rejects.toThrow(JobNotFoundError);
     });
   });
 
@@ -298,12 +292,7 @@ describe('JobIngestionService', () => {
         userId: 'user-1',
       });
 
-      await service.updateJob(
-        ingested.job.id,
-        'tenant-1',
-        { status: 'closed' },
-        'user-1'
-      );
+      await service.updateJob(ingested.job.id, 'tenant-1', { status: 'closed' }, 'user-1');
 
       const result = await service.listJobs({
         tenantId: 'tenant-1',
@@ -389,7 +378,7 @@ describe('JobIngestionService', () => {
       await service.updateFreshnessScores('tenant-1');
 
       const result = await service.listJobs({ tenantId: 'tenant-1' });
-      
+
       expect(result.jobs[0].freshnessScore).toBeLessThan(1);
     });
   });

@@ -61,12 +61,14 @@ export const VerificationRequestSchema = z.object({
 export const BulkVerificationRequestSchema = z.object({
   userId: z.string().min(1),
   tenantId: z.string().min(1),
-  claims: z.array(z.object({
-    claimId: z.string().min(1),
-    action: z.enum(['confirm', 'edit', 'remove', 'mark_unverified']),
-    editedContent: z.record(z.any()).optional(),
-    notes: z.string().optional(),
-  })),
+  claims: z.array(
+    z.object({
+      claimId: z.string().min(1),
+      action: z.enum(['confirm', 'edit', 'remove', 'mark_unverified']),
+      editedContent: z.record(z.any()).optional(),
+      notes: z.string().optional(),
+    })
+  ),
 });
 
 // ============================================================================
@@ -87,11 +89,7 @@ export class VerificationError extends Error {
 
 export class ClaimAlreadyVerifiedError extends VerificationError {
   constructor(claimId: string) {
-    super(
-      `Claim ${claimId} is already verified`,
-      'CLAIM_ALREADY_VERIFIED',
-      409
-    );
+    super(`Claim ${claimId} is already verified`, 'CLAIM_ALREADY_VERIFIED', 409);
     this.name = 'ClaimAlreadyVerifiedError';
   }
 }
@@ -109,11 +107,7 @@ export class InvalidVerificationActionError extends VerificationError {
 
 export class ClaimNotFoundError extends VerificationError {
   constructor(claimId: string) {
-    super(
-      `Claim not found: ${claimId}`,
-      'CLAIM_NOT_FOUND',
-      404
-    );
+    super(`Claim not found: ${claimId}`, 'CLAIM_NOT_FOUND', 404);
     this.name = 'ClaimNotFoundError';
   }
 }

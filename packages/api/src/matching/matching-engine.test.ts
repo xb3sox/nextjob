@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { MatchingEngineService } from './matching-engine.js';
 
 describe('MatchingEngineService', () => {
@@ -21,12 +21,8 @@ describe('MatchingEngineService', () => {
             { name: 'React', level: 'expert' },
             { name: 'Node.js', level: 'advanced' },
           ],
-          experience: [
-            { title: 'Senior Developer', years: 5 },
-          ],
-          education: [
-            { degree: 'Bachelor', field: 'Computer Science' },
-          ],
+          experience: [{ title: 'Senior Developer', years: 5 }],
+          education: [{ degree: 'Bachelor', field: 'Computer Science' }],
           location: { country: 'US', city: 'San Francisco' },
           preferences: {
             targetRoles: ['Software Engineer'],
@@ -67,12 +63,8 @@ describe('MatchingEngineService', () => {
             { name: 'JavaScript', level: 'advanced' },
             { name: 'React', level: 'intermediate' },
           ],
-          experience: [
-            { title: 'Developer', years: 3 },
-          ],
-          education: [
-            { degree: 'Bachelor', field: 'Computer Science' },
-          ],
+          experience: [{ title: 'Developer', years: 3 }],
+          education: [{ degree: 'Bachelor', field: 'Computer Science' }],
           location: { country: 'US', city: 'New York' },
         },
         job: {
@@ -98,15 +90,9 @@ describe('MatchingEngineService', () => {
         jobId: 'job-1',
         eligibilityId: 'elig-1',
         userProfile: {
-          skills: [
-            { name: 'JavaScript', level: 'junior' },
-          ],
-          experience: [
-            { title: 'Junior Developer', years: 3 },
-          ],
-          education: [
-            { degree: 'Associate', field: 'Business' },
-          ],
+          skills: [{ name: 'JavaScript', level: 'junior' }],
+          experience: [{ title: 'Junior Developer', years: 3 }],
+          education: [{ degree: 'Associate', field: 'Business' }],
           location: { country: 'US', city: 'Chicago' },
         },
         job: {
@@ -149,7 +135,7 @@ describe('MatchingEngineService', () => {
       const result = await service.calculateMatch(request);
 
       // Location should be perfect match for remote job
-      const locationFactor = result.match.factors.find(f => f.name === 'location');
+      const locationFactor = result.match.factors.find((f) => f.name === 'location');
       expect(locationFactor?.score).toBe(100);
     });
 
@@ -184,11 +170,7 @@ describe('MatchingEngineService', () => {
         jobId: 'job-1',
         eligibilityId: 'elig-1',
         userProfile: {
-          skills: [
-            { name: 'JavaScript' },
-            { name: 'React' },
-            { name: 'Node.js' },
-          ],
+          skills: [{ name: 'JavaScript' }, { name: 'React' }, { name: 'Node.js' }],
           experience: [],
           education: [],
         },
@@ -202,7 +184,7 @@ describe('MatchingEngineService', () => {
 
       const result = await service.calculateMatch(request);
 
-      const skillsFactor = result.match.factors.find(f => f.name === 'skills');
+      const skillsFactor = result.match.factors.find((f) => f.name === 'skills');
       expect(skillsFactor?.score).toBe(100); // Required + preferred bonus
     });
 
@@ -227,7 +209,7 @@ describe('MatchingEngineService', () => {
 
       const result = await service.calculateMatch(request);
 
-      const experienceFactor = result.match.factors.find(f => f.name === 'experience');
+      const experienceFactor = result.match.factors.find((f) => f.name === 'experience');
       expect(experienceFactor?.score).toBe(100); // Within range
     });
 
@@ -252,7 +234,7 @@ describe('MatchingEngineService', () => {
 
       const result = await service.calculateMatch(request);
 
-      const educationFactor = result.match.factors.find(f => f.name === 'education');
+      const educationFactor = result.match.factors.find((f) => f.name === 'education');
       expect(educationFactor?.score).toBe(100); // Master > Bachelor
     });
 
@@ -280,7 +262,7 @@ describe('MatchingEngineService', () => {
 
       const result = await service.calculateMatch(request);
 
-      const salaryFactor = result.match.factors.find(f => f.name === 'salary');
+      const salaryFactor = result.match.factors.find((f) => f.name === 'salary');
       expect(salaryFactor?.score).toBeGreaterThan(50); // Some overlap
     });
 

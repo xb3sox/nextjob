@@ -2,8 +2,7 @@
 // Storage Module - Main Export
 // ============================================================================
 
-export * from './types.js';
 export * from './evidence-storage-service.js';
-
 // Convenience exports
-export { evidenceStorageService, EvidenceStorageService } from './evidence-storage-service.js';
+export { EvidenceStorageService, evidenceStorageService } from './evidence-storage-service.js';
+export * from './types.js';

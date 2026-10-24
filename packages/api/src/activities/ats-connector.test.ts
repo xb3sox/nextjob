@@ -1,11 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-  checkDuplicate,
-  executeATSConnector,
-  verifySubmission,
-} from './ats-connector.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '../db/index';
-import { applications, receipts } from '../db/schema';
+import { checkDuplicate, executeATSConnector, verifySubmission } from './ats-connector.js';
 
 // Mock database
 vi.mock('../db/index', () => ({
@@ -60,9 +55,7 @@ describe('ATS Connector Activities', () => {
     });
 
     it('should handle database errors', async () => {
-      vi.mocked(db.query.applications.findFirst).mockRejectedValueOnce(
-        new Error('Database error')
-      );
+      vi.mocked(db.query.applications.findFirst).mockRejectedValueOnce(new Error('Database error'));
 
       await expect(
         checkDuplicate({

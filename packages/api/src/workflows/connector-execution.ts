@@ -2,7 +2,9 @@ import { proxyActivities } from '@temporalio/workflow';
 import type * as activities from './activities/ats-connector.js';
 
 // Import activities for workflow execution
-const { executeATSConnector, verifySubmission, checkDuplicate } = proxyActivities<typeof activities>({
+const { executeATSConnector, verifySubmission, checkDuplicate } = proxyActivities<
+  typeof activities
+>({
   startToCloseTimeout: '5 minutes',
   retry: {
     maximumAttempts: 3,
@@ -55,7 +57,7 @@ export interface ConnectorExecutionResult {
 export async function connectorExecutionWorkflow(
   params: ConnectorExecutionParams
 ): Promise<ConnectorExecutionResult> {
-  const startTime = new Date().toISOString();
+  const _startTime = new Date().toISOString();
 
   try {
     // Step 1: Check for duplicates (idempotency)

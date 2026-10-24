@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Preferences,
-  PreferencesSchema,
-  CreatePreferencesRequest,
-  UpdatePreferencesRequest,
-  PreferencesResponse,
-  PreferencesNotFoundError,
+  type CreatePreferencesRequest,
   InvalidPreferencesError,
+  type Preferences,
+  PreferencesNotFoundError,
+  type PreferencesResponse,
+  PreferencesSchema,
+  type UpdatePreferencesRequest,
   VersionConflictError,
 } from './types.js';
 
@@ -122,25 +122,38 @@ export class PreferencesService {
       previousVersionId: currentPreferences.preferences.id,
       version: currentPreferences.version + 1,
       targetRoles: request.targetRoles ?? currentPreferences.preferences.targetRoles,
-      targetRoleFamilies: request.targetRoleFamilies ?? currentPreferences.preferences.targetRoleFamilies,
+      targetRoleFamilies:
+        request.targetRoleFamilies ?? currentPreferences.preferences.targetRoleFamilies,
       seniorityLevels: request.seniorityLevels ?? currentPreferences.preferences.seniorityLevels,
-      yearsOfExperience: request.yearsOfExperience ?? currentPreferences.preferences.yearsOfExperience,
+      yearsOfExperience:
+        request.yearsOfExperience ?? currentPreferences.preferences.yearsOfExperience,
       targetIndustries: request.targetIndustries ?? currentPreferences.preferences.targetIndustries,
-      excludedIndustries: request.excludedIndustries ?? currentPreferences.preferences.excludedIndustries,
+      excludedIndustries:
+        request.excludedIndustries ?? currentPreferences.preferences.excludedIndustries,
       targetLocations: request.targetLocations ?? currentPreferences.preferences.targetLocations,
       workMode: request.workMode ?? currentPreferences.preferences.workMode,
-      workModePreference: request.workModePreference ?? currentPreferences.preferences.workModePreference,
-      salaryExpectations: request.salaryExpectations ?? currentPreferences.preferences.salaryExpectations,
-      preferredCompanySizes: request.preferredCompanySizes ?? currentPreferences.preferences.preferredCompanySizes,
-      preferredCompanyStages: request.preferredCompanyStages ?? currentPreferences.preferences.preferredCompanyStages,
+      workModePreference:
+        request.workModePreference ?? currentPreferences.preferences.workModePreference,
+      salaryExpectations:
+        request.salaryExpectations ?? currentPreferences.preferences.salaryExpectations,
+      preferredCompanySizes:
+        request.preferredCompanySizes ?? currentPreferences.preferences.preferredCompanySizes,
+      preferredCompanyStages:
+        request.preferredCompanyStages ?? currentPreferences.preferences.preferredCompanyStages,
       targetCompanies: request.targetCompanies ?? currentPreferences.preferences.targetCompanies,
-      excludedCompanies: request.excludedCompanies ?? currentPreferences.preferences.excludedCompanies,
-      willingToRelocate: request.willingToRelocate ?? currentPreferences.preferences.willingToRelocate,
-      relocationLocations: request.relocationLocations ?? currentPreferences.preferences.relocationLocations,
-      relocationAssistance: request.relocationAssistance ?? currentPreferences.preferences.relocationAssistance,
+      excludedCompanies:
+        request.excludedCompanies ?? currentPreferences.preferences.excludedCompanies,
+      willingToRelocate:
+        request.willingToRelocate ?? currentPreferences.preferences.willingToRelocate,
+      relocationLocations:
+        request.relocationLocations ?? currentPreferences.preferences.relocationLocations,
+      relocationAssistance:
+        request.relocationAssistance ?? currentPreferences.preferences.relocationAssistance,
       noticePeriod: request.noticePeriod ?? currentPreferences.preferences.noticePeriod,
-      jobSearchIntensity: request.jobSearchIntensity ?? currentPreferences.preferences.jobSearchIntensity,
-      applicationFrequency: request.applicationFrequency ?? currentPreferences.preferences.applicationFrequency,
+      jobSearchIntensity:
+        request.jobSearchIntensity ?? currentPreferences.preferences.jobSearchIntensity,
+      applicationFrequency:
+        request.applicationFrequency ?? currentPreferences.preferences.applicationFrequency,
       keywords: request.keywords ?? currentPreferences.preferences.keywords,
       excludedKeywords: request.excludedKeywords ?? currentPreferences.preferences.excludedKeywords,
       mustHaveSkills: request.mustHaveSkills ?? currentPreferences.preferences.mustHaveSkills,
@@ -201,7 +214,7 @@ export class PreferencesService {
     while (current.previousVersionId) {
       const previous = this.preferencesStore.get(current.previousVersionId);
       if (!previous) break;
-      
+
       history.unshift(previous);
       current = previous;
     }
@@ -236,9 +249,10 @@ export class PreferencesService {
       return {
         targetRoles: prefs.targetRoles,
         seniorityLevels: prefs.seniorityLevels || [],
-        targetLocations: prefs.targetLocations?.map(loc => 
-          [loc.city, loc.state, loc.country].filter(Boolean).join(', ')
-        ) || [],
+        targetLocations:
+          prefs.targetLocations?.map((loc) =>
+            [loc.city, loc.state, loc.country].filter(Boolean).join(', ')
+          ) || [],
         workMode: prefs.workMode,
         salaryRange: {
           min: prefs.salaryExpectations?.min,

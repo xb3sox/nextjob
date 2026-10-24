@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 // ============================================================================
 // Matching Types
 // ============================================================================
@@ -19,22 +17,22 @@ export interface JobMatch {
   tenantId: string;
   jobId: string;
   eligibilityId: string;
-  
+
   // Overall score
   score: number; // 0-100
   status: MatchStatus;
-  
+
   // Detailed factors
   factors: MatchFactor[];
-  
+
   // Strengths and weaknesses
   strengths: string[];
   weaknesses: string[];
   recommendations: string[];
-  
+
   // Confidence
   confidence: number; // 0-1
-  
+
   // Metadata
   matchedAt: string;
   version: number;
@@ -134,11 +132,11 @@ export interface MatchingConfig {
 
 export const DEFAULT_MATCHING_CONFIG: MatchingConfig = {
   weights: {
-    skills: 0.30,
+    skills: 0.3,
     experience: 0.25,
     education: 0.15,
-    location: 0.10,
-    salary: 0.10,
+    location: 0.1,
+    salary: 0.1,
     roleFit: 0.05,
     seniorityFit: 0.05,
   },

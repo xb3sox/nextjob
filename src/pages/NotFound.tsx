@@ -1,4 +1,4 @@
-import { Home, Search, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home, Search } from 'lucide-react';
 
 export default function NotFound() {
   return (
@@ -8,8 +8,8 @@ export default function NotFound() {
           <h1 className="font-display text-8xl mb-4 text-moss">404</h1>
           <h2 className="text-2xl font-semibold mb-2">Page not found</h2>
           <p className="text-fog leading-relaxed">
-            This page doesn't exist or has moved. Your applications and profile are
-            still where you left them.
+            This page doesn't exist or has moved. Your applications and profile are still where you
+            left them.
           </p>
         </div>
 
@@ -43,11 +43,17 @@ export default function NotFound() {
         <div className="mt-12 pt-8 border-t border-white/5">
           <p className="text-sm text-fog">
             Looking for something specific?{' '}
-            <a href="/#pricing" className="text-moss underline underline-offset-4 decoration-moss/40 hover:decoration-moss transition-colors">
+            <a
+              href="/#pricing"
+              className="text-moss underline underline-offset-4 decoration-moss/40 hover:decoration-moss transition-colors"
+            >
               See pricing
             </a>{' '}
             or{' '}
-            <a href="/#faq" className="text-moss underline underline-offset-4 decoration-moss/40 hover:decoration-moss transition-colors">
+            <a
+              href="/#faq"
+              className="text-moss underline underline-offset-4 decoration-moss/40 hover:decoration-moss transition-colors"
+            >
               read the FAQ
             </a>
             .

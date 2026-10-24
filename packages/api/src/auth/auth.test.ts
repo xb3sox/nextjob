@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // ============================================================================
 // In-memory mock of the drizzle `db` module + a simplified operator layer.
@@ -7,7 +7,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 // [.returning()], and db.delete(table).where(...). We emulate exactly that so
 // business logic can be tested end-to-end without a live Postgres instance.
 // ============================================================================
-
 
 /** Resolve a drizzle table object to its physical SQL name. */
 function tableName(table: any): string {
@@ -82,7 +81,6 @@ function matches(row: Row, cond: any): boolean {
   throw new Error('Unsupported mock condition');
 }
 
-
 function applyUpdate(table: any, patch: Row, cond: unknown): Row[] {
   const name = tableName(table);
   const rows = store[name] ?? [];
@@ -154,7 +152,8 @@ vi.mock('../db/index', () => {
             id: `${name}-${++insertSeq}`,
             created_at: new Date(),
           }));
-          (store[name] ??= []).push(...inserted);
+          store[name] ??= [];
+          store[name].push(...inserted);
           return inserted.map((r) => remapKeys(r, toCamel));
         };
         return makeThenable(doInsert);
@@ -202,21 +201,21 @@ vi.mock('drizzle-orm', async (importActual) => {
 });
 
 import {
-  hashPassword,
-  verifyPassword,
-  needsRehash,
-  isValidEmail,
-  registerUser,
-  loginUser,
+  AuthError,
   createSession,
-  validateSession,
   deleteSession,
+  hashPassword,
+  isValidEmail,
+  loginUser,
+  needsRehash,
   refreshSession,
+  registerUser,
   requestPasswordReset,
   resetPassword,
   sendVerificationEmail,
+  validateSession,
   verifyEmail,
-  AuthError,
+  verifyPassword,
 } from './index';
 
 describe('Authentication', () => {
@@ -286,9 +285,17 @@ describe('Authentication', () => {
     });
 
     it('rejects duplicate email', async () => {
-      await registerUser({ email: 'dup@example.com', password: 'testPassword123', tenantId: 'tenant-1' });
+      await registerUser({
+        email: 'dup@example.com',
+        password: 'testPassword123',
+        tenantId: 'tenant-1',
+      });
       await expect(
-        registerUser({ email: 'dup@example.com', password: 'testPassword123', tenantId: 'tenant-1' })
+        registerUser({
+          email: 'dup@example.com',
+          password: 'testPassword123',
+          tenantId: 'tenant-1',
+        })
       ).rejects.toThrow(AuthError);
     });
 
@@ -350,11 +357,15 @@ describe('Authentication', () => {
       const salt = 'b'.repeat(32);
       // Wait until registration finished writing the row, then downgrade it.
       await vi.waitFor(() => expect(store.users.length).toBeGreaterThan(0));
-      setProp(store.users[0], 'passwordHash', `${salt}:${crypto
-        .pbkdf2Sync('correctHorse1', salt, 10_000, 64, 'sha512')
-        .toString('hex')}`);
+      setProp(
+        store.users[0],
+        'passwordHash',
+        `${salt}:${crypto.pbkdf2Sync('correctHorse1', salt, 10_000, 64, 'sha512').toString('hex')}`
+      );
       await loginUser({ email: 'login@example.com', password: 'correctHorse1' });
-      expect(String(getProp(store.users[0], 'passwordHash')).startsWith('pbkdf2:100000:')).toBe(true);
+      expect(String(getProp(store.users[0], 'passwordHash')).startsWith('pbkdf2:100000:')).toBe(
+        true
+      );
     });
   });
 
@@ -387,14 +398,18 @@ describe('Authentication', () => {
       const rotated = await refreshSession({ refreshToken: oldRefresh });
       expect(rotated.tokens.refreshToken).not.toBe(oldRefresh);
 
-      await expect(refreshSession({ refreshToken: oldRefresh })).rejects.toThrow(/invalid or expired/i);
+      await expect(refreshSession({ refreshToken: oldRefresh })).rejects.toThrow(
+        /invalid or expired/i
+      );
       // New access token validates
       const validated = await validateSession(rotated.tokens.accessToken);
       expect(validated?.userId).toBe(login.user.id);
     });
 
     it('rejects unknown refresh tokens', async () => {
-      await expect(refreshSession({ refreshToken: 'bogus' })).rejects.toThrow(/invalid or expired/i);
+      await expect(refreshSession({ refreshToken: 'bogus' })).rejects.toThrow(
+        /invalid or expired/i
+      );
     });
   });
 
@@ -413,12 +428,16 @@ describe('Authentication', () => {
 
       expect(await resetPassword({ token: token!, newPassword: 'secondPassword2' })).toBe(true);
 
-      await expect(
-        resetPassword({ token: token!, newPassword: 'thirdPassword3' })
-      ).rejects.toThrow(/invalid or expired/i);
+      await expect(resetPassword({ token: token!, newPassword: 'thirdPassword3' })).rejects.toThrow(
+        /invalid or expired/i
+      );
 
-      await expect(loginUser({ email: 'reset@example.com', password: 'secondPassword2' })).resolves.toBeTruthy();
-      await expect(loginUser({ email: 'reset@example.com', password: 'firstPassword1' })).rejects.toThrow();
+      await expect(
+        loginUser({ email: 'reset@example.com', password: 'secondPassword2' })
+      ).resolves.toBeTruthy();
+      await expect(
+        loginUser({ email: 'reset@example.com', password: 'firstPassword1' })
+      ).rejects.toThrow();
     });
 
     it('invalidates all sessions after a password reset', async () => {
@@ -431,7 +450,9 @@ describe('Authentication', () => {
 
     it('rejects weak replacement passwords', async () => {
       const token = await requestPasswordReset('reset@example.com');
-      await expect(resetPassword({ token: token!, newPassword: 'short' })).rejects.toThrow(/between 8 and 128/);
+      await expect(resetPassword({ token: token!, newPassword: 'short' })).rejects.toThrow(
+        /between 8 and 128/
+      );
     });
   });
 

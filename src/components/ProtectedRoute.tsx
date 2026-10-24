@@ -1,6 +1,6 @@
+import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import type { ReactNode } from 'react';
 
 /**
  * Route guard for the authenticated app. Unauthenticated visitors are
@@ -13,9 +13,16 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-ink flex items-center justify-center" role="status" aria-label="Loading">
+      <div
+        className="min-h-screen bg-ink flex items-center justify-center"
+        role="status"
+        aria-label="Loading"
+      >
         <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 rounded-full border-2 border-moss/30 border-t-moss animate-spin motion-reduce:animate-none" aria-hidden="true" />
+          <div
+            className="w-8 h-8 rounded-full border-2 border-moss/30 border-t-moss animate-spin motion-reduce:animate-none"
+            aria-hidden="true"
+          />
           <p className="text-sm text-fog">Checking your session…</p>
         </div>
       </div>

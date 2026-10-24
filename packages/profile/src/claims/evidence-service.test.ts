@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { EvidenceService } from './evidence-service.js';
 import { EvidenceNotFoundError } from './types.js';
 
@@ -168,7 +168,7 @@ describe('EvidenceService', () => {
   describe('getEvidenceByHash', () => {
     it('should find evidence by hash', async () => {
       const hash = 'unique-hash-123';
-      
+
       await service.createEvidence({
         userId: 'user-123',
         tenantId: 'tenant-456',

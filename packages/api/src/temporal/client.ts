@@ -1,4 +1,4 @@
-import { Connection, Client } from '@temporalio/client';
+import { Client, Connection } from '@temporalio/client';
 
 // ============================================================================
 // Types

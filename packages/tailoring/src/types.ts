@@ -4,7 +4,7 @@ import { z } from 'zod';
 // Tailoring Types
 // ============================================================================
 
-export type TailoringType = 
+export type TailoringType =
   | 'resume'
   | 'cover_letter'
   | 'application_answer'
@@ -76,7 +76,7 @@ export interface CareerClaim {
   confidence: number;
 }
 
-export type ClaimType = 
+export type ClaimType =
   | 'experience'
   | 'education'
   | 'skill'
@@ -171,29 +171,41 @@ export const JobRequirementsSchema = z.object({
   description: z.string().optional(),
   requiredSkills: z.array(z.string()).optional(),
   preferredSkills: z.array(z.string()).optional(),
-  experience: z.object({
-    min: z.number().optional(),
-    max: z.number().optional(),
-  }).optional(),
-  education: z.object({
-    minimumDegree: z.string().optional(),
-    requiredFields: z.array(z.string()).optional(),
-  }).optional(),
-  location: z.object({
-    country: z.string().optional(),
-    city: z.string().optional(),
-    remote: z.boolean().optional(),
-  }).optional(),
-  salary: z.object({
-    min: z.number().optional(),
-    max: z.number().optional(),
-    currency: z.string().optional(),
-  }).optional(),
+  experience: z
+    .object({
+      min: z.number().optional(),
+      max: z.number().optional(),
+    })
+    .optional(),
+  education: z
+    .object({
+      minimumDegree: z.string().optional(),
+      requiredFields: z.array(z.string()).optional(),
+    })
+    .optional(),
+  location: z
+    .object({
+      country: z.string().optional(),
+      city: z.string().optional(),
+      remote: z.boolean().optional(),
+    })
+    .optional(),
+  salary: z
+    .object({
+      min: z.number().optional(),
+      max: z.number().optional(),
+      currency: z.string().optional(),
+    })
+    .optional(),
   certifications: z.array(z.string()).optional(),
-  languages: z.array(z.object({
-    language: z.string(),
-    proficiency: z.string(),
-  })).optional(),
+  languages: z
+    .array(
+      z.object({
+        language: z.string(),
+        proficiency: z.string(),
+      })
+    )
+    .optional(),
 });
 
 export const TailoringRequestSchema = z.object({
@@ -207,12 +219,14 @@ export const TailoringRequestSchema = z.object({
   careerGraph: CareerGraphSchema,
   jobRequirements: JobRequirementsSchema,
   question: z.string().optional(),
-  options: z.object({
-    maxLength: z.number().optional(),
-    tone: z.enum(['professional', 'casual', 'formal']).optional(),
-    includeSections: z.array(z.string()).optional(),
-    excludeSections: z.array(z.string()).optional(),
-  }).optional(),
+  options: z
+    .object({
+      maxLength: z.number().optional(),
+      tone: z.enum(['professional', 'casual', 'formal']).optional(),
+      includeSections: z.array(z.string()).optional(),
+      excludeSections: z.array(z.string()).optional(),
+    })
+    .optional(),
 });
 
 // ============================================================================
@@ -232,11 +246,9 @@ export class TailoringError extends Error {
 }
 
 export class EvidenceConstraintViolationError extends TailoringError {
-  constructor(
-    public violations: ConstraintViolation[]
-  ) {
+  constructor(public violations: ConstraintViolation[]) {
     super(
-      `Evidence constraint violations: ${violations.map(v => v.details).join(', ')}`,
+      `Evidence constraint violations: ${violations.map((v) => v.details).join(', ')}`,
       'EVIDENCE_CONSTRAINT_VIOLATION',
       400,
       { violations }
@@ -247,24 +259,16 @@ export class EvidenceConstraintViolationError extends TailoringError {
 
 export class InsufficientEvidenceError extends TailoringError {
   constructor(requiredType: string) {
-    super(
-      `Insufficient evidence for ${requiredType}`,
-      'INSUFFICIENT_EVIDENCE',
-      400,
-      { requiredType }
-    );
+    super(`Insufficient evidence for ${requiredType}`, 'INSUFFICIENT_EVIDENCE', 400, {
+      requiredType,
+    });
     this.name = 'InsufficientEvidenceError';
   }
 }
 
 export class InvalidTailoringRequestError extends TailoringError {
   constructor(validationErrors: any) {
-    super(
-      'Invalid tailoring request',
-      'INVALID_REQUEST',
-      400,
-      { validationErrors }
-    );
+    super('Invalid tailoring request', 'INVALID_REQUEST', 400, { validationErrors });
     this.name = 'InvalidTailoringRequestError';
   }
 }

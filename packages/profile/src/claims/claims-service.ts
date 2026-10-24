@@ -1,15 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
-  ProfileClaim,
-  ProfileClaimSchema,
-  CreateClaimRequest,
-  UpdateClaimRequest,
-  VerifyClaimRequest,
-  ClaimListResponse,
+  type ClaimListResponse,
   ClaimNotFoundError,
+  type ClaimType,
+  type CreateClaimRequest,
   InvalidClaimContentError,
-  VersionConflictError,
-  ClaimType,
+  type ProfileClaim,
+  ProfileClaimSchema,
+  type UpdateClaimRequest,
+  type VerifyClaimRequest,
 } from './types.js';
 
 // ============================================================================
@@ -64,7 +63,7 @@ export class ClaimsService {
    */
   async getClaim(claimId: string): Promise<ProfileClaim> {
     const claim = this.claims.get(claimId);
-    
+
     if (!claim || claim.deleted) {
       throw new ClaimNotFoundError(claimId);
     }
@@ -75,7 +74,11 @@ export class ClaimsService {
   /**
    * Update a claim (creates a new version)
    */
-  async updateClaim(claimId: string, request: UpdateClaimRequest, userId: string): Promise<ProfileClaim> {
+  async updateClaim(
+    claimId: string,
+    request: UpdateClaimRequest,
+    userId: string
+  ): Promise<ProfileClaim> {
     const existingClaim = await this.getClaim(claimId);
 
     // Validate content if provided
@@ -103,11 +106,11 @@ export class ClaimsService {
 
     // Validate and store
     const validatedClaim = ProfileClaimSchema.parse(updatedClaim);
-    
+
     // Mark old version as deleted (soft delete for versioning)
     existingClaim.deleted = true;
     existingClaim.deletedAt = now;
-    
+
     this.claims.set(newVersionId, validatedClaim);
 
     return validatedClaim;
@@ -170,19 +173,16 @@ export class ClaimsService {
     const { type, verificationStatus, page = 1, pageSize = 20 } = options;
 
     let claims = Array.from(this.claims.values()).filter(
-      claim => 
-        claim.userId === userId &&
-        claim.tenantId === tenantId &&
-        !claim.deleted
+      (claim) => claim.userId === userId && claim.tenantId === tenantId && !claim.deleted
     );
 
     // Apply filters
     if (type) {
-      claims = claims.filter(claim => claim.type === type);
+      claims = claims.filter((claim) => claim.type === type);
     }
 
     if (verificationStatus) {
-      claims = claims.filter(claim => claim.verificationStatus === verificationStatus);
+      claims = claims.filter((claim) => claim.verificationStatus === verificationStatus);
     }
 
     // Sort by updatedAt (newest first)
@@ -215,7 +215,7 @@ export class ClaimsService {
     while (currentClaim.previousVersionId) {
       const previousClaim = this.claims.get(currentClaim.previousVersionId);
       if (!previousClaim) break;
-      
+
       history.unshift(previousClaim);
       currentClaim = previousClaim;
     }
@@ -226,9 +226,13 @@ export class ClaimsService {
   /**
    * Get claims by evidence ID
    */
-  async getClaimsByEvidence(evidenceId: string, userId: string, tenantId: string): Promise<ProfileClaim[]> {
+  async getClaimsByEvidence(
+    evidenceId: string,
+    userId: string,
+    tenantId: string
+  ): Promise<ProfileClaim[]> {
     return Array.from(this.claims.values()).filter(
-      claim =>
+      (claim) =>
         claim.evidenceId === evidenceId &&
         claim.userId === userId &&
         claim.tenantId === tenantId &&

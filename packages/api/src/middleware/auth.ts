@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { eq } from 'drizzle-orm';
+import type { NextFunction, Request, Response } from 'express';
 import { validateSession } from '../auth';
 import { db } from '../db';
 import { users } from '../db/schema';
-import { eq } from 'drizzle-orm';
 
 // Extend Express Request type to include user
 declare global {
@@ -22,16 +22,10 @@ declare global {
 // Authentication Middleware
 // ============================================================================
 
-export async function authenticate(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
+export async function authenticate(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     // Get session token from cookie or header
-    const sessionToken =
-      req.cookies?.session ||
-      req.headers.authorization?.replace('Bearer ', '');
+    const sessionToken = req.cookies?.session || req.headers.authorization?.replace('Bearer ', '');
 
     if (!sessionToken) {
       res.status(401).json({ error: 'Authentication required' });
@@ -80,15 +74,9 @@ export async function authenticate(
 // Optional Authentication (doesn't fail if not authenticated)
 // ============================================================================
 
-export async function optionalAuth(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
+export async function optionalAuth(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const sessionToken =
-      req.cookies?.session ||
-      req.headers.authorization?.replace('Bearer ', '');
+    const sessionToken = req.cookies?.session || req.headers.authorization?.replace('Bearer ', '');
 
     if (!sessionToken) {
       next();

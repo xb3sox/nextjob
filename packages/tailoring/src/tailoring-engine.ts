@@ -1,18 +1,17 @@
 import {
-  TailoringRequest,
-  TailoringResult,
-  TailoredSection,
-  TailoredSkill,
-  EvidenceTrace,
-  CareerClaim,
-  JobRequirements,
-  TailoringOptions,
-  EvidenceConstraint,
-  ConstraintViolation,
+  type CareerClaim,
+  type ConstraintViolation,
   EvidenceConstraintViolationError,
+  type EvidenceTrace,
   InsufficientEvidenceError,
   InvalidTailoringRequestError,
+  type JobRequirements,
+  type TailoredSection,
+  type TailoredSkill,
+  type TailoringOptions,
+  type TailoringRequest,
   TailoringRequestSchema,
+  type TailoringResult,
 } from './types.js';
 
 // ============================================================================
@@ -33,7 +32,7 @@ const DEFAULT_MAX_LENGTH = 500;
 export class TailoringEngine {
   /**
    * Tailor content based on career graph and job requirements
-   * 
+   *
    * @param request - Tailoring request with career graph and job requirements
    * @returns Tailored content with full evidence traceability
    * @throws {InvalidTailoringRequestError} If request is invalid
@@ -54,32 +53,57 @@ export class TailoringEngine {
     let result: TailoringResult;
     switch (validatedRequest.type) {
       case 'resume':
-        result = await this.tailorResume(verifiedClaims, validatedRequest.jobRequirements, validatedRequest.options);
+        result = await this.tailorResume(
+          verifiedClaims,
+          validatedRequest.jobRequirements,
+          validatedRequest.options
+        );
         break;
       case 'cover_letter':
-        result = await this.tailorCoverLetter(verifiedClaims, validatedRequest.jobRequirements, validatedRequest.options);
+        result = await this.tailorCoverLetter(
+          verifiedClaims,
+          validatedRequest.jobRequirements,
+          validatedRequest.options
+        );
         break;
       case 'application_answer':
         if (!validatedRequest.question) {
-          throw new InvalidTailoringRequestError({ question: 'Question is required for application_answer type' });
+          throw new InvalidTailoringRequestError({
+            question: 'Question is required for application_answer type',
+          });
         }
-        result = await this.tailorApplicationAnswer(verifiedClaims, validatedRequest.jobRequirements, validatedRequest.question, validatedRequest.options);
+        result = await this.tailorApplicationAnswer(
+          verifiedClaims,
+          validatedRequest.jobRequirements,
+          validatedRequest.question,
+          validatedRequest.options
+        );
         break;
       case 'professional_summary':
-        result = await this.tailorProfessionalSummary(verifiedClaims, validatedRequest.jobRequirements, validatedRequest.options);
+        result = await this.tailorProfessionalSummary(
+          verifiedClaims,
+          validatedRequest.jobRequirements,
+          validatedRequest.options
+        );
         break;
       case 'skills_section':
-        result = await this.tailorSkillsSection(verifiedClaims, validatedRequest.jobRequirements, validatedRequest.options);
+        result = await this.tailorSkillsSection(
+          verifiedClaims,
+          validatedRequest.jobRequirements,
+          validatedRequest.options
+        );
         break;
       default:
-        throw new InvalidTailoringRequestError({ type: `Unsupported tailoring type: ${validatedRequest.type}` });
+        throw new InvalidTailoringRequestError({
+          type: `Unsupported tailoring type: ${validatedRequest.type}`,
+        });
     }
 
     // Collect all unsupported claims from original career graph
-    const usedClaimIds = new Set(result.evidenceTraceability.map(t => t.claimId));
+    const usedClaimIds = new Set(result.evidenceTraceability.map((t) => t.claimId));
     result.unsupportedClaims = validatedRequest.careerGraph.claims
-      .map(c => c.id)
-      .filter(id => !usedClaimIds.has(id));
+      .map((c) => c.id)
+      .filter((id) => !usedClaimIds.has(id));
 
     // Validate evidence constraints
     this.validateEvidenceConstraints(result, verifiedClaims);
@@ -109,9 +133,9 @@ export class TailoringEngine {
    * Filter claims to only verified ones with sufficient confidence
    */
   private filterVerifiedClaims(claims: CareerClaim[]): CareerClaim[] {
-    return claims.filter(claim => 
-      claim.verificationStatus === 'verified' && 
-      claim.confidence >= MIN_CONFIDENCE_THRESHOLD
+    return claims.filter(
+      (claim) =>
+        claim.verificationStatus === 'verified' && claim.confidence >= MIN_CONFIDENCE_THRESHOLD
     );
   }
 
@@ -127,22 +151,24 @@ export class TailoringEngine {
     switch (type) {
       case 'resume':
       case 'cover_letter':
-      case 'professional_summary':
+      case 'professional_summary': {
         // Need at least one experience or education claim
-        const hasExperienceOrEducation = claims.some(c => 
-          c.type === 'experience' || c.type === 'education'
+        const hasExperienceOrEducation = claims.some(
+          (c) => c.type === 'experience' || c.type === 'education'
         );
         if (!hasExperienceOrEducation) {
           throw new InsufficientEvidenceError(`${type} requires experience or education evidence`);
         }
         break;
-      case 'skills_section':
+      }
+      case 'skills_section': {
         // Need at least one skill claim
-        const hasSkill = claims.some(c => c.type === 'skill');
+        const hasSkill = claims.some((c) => c.type === 'skill');
         if (!hasSkill) {
           throw new InsufficientEvidenceError('skills_section requires skill evidence');
         }
         break;
+      }
       case 'application_answer':
         // Already checked that claims.length > 0 above
         // No additional specific evidence required for application answers
@@ -160,7 +186,7 @@ export class TailoringEngine {
   private async tailorResume(
     claims: CareerClaim[],
     jobRequirements: JobRequirements,
-    options?: TailoringOptions
+    _options?: TailoringOptions
   ): Promise<TailoringResult> {
     const sections: TailoredSection[] = [];
     const evidenceTrace: EvidenceTrace[] = [];
@@ -168,7 +194,7 @@ export class TailoringEngine {
     const warnings: string[] = [];
 
     // Process experience claims
-    const experienceClaims = claims.filter(c => c.type === 'experience');
+    const experienceClaims = claims.filter((c) => c.type === 'experience');
     for (const claim of experienceClaims) {
       const section = this.generateExperienceSection(claim, jobRequirements);
       if (section) {
@@ -183,7 +209,7 @@ export class TailoringEngine {
     }
 
     // Process education claims
-    const educationClaims = claims.filter(c => c.type === 'education');
+    const educationClaims = claims.filter((c) => c.type === 'education');
     for (const claim of educationClaims) {
       const section = this.generateEducationSection(claim, jobRequirements);
       if (section) {
@@ -198,7 +224,7 @@ export class TailoringEngine {
     }
 
     // Process skill claims
-    const skillClaims = claims.filter(c => c.type === 'skill');
+    const skillClaims = claims.filter((c) => c.type === 'skill');
     for (const claim of skillClaims) {
       const section = this.generateSkillSection(claim, jobRequirements);
       if (section) {
@@ -213,7 +239,7 @@ export class TailoringEngine {
     }
 
     // Process certification claims
-    const certificationClaims = claims.filter(c => c.type === 'certification');
+    const certificationClaims = claims.filter((c) => c.type === 'certification');
     for (const claim of certificationClaims) {
       const section = this.generateCertificationSection(claim, jobRequirements);
       if (section) {
@@ -228,7 +254,7 @@ export class TailoringEngine {
     }
 
     // Process project claims
-    const projectClaims = claims.filter(c => c.type === 'project');
+    const projectClaims = claims.filter((c) => c.type === 'project');
     for (const claim of projectClaims) {
       const section = this.generateProjectSection(claim, jobRequirements);
       if (section) {
@@ -245,7 +271,7 @@ export class TailoringEngine {
     // Track unsupported claims
     const allClaims = claims;
     for (const claim of allClaims) {
-      if (!evidenceTrace.find(t => t.claimId === claim.id)) {
+      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -254,7 +280,7 @@ export class TailoringEngine {
     const confidence = this.calculateConfidence(claims, evidenceTrace);
 
     // Generate content
-    const content = sections.map(s => s.content).join('\n\n');
+    const content = sections.map((s) => s.content).join('\n\n');
 
     return {
       type: 'resume',
@@ -273,7 +299,7 @@ export class TailoringEngine {
   private async tailorCoverLetter(
     claims: CareerClaim[],
     jobRequirements: JobRequirements,
-    options?: TailoringOptions
+    _options?: TailoringOptions
   ): Promise<TailoringResult> {
     const sections: TailoredSection[] = [];
     const evidenceTrace: EvidenceTrace[] = [];
@@ -290,7 +316,7 @@ export class TailoringEngine {
     });
 
     // Process experience claims
-    const experienceClaims = claims.filter(c => c.type === 'experience');
+    const experienceClaims = claims.filter((c) => c.type === 'experience');
     for (const claim of experienceClaims) {
       const section = this.generateCoverLetterExperienceSection(claim, jobRequirements);
       if (section) {
@@ -305,7 +331,7 @@ export class TailoringEngine {
     }
 
     // Process skill claims
-    const skillClaims = claims.filter(c => c.type === 'skill');
+    const skillClaims = claims.filter((c) => c.type === 'skill');
     for (const claim of skillClaims) {
       const section = this.generateCoverLetterSkillSection(claim, jobRequirements);
       if (section) {
@@ -330,7 +356,7 @@ export class TailoringEngine {
 
     // Track unsupported claims
     for (const claim of claims) {
-      if (!evidenceTrace.find(t => t.claimId === claim.id)) {
+      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -339,7 +365,7 @@ export class TailoringEngine {
     const confidence = this.calculateConfidence(claims, evidenceTrace);
 
     // Generate content
-    const content = sections.map(s => s.content).join('\n\n');
+    const content = sections.map((s) => s.content).join('\n\n');
 
     return {
       type: 'cover_letter',
@@ -359,7 +385,7 @@ export class TailoringEngine {
     claims: CareerClaim[],
     jobRequirements: JobRequirements,
     question: string,
-    options?: TailoringOptions
+    _options?: TailoringOptions
   ): Promise<TailoringResult> {
     const sections: TailoredSection[] = [];
     const evidenceTrace: EvidenceTrace[] = [];
@@ -368,7 +394,7 @@ export class TailoringEngine {
 
     // Generate answer based on question and available evidence
     const answer = this.generateAnswer(claims, jobRequirements, question);
-    
+
     if (answer) {
       sections.push({
         type: 'answer',
@@ -379,7 +405,7 @@ export class TailoringEngine {
 
       // Track evidence
       for (const claimId of answer.claimIds) {
-        const claim = claims.find(c => c.id === claimId);
+        const claim = claims.find((c) => c.id === claimId);
         if (claim) {
           evidenceTrace.push({
             claimId: claim.id,
@@ -393,7 +419,7 @@ export class TailoringEngine {
 
     // Track unsupported claims
     for (const claim of claims) {
-      if (!evidenceTrace.find(t => t.claimId === claim.id)) {
+      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -430,7 +456,7 @@ export class TailoringEngine {
 
     // Generate summary
     const summary = this.generateProfessionalSummary(claims, jobRequirements, options);
-    
+
     if (summary) {
       sections.push({
         type: 'summary',
@@ -441,7 +467,7 @@ export class TailoringEngine {
 
       // Track evidence
       for (const claimId of summary.claimIds) {
-        const claim = claims.find(c => c.id === claimId);
+        const claim = claims.find((c) => c.id === claimId);
         if (claim) {
           evidenceTrace.push({
             claimId: claim.id,
@@ -455,7 +481,7 @@ export class TailoringEngine {
 
     // Track unsupported claims
     for (const claim of claims) {
-      if (!evidenceTrace.find(t => t.claimId === claim.id)) {
+      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -483,7 +509,7 @@ export class TailoringEngine {
   private async tailorSkillsSection(
     claims: CareerClaim[],
     jobRequirements: JobRequirements,
-    options?: TailoringOptions
+    _options?: TailoringOptions
   ): Promise<TailoringResult> {
     const skills: TailoredSkill[] = [];
     const evidenceTrace: EvidenceTrace[] = [];
@@ -491,7 +517,7 @@ export class TailoringEngine {
     const warnings: string[] = [];
 
     // Process skill claims
-    const skillClaims = claims.filter(c => c.type === 'skill');
+    const skillClaims = claims.filter((c) => c.type === 'skill');
     for (const claim of skillClaims) {
       const skill = this.generateSkillEntry(claim, jobRequirements);
       if (skill) {
@@ -513,7 +539,7 @@ export class TailoringEngine {
 
     // Track unsupported claims
     for (const claim of claims) {
-      if (!evidenceTrace.find(t => t.claimId === claim.id)) {
+      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -522,7 +548,7 @@ export class TailoringEngine {
     const confidence = this.calculateConfidence(claims, evidenceTrace);
 
     // Generate content
-    const content = skills.map(s => `${s.name} (${s.level})`).join(', ');
+    const content = skills.map((s) => `${s.name} (${s.level})`).join(', ');
 
     return {
       type: 'skills_section',
@@ -542,27 +568,34 @@ export class TailoringEngine {
   /**
    * Generate experience section for resume
    */
-  private generateExperienceSection(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSection | null {
+  private generateExperienceSection(
+    claim: CareerClaim,
+    _jobRequirements: JobRequirements
+  ): TailoredSection | null {
     const content = claim.content || {};
-    
+
     // Preserve exact company name
     const company = content.company || 'Unknown Company';
     const title = claim.title;
-    
+
     // Preserve exact dates
     const startDate = content.startDate;
     const endDate = content.endDate;
-    
+
     let sectionContent = `${title} at ${company}`;
-    
+
     if (startDate && endDate) {
       sectionContent += ` (${startDate} to ${endDate})`;
     } else if (startDate) {
       sectionContent += ` (${startDate} - Present)`;
     }
-    
-    if (content.achievements && Array.isArray(content.achievements) && content.achievements.length > 0) {
-      sectionContent += '\n' + content.achievements.map((a: string) => `• ${a}`).join('\n');
+
+    if (
+      content.achievements &&
+      Array.isArray(content.achievements) &&
+      content.achievements.length > 0
+    ) {
+      sectionContent += `\n${content.achievements.map((a: string) => `• ${a}`).join('\n')}`;
     }
 
     return {
@@ -576,19 +609,22 @@ export class TailoringEngine {
   /**
    * Generate education section for resume
    */
-  private generateEducationSection(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSection | null {
+  private generateEducationSection(
+    claim: CareerClaim,
+    _jobRequirements: JobRequirements
+  ): TailoredSection | null {
     const content = claim.content || {};
-    
+
     // Preserve exact institution name
     const institution = content.institution || 'Unknown Institution';
     const degree = claim.title;
-    
+
     let sectionContent = `${degree} from ${institution}`;
-    
+
     if (content.graduationDate) {
       sectionContent += ` (${content.graduationDate})`;
     }
-    
+
     if (content.field) {
       sectionContent += ` in ${content.field}`;
     }
@@ -604,11 +640,14 @@ export class TailoringEngine {
   /**
    * Generate skill section for resume
    */
-  private generateSkillSection(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSection | null {
+  private generateSkillSection(
+    claim: CareerClaim,
+    _jobRequirements: JobRequirements
+  ): TailoredSection | null {
     const content = claim.content || {};
     const skillName = claim.title;
     const level = content.level || 'unknown';
-    
+
     let sectionContent = skillName;
     if (content.yearsOfExperience) {
       sectionContent += ` (${content.yearsOfExperience} years, ${level})`;
@@ -627,9 +666,12 @@ export class TailoringEngine {
   /**
    * Generate certification section for resume
    */
-  private generateCertificationSection(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSection | null {
+  private generateCertificationSection(
+    claim: CareerClaim,
+    _jobRequirements: JobRequirements
+  ): TailoredSection | null {
     const content = claim.content || {};
-    
+
     // Check if certification is expired
     if (content.expirationDate) {
       const expirationDate = new Date(content.expirationDate);
@@ -637,12 +679,12 @@ export class TailoringEngine {
         return null; // Skip expired certifications
       }
     }
-    
+
     const certName = claim.title;
     const issuer = content.issuer || 'Unknown Issuer';
-    
+
     let sectionContent = `${certName} from ${issuer}`;
-    
+
     if (content.issueDate) {
       sectionContent += ` (${content.issueDate})`;
     }
@@ -658,17 +700,24 @@ export class TailoringEngine {
   /**
    * Generate project section for resume
    */
-  private generateProjectSection(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSection | null {
+  private generateProjectSection(
+    claim: CareerClaim,
+    _jobRequirements: JobRequirements
+  ): TailoredSection | null {
     const content = claim.content || {};
     const projectName = claim.title;
-    
+
     let sectionContent = projectName;
-    
+
     if (content.description) {
       sectionContent += `: ${content.description}`;
     }
-    
-    if (content.technologies && Array.isArray(content.technologies) && content.technologies.length > 0) {
+
+    if (
+      content.technologies &&
+      Array.isArray(content.technologies) &&
+      content.technologies.length > 0
+    ) {
       sectionContent += ` using ${content.technologies.join(', ')}`;
     }
 
@@ -686,21 +735,28 @@ export class TailoringEngine {
   private generateCoverLetterIntro(jobRequirements: JobRequirements): string {
     const company = jobRequirements.company || 'your company';
     const title = jobRequirements.title;
-    
+
     return `I am writing to express my strong interest in the ${title} position at ${company}.`;
   }
 
   /**
    * Generate cover letter experience section
    */
-  private generateCoverLetterExperienceSection(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSection | null {
+  private generateCoverLetterExperienceSection(
+    claim: CareerClaim,
+    _jobRequirements: JobRequirements
+  ): TailoredSection | null {
     const content = claim.content || {};
     const company = content.company || 'Unknown Company';
     const title = claim.title;
-    
+
     let sectionContent = `In my role as ${title} at ${company}`;
-    
-    if (content.achievements && Array.isArray(content.achievements) && content.achievements.length > 0) {
+
+    if (
+      content.achievements &&
+      Array.isArray(content.achievements) &&
+      content.achievements.length > 0
+    ) {
       sectionContent += `, I ${content.achievements[0].toLowerCase()}`;
     }
 
@@ -715,11 +771,14 @@ export class TailoringEngine {
   /**
    * Generate cover letter skill section
    */
-  private generateCoverLetterSkillSection(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSection | null {
+  private generateCoverLetterSkillSection(
+    claim: CareerClaim,
+    _jobRequirements: JobRequirements
+  ): TailoredSection | null {
     const content = claim.content || {};
     const skillName = claim.title;
     const level = content.level || 'proficient';
-    
+
     const sectionContent = `My ${level} skills in ${skillName} align well with your requirements.`;
 
     return {
@@ -733,7 +792,7 @@ export class TailoringEngine {
   /**
    * Generate cover letter conclusion
    */
-  private generateCoverLetterConclusion(jobRequirements: JobRequirements): string {
+  private generateCoverLetterConclusion(_jobRequirements: JobRequirements): string {
     return `I look forward to the opportunity to discuss how my experience and skills can contribute to your team.`;
   }
 
@@ -742,7 +801,7 @@ export class TailoringEngine {
    */
   private generateAnswer(
     claims: CareerClaim[],
-    jobRequirements: JobRequirements,
+    _jobRequirements: JobRequirements,
     question: string
   ): { content: string; claimIds: string[]; preserved: string[] } | null {
     if (claims.length === 0) {
@@ -752,25 +811,25 @@ export class TailoringEngine {
     const questionLower = question.toLowerCase();
     const claimIds: string[] = [];
     const preserved: string[] = [];
-    
+
     // Determine which claims are relevant to the question
-    const relevantClaims = claims.filter(claim => {
+    const relevantClaims = claims.filter((claim) => {
       const contentStr = JSON.stringify(claim.content || {}).toLowerCase();
       const titleStr = claim.title.toLowerCase();
       return contentStr.includes(questionLower) || titleStr.includes(questionLower);
     });
-    
+
     if (relevantClaims.length === 0) {
       // Use all claims if no specific match
       relevantClaims.push(...claims.slice(0, 3));
     }
-    
+
     // Generate answer
     const parts: string[] = [];
-    
+
     for (const claim of relevantClaims) {
       claimIds.push(claim.id);
-      
+
       try {
         if (claim.type === 'experience') {
           const company = claim.content?.company || 'Unknown Company';
@@ -788,18 +847,18 @@ export class TailoringEngine {
         } else {
           parts.push(claim.title);
         }
-      } catch (error) {
+      } catch (_error) {
         // If there's an error accessing claim content, just use the title
         parts.push(claim.title);
       }
     }
-    
+
     if (parts.length === 0) {
       return null;
     }
-    
+
     const content = `Based on my ${parts.join(' and ')}, I am well-qualified for this position.`;
-    
+
     return { content, claimIds, preserved };
   }
 
@@ -808,15 +867,15 @@ export class TailoringEngine {
    */
   private generateProfessionalSummary(
     claims: CareerClaim[],
-    jobRequirements: JobRequirements,
+    _jobRequirements: JobRequirements,
     options?: TailoringOptions
   ): { content: string; claimIds: string[]; preserved: string[] } | null {
     const claimIds: string[] = [];
     const preserved: string[] = [];
     const parts: string[] = [];
-    
+
     // Get experience
-    const experienceClaim = claims.find(c => c.type === 'experience');
+    const experienceClaim = claims.find((c) => c.type === 'experience');
     if (experienceClaim) {
       claimIds.push(experienceClaim.id);
       const content = experienceClaim.content || {};
@@ -828,63 +887,66 @@ export class TailoringEngine {
       }
       preserved.push('title', 'years');
     }
-    
+
     // Get skills
-    const skillClaims = claims.filter(c => c.type === 'skill').slice(0, 3);
+    const skillClaims = claims.filter((c) => c.type === 'skill').slice(0, 3);
     if (skillClaims.length > 0) {
-      const skills = skillClaims.map(c => {
+      const skills = skillClaims.map((c) => {
         claimIds.push(c.id);
         preserved.push('skillName');
         return c.title;
       });
       parts.push(`with expertise in ${skills.join(', ')}`);
     }
-    
+
     // Get education
-    const educationClaim = claims.find(c => c.type === 'education');
+    const educationClaim = claims.find((c) => c.type === 'education');
     if (educationClaim) {
       claimIds.push(educationClaim.id);
       parts.push(`holding ${educationClaim.title}`);
       preserved.push('degree');
     }
-    
+
     // Get certifications
-    const certClaim = claims.find(c => c.type === 'certification');
+    const certClaim = claims.find((c) => c.type === 'certification');
     if (certClaim) {
       claimIds.push(certClaim.id);
       parts.push(`and ${certClaim.title} certification`);
       preserved.push('certification');
     }
-    
+
     const content = parts.join(' ');
-    
+
     // Apply max length if specified
     const maxLength = options?.maxLength || DEFAULT_MAX_LENGTH;
     if (content.length > maxLength) {
-      return { content: content.substring(0, maxLength - 3) + '...', claimIds, preserved };
+      return { content: `${content.substring(0, maxLength - 3)}...`, claimIds, preserved };
     }
-    
+
     return { content, claimIds, preserved };
   }
 
   /**
    * Generate skill entry for skills section
    */
-  private generateSkillEntry(claim: CareerClaim, jobRequirements: JobRequirements): TailoredSkill | null {
+  private generateSkillEntry(
+    claim: CareerClaim,
+    jobRequirements: JobRequirements
+  ): TailoredSkill | null {
     const skillName = claim.title;
     const level = claim.content?.level || 'unknown';
-    
+
     // Determine priority based on job requirements (case-insensitive comparison)
     let priority: 'high' | 'medium' | 'low' = 'low';
-    
+
     const skillNameLower = skillName.toLowerCase();
-    
-    if (jobRequirements.requiredSkills?.some(s => s.toLowerCase() === skillNameLower)) {
+
+    if (jobRequirements.requiredSkills?.some((s) => s.toLowerCase() === skillNameLower)) {
       priority = 'high';
-    } else if (jobRequirements.preferredSkills?.some(s => s.toLowerCase() === skillNameLower)) {
+    } else if (jobRequirements.preferredSkills?.some((s) => s.toLowerCase() === skillNameLower)) {
       priority = 'medium';
     }
-    
+
     return {
       name: skillName,
       level,
@@ -898,10 +960,10 @@ export class TailoringEngine {
    */
   private calculateConfidence(claims: CareerClaim[], evidenceTrace: EvidenceTrace[]): number {
     if (claims.length === 0) return 0;
-    
+
     const coveredClaims = evidenceTrace.length;
     const totalClaims = claims.length;
-    
+
     return coveredClaims / totalClaims;
   }
 
@@ -911,23 +973,23 @@ export class TailoringEngine {
 
   /**
    * Validate evidence constraints
-   * 
+   *
    * Note: Unsupported claims are tracked for transparency but do not cause violations.
    * Only actual constraint violations (fabrication, upgrades, etc.) throw errors.
    */
   private validateEvidenceConstraints(result: TailoringResult, claims: CareerClaim[]): void {
     const violations: ConstraintViolation[] = [];
-    
+
     // Check for fabricated company names
-    const experienceSections = result.sections?.filter(s => s.type === 'experience') || [];
+    const experienceSections = result.sections?.filter((s) => s.type === 'experience') || [];
     for (const section of experienceSections) {
       // Safety check: ensure evidenceClaimIds is not empty
       if (!section.evidenceClaimIds || section.evidenceClaimIds.length === 0) {
         continue;
       }
-      
-      const claim = claims.find(c => c.id === section.evidenceClaimIds[0]);
-      if (claim && claim.content?.company) {
+
+      const claim = claims.find((c) => c.id === section.evidenceClaimIds[0]);
+      if (claim?.content?.company) {
         if (!section.content.includes(claim.content.company)) {
           violations.push({
             constraint: {
@@ -941,12 +1003,12 @@ export class TailoringEngine {
         }
       }
     }
-    
+
     // Check for skill level upgrades
     const skills = result.skills || [];
     for (const skill of skills) {
-      const claim = claims.find(c => c.id === skill.evidenceClaimId);
-      if (claim && claim.content?.level) {
+      const claim = claims.find((c) => c.id === skill.evidenceClaimId);
+      if (claim?.content?.level) {
         if (skill.level !== claim.content.level) {
           violations.push({
             constraint: {
@@ -960,12 +1022,12 @@ export class TailoringEngine {
         }
       }
     }
-    
+
     // Note: We do NOT throw errors for unsupported claims.
     // Unsupported claims are tracked for transparency and reporting purposes.
     // They represent evidence that couldn't be used (e.g., low confidence, missing data).
     // This is expected behavior, not a constraint violation.
-    
+
     if (violations.length > 0) {
       throw new EvidenceConstraintViolationError(violations);
     }

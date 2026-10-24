@@ -1,10 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { Request, Response, NextFunction } from 'express';
-import {
-  requireTenant,
-  getTenantFilter,
-  validateResourceOwnership,
-} from './tenant';
+import type { NextFunction, Request, Response } from 'express';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { getTenantFilter, requireTenant, validateResourceOwnership } from './tenant';
 
 describe('Tenant Isolation Middleware', () => {
   let req: Partial<Request>;
@@ -94,9 +90,7 @@ describe('Tenant Isolation Middleware', () => {
     it('should throw error if user is not authenticated', () => {
       req.user = undefined;
 
-      expect(() => getTenantFilter(req as Request)).toThrow(
-        'User not authenticated'
-      );
+      expect(() => getTenantFilter(req as Request)).toThrow('User not authenticated');
     });
   });
 

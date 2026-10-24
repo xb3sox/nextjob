@@ -8,19 +8,15 @@ export function ButtonLoader({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   };
 
   return (
-    <Loader2 
-      className={`${sizeClasses[size]} animate-spin`} 
-      aria-label="Loading"
-      role="status"
-    />
+    <Loader2 className={`${sizeClasses[size]} animate-spin`} aria-label="Loading" role="status" />
   );
 }
 
-export function LoadingButton({ 
-  children, 
-  loading, 
+export function LoadingButton({
+  children,
+  loading,
   className = '',
-  ...props 
+  ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { loading: boolean }) {
   return (
     <button
@@ -29,9 +25,7 @@ export function LoadingButton({
       className={`relative ${className}`}
       aria-busy={loading}
     >
-      <span className={loading ? 'invisible' : ''}>
-        {children}
-      </span>
+      <span className={loading ? 'invisible' : ''}>{children}</span>
       {loading && (
         <span className="absolute inset-0 flex items-center justify-center">
           <ButtonLoader />
@@ -43,7 +37,7 @@ export function LoadingButton({
 
 export function PageLoader() {
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center bg-[#0a0a0a]"
       role="status"
       aria-label="Loading page"
@@ -65,20 +59,26 @@ export function InlineLoader({ text = 'Loading...' }: { text?: string }) {
   );
 }
 
-export function ProgressBar({ 
-  value, 
-  max = 100, 
-  label 
-}: { 
-  value: number; 
-  max?: number; 
+export function ProgressBar({
+  value,
+  max = 100,
+  label,
+}: {
+  value: number;
+  max?: number;
   label?: string;
 }) {
   const clampedValue = Math.min(max, Math.max(0, value));
   const percentage = Math.min(100, Math.max(0, (value / max) * 100));
 
   return (
-    <div className="w-full" role="progressbar" aria-valuenow={clampedValue} aria-valuemin={0} aria-valuemax={max}>
+    <div
+      className="w-full"
+      role="progressbar"
+      aria-valuenow={clampedValue}
+      aria-valuemin={0}
+      aria-valuemax={max}
+    >
       {label && (
         <div className="flex justify-between mb-2">
           <span className="text-sm text-white/60">{label}</span>
@@ -86,7 +86,7 @@ export function ProgressBar({
         </div>
       )}
       <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-        <div 
+        <div
           className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
@@ -97,12 +97,18 @@ export function ProgressBar({
 
 export function SuccessMessage({ message }: { message: string }) {
   return (
-    <div 
+    <div
       className="flex items-center gap-2 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20"
       role="alert"
       aria-live="polite"
     >
-      <svg className="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <svg
+        aria-hidden="true"
+        className="h-5 w-5 text-emerald-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
       </svg>
       <span className="text-sm text-emerald-400">{message}</span>
@@ -112,13 +118,24 @@ export function SuccessMessage({ message }: { message: string }) {
 
 export function ErrorMessage({ message }: { message: string }) {
   return (
-    <div 
+    <div
       className="flex items-center gap-2 p-4 rounded-lg bg-red-500/10 border border-red-500/20"
       role="alert"
       aria-live="assertive"
     >
-      <svg className="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      <svg
+        aria-hidden="true"
+        className="h-5 w-5 text-red-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M6 18L18 6M6 6l12 12"
+        />
       </svg>
       <span className="text-sm text-red-400">{message}</span>
     </div>

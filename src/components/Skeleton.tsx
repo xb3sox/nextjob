@@ -1,10 +1,5 @@
 export function Skeleton({ className = '' }: { className?: string }) {
-  return (
-    <div 
-      className={`animate-pulse bg-white/10 rounded ${className}`}
-      aria-hidden="true"
-    />
-  );
+  return <div className={`animate-pulse bg-white/10 rounded ${className}`} aria-hidden="true" />;
 }
 
 export function CardSkeleton() {
@@ -59,8 +54,8 @@ export function TestimonialSkeleton() {
   return (
     <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
       <div className="flex gap-1 mb-4">
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="h-4 w-4" />
+        {[0, 1, 2, 3, 4].map((n) => (
+          <Skeleton key={n} className="h-4 w-4" />
         ))}
       </div>
       <Skeleton className="h-4 w-full mb-2" />

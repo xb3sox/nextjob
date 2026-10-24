@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Evidence,
-  EvidenceSchema,
-  CreateEvidenceRequest,
-  EvidenceListResponse,
+  type CreateEvidenceRequest,
+  type Evidence,
+  type EvidenceListResponse,
   EvidenceNotFoundError,
-  EvidenceType,
+  EvidenceSchema,
+  type EvidenceType,
 } from './types.js';
 
 // ============================================================================
@@ -57,7 +57,7 @@ export class EvidenceService {
    */
   async getEvidence(evidenceId: string): Promise<Evidence> {
     const evidence = this.evidenceStore.get(evidenceId);
-    
+
     if (!evidence || evidence.deleted) {
       throw new EvidenceNotFoundError(evidenceId);
     }
@@ -130,19 +130,16 @@ export class EvidenceService {
     const { type, verified, page = 1, pageSize = 20 } = options;
 
     let evidence = Array.from(this.evidenceStore.values()).filter(
-      e => 
-        e.userId === userId &&
-        e.tenantId === tenantId &&
-        !e.deleted
+      (e) => e.userId === userId && e.tenantId === tenantId && !e.deleted
     );
 
     // Apply filters
     if (type) {
-      evidence = evidence.filter(e => e.type === type);
+      evidence = evidence.filter((e) => e.type === type);
     }
 
     if (verified !== undefined) {
-      evidence = evidence.filter(e => e.verified === verified);
+      evidence = evidence.filter((e) => e.verified === verified);
     }
 
     // Sort by createdAt (newest first)
@@ -167,23 +164,19 @@ export class EvidenceService {
    * Verify evidence
    */
   async verifyEvidence(evidenceId: string, userId: string): Promise<Evidence> {
-    return this.updateEvidence(
-      evidenceId,
-      { verified: true, verifiedBy: userId },
-      userId
-    );
+    return this.updateEvidence(evidenceId, { verified: true, verifiedBy: userId }, userId);
   }
 
   /**
    * Get evidence by hash (for deduplication)
    */
-  async getEvidenceByHash(hash: string, userId: string, tenantId: string): Promise<Evidence | null> {
+  async getEvidenceByHash(
+    hash: string,
+    userId: string,
+    tenantId: string
+  ): Promise<Evidence | null> {
     const evidence = Array.from(this.evidenceStore.values()).find(
-      e =>
-        e.hash === hash &&
-        e.userId === userId &&
-        e.tenantId === tenantId &&
-        !e.deleted
+      (e) => e.hash === hash && e.userId === userId && e.tenantId === tenantId && !e.deleted
     );
 
     return evidence || null;
@@ -192,7 +185,10 @@ export class EvidenceService {
   /**
    * Calculate evidence coverage for a user
    */
-  async calculateEvidenceCoverage(userId: string, tenantId: string): Promise<{
+  async calculateEvidenceCoverage(
+    userId: string,
+    tenantId: string
+  ): Promise<{
     totalEvidence: number;
     verifiedEvidence: number;
     coveragePercentage: number;
@@ -200,7 +196,7 @@ export class EvidenceService {
     const { evidence } = await this.listEvidence(userId, tenantId, { pageSize: 1000 });
 
     const totalEvidence = evidence.length;
-    const verifiedEvidence = evidence.filter(e => e.verified).length;
+    const verifiedEvidence = evidence.filter((e) => e.verified).length;
     const coveragePercentage = totalEvidence > 0 ? (verifiedEvidence / totalEvidence) * 100 : 0;
 
     return {
@@ -213,7 +209,10 @@ export class EvidenceService {
   /**
    * Get evidence statistics
    */
-  async getEvidenceStats(userId: string, tenantId: string): Promise<{
+  async getEvidenceStats(
+    userId: string,
+    tenantId: string
+  ): Promise<{
     byType: Record<EvidenceType, number>;
     byVerificationStatus: {
       verified: number;
@@ -242,7 +241,7 @@ export class EvidenceService {
 
     for (const e of evidence) {
       byType[e.type]++;
-      
+
       if (e.verified) {
         byVerificationStatus.verified++;
       } else {

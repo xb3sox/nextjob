@@ -11,10 +11,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US",
-            "CA"
-          ]
+          "countries": ["US", "CA"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -51,10 +48,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US",
-            "CA"
-          ]
+          "countries": ["US", "CA"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -91,9 +85,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ],
+          "countries": ["US"],
           "allowRemote": true
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
@@ -164,9 +156,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -274,9 +264,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "GB"
-          ]
+          "countries": ["GB"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -313,9 +301,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ],
+          "countries": ["US"],
           "allowRemote": false
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
@@ -352,12 +338,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "JP",
-            "SG",
-            "KR",
-            "AU"
-          ]
+          "countries": ["JP", "SG", "KR", "AU"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -392,9 +373,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -426,9 +405,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -464,19 +441,14 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen",
-            "Green Card"
-          ]
+          "requiredAuthorizations": ["US Citizen", "Green Card"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
     ],
     "profile": {
       "workAuthorization": {
-        "authorizations": [
-          "Green Card"
-        ]
+        "authorizations": ["Green Card"]
       }
     },
     "job": {
@@ -505,19 +477,14 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen",
-            "Green Card"
-          ]
+          "requiredAuthorizations": ["US Citizen", "Green Card"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
     ],
     "profile": {
       "workAuthorization": {
-        "authorizations": [
-          "H1B"
-        ]
+        "authorizations": ["H1B"]
       }
     },
     "job": {
@@ -547,9 +514,7 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "EU Passport"
-          ]
+          "requiredAuthorizations": ["EU Passport"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -582,19 +547,14 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "EU Passport"
-          ]
+          "requiredAuthorizations": ["EU Passport"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
     ],
     "profile": {
       "workAuthorization": {
-        "authorizations": [
-          "Work Permit",
-          "EU Passport"
-        ]
+        "authorizations": ["Work Permit", "EU Passport"]
       }
     },
     "job": {
@@ -622,20 +582,14 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen",
-            "H1B",
-            "Green Card"
-          ]
+          "requiredAuthorizations": ["US Citizen", "H1B", "Green Card"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
     ],
     "profile": {
       "workAuthorization": {
-        "authorizations": [
-          "H1B"
-        ]
+        "authorizations": ["H1B"]
       }
     },
     "job": {
@@ -664,18 +618,14 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen"
-          ]
+          "requiredAuthorizations": ["US Citizen"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
     ],
     "profile": {
       "workAuthorization": {
-        "authorizations": [
-          "Open Work Permit"
-        ]
+        "authorizations": ["Open Work Permit"]
       }
     },
     "job": {
@@ -738,19 +688,14 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "Green Card",
-            "Work Permit"
-          ]
+          "requiredAuthorizations": ["Green Card", "Work Permit"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
     ],
     "profile": {
       "workAuthorization": {
-        "authorizations": [
-          "Work Permit"
-        ]
+        "authorizations": ["Work Permit"]
       }
     },
     "job": {
@@ -779,9 +724,7 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "EU Passport"
-          ]
+          "requiredAuthorizations": ["EU Passport"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -812,20 +755,14 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen",
-            "Green Card"
-          ]
+          "requiredAuthorizations": ["US Citizen", "Green Card"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
     ],
     "profile": {
       "workAuthorization": {
-        "authorizations": [
-          "H1B",
-          "Green Card"
-        ]
+        "authorizations": ["H1B", "Green Card"]
       }
     },
     "job": {
@@ -1179,9 +1116,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "RN"
-          ]
+          "requiredLicenses": ["RN"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1220,9 +1155,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "RN"
-          ]
+          "requiredLicenses": ["RN"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1262,9 +1195,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "CDL-A"
-          ]
+          "requiredLicenses": ["CDL-A"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1298,10 +1229,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "PE",
-            "Real Estate"
-          ]
+          "requiredLicenses": ["PE", "Real Estate"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1344,10 +1272,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "PE",
-            "Electrician"
-          ]
+          "requiredLicenses": ["PE", "Electrician"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1427,9 +1352,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "Pilots License"
-          ]
+          "requiredLicenses": ["Pilots License"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1460,9 +1383,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "Series 7"
-          ]
+          "requiredLicenses": ["Series 7"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1505,9 +1426,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "RN"
-          ]
+          "requiredLicenses": ["RN"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1546,9 +1465,7 @@
         "checkType": "license",
         "required": false,
         "condition": {
-          "requiredLicenses": [
-            "Electrician"
-          ]
+          "requiredLicenses": ["Electrician"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1582,9 +1499,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "AWS SA"
-          ]
+          "requiredCertifications": ["AWS SA"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1622,9 +1537,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "CISSP"
-          ]
+          "requiredCertifications": ["CISSP"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1663,10 +1576,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "PMP",
-            "Scrum Master"
-          ]
+          "requiredCertifications": ["PMP", "Scrum Master"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1707,10 +1617,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "PMP",
-            "CSM Advanced"
-          ]
+          "requiredCertifications": ["PMP", "CSM Advanced"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1780,9 +1687,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "CFA"
-          ]
+          "requiredCertifications": ["CFA"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1815,9 +1720,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "K8s CKA"
-          ]
+          "requiredCertifications": ["K8s CKA"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1855,9 +1758,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "CPA"
-          ]
+          "requiredCertifications": ["CPA"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -1901,9 +1802,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "CISSP"
-          ]
+          "requiredCertifications": ["CISSP"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2166,9 +2065,7 @@
         "checkType": "education",
         "required": true,
         "condition": {
-          "requiredFields": [
-            "computer science"
-          ]
+          "requiredFields": ["computer science"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2207,9 +2104,7 @@
         "checkType": "education",
         "required": true,
         "condition": {
-          "requiredFields": [
-            "law"
-          ]
+          "requiredFields": ["law"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2249,10 +2144,7 @@
         "checkType": "education",
         "required": true,
         "condition": {
-          "requiredFields": [
-            "mathematics",
-            "engineering"
-          ]
+          "requiredFields": ["mathematics", "engineering"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2292,9 +2184,7 @@
         "required": true,
         "condition": {
           "minimumDegree": "bachelor",
-          "requiredFields": [
-            "physics"
-          ]
+          "requiredFields": ["physics"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2823,10 +2713,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "JavaScript",
-            "React"
-          ]
+          "requiredSkills": ["JavaScript", "React"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2867,10 +2754,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Go",
-            "Kubernetes"
-          ]
+          "requiredSkills": ["Go", "Kubernetes"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2909,9 +2793,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Python"
-          ]
+          "requiredSkills": ["Python"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -2981,10 +2863,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "SQL",
-            "Python"
-          ]
+          "requiredSkills": ["SQL", "Python"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -3031,9 +2910,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Node.js"
-          ]
+          "requiredSkills": ["Node.js"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -3071,9 +2948,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "TYPESCRIPT"
-          ]
+          "requiredSkills": ["TYPESCRIPT"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -3111,11 +2986,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Rust",
-            "Terraform",
-            "AWS"
-          ]
+          "requiredSkills": ["Rust", "Terraform", "AWS"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -3183,9 +3054,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Java"
-          ]
+          "requiredSkills": ["Java"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -3989,9 +3858,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4001,10 +3868,7 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen",
-            "Green Card"
-          ]
+          "requiredAuthorizations": ["US Citizen", "Green Card"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4042,10 +3906,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Python",
-            "React"
-          ]
+          "requiredSkills": ["Python", "React"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -4055,9 +3916,7 @@
         "country": "US"
       },
       "workAuthorization": {
-        "authorizations": [
-          "US Citizen"
-        ]
+        "authorizations": ["US Citizen"]
       },
       "needsSponsorship": false,
       "education": [
@@ -4120,9 +3979,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4132,9 +3989,7 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen"
-          ]
+          "requiredAuthorizations": ["US Citizen"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4164,9 +4019,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Kubernetes"
-          ]
+          "requiredSkills": ["Kubernetes"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -4176,9 +4029,7 @@
         "country": "US"
       },
       "workAuthorization": {
-        "authorizations": [
-          "US Citizen"
-        ]
+        "authorizations": ["US Citizen"]
       },
       "needsSponsorship": false,
       "education": [
@@ -4238,9 +4089,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4250,9 +4099,7 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen"
-          ]
+          "requiredAuthorizations": ["US Citizen"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4262,9 +4109,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Python"
-          ]
+          "requiredSkills": ["Python"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -4310,9 +4155,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4322,9 +4165,7 @@
         "checkType": "work_authorization",
         "required": false,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen"
-          ]
+          "requiredAuthorizations": ["US Citizen"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -4362,9 +4203,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4411,9 +4250,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "US"
-          ]
+          "countries": ["US"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4433,9 +4270,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "Go"
-          ]
+          "requiredSkills": ["Go"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4520,9 +4355,7 @@
         "checkType": "work_authorization",
         "required": true,
         "condition": {
-          "requiredAuthorizations": [
-            "US Citizen"
-          ]
+          "requiredAuthorizations": ["US Citizen"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4540,9 +4373,7 @@
     "profile": {
       "securityClearance": "secret",
       "workAuthorization": {
-        "authorizations": [
-          "Green Card"
-        ]
+        "authorizations": ["Green Card"]
       },
       "education": [
         {
@@ -4581,9 +4412,7 @@
         "checkType": "license",
         "required": true,
         "condition": {
-          "requiredLicenses": [
-            "RN"
-          ]
+          "requiredLicenses": ["RN"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4593,9 +4422,7 @@
         "checkType": "certification",
         "required": true,
         "condition": {
-          "requiredCertifications": [
-            "CISSP"
-          ]
+          "requiredCertifications": ["CISSP"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4658,9 +4485,7 @@
         "checkType": "location",
         "required": true,
         "condition": {
-          "countries": [
-            "GB"
-          ]
+          "countries": ["GB"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       },
@@ -4670,9 +4495,7 @@
         "checkType": "skill",
         "required": true,
         "condition": {
-          "requiredSkills": [
-            "SQL"
-          ]
+          "requiredSkills": ["SQL"]
         },
         "userId": "00000000-0000-4000-8000-0000000000e2"
       }
@@ -4791,9 +4614,7 @@
         "country": "US"
       },
       "workAuthorization": {
-        "authorizations": [
-          "US Citizen"
-        ]
+        "authorizations": ["US Citizen"]
       },
       "needsSponsorship": false,
       "education": [
