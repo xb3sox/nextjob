@@ -60,9 +60,9 @@ body:
       label: Owner
       description: See AGENTS.md §GitHub Workflow for what each label means.
       options:
-        - agent:jules (ready for the async agent)
-        - agent:jules-queued (agent work, dependency open)
-        - agent:human (approval, credentials, legal, judgement)
+        - jules (adding this label dispatches the Jules agent)
+        - jules-queued (agent work, dependency still open)
+        - human (approval, credentials, legal, judgement)
     validations:
       required: true
 
