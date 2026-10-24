@@ -44,6 +44,9 @@
 			"!!coverage",
 			"!!.next",
 			"!!.turbo",
+			"!!.wrangler",
+			"!!.agents",
+			"!!.codegraph",
 			"!!package-lock.json",
 			"!!bun.lockb"
 		]
