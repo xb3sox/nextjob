@@ -30,6 +30,12 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      # packages/api, packages/profile and packages/ai-gateway still fail strict
+      # tsc (Zod .parse() widens required fields to optional). tailoring is clean,
+      # so gate it; add the others here as their type debt is fixed.
+      - name: Typecheck (packages/tailoring)
+        run: bunx tsc --noEmit -p packages/tailoring/tsconfig.json
+
       - name: Lint
         run: bun run lint
 

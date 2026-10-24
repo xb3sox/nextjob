@@ -12,7 +12,7 @@ NextJob is your AI career agent that finds the right opportunities, prepares bet
 [![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
 [![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
 [![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 120](https://img.shields.io/badge/Tasks-120-blue)](TASKS.md) [![Progress: 28.3%](https://img.shields.io/badge/Progress-28.3%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](TASKS.md#quality-review--fixes-2026-01-15)
+[![Tasks: 118](https://img.shields.io/badge/Tasks-118-blue)](TASKS.md) [![Progress: 28.0%](https://img.shields.io/badge/Progress-28.0%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](TASKS.md#quality-review--fixes-2026-01-15)
 [![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
 
 [Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
@@ -193,6 +193,37 @@ See [Technical Design §Stack](docs/TECH.md#stack) for complete list with ration
 2. **Review architecture** — Check [TECH.md](docs/TECH.md) for technical decisions
 3. **Understand tasks** — Browse [TASKS.md](TASKS.md) for implementation plan
 4. **Follow agent rules** — See [AGENTS.md](AGENTS.md) for development guidelines
+
+### Local setup
+
+```bash
+bun install --frozen-lockfile   # bun.lock is the only lockfile
+cp .env.example .env            # then fill in the Supabase project values
+bun run dev                     # http://localhost:3000
+
+# gates — these are what CI runs
+bun run typecheck
+bun run lint
+bunx vitest run --maxWorkers 2
+bun run build
+```
+
+`packages/*` are Bun workspaces: adding a dependency to a package's own
+`package.json` is enough, run `bun install` at the repo root.
+
+### Repository status
+
+What is actually wired and green today:
+
+| Surface | State |
+| --- | --- |
+| App (`src/`) | Vite + React 18 SPA. Typecheck, lint, 603 tests, production build all green. |
+| `packages/tailoring` | Engine + types; typechecks clean, 18 unit tests. |
+| `packages/api`, `packages/profile`, `packages/ai-gateway` | Code and tests present (Fastify/Temporal, claims, providers). They do **not** typecheck in strict mode yet — 23 errors of the "Zod `.parse()` widens required fields to optional" kind. Tracked on the roadmap board; the app does not import them at runtime yet. |
+| Deploy | Vercel owns the live site (`vercel.json`); Cloudflare Workers is a manual, opt-in path (`wrangler.jsonc`, `deploy-cloudflare.yml`). |
+
+`docs/TECH.md` describes the target architecture (Next.js `apps/web`, WXT extension); those
+directories do not exist yet. See `AGENTS.md` §Structure for how task paths map onto today's tree.
 
 ### Current Implementation
 
