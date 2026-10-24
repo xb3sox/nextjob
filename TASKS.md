@@ -221,12 +221,13 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Risk:** Medium - Some custom ESLint rules may not be available in Biome (mitigated by keeping ESLint as fallback)
 
 #### T-03d: Add Turborepo for build caching
-- [x] **Status:** Complete
+- [x] **Status:** Removed (2026-10-25) — was Complete, never wired
 - **Deliverable:** Monorepo build orchestration with 9x faster builds via caching
 - **Dependencies:** T-01, T-02
 - **Acceptance:** Turborepo configured; build caching working; CI/CD optimized
 - **Verification:** `bun run build` uses cache on second run; CI/CD pipeline 5x faster
 - **Files:** `turbo.json`, package.json scripts
+- **Note:** `turbo.json` existed but no npm script ever called `turbo`; CI ran plain `bun run` commands. Removed with the `turbo` devDependency on 2026-10-25 to stop carrying dead config.
 - **Evidence:**
   - ✅ Turborepo installed and configured (turbo.json)
   - ✅ Task definitions for build, dev, test, lint, format, typecheck

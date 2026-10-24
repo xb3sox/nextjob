@@ -14,7 +14,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-03a: Migrated to Bun package manager (30x faster)
 - ✅ T-03b: Added Vitest testing framework (5x faster, 20 example tests)
 - ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
-- ✅ T-03d: Added Turborepo for build caching (9x faster builds)
+- ⚠️ T-03d: Turborepo removed 2026-10-25 — the config was never wired to any script
 - ✅ T-03e: Integrated shadcn/ui component library (8 core components)
 - ✅ T-04: Authentication & tenant isolation (OAuth 2.0, RBAC, 33 tests)
 - ✅ T-05: AI Gateway (3 providers, 7 schemas, PII redaction, Langfuse, 55+ tests)
