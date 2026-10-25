@@ -15,8 +15,9 @@ Installation state cannot be confirmed from this repo's API surface: `repos/xb3s
 returned only `xb3sox` when checked, which is consistent with the app not being installed, but the
 label trigger is the real test.
 
-Smoke-test it once on a bounded issue (#169, registry divergence) before dispatching a batch. If no
-Jules run appears, the app is not on the repo: stop, that is a human fix.
+Smoke-test it once on the first bounded issue you dispatch, before sending a batch. #63 (code
+splitting) served as that issue on 2026-10-25. If no Jules run appears, the app is not on the
+repository: stop, that is a human fix.
 
 ## 2. Dispatch
 

@@ -50,7 +50,8 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
 > `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
 > (#158 closed; #159 shipped static OG metadata only) and the SPA has no server runtime for
-> per-route generation. Next MVP item: T-27 tracker UI (#32), whose last dependency was T-26.
+> per-route generation. Next MVP item: T-27 tracker UI (#32); its task dependencies (T-25, T-26) are
+> merged, and it is queued behind #63 and #69 because all three edit `src/App.tsx`.
 
 ## Agent Skills
 
