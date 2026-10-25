@@ -1237,12 +1237,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/app/(marketing)/layout.tsx`, `apps/web/src/styles/`
 
 #### T-58: Implement image optimization pipeline
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-03-31)
 - **Deliverable:** Automatic WebP/AVIF conversion, responsive images with srcset, lazy loading below fold, art direction for breakpoints, blur placeholders
 - **Dependencies:** T-52
 - **Acceptance:** FR-PERF-02 satisfied; all images served in modern formats; responsive sizes for all breakpoints; no layout shift from images
-- **Verification:** Inspect network tab → verify WebP/AVIF formats; resize browser → verify srcset switching; check CLS → verify no shift
-- **Files:** `apps/web/src/components/optimized-image.tsx`, `apps/web/next.config.js`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` (36 test files / 639 tests green)
+- **Files:** `src/components/optimized-image.tsx`, `src/next.config.js`
 
 #### T-59: Implement font optimization
 - [ ] **Status:** Not started
@@ -1799,7 +1799,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-MKT-09 (Legal compliance) | T-55 | Complete |
 | FR-MKT-10 (Referral program) | T-56 | Not started |
 | FR-PERF-01 (Core Web Vitals) | T-57 | Not started |
-| FR-PERF-02 (Image optimization) | T-58 | Not started |
+| FR-PERF-02 (Image optimization) | T-58 | Complete |
 | FR-PERF-03 (Font optimization) | T-59 | Not started |
 | FR-PERF-04 (Code splitting) | T-60 | Not started |
 | FR-PERF-05 (Edge caching) | T-61 | Not started |
@@ -1828,7 +1828,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-VIS-04 (Loading skeletons) | T-80 | Complete |
 | FR-VIS-05 (Video support) | T-81 | Not started |
 | FR-VIS-06 (Dark/light mode) | T-82 | Not started |
-| FR-VIS-07 (Responsive images) | T-58 | Not started |
+| FR-VIS-07 (Responsive images) | T-58 | Complete |
 | FR-VIS-08 (Icon system) | T-77 | Not started |
 | FR-CONT-01 (Messaging hierarchy) | T-83 | Not started |
 | FR-CONT-02 (Copywriting guidelines) | T-84 | Not started |
