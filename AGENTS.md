@@ -39,16 +39,17 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-43: API documentation (`docs/api/`)
 - ✅ T-47: Localization infrastructure (RTL, locale-aware formatting, locale switcher)
 - ✅ T-64: Static sitemap and robots.txt (`public/`)
+- ✅ T-26: Submission receipts (sha256 field/answer hashes, frozen receipt, wired to the T-25 state machine)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 38/118 tasks complete (32.2%)
+**Progress:** 39/118 tasks complete (33.1%)
 
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
 > `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
 > (#158 closed; #159 shipped static OG metadata only) and the SPA has no server runtime for
-> per-route generation. Next ready MVP work: T-26 submission receipt generation (#110).
+> per-route generation. Next MVP item: T-27 tracker UI (#32), whose last dependency was T-26.
 
 ## Agent Skills
 
