@@ -22,6 +22,15 @@ if (!rootEl) {
   } catch (err) {
     console.error('[NextJob] Error mounting root:', err);
     const message = err instanceof Error ? err.stack || err.message : String(err);
-    rootEl.innerHTML = `<div style="padding:20px;color:red;font-family:sans-serif;"><h2>Render Error</h2><pre>${message}</pre></div>`;
+    rootEl.textContent = '';
+    const container = document.createElement('div');
+    container.style.cssText = 'padding:20px;color:red;font-family:sans-serif;';
+    const heading = document.createElement('h2');
+    heading.textContent = 'Render Error';
+    const pre = document.createElement('pre');
+    pre.textContent = message;
+    container.appendChild(heading);
+    container.appendChild(pre);
+    rootEl.appendChild(container);
   }
 }
