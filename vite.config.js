@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@nextjob/shared': path.resolve(__dirname, './packages/shared/src/index.ts'),
       // T-18: review UI consumes the tailoring engine's real output.
       '@nextjob/tailoring': path.resolve(__dirname, './packages/tailoring/src/index.ts'),
     },
