@@ -36,6 +36,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-03g: Custom shadcn registry (`registry/`, `public/r/`)
 - ✅ T-21: WXT browser extension scaffold (`extension/`)
 - ✅ T-25: Application state machine
+- ✅ T-44: Complete application state machine (verified 2026-10-25 — shipped with T-25, PR #128)
 - ✅ T-43: API documentation (`docs/api/`)
 - ✅ T-47: Localization infrastructure (RTL, locale-aware formatting, locale switcher)
 - ✅ T-64: Static sitemap and robots.txt (`public/`)
@@ -44,12 +45,13 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 39/118 tasks complete (33.1%)
+**Progress:** 40/118 tasks complete (33.9%)
 
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
 > `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
 > (#158 closed; #159 shipped static OG metadata only) and the SPA has no server runtime for
-> per-route generation. Next MVP item: T-27 tracker UI (#32), whose last dependency was T-26.
+> per-route generation. Next MVP item: T-27 tracker UI (#32); its task dependencies (T-25, T-26) are
+> merged, and it is queued behind #63 and #69 because all three edit `src/App.tsx`.
 
 ## Agent Skills
 
@@ -205,6 +207,8 @@ Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/p
 (`#11`). Every open task in [TASKS.md](TASKS.md) has exactly one issue.
 
 **One issue = one task = one PR.** Do not bundle tasks; do not open a PR without an issue.
+Issue bodies follow the contract in [docs/OPERATING_MODEL.md](docs/OPERATING_MODEL.md#issue-contract):
+problem, scope, start here, command-checkable acceptance criteria, test command, guardrails.
 
 ### Labels
 
@@ -216,15 +220,23 @@ Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/p
 
 Phase lives in the project's `Phase` field, not in labels.
 
-**Ready work** = open, no `jules-queued`, no `human` (18 issues today), MVP milestone first.
+**Ready work** = open, no `jules-queued`, no `human`, no `jules`. MVP milestone first. List it instead
+of trusting a number here:
+
+```bash
+gh issue list --state open --search '-label:jules-queued -label:human -label:jules'
+```
+
+**Status flow** = `Todo` → `In Progress` (dispatched) → `In Review` (PR open) → `Done` (merged).
+`Blocked` requires a native blocked-by, not prose.
 
 ### Workflow
 
-1. Pick ready work. Read its brief. **Adding `jules` dispatches the agent** — that single label is the trigger, never an assignment.
+1. Pick ready work. Read its brief. **Adding `jules` dispatches the agent** — that single label is the trigger, never an assignment. The four preconditions are in [docs/JULES.md](docs/JULES.md#2-dispatch).
 2. Branch from `main`: `feat/<task-id>-<slug>` (e.g. `feat/t-18-tailoring-review-ui`).
 3. Implement only the scope in the issue. Protected paths stay untouched.
 4. Run the gates below; paste the output into the PR body.
-5. Open the PR against `main`, link the issue (`Refs T-XX`), and move the board item to `In Progress` then `Done`.
+5. Open the PR against `main`, link the issue with `Closes #N`, and move the board item to `In Review`, then `Done` after merge.
 
 ### Gates before any PR
 

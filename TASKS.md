@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (39/118 tasks complete - 33.1%)
+**Status:** In Progress (40/118 tasks complete - 33.9%)
 **Last Updated:** 2026-10-25
-**Latest Update:** T-26 complete — submission receipts in `packages/applications/src/receipts.ts` (per-field and per-answer sha256, frozen content-hashed receipt, `submitApplication` seam wired to the T-25 state machine). T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
+**Latest Update:** T-44 verified complete — `packages/applications/src/state-machine.ts` (shipped with T-25 in PR #128) already implements FR-ASM-01..04; the issue (#49) was closed instead of rebuilt. T-26 complete — submission receipts in `packages/applications/src/receipts.ts` (per-field and per-answer sha256, frozen content-hashed receipt, `submitApplication` seam wired to the T-25 state machine). T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
 
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -1048,12 +1048,16 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 18: Application State Machine
 
 #### T-44: Implement complete application state machine
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (verified 2026-10-25)
 - **Deliverable:** Full state machine with all progress states (DISCOVERED → SUBMITTED_VERIFIED), outcome states (INTERVIEW, REJECTED, OFFER, WITHDRAWN, HIRED), and exception states (BLOCKED, NEEDS_USER, FAILED_RETRYABLE, NEEDS_RECONCILIATION, FAILED_FINAL, CANCELLED)
 - **Dependencies:** T-25
 - **Acceptance:** FR-ASM-01, FR-ASM-02, FR-ASM-03, FR-ASM-04 satisfied; all state transitions atomic and auditable; AC-07, AC-08 passing
-- **Verification:** Test all state transitions; verify audit logs; `npm run test -- state-machine` → pass
+- **Verification:** `bunx vitest run packages/applications` → 16 state-machine cases green; `TRANSITIONS` matches the FR-ASM-01 order exactly; AC-07 audited, AC-08 increments the retry count
 - **Files:** `packages/applications/src/state-machine.ts`
+- **Evidence:**
+  - ✅ Shipped with T-25 in PR #128; the task's issue (#49) was closed as already implemented, not rebuilt
+  - ✅ FR-ASM-01 pipeline order and the FR-ASM-02/03 state sets match `docs/PRD.md:182-185` one for one
+  - ✅ FR-ASM-04: `transition()` validates, applies guards, then appends `{at, from, to, actor, reason}`; state does not move on failure
 
 ---
 
