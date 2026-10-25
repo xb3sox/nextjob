@@ -1,13 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import content from '../entrypoints/content';
 
 describe('Extension Content Script', () => {
-  it('injects into page and logs confirmation', () => {
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-
-    // Simulate content script execution
-    console.log('NextJob content script injected');
-
-    expect(consoleSpy).toHaveBeenCalledWith('NextJob content script injected');
-    consoleSpy.mockRestore();
+  it('declares an all-urls match and a main handler', () => {
+    expect(content.matches).toEqual(['<all_urls>']);
+    expect(content.main).toBeTypeOf('function');
   });
 });

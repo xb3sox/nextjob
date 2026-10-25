@@ -12,7 +12,7 @@
     "build": "vite build && wxt build extension",
     "build:extension": "wxt build extension",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "wxt prepare extension && tsc --noEmit && tsc --noEmit -p extension/tsconfig.json",
     "lint": "biome check .",
     "lint:fix": "biome check --apply .",
     "test": "vitest",

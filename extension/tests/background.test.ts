@@ -1,13 +1,20 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
+import background from '../entrypoints/background';
 
 describe('Extension Background Script', () => {
-  it('initializes correctly and logs message', () => {
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  let consoleSpy: MockInstance<typeof console.log>;
 
-    // Simulate background script execution
-    console.log('NextJob background script initialized');
+  beforeEach(() => {
+    consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleSpy.mockRestore();
+  });
+
+  it('logs an initialization message when the background entrypoint starts', () => {
+    background.main();
 
     expect(consoleSpy).toHaveBeenCalledWith('NextJob background script initialized');
-    consoleSpy.mockRestore();
   });
 });
