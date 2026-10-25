@@ -130,8 +130,13 @@ export function ApplicationCard({
             type="button"
             onClick={onApply}
             disabled={eligibilityStatus === 'ineligible'}
+            aria-label={
+              eligibilityStatus === 'ineligible'
+                ? `Not eligible to apply for ${title} at ${company}`
+                : `Review and apply for ${title} at ${company}`
+            }
             className={cn(
-              'flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors',
+              'flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
               eligibilityStatus === 'ineligible'
                 ? 'bg-white/5 text-white/30 cursor-not-allowed'
                 : 'bg-emerald-500 hover:bg-emerald-600 text-white'
@@ -144,7 +149,8 @@ export function ApplicationCard({
           <button
             type="button"
             onClick={onSave}
-            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors"
+            aria-label={`Save ${title} at ${company}`}
+            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Save
           </button>
@@ -153,7 +159,8 @@ export function ApplicationCard({
           <button
             type="button"
             onClick={onSkip}
-            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white/60 text-sm font-medium transition-colors"
+            aria-label={`Skip ${title} at ${company}`}
+            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white/60 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Skip
           </button>
