@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (34/118 tasks complete - 28.8%)
-**Last Updated:** 2026-10-24  
-**Latest Update:** T-43 complete — API documentation created in `docs/api/` covering all 13 domains from `TECH.md §API Domains` with OpenAPI 3.0 specification and automated vitest test suite.
+**Status:** In Progress (35/118 tasks complete - 29.7%)
+**Last Updated:** 2026-10-25
+**Latest Update:** T-03g complete — Custom shadcn component registry created (`registry/`, `registry.json`, `public/r/`) with components (`application-card`, `job-card`, `waitlist-form`), CLI installation support, and test suite.
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -277,17 +277,20 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Risk:** Low - Blocks are pre-built and tested
 
 #### T-03g: Create custom shadcn registry
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Shareable component registry for NextJob-specific components
 - **Dependencies:** T-03e
 - **Acceptance:** Registry structure created; custom components published; installation via CLI works
-- **Verification:** `npx shadcn@latest add @nextjob/application-card` succeeds; components install correctly
-- **Files:** `registry/`, `registry.json`, custom components
-- **Evidence Required:**
-  - Registry configuration
-  - List of published components
-  - Installation instructions
-- **Risk:** Low - Registry is additive
+- **Verification:** `npx shadcn@latest add @nextjob/application-card` succeeds; components install correctly; `bun run registry:build` generates static JSON artifacts in `public/r/`
+- **Files:** `registry/`, `registry.json`, `public/r/`, `components.json`, `package.json`
+- **Evidence:**
+  - ✅ Custom registry definition created in `registry.json` for `@nextjob` with items: `application-card`, `job-card`, `waitlist-form`
+  - ✅ Component source files created in `registry/components/` (`application-card/application-card.tsx`, `job-card/job-card.tsx`, `waitlist-form/waitlist-form.tsx`)
+  - ✅ Registry alias mapping added to `components.json` (`"@nextjob": "http://localhost:5173/r/{name}.json"`)
+  - ✅ Build integration added in `package.json` (`bun run registry:build` outputs artifacts to `public/r/` and is tied to `bun run build`)
+  - ✅ Registry validation passing (`npx shadcn@latest registry validate` succeeds with 0 errors)
+  - ✅ CLI installation verified (`npx shadcn@latest add @nextjob/application-card -y -o` installs component into `src/components/application-card.tsx`)
+  - ✅ Vitest test suite implemented in `registry/registry.test.ts` (4/4 tests passing)
 
 #### T-04: Set up authentication and tenant isolation
 - [x] **Status:** Complete

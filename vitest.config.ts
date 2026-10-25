@@ -35,6 +35,7 @@ export default defineConfig({
           include: [
             'packages/**/*.{test,spec}.{ts,tsx}',
             'src/lib/**/*.{test,spec}.{ts,tsx}',
+            'registry/**/*.{test,spec}.{ts,tsx}',
             // T-13: evaluation harnesses (eligibility G-04 gate, future tailoring evals)
             'evals/**/*.{test,spec}.{ts,tsx}',
             'docs/**/*.{test,spec}.{ts,tsx}',
