@@ -22,7 +22,7 @@ if (!isSupabaseConfigured) {
   // Surfaced once at module load; AuthContext shows a user-facing banner too.
   console.error(
     '[NextJob] Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY. ' +
-      'Authentication cannot work until these are set (see nextjob/packages/api/.env.example).'
+      'Authentication cannot work until these are set (see .env.example).'
   );
 }
 

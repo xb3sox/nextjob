@@ -39,6 +39,7 @@ export default defineConfig({
             // T-13: evaluation harnesses (eligibility G-04 gate, future tailoring evals)
             'evals/**/*.{test,spec}.{ts,tsx}',
             'docs/**/*.{test,spec}.{ts,tsx}',
+            'extension/**/*.{test,spec}.ts',
           ],
           server: {
             deps: {
@@ -58,7 +59,7 @@ export default defineConfig({
         test: {
           name: 'dom',
           environment: 'happy-dom',
-          include: ['src/**/*.{test,spec}.{ts,tsx}'],
+          include: ['src/**/*.{test,spec}.{ts,tsx}', 'extension/**/*.{test,spec}.tsx'],
           exclude: ['src/lib/**'],
           setupFiles: ['./src/test/setup.ts'],
         },
