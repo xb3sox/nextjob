@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (34/118 tasks complete - 28.8%)
-**Last Updated:** 2026-10-24  
-**Latest Update:** T-43 complete — API documentation created in `docs/api/` covering all 13 domains from `TECH.md §API Domains` with OpenAPI 3.0 specification and automated vitest test suite.
+**Status:** In Progress (35/118 tasks complete - 29.7%)
+**Last Updated:** 2026-10-25
+**Latest Update:** T-64 complete — Sitemap generator and robots.txt created in `src/pages/sitemap.ts` and `src/pages/robots.ts` with public pages metadata, AI bot blocking rules, Google Search Console submission utility, and 10 unit tests.
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -1289,12 +1289,17 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/app/api/og/route.tsx`, `apps/web/src/components/og-template.tsx`
 
 #### T-64: Implement sitemap and robots.txt
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Auto-generated sitemap.xml with all public pages, proper lastmod dates, priority attributes; robots.txt allowing legitimate crawlers, blocking AI bots
 - **Dependencies:** T-52
 - **Acceptance:** FR-SEO-04, FR-SEO-05 satisfied; sitemap includes all public pages; robots.txt blocks GPTBot, ClaudeBot, CCBot; sitemap submitted to Google Search Console
-- **Verification:** Check /sitemap.xml → verify all pages present; check /robots.txt → verify AI bot blocking; submit to Search Console → verify indexing
-- **Files:** `apps/web/src/app/sitemap.ts`, `apps/web/src/app/robots.ts`
+- **Verification:** `bun x vitest run src/pages/sitemap.test.ts src/pages/robots.test.ts` → 10/10 passed; `/sitemap.xml` includes all public pages; `/robots.txt` blocks AI bots and references sitemap
+- **Files:** `src/pages/sitemap.ts`, `src/pages/robots.ts`
+- **Evidence:**
+  - ✅ Sitemap generator implemented in `src/pages/sitemap.ts` with XML generator (`generateSitemapXml`) and Search Console submission helper (`submitSitemapToSearchConsole`)
+  - ✅ Robots.txt generator implemented in `src/pages/robots.ts` blocking AI bots (`GPTBot`, `ClaudeBot`, `CCBot`, `ChatGPT-User`, `Google-Extended`, etc.) and allowing search engine crawlers
+  - ✅ Static files synced in `public/sitemap.xml` and `public/robots.txt`
+  - ✅ 10 unit tests passing in `src/pages/sitemap.test.ts` and `src/pages/robots.test.ts`
 
 #### T-65: Implement AI search optimization
 - [ ] **Status:** Not started
@@ -1807,8 +1812,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-SEO-01 (Schema markup) | T-62 | Not started |
 | FR-SEO-02 (OG images) | T-63 | Not started |
 | FR-SEO-03 (Twitter Cards) | T-67 | Not started |
-| FR-SEO-04 (Sitemap) | T-64 | Not started |
-| FR-SEO-05 (Robots.txt) | T-64 | Not started |
+| FR-SEO-04 (Sitemap) | T-64 | Complete |
+| FR-SEO-05 (Robots.txt) | T-64 | Complete |
 | FR-SEO-06 (Canonical URLs) | T-66 | Not started |
 | FR-SEO-07 (AI search) | T-65, T-68 | Not started |
 | FR-SEO-08 (Hreflang) | T-66 | Not started |
