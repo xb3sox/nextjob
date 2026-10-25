@@ -11,6 +11,8 @@
     "dev": "vite",
     "build": "vite build && wxt build extension",
     "build:extension": "wxt build extension",
+    "registry:build": "bunx shadcn@latest build registry.json -o public/r",
+    "registry:validate": "bunx shadcn@latest registry validate registry.json",
     "preview": "vite preview",
     "typecheck": "wxt prepare extension && tsc --noEmit && tsc --noEmit -p extension/tsconfig.json",
     "lint": "biome check .",

@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (35/118 tasks complete - 29.7%)
+**Status:** In Progress (38/118 tasks complete - 32.2%)
 **Last Updated:** 2026-10-25
-**Latest Update:** T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`; RTL, locale-aware formatting, language detection, locale switcher, tests). T-63 partially complete — static 1200×630 `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred until a server runtime exists. T-64 complete — canonical static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`; no Search Console submission.
+**Latest Update:** T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
 
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -274,17 +274,20 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Risk:** Low - Blocks are pre-built and tested
 
 #### T-03g: Create custom shadcn registry
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Shareable component registry for NextJob-specific components
 - **Dependencies:** T-03e
 - **Acceptance:** Registry structure created; custom components published; installation via CLI works
-- **Verification:** `npx shadcn@latest add @nextjob/application-card` succeeds; components install correctly
-- **Files:** `registry/`, `registry.json`, custom components
-- **Evidence Required:**
-  - Registry configuration
-  - List of published components
-  - Installation instructions
-- **Risk:** Low - Registry is additive
+- **Verification:** `npx shadcn@latest add @nextjob/application-card` succeeds; components install correctly; `bun run registry:build` generates static JSON artifacts in `public/r/`
+- **Files:** `registry/`, `registry.json`, `public/r/`, `components.json`, `package.json`
+- **Evidence:**
+  - ✅ Custom registry definition created in `registry.json` for `@nextjob` with items: `application-card`, `job-card`, `waitlist-form`
+  - ✅ Component source files created in `registry/components/` (`application-card/application-card.tsx`, `job-card/job-card.tsx`, `waitlist-form/waitlist-form.tsx`)
+  - ✅ Registry alias mapping added to `components.json` (`"@nextjob": "http://localhost:5173/r/{name}.json"`)
+  - ✅ Build script `bun run registry:build` regenerates the static artifacts in `public/r/`; the output is committed, so `bun run build` does not shell out to the registry CLI
+  - ✅ Registry validation passing (`bun run registry:validate` reports 0 errors)
+  - ⚠️ CLI installation was verified manually against a local static server, not in the unit suite: `shadcn add` needs network, an unpinned CLI, and it rewrites files under `src/`
+  - ✅ Vitest suite in `registry/registry.test.ts` (3 tests, no network) validates `registry.json`, every declared source file, and a committed artifact for every item
 
 #### T-04: Set up authentication and tenant isolation
 - [x] **Status:** Complete
@@ -2002,3 +2005,5 @@ Notes:
 - T-04 through T-12 were completed since the last update (see evidence sections under each task and the session summaries).
 - PRD blocker B-02 still applies to the tailoring track: T-16 (AI evaluation dataset) must be created before T-17 (tailoring engine).
 - T-13 produces the evaluation data needed to verify the G-04 eligibility accuracy gate (false-positive ≤2%).
+
+
