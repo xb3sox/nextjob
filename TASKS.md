@@ -2,7 +2,7 @@
 
 **Status:** In Progress (35/118 tasks complete - 29.7%)
 **Last Updated:** 2026-10-25
-**Latest Update:** T-64 complete — Sitemap generator and robots.txt created in `src/pages/sitemap.ts` and `src/pages/robots.ts` with public pages metadata, AI bot blocking rules, Google Search Console submission utility, and 10 unit tests.
+**Latest Update:** T-64 complete — canonical static `public/sitemap.xml` (all six public routes, no fabricated `lastmod`) and `public/robots.txt` (AI-bot blocking, sitemap reference) ship in `dist/`. No Search Console submission.
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -1290,16 +1290,16 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 
 #### T-64: Implement sitemap and robots.txt
 - [x] **Status:** Complete
-- **Deliverable:** Auto-generated sitemap.xml with all public pages, proper lastmod dates, priority attributes; robots.txt allowing legitimate crawlers, blocking AI bots
+- **Deliverable:** Static `public/sitemap.xml` listing all public pages with priority/changefreq hints (no `lastmod`); static `public/robots.txt` allowing legitimate crawlers, blocking AI bots
 - **Dependencies:** T-52
-- **Acceptance:** FR-SEO-04, FR-SEO-05 satisfied; sitemap includes all public pages; robots.txt blocks GPTBot, ClaudeBot, CCBot; sitemap submitted to Google Search Console
-- **Verification:** `bun x vitest run src/pages/sitemap.test.ts src/pages/robots.test.ts` → 10/10 passed; `/sitemap.xml` includes all public pages; `/robots.txt` blocks AI bots and references sitemap
-- **Files:** `src/pages/sitemap.ts`, `src/pages/robots.ts`
+- **Acceptance:** FR-SEO-04, FR-SEO-05 satisfied; sitemap includes all public pages; robots.txt blocks GPTBot, ClaudeBot, CCBot
+- **Verification:** `bun run build` → `dist/sitemap.xml` and `dist/robots.txt` emitted from `public/`; `/sitemap.xml` lists all six public routes (verified against `src/App.tsx`); `/robots.txt` blocks AI bots and references the sitemap
+- **Files:** `public/sitemap.xml`, `public/robots.txt`
 - **Evidence:**
-  - ✅ Sitemap generator implemented in `src/pages/sitemap.ts` with XML generator (`generateSitemapXml`) and Search Console submission helper (`submitSitemapToSearchConsole`)
-  - ✅ Robots.txt generator implemented in `src/pages/robots.ts` blocking AI bots (`GPTBot`, `ClaudeBot`, `CCBot`, `ChatGPT-User`, `Google-Extended`, etc.) and allowing search engine crawlers
-  - ✅ Static files synced in `public/sitemap.xml` and `public/robots.txt`
-  - ✅ 10 unit tests passing in `src/pages/sitemap.test.ts` and `src/pages/robots.test.ts`
+  - ✅ `public/sitemap.xml` lists the six public routes (`/`, `/privacy`, `/terms`, `/login`, `/signup`, `/forgot-password`), each verified against `src/App.tsx`
+  - ✅ `public/robots.txt` blocks AI training bots (`GPTBot`, `ClaudeBot`, `CCBot`, `ChatGPT-User`, `Google-Extended`, etc.), allows search engine crawlers, and references the sitemap
+  - ✅ Both files ship in `dist/` because Vite copies `public/` during the build
+  - ℹ️ No Search Console submission was made — it is a manual operator step, and the legacy `google.com/ping?sitemap=` ping endpoint used by the earlier draft was retired in 2023
 
 #### T-65: Implement AI search optimization
 - [ ] **Status:** Not started
