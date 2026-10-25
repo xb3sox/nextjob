@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (35/118 tasks complete - 29.7%)
+**Status:** In Progress (34/118 tasks complete - 28.8%)
 **Last Updated:** 2026-10-25
-**Latest Update:** T-63 complete — Dynamic OG image generator implemented in `src/pages/api/og/route.tsx` and `src/components/og-template.tsx` with automated vitest test suite.
+**Latest Update:** T-63 partially complete — static 1200×630 `public/og-image.png` shipped and wired into `index.html`; per-route dynamic OG generation deferred until a server runtime exists.
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
 ## Quality Review & Fixes (2026-01-15)
@@ -1281,16 +1281,16 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/lib/schema.ts`, `apps/web/src/app/(marketing)/layout.tsx`
 
 #### T-63: Implement dynamic Open Graph images
-- [x] **Status:** Complete
-- **Deliverable:** Auto-generated OG images (1200x630px) using Next.js ImageResponse with branding, title, description, and visual elements
+- [~] **Status:** Partially Complete (2026-10-25) — static image shipped, per-route generation deferred
+- **Deliverable:** Auto-generated OG images (1200x630px) with branding, title, description, and visual elements
 - **Dependencies:** T-52
 - **Acceptance:** FR-SEO-02 satisfied; every page has unique OG image; images load in < 2s; branding consistent across all images
-- **Verification:** Share URL on social media → verify image preview; check OG image endpoint → verify generation; test multiple pages → verify uniqueness; `bun x vitest run src/components/og-template.test.tsx src/pages/api/og/route.test.tsx` → passed (10/10 tests)
-- **Files:** `src/pages/api/og/route.tsx`, `src/components/og-template.tsx`
+- **Verification:** Share URL on social media → verify image preview; `bunx vitest run src/test/og-image.test.ts` → fails if any declared `og:image`/`twitter:image` URL points at a missing, tiny, or non-PNG asset
+- **Files:** `public/og-image.png`, `index.html`, `src/test/og-image.test.ts`
 - **Evidence:**
-  - ✅ Vector SVG template (`src/components/og-template.tsx`) rendering 1200x630px image with NextJob dark theme (`#0a0a0a`), moss accents (`#34d399`), custom grid pattern, brand mark, page badge, wrapped title/description, and capability feature badges
-  - ✅ Dynamic OG API endpoint (`src/pages/api/og/route.tsx`) supporting web requests (`GET`) and query parameters (`title`, `description`, `badge`, `pageType`, `siteName`) returning `Content-Type: image/svg+xml` with cache headers
-  - ✅ Automated Vitest test suite (`src/components/og-template.test.tsx`, `src/pages/api/og/route.test.tsx`) covering rendering, custom inputs, unique per-page SVGs, and performance (< 2s execution limit)
+  - ✅ Static 1200×630 PNG (`public/og-image.png`, 31,092 bytes, sha256 `2e8823b37389e651e591152a3fb38c272e81613d6f8ac829a88a2304fe7a15b9`) shipped and wired into `index.html` via `og:image`, `og:image:type`/`:width`/`:height`/`:alt`, `twitter:image`, and `twitter:image:alt`
+  - ✅ `src/test/og-image.test.ts` extracts every declared social image URL, maps it to a `public/` file, and asserts the asset exists, is larger than 10 KB, and starts with the PNG magic bytes
+  - ⏸️ **Per-route/uniqueness gap is open by design:** the app is a Vite + React SPA served by a static-assets-only Cloudflare Worker (`wrangler.jsonc` — no `main`, `not_found_handling: single-page-application`). Every path returns the same `index.html` and there is no `/api` runtime, so one canonical OG image is the honest ceiling until SSR or a Worker route exists. Dynamic per-page generation stays deferred.
 
 #### T-64: Implement sitemap and robots.txt
 - [ ] **Status:** Not started
