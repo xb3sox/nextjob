@@ -33,15 +33,22 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-16: AI evaluation dataset for tailoring (64 tests)
 - ✅ T-17: Tailoring engine with evidence constraints (18 tests)
 - ✅ T-18: Tailoring UI with evidence display (original → proposed → evidence, 4 tests)
+- ✅ T-03g: Custom shadcn registry (`registry/`, `public/r/`)
+- ✅ T-21: WXT browser extension scaffold (`extension/`)
+- ✅ T-25: Application state machine
+- ✅ T-43: API documentation (`docs/api/`)
+- ✅ T-47: Localization infrastructure (RTL, locale-aware formatting, locale switcher)
+- ✅ T-64: Static sitemap and robots.txt (`public/`)
 - ✅ T-52: Landing page implemented (ultra-minimal design)
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 33/118 tasks complete (28.0%)
+**Progress:** 38/118 tasks complete (32.2%)
 
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
-> `human`-blocked (#107, #108). Next ready MVP work: T-21 extension scaffold (#28), or the strict
-> typecheck debt (#113).
+> `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
+> (#158 closed; #159 shipped static OG metadata only) and the SPA has no server runtime for
+> per-route generation. Next ready MVP work: T-26 submission receipt generation (#110).
 
 ## Agent Skills
 
@@ -160,17 +167,18 @@ What is in the repo today:
 │   ├── tailoring/          # evidence-constrained generation (T-17 engine)
 │   └── ai-gateway/         # model routing, Zod schemas, PII redaction
 ├── evals/                  # evaluation datasets (protected)
+├── extension/              # WXT browser extension (T-21)
 ├── supabase/               # local stack config and migrations
 ├── docs/                   # PRD, TECH, DESIGN (PRD and TECH are protected)
 └── public/
 ```
 
-**Target architecture vs. today.** `docs/TECH.md` describes a Next.js `apps/web` and a WXT
-`apps/extension`. Neither exists yet. Until they do:
+**Target architecture vs. today.** `docs/TECH.md` describes a Next.js `apps/web`. It does not exist
+yet, and `extension/` lives at the repo root, not under `apps/`. Until `apps/web` exists:
 
 - A task that names `apps/web/src/...` means the equivalent path under `src/` (e.g.
   `apps/web/src/app/tailor/` → `src/pages/TailorPage.tsx`).
-- A task that names `apps/extension/...` means a new top-level `extension/` directory (T-21).
+- A task that names `apps/extension/...` means `extension/`.
 - A task that names a `packages/<name>/` that does not exist yet means create that package
   (plain TypeScript, `src/index.ts` entry, vitest next to source).
 
@@ -207,7 +215,7 @@ Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/p
 
 Phase lives in the project's `Phase` field, not in labels.
 
-**Ready work** = open, no `jules-queued`, no `human` (22 issues today), MVP milestone first.
+**Ready work** = open, no `jules-queued`, no `human` (18 issues today), MVP milestone first.
 
 ### Workflow
 
