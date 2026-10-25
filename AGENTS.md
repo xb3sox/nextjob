@@ -219,7 +219,12 @@ problem, scope, start here, command-checkable acceptance criteria, test command,
 
 Phase lives in the project's `Phase` field, not in labels.
 
-**Ready work** = open, no `jules-queued`, no `human` (14 issues today), MVP milestone first.
+**Ready work** = open, no `jules-queued`, no `human`, no `jules`. MVP milestone first. List it instead
+of trusting a number here:
+
+```bash
+gh issue list --state open --search '-label:jules-queued -label:human -label:jules'
+```
 
 **Status flow** = `Todo` → `In Progress` (dispatched) → `In Review` (PR open) → `Done` (merged).
 `Blocked` requires a native blocked-by, not prose.
