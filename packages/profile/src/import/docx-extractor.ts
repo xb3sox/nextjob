@@ -66,7 +66,9 @@ export async function validateDOCX(buffer: Buffer): Promise<{
     const result = await mammoth.extractRawText({ buffer });
 
     return {
-      isValid: result.value && result.value.trim().length > 0,
+      // A non-empty extracted value is what makes the file valid; compare
+      // explicitly so the result is a boolean rather than the raw string.
+      isValid: result.value.trim().length > 0,
       warnings: result.messages.map((msg) => msg.message),
     };
   } catch (error) {

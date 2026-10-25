@@ -36,9 +36,17 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      # packages/api, packages/profile and packages/ai-gateway still fail strict
-      # tsc (Zod .parse() widens required fields to optional). tailoring is clean,
-      # so gate it; add the others here as their type debt is fixed.
+      # Every package typechecks cleanly under strict tsc; gate all of them so
+      # the debt cleared in T-113 cannot drift back.
+      - name: Typecheck (packages/api)
+        run: bunx tsc --noEmit -p packages/api/tsconfig.json
+
+      - name: Typecheck (packages/profile)
+        run: bunx tsc --noEmit -p packages/profile/tsconfig.json
+
+      - name: Typecheck (packages/ai-gateway)
+        run: bunx tsc --noEmit -p packages/ai-gateway/tsconfig.json
+
       - name: Typecheck (packages/tailoring)
         run: bunx tsc --noEmit -p packages/tailoring/tsconfig.json
 

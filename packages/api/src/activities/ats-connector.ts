@@ -63,10 +63,7 @@ export async function checkDuplicate(params: CheckDuplicateParams): Promise<Chec
   try {
     // Check if application already has a verified receipt
     const existingApplication = await db.query.applications.findFirst({
-      where: and(
-        eq(applications.id, params.applicationId),
-        eq(applications.status, 'submitted_verified')
-      ),
+      where: and(eq(applications.id, params.applicationId), eq(applications.status, 'submitted')),
     });
 
     if (existingApplication) {
@@ -181,13 +178,12 @@ export async function verifySubmission(
     await db
       .update(receipts)
       .set({
-        status: 'submitted_verified',
-        verifiedAt: new Date(),
-        confirmationEvidence: JSON.stringify({
+        verificationStatus: 'verified',
+        metadata: {
           verified: true,
           timestamp: new Date().toISOString(),
           method: 'api_confirmation',
-        }),
+        },
       })
       .where(eq(receipts.id, submissionId));
 

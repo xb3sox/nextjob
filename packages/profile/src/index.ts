@@ -37,3 +37,15 @@ export * from './types.js';
 export * from './verification/index.js';
 // Convenience exports - Verification
 export { VerificationService, verificationService } from './verification/verification-service.js';
+
+// ============================================================================
+// Shared error names
+// ============================================================================
+
+// Several domains declare their own error classes with the same name
+// (`VersionConflictError`, `ClaimNotFoundError`, `EvidenceNotFoundError`), so a
+// bare `export *` of those barrels is ambiguous. Re-export the canonical class
+// explicitly; the domain-specific variants stay importable from their own
+// module path.
+export { VersionConflictError } from './automation/types.js';
+export { ClaimNotFoundError, EvidenceNotFoundError } from './claims/types.js';

@@ -3,9 +3,7 @@
   "name": "application-card",
   "title": "Application Card",
   "description": "NextJob application card showing job capability model, eligibility, and action buttons.",
-  "dependencies": [
-    "lucide-react"
-  ],
+  "dependencies": ["lucide-react"],
   "files": [
     {
       "path": "registry/components/application-card/application-card.tsx",

@@ -41,12 +41,17 @@ export async function extractProfileWithAI(
  * This will be replaced with actual AI Gateway integration
  */
 async function mockAIExtraction(text: string): Promise<ExtractedProfileData> {
+  // `skills` and `experience` are optional on the extracted-data type, so keep
+  // non-optional local arrays and hand the same references to the result.
+  const skills: NonNullable<ExtractedProfileData['skills']> = [];
+  const experience: NonNullable<ExtractedProfileData['experience']> = [];
+
   // Simple pattern matching for demonstration
   const data: ExtractedProfileData = {
     personalInfo: {},
-    experience: [],
+    experience,
     education: [],
-    skills: [],
+    skills,
     certifications: [],
     projects: [],
     achievements: [],
@@ -95,7 +100,7 @@ async function mockAIExtraction(text: string): Promise<ExtractedProfileData> {
 
   for (const skill of commonSkills) {
     if (text.toLowerCase().includes(skill.toLowerCase())) {
-      data.skills.push({
+      skills.push({
         name: skill,
         category: categorizeSkill(skill),
       });
@@ -108,7 +113,7 @@ async function mockAIExtraction(text: string): Promise<ExtractedProfileData> {
   const experienceMatch = text.match(experiencePattern);
   if (experienceMatch) {
     // This is a very simplified extraction
-    data.experience.push({
+    experience.push({
       title: 'Software Engineer',
       company: 'Company Name',
       description: experienceMatch[0].substring(0, 200),

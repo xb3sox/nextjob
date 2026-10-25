@@ -3,9 +3,7 @@
   "name": "waitlist-form",
   "title": "Waitlist Form",
   "description": "NextJob waitlist signup form component with email validation and status states.",
-  "dependencies": [
-    "lucide-react"
-  ],
+  "dependencies": ["lucide-react"],
   "files": [
     {
       "path": "registry/components/waitlist-form/waitlist-form.tsx",

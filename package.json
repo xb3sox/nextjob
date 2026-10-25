@@ -3,16 +3,18 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "extension"
   ],
   "packageManager": "bun@1.3.11",
   "scripts": {
     "dev": "vite",
-    "registry:build": "npx shadcn@latest build registry.json -o public/r",
-    "registry:validate": "npx shadcn@latest registry validate registry.json",
-    "build": "bun run registry:build && vite build",
+    "build": "vite build && wxt build extension",
+    "build:extension": "wxt build extension",
+    "registry:build": "bunx shadcn@latest build registry.json -o public/r",
+    "registry:validate": "bunx shadcn@latest registry validate registry.json",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "wxt prepare extension && tsc --noEmit && tsc --noEmit -p extension/tsconfig.json",
     "lint": "biome check .",
     "lint:fix": "biome check --apply .",
     "test": "vitest",
@@ -68,6 +70,7 @@
     "tailwindcss": "^4.1.7",
     "typescript": "^5.7.0",
     "vite": "^6.3.5",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.3",
+    "wxt": "^0.21.4"
   }
 }

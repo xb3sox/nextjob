@@ -3,9 +3,7 @@
   "name": "job-card",
   "title": "Job Card",
   "description": "NextJob job card component displaying fit, eligibility, and capability model.",
-  "dependencies": [
-    "lucide-react"
-  ],
+  "dependencies": ["lucide-react"],
   "files": [
     {
       "path": "registry/components/job-card/job-card.tsx",

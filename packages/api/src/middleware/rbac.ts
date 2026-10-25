@@ -141,20 +141,19 @@ export function requireRole(...roles: Role[]) {
  */
 export function requireAnyPermission(permissions: Array<{ resource: string; action: string }>) {
   return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user) {
+    const { user } = req;
+    if (!user) {
       res.status(401).json({ error: 'Authentication required' });
       return;
     }
 
-    const hasAnyPermission = permissions.some((p) =>
-      userHasPermission(req.user, p.resource, p.action)
-    );
+    const hasAnyPermission = permissions.some((p) => userHasPermission(user, p.resource, p.action));
 
     if (!hasAnyPermission) {
       res.status(403).json({
         error: 'Insufficient permissions',
         required: permissions,
-        role: req.user.role,
+        role: user.role,
       });
       return;
     }
@@ -168,20 +167,21 @@ export function requireAnyPermission(permissions: Array<{ resource: string; acti
  */
 export function requireAllPermissions(permissions: Array<{ resource: string; action: string }>) {
   return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.user) {
+    const { user } = req;
+    if (!user) {
       res.status(401).json({ error: 'Authentication required' });
       return;
     }
 
     const hasAllPermissions = permissions.every((p) =>
-      userHasPermission(req.user, p.resource, p.action)
+      userHasPermission(user, p.resource, p.action)
     );
 
     if (!hasAllPermissions) {
       res.status(403).json({
         error: 'Insufficient permissions',
         required: permissions,
-        role: req.user.role,
+        role: user.role,
       });
       return;
     }

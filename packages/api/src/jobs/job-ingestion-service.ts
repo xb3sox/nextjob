@@ -33,8 +33,27 @@ export class JobIngestionService {
   async ingestJob(request: IngestJobRequest): Promise<IngestJobResponse> {
     const now = new Date().toISOString();
 
+    // Apply the defaults `JobSchema` declares so request values can be used in
+    // `Partial<Job>` positions before validation runs.
+    const location: Job['location'] = {
+      ...request.location,
+      remote: request.location.remote ?? false,
+    };
+    const salary: Job['salary'] = request.salary
+      ? {
+          min: request.salary.min,
+          max: request.salary.max,
+          currency: request.salary.currency ?? 'USD',
+          period: request.salary.period ?? 'yearly',
+        }
+      : undefined;
+
     // Step 1: Normalize job data
-    const normalizedData = jobNormalizationService.normalizeJob(request);
+    const normalizedData = jobNormalizationService.normalizeJob({
+      ...request,
+      location,
+      salary,
+    });
 
     // Step 2: Check for duplicates
     const existingJobs = Array.from(this.jobsStore.values()).filter(
@@ -100,9 +119,9 @@ export class JobIngestionService {
       requirements: request.requirements,
       responsibilities: request.responsibilities,
       benefits: request.benefits,
-      location: normalizedData.normalized.location ?? request.location,
-      workMode: (normalizedData.normalized.workMode ?? request.workMode ?? 'any') as any,
-      salary: normalizedData.normalized.salary ?? request.salary,
+      location: normalizedData.normalized.location ?? location,
+      workMode: normalizedData.normalized.workMode ?? request.workMode ?? 'any',
+      salary: normalizedData.normalized.salary ?? salary,
       seniorityLevel: normalizedData.normalized.seniorityLevel,
       roleFamily: normalizedData.normalized.roleFamily,
       requiredSkills: request.requiredSkills,

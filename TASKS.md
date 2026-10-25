@@ -2,12 +2,9 @@
 
 **Status:** In Progress (35/118 tasks complete - 29.7%)
 **Last Updated:** 2026-10-25
-**Latest Update:** T-03g complete — Custom shadcn component registry created (`registry/`, `registry.json`, `public/r/`) with components (`application-card`, `job-card`, `waitlist-form`), CLI installation support, and test suite.
+**Latest Update:** T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
+
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
-
-## Quality Review & Fixes (2026-01-15)
-
-Comprehensive product review completed. Critical issues fixed:
 
 ### ✅ Fixed Issues (7 Critical)
 - **Form validation** - Email validation with regex pattern
@@ -805,12 +802,18 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 7: Browser Extension & Connectors
 
 #### T-21: Set up browser extension scaffold
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** WXT browser extension with background script, content script, popup
 - **Dependencies:** T-02
 - **Acceptance:** Extension loads in Chrome/Firefox; popup displays; content script injects; background script runs
-- **Verification:** Load extension in browser → verify popup opens; check console for errors
-- **Files:** `apps/extension/`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0
+- **Files:** `extension/`
+- **Evidence:**
+  - ✅ WXT extension scaffold created in `extension/` (`wxt.config.ts`, `package.json`, `tsconfig.json`)
+  - ✅ Entrypoints configured: `extension/entrypoints/background.ts`, `extension/entrypoints/content.ts`, `extension/entrypoints/popup/` (`index.html`, `main.tsx`, `App.tsx`)
+  - ✅ React popup component implemented displaying extension connection status
+  - ✅ Unit tests added in `extension/tests/` covering background script, content script, and popup UI component
+  - ✅ Integrated extension into monorepo workspace and build pipeline (`bun run build` generates `extension/.output/chrome-mv3/` with valid `manifest.json`)
 
 #### T-22: Create ATS connector synthetic test framework
 - [ ] **Status:** Not started
@@ -1072,12 +1075,18 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** All UI components in `apps/web/src/`
 
 #### T-47: Implement localization infrastructure
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-25)
 - **Deliverable:** RTL-ready architecture with locale-aware dates, currency formatting, address/phone localization
 - **Dependencies:** T-02
 - **Acceptance:** FR-ACC-03 satisfied; architecture supports additional languages; locale detection works
-- **Verification:** Switch locale → verify dates/currency format correctly; test RTL layout → verify mirrors correctly
-- **Files:** `packages/shared/src/i18n/`, `apps/web/src/i18n/`
+- **Verification:** Switch locale → verify dates/currency format correctly; test RTL layout → verify mirrors correctly (`bun vitest run packages/shared/src/i18n/i18n.test.ts` [10/10 passed], `bun vitest run src/i18n/i18n.test.tsx` [2/2 passed], `bun vitest run src/components/LocaleSwitcher.test.tsx` [1/1 passed])
+- **Files:** `packages/shared/src/i18n/`, `src/i18n/`, `src/components/LocaleSwitcher.tsx`
+- **Evidence:**
+  - ✅ Created `@nextjob/shared` package with full i18n core utilities (`date.ts`, `currency.ts`, `address.ts`, `phone.ts`, `direction.ts`, `locale.ts`, `config.ts`, `types.ts`)
+  - ✅ Created React i18n infrastructure in `src/i18n/` (`I18nProvider`, `useI18n` hook, multi-locale dictionaries for `en-US`, `ar-SA`, `es-ES`, `he-IL`)
+  - ✅ Document `dir` and `lang` attributes sync dynamically on `document.documentElement` when changing locales (e.g., setting `dir="rtl"` for `ar-SA` / `he-IL`)
+  - ✅ Created `LocaleSwitcher` component added to top navbar for testing language switching and layout mirroring
+  - ✅ Verified locally: `bun run typecheck`, `bun run lint`, `bun vitest run`, `bun run build` all passing green
 
 ---
 
@@ -1284,20 +1293,29 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/lib/schema.ts`, `apps/web/src/app/(marketing)/layout.tsx`
 
 #### T-63: Implement dynamic Open Graph images
-- [ ] **Status:** Not started
-- **Deliverable:** Auto-generated OG images (1200x630px) using Next.js ImageResponse with branding, title, description, and visual elements
+- [~] **Status:** Partially Complete (2026-10-25) — static image shipped, per-route generation deferred
+- **Deliverable:** Auto-generated OG images (1200x630px) with branding, title, description, and visual elements
 - **Dependencies:** T-52
 - **Acceptance:** FR-SEO-02 satisfied; every page has unique OG image; images load in < 2s; branding consistent across all images
-- **Verification:** Share URL on social media → verify image preview; check OG image endpoint → verify generation; test multiple pages → verify uniqueness
-- **Files:** `apps/web/src/app/api/og/route.tsx`, `apps/web/src/components/og-template.tsx`
+- **Verification:** Share URL on social media → verify image preview; `bunx vitest run src/test/og-image.test.ts` → fails if any declared `og:image`/`twitter:image` URL points at a missing, tiny, or non-PNG asset
+- **Files:** `public/og-image.png`, `index.html`, `src/test/og-image.test.ts`
+- **Evidence:**
+  - ✅ Static 1200×630 PNG (`public/og-image.png`, 31,092 bytes, sha256 `2e8823b37389e651e591152a3fb38c272e81613d6f8ac829a88a2304fe7a15b9`) shipped and wired into `index.html` via `og:image`, `og:image:type`/`:width`/`:height`/`:alt`, `twitter:image`, and `twitter:image:alt`
+  - ✅ `src/test/og-image.test.ts` extracts every declared social image URL, maps it to a `public/` file, and asserts the asset exists, is larger than 10 KB, and starts with the PNG magic bytes
+  - ⏸️ **Per-route/uniqueness gap is open by design:** the app is a Vite + React SPA served by a static-assets-only Cloudflare Worker (`wrangler.jsonc` — no `main`, `not_found_handling: single-page-application`). Every path returns the same `index.html` and there is no `/api` runtime, so one canonical OG image is the honest ceiling until SSR or a Worker route exists. Dynamic per-page generation stays deferred.
 
 #### T-64: Implement sitemap and robots.txt
-- [ ] **Status:** Not started
-- **Deliverable:** Auto-generated sitemap.xml with all public pages, proper lastmod dates, priority attributes; robots.txt allowing legitimate crawlers, blocking AI bots
+- [x] **Status:** Complete
+- **Deliverable:** Static `public/sitemap.xml` listing all public pages with priority/changefreq hints (no `lastmod`); static `public/robots.txt` allowing legitimate crawlers, blocking AI bots
 - **Dependencies:** T-52
-- **Acceptance:** FR-SEO-04, FR-SEO-05 satisfied; sitemap includes all public pages; robots.txt blocks GPTBot, ClaudeBot, CCBot; sitemap submitted to Google Search Console
-- **Verification:** Check /sitemap.xml → verify all pages present; check /robots.txt → verify AI bot blocking; submit to Search Console → verify indexing
-- **Files:** `apps/web/src/app/sitemap.ts`, `apps/web/src/app/robots.ts`
+- **Acceptance:** FR-SEO-04, FR-SEO-05 satisfied; sitemap includes all public pages; robots.txt blocks GPTBot, ClaudeBot, CCBot
+- **Verification:** `bun run build` → `dist/sitemap.xml` and `dist/robots.txt` emitted from `public/`; `/sitemap.xml` lists all six public routes (verified against `src/App.tsx`); `/robots.txt` blocks AI bots and references the sitemap
+- **Files:** `public/sitemap.xml`, `public/robots.txt`
+- **Evidence:**
+  - ✅ `public/sitemap.xml` lists the six public routes (`/`, `/privacy`, `/terms`, `/login`, `/signup`, `/forgot-password`), each verified against `src/App.tsx`
+  - ✅ `public/robots.txt` blocks AI training bots (`GPTBot`, `ClaudeBot`, `CCBot`, `ChatGPT-User`, `Google-Extended`, etc.), allows search engine crawlers, and references the sitemap
+  - ✅ Both files ship in `dist/` because Vite copies `public/` during the build
+  - ℹ️ No Search Console submission was made — it is a manual operator step, and the legacy `google.com/ping?sitemap=` ping endpoint used by the earlier draft was retired in 2023
 
 #### T-65: Implement AI search optimization
 - [ ] **Status:** Not started
@@ -1777,7 +1795,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-FEC-03 (No auto-retry ambiguous) | T-25, T-45 | Not started |
 | FR-ACC-01 (WCAG 2.2 AA) | T-46 | Not started |
 | FR-ACC-02 (Accessibility features) | T-46 | Not started |
-| FR-ACC-03 (Localization) | T-47 | Not started |
+| FR-ACC-03 (Localization) | T-47 | Complete |
 | FR-ACC-04 (Additional languages) | Not in MVP scope | N/A |
 | FR-ANA-01 (Product analytics) | T-48 | Not started |
 | FR-ANA-02 (No PII in analytics) | T-48 | Not started |
@@ -1810,8 +1828,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-SEO-01 (Schema markup) | T-62 | Not started |
 | FR-SEO-02 (OG images) | T-63 | Not started |
 | FR-SEO-03 (Twitter Cards) | T-67 | Not started |
-| FR-SEO-04 (Sitemap) | T-64 | Not started |
-| FR-SEO-05 (Robots.txt) | T-64 | Not started |
+| FR-SEO-04 (Sitemap) | T-64 | Complete |
+| FR-SEO-05 (Robots.txt) | T-64 | Complete |
 | FR-SEO-06 (Canonical URLs) | T-66 | Not started |
 | FR-SEO-07 (AI search) | T-65, T-68 | Not started |
 | FR-SEO-08 (Hreflang) | T-66 | Not started |
@@ -1929,7 +1947,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Deferred (Post-MVP)
 - T-44: Implement complete application state machine (simplified in T-25)
 - T-45: Implement failure handling for all edge cases (can be iterative)
-- T-47: Implement localization infrastructure (English-first MVP)
+- ~~T-47: Implement localization infrastructure~~ ✅ Complete
 - T-48: Implement product analytics with privacy safeguards (partially done in T-54)
 - T-49: Implement experimentation framework (post-launch)
 - T-50: Implement free tier and Search Pass billing (simplified in T-32)
