@@ -11,6 +11,42 @@ import {
 } from './types.js';
 
 // ============================================================================
+// Normalization helpers
+// ============================================================================
+
+type SalaryExpectationsInput = NonNullable<CreatePreferencesRequest['salaryExpectations']>;
+type SalaryExpectations = NonNullable<Preferences['salaryExpectations']>;
+type NoticePeriodInput = NonNullable<CreatePreferencesRequest['noticePeriod']>;
+type NoticePeriod = NonNullable<Preferences['noticePeriod']>;
+
+/**
+ * Applies the defaults declared by `PreferencesSchema` to a request value, so a
+ * request object can be assigned to the validated `Preferences` shape.
+ */
+function toSalaryExpectations(input: SalaryExpectationsInput): SalaryExpectations {
+  return {
+    min: input.min,
+    max: input.max,
+    currency: input.currency ?? 'USD',
+    period: input.period ?? 'yearly',
+    flexible: input.flexible ?? false,
+  };
+}
+
+/**
+ * Applies the defaults declared by `PreferencesSchema` to a request value, so a
+ * request object can be assigned to the validated `Preferences` shape.
+ */
+function toNoticePeriod(input: NoticePeriodInput): NoticePeriod {
+  return {
+    weeks: input.weeks,
+    months: input.months,
+    immediate: input.immediate ?? false,
+    negotiable: input.negotiable ?? false,
+  };
+}
+
+// ============================================================================
 // Preferences Service
 // ============================================================================
 
@@ -41,7 +77,9 @@ export class PreferencesService {
       targetLocations: request.targetLocations,
       workMode: request.workMode || 'any',
       workModePreference: request.workModePreference,
-      salaryExpectations: request.salaryExpectations,
+      salaryExpectations: request.salaryExpectations
+        ? toSalaryExpectations(request.salaryExpectations)
+        : undefined,
       preferredCompanySizes: request.preferredCompanySizes,
       preferredCompanyStages: request.preferredCompanyStages,
       targetCompanies: request.targetCompanies,
@@ -49,7 +87,7 @@ export class PreferencesService {
       willingToRelocate: request.willingToRelocate || false,
       relocationLocations: request.relocationLocations,
       relocationAssistance: request.relocationAssistance,
-      noticePeriod: request.noticePeriod,
+      noticePeriod: request.noticePeriod ? toNoticePeriod(request.noticePeriod) : undefined,
       jobSearchIntensity: request.jobSearchIntensity || 'active',
       applicationFrequency: request.applicationFrequency,
       keywords: request.keywords,
@@ -134,8 +172,9 @@ export class PreferencesService {
       workMode: request.workMode ?? currentPreferences.preferences.workMode,
       workModePreference:
         request.workModePreference ?? currentPreferences.preferences.workModePreference,
-      salaryExpectations:
-        request.salaryExpectations ?? currentPreferences.preferences.salaryExpectations,
+      salaryExpectations: request.salaryExpectations
+        ? toSalaryExpectations(request.salaryExpectations)
+        : currentPreferences.preferences.salaryExpectations,
       preferredCompanySizes:
         request.preferredCompanySizes ?? currentPreferences.preferences.preferredCompanySizes,
       preferredCompanyStages:
@@ -149,7 +188,9 @@ export class PreferencesService {
         request.relocationLocations ?? currentPreferences.preferences.relocationLocations,
       relocationAssistance:
         request.relocationAssistance ?? currentPreferences.preferences.relocationAssistance,
-      noticePeriod: request.noticePeriod ?? currentPreferences.preferences.noticePeriod,
+      noticePeriod: request.noticePeriod
+        ? toNoticePeriod(request.noticePeriod)
+        : currentPreferences.preferences.noticePeriod,
       jobSearchIntensity:
         request.jobSearchIntensity ?? currentPreferences.preferences.jobSearchIntensity,
       applicationFrequency:
@@ -168,7 +209,12 @@ export class PreferencesService {
     // Store updated preferences
     this.preferencesStore.set(userId, validatedPreferences);
     this.preferencesStore.set(newPreferencesId, validatedPreferences);
-    this.preferencesStore.set(currentPreferences.preferences.id, currentPreferences.preferences);
+    // Keep the previous version addressable for history traversal. `id` is
+    // optional on the schema, so guard before using it as a store key.
+    const previousId = currentPreferences.preferences.id;
+    if (previousId !== undefined) {
+      this.preferencesStore.set(previousId, currentPreferences.preferences);
+    }
 
     return {
       preferences: validatedPreferences,

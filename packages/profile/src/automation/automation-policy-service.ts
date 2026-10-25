@@ -13,6 +13,105 @@ import {
 } from './types.js';
 
 // ============================================================================
+// Settings merging
+// ============================================================================
+
+type AutoApplySettings = NonNullable<AutomationPolicy['autoApply']>;
+type SafetySettings = NonNullable<AutomationPolicy['safetySettings']>;
+type NotificationSettings = NonNullable<AutomationPolicy['notifications']>;
+type AutoApplyPatch = NonNullable<UpdateAutomationPolicyRequest['autoApply']>;
+type SafetySettingsPatch = NonNullable<UpdateAutomationPolicyRequest['safetySettings']>;
+type NotificationsPatch = NonNullable<UpdateAutomationPolicyRequest['notifications']>;
+
+// Defaults mirror `AutomationPolicySchema`; used only when the stored policy
+// has no value for the section (Zod would apply the same defaults on parse).
+const DEFAULT_AUTO_APPLY: AutoApplySettings = {
+  enabled: false,
+  requireEligibilityCheck: true,
+  requireProfileCoverage: true,
+  minProfileCoveragePercent: 80,
+};
+
+const DEFAULT_SAFETY_SETTINGS: SafetySettings = {
+  alwaysAskForSensitiveFields: true,
+  blockAutoApplyWithoutVerification: true,
+  requireExplicitApprovalForHighRisk: true,
+  maxRetries: 3,
+};
+
+const DEFAULT_NOTIFICATIONS: NotificationSettings = {
+  notifyOnAutoApply: true,
+  notifyOnApprovalRequired: true,
+  notifyOnSubmissionComplete: true,
+  notifyOnErrors: true,
+};
+
+/**
+ * Merges a partial auto-apply patch over the current settings, keeping the
+ * required shape intact (an optional patch field cannot clear a required one).
+ */
+function mergeAutoApply(
+  current: AutoApplySettings | undefined,
+  patch: AutoApplyPatch | undefined
+): AutoApplySettings {
+  const base = current ?? DEFAULT_AUTO_APPLY;
+  if (!patch) {
+    return base;
+  }
+
+  return {
+    enabled: patch.enabled ?? base.enabled,
+    maxApplicationsPerDay: patch.maxApplicationsPerDay ?? base.maxApplicationsPerDay,
+    requireEligibilityCheck: patch.requireEligibilityCheck ?? base.requireEligibilityCheck,
+    requireProfileCoverage: patch.requireProfileCoverage ?? base.requireProfileCoverage,
+    minProfileCoveragePercent: patch.minProfileCoveragePercent ?? base.minProfileCoveragePercent,
+  };
+}
+
+/**
+ * Merges a partial safety-settings patch over the current settings.
+ */
+function mergeSafetySettings(
+  current: SafetySettings | undefined,
+  patch: SafetySettingsPatch | undefined
+): SafetySettings {
+  const base = current ?? DEFAULT_SAFETY_SETTINGS;
+  if (!patch) {
+    return base;
+  }
+
+  return {
+    alwaysAskForSensitiveFields:
+      patch.alwaysAskForSensitiveFields ?? base.alwaysAskForSensitiveFields,
+    blockAutoApplyWithoutVerification:
+      patch.blockAutoApplyWithoutVerification ?? base.blockAutoApplyWithoutVerification,
+    requireExplicitApprovalForHighRisk:
+      patch.requireExplicitApprovalForHighRisk ?? base.requireExplicitApprovalForHighRisk,
+    maxRetries: patch.maxRetries ?? base.maxRetries,
+  };
+}
+
+/**
+ * Merges a partial notification-settings patch over the current settings.
+ */
+function mergeNotifications(
+  current: NotificationSettings | undefined,
+  patch: NotificationsPatch | undefined
+): NotificationSettings {
+  const base = current ?? DEFAULT_NOTIFICATIONS;
+  if (!patch) {
+    return base;
+  }
+
+  return {
+    notifyOnAutoApply: patch.notifyOnAutoApply ?? base.notifyOnAutoApply,
+    notifyOnApprovalRequired: patch.notifyOnApprovalRequired ?? base.notifyOnApprovalRequired,
+    notifyOnSubmissionComplete: patch.notifyOnSubmissionComplete ?? base.notifyOnSubmissionComplete,
+    notifyOnErrors: patch.notifyOnErrors ?? base.notifyOnErrors,
+  };
+}
+
+// ============================================================================
 // Automation Policy Service
 // ============================================================================
 
@@ -124,18 +223,12 @@ export class AutomationPolicyService {
       version: currentPolicy.version + 1,
       defaultMode: request.defaultMode ?? currentPolicy.policy.defaultMode,
       fieldOverrides: request.fieldOverrides ?? currentPolicy.policy.fieldOverrides,
-      autoApply: {
-        ...currentPolicy.policy.autoApply,
-        ...request.autoApply,
-      },
-      safetySettings: {
-        ...currentPolicy.policy.safetySettings,
-        ...request.safetySettings,
-      },
-      notifications: {
-        ...currentPolicy.policy.notifications,
-        ...request.notifications,
-      },
+      autoApply: mergeAutoApply(currentPolicy.policy.autoApply, request.autoApply),
+      safetySettings: mergeSafetySettings(
+        currentPolicy.policy.safetySettings,
+        request.safetySettings
+      ),
+      notifications: mergeNotifications(currentPolicy.policy.notifications, request.notifications),
       updatedAt: now,
       updatedBy: userId,
     };

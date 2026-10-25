@@ -80,8 +80,9 @@ export function recordGeneration(
     name: `${request.provider}/${request.model}`,
     model: request.model,
     modelParameters: {
-      temperature: request.temperature,
-      maxTokens: request.maxTokens,
+      // Langfuse metadata values cannot be undefined; omit unset parameters
+      ...(request.temperature !== undefined && { temperature: request.temperature }),
+      ...(request.maxTokens !== undefined && { maxTokens: request.maxTokens }),
     },
     input: request.messages,
     output: response.raw,
