@@ -327,9 +327,10 @@ export class JobDeduplicationService {
     // Optimization: Count overlapping words directly without intermediate array allocation or creating a 3rd Set
     const words1 = new Set(str1.split(/\s+/));
     const words2 = new Set(str2.split(/\s+/));
+    const [small, large] = words1.size <= words2.size ? [words1, words2] : [words2, words1];
     let commonCount = 0;
-    for (const word of words1) {
-      if (words2.has(word)) {
+    for (const word of small) {
+      if (large.has(word)) {
         commonCount++;
       }
     }
