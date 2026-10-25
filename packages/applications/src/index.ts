@@ -1,4 +1,17 @@
 export {
+  computeContentHash,
+  createSubmissionReceipt,
+  hashValue,
+  RECEIPT_STATES,
+  receiptForSnapshot,
+  type SubmissionInput,
+  type SubmissionOutcome,
+  type SubmissionReceipt,
+  submitApplication,
+  type VerificationStatus,
+  verifyReceipt,
+} from './receipts.js';
+export {
   type ApplicationSnapshot,
   type ApplicationState,
   ApplicationStateMachine,

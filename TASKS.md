@@ -1,8 +1,8 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (38/118 tasks complete - 32.2%)
+**Status:** In Progress (39/118 tasks complete - 33.1%)
 **Last Updated:** 2026-10-25
-**Latest Update:** T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
+**Latest Update:** T-26 complete — submission receipts in `packages/applications/src/receipts.ts` (per-field and per-answer sha256, frozen content-hashed receipt, `submitApplication` seam wired to the T-25 state machine). T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
 
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
 
@@ -852,12 +852,17 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `packages/applications/src/state-machine.ts` (+ `index.ts`, `state-machine.test.ts`)
 
 #### T-26: Implement submission receipt generation
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Receipt generation with job version, submitted fields, answer hashes, confirmation evidence
 - **Dependencies:** T-25
 - **Acceptance:** FR-04 satisfied; receipt contains all required fields; immutable; verification status tracked
-- **Verification:** Submit application → verify receipt generated; check receipt contents; `npm run test -- receipts` → pass
+- **Verification:** `bunx vitest run packages/applications` → 32 tests green; receipts carry `jobVersion`, per-field sha256 hashes, answer hashes, `confirmationEvidenceId`, `verificationStatus`; `verifyReceipt` rejects an edited copy
 - **Files:** `packages/applications/src/receipts.ts`
+- **Evidence:**
+  - ✅ `createSubmissionReceipt` hashes every field value and every answer with sha256 and never stores the raw value, so a receipt can be shown without leaking application content
+  - ✅ Immutability is enforced twice: the receipt is deep-frozen, and `contentHash` covers the sorted-key canonical body, so a copied-then-edited receipt fails `verifyReceipt`
+  - ✅ `submitApplication` is the caller: it performs `EXECUTING → SUBMITTED_UNVERIFIED` (plus `→ SUBMITTED_VERIFIED` when the connector supplies confirmation evidence) and returns the receipt for that exact submission; connectors (T-22) call it instead of hand-building receipts
+  - ⏸️ Persistence and UI surfacing belong to T-27 (tracker UI) and the connector work; this task ships the generation seam only
 
 #### T-27: Implement application tracker UI
 - [ ] **Status:** Not started
@@ -1769,7 +1774,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-01 (Evidence-constrained generation) | T-08, T-17 | Partially Complete (T-08 done) |
 | FR-02 (Eligibility before ranking) | T-12, T-14 | Partially Complete (T-12 done) |
 | FR-03 (Sensitive fields user-only) | T-19, T-20 | Not started |
-| FR-04 (Verified submission receipts) | T-26 | Not started |
+| FR-04 (Verified submission receipts) | T-26 | Complete |
 | FR-05 (Duplicate prevention) | T-23, T-24, T-25 | Not started |
 | FR-06 (Explainable actions) | T-14, T-15, T-20 | Not started |
 | FR-07 (Policy precedence) | T-19, T-09b | Partially Complete (T-09b done) |
