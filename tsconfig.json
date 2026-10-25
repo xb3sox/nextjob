@@ -14,6 +14,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@nextjob/shared": ["./packages/shared/src/index.ts"],
       "@nextjob/tailoring": ["./packages/tailoring/src/index.ts"]
     }
   },

@@ -1,3 +1,5 @@
+import type { AIMessage } from './types.js';
+
 // ============================================================================
 // PII Redaction Patterns
 // ============================================================================
@@ -110,9 +112,9 @@ export function redactPII(
  * Redacts PII from an array of messages
  */
 export function redactMessages(
-  messages: Array<{ role: string; content: string }>,
+  messages: AIMessage[],
   options?: Parameters<typeof redactPII>[1]
-): Array<{ role: string; content: string }> {
+): AIMessage[] {
   return messages.map((msg) => ({
     role: msg.role,
     content: redactPII(msg.content, options),

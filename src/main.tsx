@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
 import { AuthProvider } from './contexts/AuthContext';
+import { I18nProvider } from './i18n';
 
 console.log('[NextJob] main.tsx executing...');
 
@@ -12,7 +13,9 @@ if (!rootEl) {
   try {
     ReactDOM.createRoot(rootEl).render(
       <AuthProvider>
-        <App />
+        <I18nProvider>
+          <App />
+        </I18nProvider>
       </AuthProvider>
     );
     console.log('[NextJob] ReactDOM.createRoot mounted successfully.');

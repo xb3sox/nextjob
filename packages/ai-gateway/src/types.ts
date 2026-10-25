@@ -133,11 +133,9 @@ export interface GatewayConfig {
 // Schema Validation Types
 // ============================================================================
 
-export interface ValidationResult<T> {
-  success: boolean;
-  data?: T;
-  error?: z.ZodError;
-}
+export type ValidationResult<T> =
+  | { success: true; data: T; error?: undefined }
+  | { success: false; data?: undefined; error: z.ZodError };
 
 export interface SchemaDefinition {
   name: string;
