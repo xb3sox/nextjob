@@ -287,7 +287,9 @@ describe('EvidenceStorageService', () => {
       const signature = url.searchParams.get('signature')!;
       const expires = url.searchParams.get('expires')!;
 
-      const tamperedSig = signature.substring(0, signature.length - 2) + '00';
+      // Flip the first hex char so the tampered signature always differs, even
+      // when the real signature happens to end in the characters we replace.
+      const tamperedSig = `${signature[0] === '0' ? '1' : '0'}${signature.slice(1)}`;
       const isValid = await service.validateSignedUrl(uploaded.file.id, tamperedSig, expires);
       expect(isValid).toBe(false);
     });
