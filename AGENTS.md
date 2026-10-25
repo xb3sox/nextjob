@@ -36,6 +36,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-03g: Custom shadcn registry (`registry/`, `public/r/`)
 - ✅ T-21: WXT browser extension scaffold (`extension/`)
 - ✅ T-25: Application state machine
+- ✅ T-44: Complete application state machine (verified 2026-10-25 — shipped with T-25, PR #128)
 - ✅ T-43: API documentation (`docs/api/`)
 - ✅ T-47: Localization infrastructure (RTL, locale-aware formatting, locale switcher)
 - ✅ T-64: Static sitemap and robots.txt (`public/`)
@@ -44,7 +45,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 39/118 tasks complete (33.1%)
+**Progress:** 40/118 tasks complete (33.9%)
 
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
 > `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
@@ -218,7 +219,7 @@ problem, scope, start here, command-checkable acceptance criteria, test command,
 
 Phase lives in the project's `Phase` field, not in labels.
 
-**Ready work** = open, no `jules-queued`, no `human` (18 issues today), MVP milestone first.
+**Ready work** = open, no `jules-queued`, no `human` (14 issues today), MVP milestone first.
 
 **Status flow** = `Todo` → `In Progress` (dispatched) → `In Review` (PR open) → `Done` (merged).
 `Blocked` requires a native blocked-by, not prose.
