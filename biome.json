@@ -54,7 +54,10 @@
       "!!.agents",
       "!!.codegraph",
       "!!package-lock.json",
-      "!!bun.lockb"
+      "!!bun.lockb",
+      "!!extension/.output",
+      "!!extension/.wxt",
+      "!!.wxt"
     ]
   }
 }

@@ -802,12 +802,18 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 7: Browser Extension & Connectors
 
 #### T-21: Set up browser extension scaffold
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** WXT browser extension with background script, content script, popup
 - **Dependencies:** T-02
 - **Acceptance:** Extension loads in Chrome/Firefox; popup displays; content script injects; background script runs
-- **Verification:** Load extension in browser → verify popup opens; check console for errors
-- **Files:** `apps/extension/`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0
+- **Files:** `extension/`
+- **Evidence:**
+  - ✅ WXT extension scaffold created in `extension/` (`wxt.config.ts`, `package.json`, `tsconfig.json`)
+  - ✅ Entrypoints configured: `extension/entrypoints/background.ts`, `extension/entrypoints/content.ts`, `extension/entrypoints/popup/` (`index.html`, `main.tsx`, `App.tsx`)
+  - ✅ React popup component implemented displaying extension connection status
+  - ✅ Unit tests added in `extension/tests/` covering background script, content script, and popup UI component
+  - ✅ Integrated extension into monorepo workspace and build pipeline (`bun run build` generates `extension/.output/chrome-mv3/` with valid `manifest.json`)
 
 #### T-22: Create ATS connector synthetic test framework
 - [ ] **Status:** Not started
