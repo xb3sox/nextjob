@@ -79,9 +79,9 @@ credential, it is `human`, not agent work. Marketing items with unverifiable cri
 
 ## Backlog state
 
-Every open issue carries `Dependencies`, `Test requirement` and `Guardrails`, and every project item
-has `Status`, `Phase`, `Priority` and a milestone. `Status: Blocked` means an open native blocker,
-nothing else.
+Every open issue carries `Dependencies`, `Test requirement` and `Guardrails`, and every open project
+item has `Status`, `Phase`, `Priority` and a milestone. `Status: Blocked` means an open native
+blocker, nothing else.
 
 `Problem`, `Scope`, `Start here` and sharpened acceptance criteria are written at dispatch for the
 next few candidates, not for all 83 at once: a brief written weeks early drifts, as #32 did.
