@@ -47,13 +47,14 @@ export function validateSchemaOrThrow<T>(
   const result = validateSchema(data, schema);
 
   if (!result.success) {
+    // `success: false` guarantees a ZodError in the discriminated union
     const message = context
       ? `Validation failed for ${context}: ${result.error.message}`
       : `Validation failed: ${result.error.message}`;
     throw new ValidationError(message, result.error);
   }
 
-  return result.data!;
+  return result.data;
 }
 
 /**

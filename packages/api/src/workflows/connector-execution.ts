@@ -1,5 +1,5 @@
 import { proxyActivities } from '@temporalio/workflow';
-import type * as activities from './activities/ats-connector.js';
+import type * as activities from '../activities/ats-connector.js';
 
 // Import activities for workflow execution
 const { executeATSConnector, verifySubmission, checkDuplicate } = proxyActivities<
@@ -121,9 +121,3 @@ export async function connectorExecutionWorkflow(
     };
   }
 }
-
-// ============================================================================
-// Workflow Exports
-// ============================================================================
-
-export { connectorExecutionWorkflow };

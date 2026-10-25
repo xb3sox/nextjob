@@ -1,4 +1,4 @@
-import { Worker } from '@temporalio/worker';
+import { NativeConnection, Worker } from '@temporalio/worker';
 import * as activities from '../activities/ats-connector.js';
 import type { TemporalConfig } from './client.js';
 
@@ -16,6 +16,7 @@ export interface WorkerConfig extends TemporalConfig {
 // ============================================================================
 
 let worker: Worker | null = null;
+let connection: NativeConnection | null = null;
 let isRunning = false;
 
 /**
@@ -28,15 +29,21 @@ export async function startWorker(config: WorkerConfig): Promise<void> {
   }
 
   try {
+    // Worker.create() accepts a connected NativeConnection, not a connection
+    // config; connect first so the configured address is honoured.
+    if (!connection) {
+      connection = await NativeConnection.connect({ address: config.address });
+    }
+
     worker = await Worker.create({
-      connection: {
-        address: config.address,
-      },
+      connection,
       namespace: config.namespace,
       taskQueue: config.taskQueue,
       workflowsPath: require.resolve('../workflows/connector-execution.js'),
       activities,
-      maxConcurrentActivityExecutions: config.maxConcurrentActivityExecutions || 10,
+      // The SDK option is `maxConcurrentActivityTaskExecutions`; the config
+      // field keeps its shorter public name.
+      maxConcurrentActivityTaskExecutions: config.maxConcurrentActivityExecutions || 10,
       maxConcurrentWorkflowTaskExecutions: config.maxConcurrentWorkflowTaskExecutions || 10,
     });
 
@@ -66,6 +73,12 @@ export async function stopWorker(): Promise<void> {
     worker.shutdown();
     isRunning = false;
     worker = null;
+
+    if (connection) {
+      await connection.close();
+      connection = null;
+    }
+
     console.log('Temporal worker stopped');
   } catch (error) {
     console.error('Error stopping Temporal worker:', error);
