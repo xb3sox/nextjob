@@ -13,7 +13,8 @@ jobs:
     # Free-plan repo: required reviewers are rejected (422 "ensure the billing
     # plan supports the required reviewers protection rule"), so this is a
     # branch restriction, not an approval gate. The `production` environment
-    # allows only `main`; a dispatch from any other branch is refused by GitHub.
+    # allows only `main` and has `can_admins_bypass` disabled, so a dispatch
+    # from any other branch is refused for every actor, admins included.
     environment:
       name: production
     steps:
