@@ -34,7 +34,9 @@ jobs:
           # Free endpoints reject provider-specific body keys (Gemini does).
           llm_extra_body: '{}'
           effort: medium
-          max_tokens_budget: '150000'
+          # A 22-file PR (T-47) estimated ~242k tokens and tripped the old
+          # 150000 cap. Cover that; review_concurrency stays 1 (one group).
+          max_tokens_budget: '400000'
           # Free Gemini keys cap at 20 req/day on full Flash and 429 hard when
           # several groups run at once. Use a *-flash-lite model and one group;
           # gemini-3.1-flash-lite at effort medium was the tested combo.
