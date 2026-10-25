@@ -284,10 +284,10 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Custom registry definition created in `registry.json` for `@nextjob` with items: `application-card`, `job-card`, `waitlist-form`
   - ✅ Component source files created in `registry/components/` (`application-card/application-card.tsx`, `job-card/job-card.tsx`, `waitlist-form/waitlist-form.tsx`)
   - ✅ Registry alias mapping added to `components.json` (`"@nextjob": "http://localhost:5173/r/{name}.json"`)
-  - ✅ Build integration added in `package.json` (`bun run registry:build` outputs artifacts to `public/r/` and is tied to `bun run build`)
-  - ✅ Registry validation passing (`npx shadcn@latest registry validate` succeeds with 0 errors)
-  - ✅ CLI installation verified (`npx shadcn@latest add @nextjob/application-card -y -o` installs component into `src/components/application-card.tsx`)
-  - ✅ Vitest test suite implemented in `registry/registry.test.ts` (4/4 tests passing)
+  - ✅ Build script `bun run registry:build` regenerates the static artifacts in `public/r/`; the output is committed, so `bun run build` does not shell out to the registry CLI
+  - ✅ Registry validation passing (`bun run registry:validate` reports 0 errors)
+  - ⚠️ CLI installation was verified manually against a local static server, not in the unit suite: `shadcn add` needs network, an unpinned CLI, and it rewrites files under `src/`
+  - ✅ Vitest suite in `registry/registry.test.ts` (3 tests, no network) validates `registry.json`, every declared source file, and a committed artifact for every item
 
 #### T-04: Set up authentication and tenant isolation
 - [x] **Status:** Complete
@@ -2005,3 +2005,4 @@ Notes:
 - T-04 through T-12 were completed since the last update (see evidence sections under each task and the session summaries).
 - PRD blocker B-02 still applies to the tailoring track: T-16 (AI evaluation dataset) must be created before T-17 (tailoring engine).
 - T-13 produces the evaluation data needed to verify the G-04 eligibility accuracy gate (false-positive ≤2%).
+
