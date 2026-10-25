@@ -15,14 +15,29 @@ Installation state cannot be confirmed from this repo's API surface: `repos/xb3s
 returned only `xb3sox` when checked, which is consistent with the app not being installed, but the
 label trigger is the real test.
 
+Smoke-test it once on a bounded issue (#169, registry divergence) before dispatching a batch. If no
+Jules run appears, the app is not on the repo: stop, that is a human fix.
+
 ## 2. Dispatch
 
 **A label is the trigger.** Per the [Jules changelog](https://jules.google/docs/changelog/2025-06-26/):
 "Add the label 'jules' to any GitHub issue to start a task in Jules. That's it — label on, task live."
 
-1. The issue must already be labelled `jules-queued`-free and ready — dependencies merged.
-2. Add the label **`jules`** (exactly that, no prefix). Removing it and re-adding it starts a new task.
-3. Jules clones `main`, works the issue, and opens a PR for review.
+Four preconditions. All four, every time:
+
+1. No branch or merged PR already contains the work.
+2. The whole diff fits 400 changed lines. Otherwise split into sub-issues first.
+3. No credential, deployment, or secret is involved.
+4. It shares no file with another in-flight issue. `index.html` is the usual collision.
+
+Then:
+
+```bash
+gh issue edit <number> --add-label jules
+gh project item-edit 11 --owner xb3sox --url <issue-url> --field Status --value "In Progress"
+```
+
+Jules clones `main`, works the issue, and opens a PR. On PR open, set `Status` → `In Review`.
 
 Assignment is not required, and the label name is not configurable — `agent:jules` would never fire,
 which is why this repo renamed it to `jules`.
@@ -30,6 +45,9 @@ which is why this repo renamed it to `jules`.
 The label is deliberately **not** pre-applied to ready issues: otherwise installing the app could
 retroactively start twenty-two tasks. Ready work is found by excluding `jules-queued` and `human`;
 adding `jules` is always a deliberate dispatch.
+
+**Concurrency.** Free plan runs three tasks at once, fifteen a day. Hold at two open agent PRs;
+review bandwidth, not quota, is the real limit.
 
 Optional: from the Jules UI you can also start a task from the issue URL directly.
 

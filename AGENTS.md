@@ -205,6 +205,8 @@ Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/p
 (`#11`). Every open task in [TASKS.md](TASKS.md) has exactly one issue.
 
 **One issue = one task = one PR.** Do not bundle tasks; do not open a PR without an issue.
+Issue bodies follow the contract in [docs/OPERATING_MODEL.md](docs/OPERATING_MODEL.md#issue-contract):
+problem, scope, start here, command-checkable acceptance criteria, test command, guardrails.
 
 ### Labels
 
@@ -218,13 +220,16 @@ Phase lives in the project's `Phase` field, not in labels.
 
 **Ready work** = open, no `jules-queued`, no `human` (18 issues today), MVP milestone first.
 
+**Status flow** = `Todo` → `In Progress` (dispatched) → `In Review` (PR open) → `Done` (merged).
+`Blocked` requires a native blocked-by, not prose.
+
 ### Workflow
 
-1. Pick ready work. Read its brief. **Adding `jules` dispatches the agent** — that single label is the trigger, never an assignment.
+1. Pick ready work. Read its brief. **Adding `jules` dispatches the agent** — that single label is the trigger, never an assignment. The four preconditions are in [docs/JULES.md](docs/JULES.md#2-dispatch).
 2. Branch from `main`: `feat/<task-id>-<slug>` (e.g. `feat/t-18-tailoring-review-ui`).
 3. Implement only the scope in the issue. Protected paths stay untouched.
 4. Run the gates below; paste the output into the PR body.
-5. Open the PR against `main`, link the issue (`Refs T-XX`), and move the board item to `In Progress` then `Done`.
+5. Open the PR against `main`, link the issue with `Closes #N`, and move the board item to `In Review`, then `Done` after merge.
 
 ### Gates before any PR
 
