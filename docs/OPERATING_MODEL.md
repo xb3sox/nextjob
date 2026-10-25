@@ -68,6 +68,24 @@ credential, it is `human`, not agent work. Marketing items with unverifiable cri
 
 **400 lines.** A diff over that becomes sub-issues before the label goes on.
 
+## Adding work
+
+1. Create the issue from `.github/ISSUE_TEMPLATE/task.yml`, or write a body shaped like the contract.
+2. Put it on the board: `gh project item-add 11 --owner xb3sox --url <issue-url>`.
+   Auto-add is not configured, so a new issue stays invisible until this runs.
+3. Set `Phase` and `Priority`. `Size` is set at dispatch, never bulk-guessed.
+4. Wire ordering with native blocked-by, then set `Status` to `Blocked` while a blocker is open.
+5. Never add `jules` at creation. Dispatch is deliberate — see [JULES.md § 2](JULES.md#2-dispatch).
+
+## Backlog state
+
+Every open issue carries `Dependencies`, `Test requirement` and `Guardrails`, and every project item
+has `Status`, `Phase`, `Priority` and a milestone. `Status: Blocked` means an open native blocker,
+nothing else.
+
+`Problem`, `Scope`, `Start here` and sharpened acceptance criteria are written at dispatch for the
+next few candidates, not for all 83 at once: a brief written weeks early drifts, as #32 did.
+
 ## Ownership
 
 - `jules` — **dispatch trigger**: adding this exact label starts a task in the Jules GitHub App.
