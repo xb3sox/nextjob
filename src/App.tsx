@@ -1,19 +1,22 @@
 import { ArrowRight, Check, ChevronDown, FileSearch, Lock, ShieldCheck, Zap } from 'lucide-react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
 import { useI18n } from './i18n';
-import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
-import LoginPage from './pages/auth/LoginPage';
-import ResetPasswordPage from './pages/auth/ResetPasswordPage';
-import SignupPage from './pages/auth/SignupPage';
-import DashboardPage from './pages/DashboardPage';
-import NotFound from './pages/NotFound';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TailorPage from './pages/TailorPage';
-import TermsOfService from './pages/TermsOfService';
+
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
+const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
+const SignupPage = lazy(() => import('./pages/auth/SignupPage'));
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TailorPage = lazy(() => import('./pages/TailorPage'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
 /* ------------------------------------------------------------------ */
 /* Landing page                                                        */
@@ -497,33 +500,35 @@ function LandingPage() {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/auth/callback" element={<LoginPage />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/tailor"
-          element={
-            <ProtectedRoute>
-              <TailorPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/auth/callback" element={<LoginPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tailor"
+            element={
+              <ProtectedRoute>
+                <TailorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
