@@ -29,7 +29,7 @@ export default defineConfig({
             if (id.includes('lucide-react')) {
               return 'vendor-icons';
             }
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+            if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/.test(id)) {
               return 'vendor-react';
             }
             return 'vendor';
