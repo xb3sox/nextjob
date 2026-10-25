@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (35/118 tasks complete - 29.7%)
+**Status:** In Progress (38/118 tasks complete - 32.2%)
 **Last Updated:** 2026-10-25
 **Latest Update:** T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
 
@@ -2005,4 +2005,5 @@ Notes:
 - T-04 through T-12 were completed since the last update (see evidence sections under each task and the session summaries).
 - PRD blocker B-02 still applies to the tailoring track: T-16 (AI evaluation dataset) must be created before T-17 (tailoring engine).
 - T-13 produces the evaluation data needed to verify the G-04 eligibility accuracy gate (false-positive ≤2%).
+
 
