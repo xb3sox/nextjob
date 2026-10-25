@@ -324,10 +324,16 @@ export class JobDeduplicationService {
     const lengthSimilarity = 1 - lengthDiff / maxLen;
 
     // Check for common words
+    // Optimization: Count overlapping words directly without intermediate array allocation or creating a 3rd Set
     const words1 = new Set(str1.split(/\s+/));
     const words2 = new Set(str2.split(/\s+/));
-    const commonWords = new Set([...words1].filter((w) => words2.has(w)));
-    const wordSimilarity = commonWords.size / Math.max(words1.size, words2.size);
+    let commonCount = 0;
+    for (const word of words1) {
+      if (words2.has(word)) {
+        commonCount++;
+      }
+    }
+    const wordSimilarity = commonCount / Math.max(words1.size, words2.size);
 
     return (lengthSimilarity + wordSimilarity) / 2;
   }
