@@ -39,7 +39,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 
 **Progress:** 33/118 tasks complete (28.0%)
 
-> Note: T-13 through T-18 are complete with all eval/unit tests passing. Next up: T-19 (risk & policy engine) or T-03f/T-03g.
+> Note: T-13 through T-18 are complete with all eval/unit tests passing. Next up: T-03f or T-03g.
 
 ## Agent Skills
 
