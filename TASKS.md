@@ -2,12 +2,9 @@
 
 **Status:** In Progress (35/118 tasks complete - 29.7%)
 **Last Updated:** 2026-10-25
-**Latest Update:** T-64 complete — canonical static `public/sitemap.xml` (all six public routes, no fabricated `lastmod`) and `public/robots.txt` (AI-bot blocking, sitemap reference) ship in `dist/`. No Search Console submission.
+**Latest Update:** T-47 complete — localization infrastructure in `packages/shared/src/i18n/` and `src/i18n/` (RTL support, locale-aware formatting, language detection, locale switcher, tests). T-64 complete — canonical static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`; no Search Console submission.
+
 **References:** [PRD](docs/PRD.md) · [TECH](docs/TECH.md) · [DESIGN](docs/DESIGN.md) · [AGENTS](AGENTS.md)
-
-## Quality Review & Fixes (2026-01-15)
-
-Comprehensive product review completed. Critical issues fixed:
 
 ### ✅ Fixed Issues (7 Critical)
 - **Form validation** - Email validation with regex pattern
@@ -1075,12 +1072,18 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** All UI components in `apps/web/src/`
 
 #### T-47: Implement localization infrastructure
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-25)
 - **Deliverable:** RTL-ready architecture with locale-aware dates, currency formatting, address/phone localization
 - **Dependencies:** T-02
 - **Acceptance:** FR-ACC-03 satisfied; architecture supports additional languages; locale detection works
-- **Verification:** Switch locale → verify dates/currency format correctly; test RTL layout → verify mirrors correctly
-- **Files:** `packages/shared/src/i18n/`, `apps/web/src/i18n/`
+- **Verification:** Switch locale → verify dates/currency format correctly; test RTL layout → verify mirrors correctly (`bun vitest run packages/shared/src/i18n/i18n.test.ts` [10/10 passed], `bun vitest run src/i18n/i18n.test.tsx` [2/2 passed], `bun vitest run src/components/LocaleSwitcher.test.tsx` [1/1 passed])
+- **Files:** `packages/shared/src/i18n/`, `src/i18n/`, `src/components/LocaleSwitcher.tsx`
+- **Evidence:**
+  - ✅ Created `@nextjob/shared` package with full i18n core utilities (`date.ts`, `currency.ts`, `address.ts`, `phone.ts`, `direction.ts`, `locale.ts`, `config.ts`, `types.ts`)
+  - ✅ Created React i18n infrastructure in `src/i18n/` (`I18nProvider`, `useI18n` hook, multi-locale dictionaries for `en-US`, `ar-SA`, `es-ES`, `he-IL`)
+  - ✅ Document `dir` and `lang` attributes sync dynamically on `document.documentElement` when changing locales (e.g., setting `dir="rtl"` for `ar-SA` / `he-IL`)
+  - ✅ Created `LocaleSwitcher` component added to top navbar for testing language switching and layout mirroring
+  - ✅ Verified locally: `bun run typecheck`, `bun run lint`, `bun vitest run`, `bun run build` all passing green
 
 ---
 
@@ -1785,7 +1788,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-FEC-03 (No auto-retry ambiguous) | T-25, T-45 | Not started |
 | FR-ACC-01 (WCAG 2.2 AA) | T-46 | Not started |
 | FR-ACC-02 (Accessibility features) | T-46 | Not started |
-| FR-ACC-03 (Localization) | T-47 | Not started |
+| FR-ACC-03 (Localization) | T-47 | Complete |
 | FR-ACC-04 (Additional languages) | Not in MVP scope | N/A |
 | FR-ANA-01 (Product analytics) | T-48 | Not started |
 | FR-ANA-02 (No PII in analytics) | T-48 | Not started |
@@ -1937,7 +1940,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Deferred (Post-MVP)
 - T-44: Implement complete application state machine (simplified in T-25)
 - T-45: Implement failure handling for all edge cases (can be iterative)
-- T-47: Implement localization infrastructure (English-first MVP)
+- ~~T-47: Implement localization infrastructure~~ ✅ Complete
 - T-48: Implement product analytics with privacy safeguards (partially done in T-54)
 - T-49: Implement experimentation framework (post-launch)
 - T-50: Implement free tier and Search Pass billing (simplified in T-32)

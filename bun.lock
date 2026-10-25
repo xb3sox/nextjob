@@ -92,6 +92,10 @@
         "typescript": "^5.6.3",
       },
     },
+    "packages/shared": {
+      "name": "@nextjob/shared",
+      "version": "0.1.0",
+    },
     "packages/tailoring": {
       "name": "@nextjob/tailoring",
       "version": "0.1.0",
@@ -353,6 +357,8 @@
     "@nextjob/extension": ["@nextjob/extension@workspace:extension"],
 
     "@nextjob/profile": ["@nextjob/profile@workspace:packages/profile"],
+
+    "@nextjob/shared": ["@nextjob/shared@workspace:packages/shared"],
 
     "@nextjob/tailoring": ["@nextjob/tailoring@workspace:packages/tailoring"],
 

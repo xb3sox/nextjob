@@ -1,8 +1,10 @@
 import { ArrowRight, Check, ChevronDown, FileSearch, Lock, ShieldCheck, Zap } from 'lucide-react';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import LocaleSwitcher from './components/LocaleSwitcher';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
+import { useI18n } from './i18n';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import LoginPage from './pages/auth/LoginPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
@@ -18,6 +20,8 @@ import TermsOfService from './pages/TermsOfService';
 /* ------------------------------------------------------------------ */
 
 function LandingPage() {
+  const { t } = useI18n();
+
   return (
     <div className="min-h-screen bg-ink text-paper antialiased">
       {/* Skip to content link for accessibility */}
@@ -42,7 +46,7 @@ function LandingPage() {
             >
               N
             </span>
-            <span className="font-semibold text-sm tracking-tight">NextJob</span>
+            <span className="font-semibold text-sm tracking-tight">{t('common.appName')}</span>
           </Link>
           <div className="flex items-center gap-6">
             <a
@@ -63,6 +67,7 @@ function LandingPage() {
             >
               Sign in
             </Link>
+            <LocaleSwitcher />
             <Link
               to="/signup"
               className="text-sm font-medium px-3.5 py-2 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark transition-colors"
@@ -114,7 +119,7 @@ function LandingPage() {
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors shadow-[0_0_40px_-12px_rgba(52,211,153,0.5)]"
               >
                 Start free — create your account
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" aria-hidden="true" />
               </Link>
               <a
                 href="#waitlist"
@@ -138,8 +143,10 @@ function LandingPage() {
                     <div className="w-3 h-3 rounded-full bg-white/10" />
                     <div className="w-3 h-3 rounded-full bg-white/10" />
                   </div>
-                  <span className="text-xs text-fog ml-2">Senior Software Engineer at Stripe</span>
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-moss/10 border border-moss/25 px-2 py-0.5 text-[11px] font-medium text-moss tnum">
+                  <span className="text-xs text-fog ltr:ml-2 rtl:mr-2">
+                    Senior Software Engineer at Stripe
+                  </span>
+                  <span className="ltr:ml-auto rtl:mr-auto inline-flex items-center gap-1 rounded-full bg-moss/10 border border-moss/25 px-2 py-0.5 text-[11px] font-medium text-moss tnum">
                     94% match
                   </span>
                 </div>
@@ -340,7 +347,7 @@ function LandingPage() {
             </Reveal>
             <Reveal delay={120}>
               <div className="relative h-full p-8 rounded-xl border border-moss/35 bg-moss/[0.05] shadow-[0_0_60px_-20px_rgba(52,211,153,0.35)]">
-                <span className="absolute top-6 right-6 rounded-full border border-moss/30 bg-moss/10 px-2.5 py-0.5 text-xs font-medium text-moss">
+                <span className="absolute top-6 ltr:right-6 rtl:left-6 rounded-full border border-moss/30 bg-moss/10 px-2.5 py-0.5 text-xs font-medium text-moss">
                   Most popular
                 </span>
                 <h3 className="font-medium mb-2">Search</h3>
@@ -365,7 +372,8 @@ function LandingPage() {
                   to="/signup"
                   className="mt-8 inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark font-semibold text-sm transition-colors"
                 >
-                  Start Search Pass <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  Start Search Pass{' '}
+                  <ArrowRight className="w-4 h-4 rtl:rotate-180" aria-hidden="true" />
                 </Link>
               </div>
             </Reveal>
@@ -404,7 +412,7 @@ function LandingPage() {
                   <summary className="flex items-center justify-between cursor-pointer list-none px-6 py-4 font-medium [&::-webkit-details-marker]:hidden">
                     {item.q}
                     <ChevronDown
-                      className="w-4 h-4 text-fog group-open:rotate-180 transition-transform shrink-0 ml-4"
+                      className="w-4 h-4 text-fog group-open:rotate-180 transition-transform shrink-0 ltr:ml-4 rtl:mr-4"
                       aria-hidden="true"
                     />
                   </summary>
@@ -437,7 +445,7 @@ function LandingPage() {
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors"
               >
                 Start free
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                <ArrowRight className="w-4 h-4 rtl:rotate-180" aria-hidden="true" />
               </Link>
               <Link
                 to="/login"
