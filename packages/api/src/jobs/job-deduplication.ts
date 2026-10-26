@@ -308,7 +308,8 @@ export class JobDeduplicationService {
   }
 
   /**
-   * Calculate string similarity using Levenshtein distance
+   * Calculate string similarity using length and word overlap comparison.
+   * Performance optimization: Extract word Sets in a single pass without intermediate Array allocations.
    */
   private calculateStringSimilarity(str1: string, str2: string): number {
     if (str1 === str2) return 1;
@@ -323,10 +324,10 @@ export class JobDeduplicationService {
     const lengthDiff = Math.abs(len1 - len2);
     const lengthSimilarity = 1 - lengthDiff / maxLen;
 
-    // Check for common words
-    // Optimization: Count overlapping words directly without intermediate array allocation or creating a 3rd Set
-    const words1 = new Set(str1.split(/\s+/));
-    const words2 = new Set(str2.split(/\s+/));
+    // Extract word sets directly without allocating intermediate arrays from split()
+    const words1 = this.extractWordSet(str1);
+    const words2 = this.extractWordSet(str2);
+
     const [small, large] = words1.size <= words2.size ? [words1, words2] : [words2, words1];
     let commonCount = 0;
     for (const word of small) {
@@ -337,6 +338,28 @@ export class JobDeduplicationService {
     const wordSimilarity = commonCount / Math.max(words1.size, words2.size);
 
     return (lengthSimilarity + wordSimilarity) / 2;
+  }
+
+  /**
+   * Extract words into a Set in a single pass, avoiding intermediate array allocations.
+   */
+  private extractWordSet(str: string): Set<string> {
+    const words = new Set<string>();
+    const len = str.length;
+    let start = 0;
+
+    for (let i = 0; i <= len; i++) {
+      if (i === len || str.charCodeAt(i) <= 32) {
+        words.add(str.substring(start, i));
+        // Skip consecutive whitespace characters
+        while (i + 1 < len && str.charCodeAt(i + 1) <= 32) {
+          i++;
+        }
+        start = i + 1;
+      }
+    }
+
+    return words;
   }
 
   /**
