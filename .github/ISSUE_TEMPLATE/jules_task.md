@@ -32,4 +32,5 @@ A concise statement of what this module does.
 ```bash
 bun test packages/<package-name>
 bun run typecheck
+bun run lint
 ```

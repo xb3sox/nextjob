@@ -14,7 +14,7 @@ Paste the command output that proves the acceptance criteria:
 ```bash
 bun run typecheck
 bun run lint
-bunx vitest run --maxWorkers 2
+bun x vitest run --maxWorkers 2
 bun run build
 ```
 

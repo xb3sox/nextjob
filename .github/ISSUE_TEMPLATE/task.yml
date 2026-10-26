@@ -23,6 +23,10 @@ body:
       label: Phase
       options:
         - "1. Environment & Infrastructure"
+        - "2. Your Profile & Evidence"
+        - "3. Jobs & Eligibility"
+        - "4. Matching & Ranking"
+        - "5. Tailoring Engine"
         - "6. Policy & Approvals"
         - "7. Browser Extension & Connectors"
         - "8. Applications & Receipts"
@@ -93,7 +97,7 @@ body:
       value: |
         ```bash
         bun run typecheck && bun run lint
-        bunx vitest run --maxWorkers 2
+        bun x vitest run --maxWorkers 2
         bun run build
         ```
     validations:
