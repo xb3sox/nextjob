@@ -1,15 +1,9 @@
 name: main-guard
 
-# Free-plan substitute for required status checks.
-#
-# A private repo on GitHub Free cannot enable rulesets or branch protection
-# (the API answers 403 "Upgrade to GitHub Pro or make this repository public"),
-# so a red commit can reach main. This workflow watches CI on main and, if that
-# run failed, reverts the offending commit automatically. The revert itself is
-# skipped by the `Revert` guard below, so it cannot loop.
-#
-# Limits: it reacts after the push, not before. It only reverts commits it can
-# cleanly revert; a conflicting revert needs a human.
+# Fallback guard for unblocked direct pushes to main.
+# With the repository public, native branch protection rules require green CI
+# before merging. If an admin bypasses or an unverified commit reaches main,
+# this workflow reverts the offending commit automatically.
 
 on:
   workflow_run:
@@ -49,7 +43,7 @@ jobs:
           git commit --amend -m "Revert \"$(git log -1 --format=%s "$SHA")\"" \
             -m "Automatic revert: CI failed on main (${RUN_URL})." \
             -m "This reverts commit ${SHA}."
-          git push origin HEAD:main
+          git push origin HEAD:main || echo "::warning::Branch protection blocked direct push to main"
 
       - name: Report the revert as an issue
         if: always()

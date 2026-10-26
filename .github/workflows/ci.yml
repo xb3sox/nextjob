@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   verify:
@@ -53,6 +53,9 @@ jobs:
       - name: Typecheck (packages/applications)
         run: bunx tsc --noEmit -p packages/applications/tsconfig.json
 
+      - name: Typecheck (packages/shared)
+        run: bunx tsc --noEmit -p packages/shared/tsconfig.json
+
       - name: Lint
         run: bun run lint
 
@@ -73,3 +76,17 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: bunx vitest run --maxWorkers 2
+
+      - name: Upload Web Build Artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: nextjob-web-dist
+          path: dist/
+          retention-days: 7
+
+      - name: Upload Extension Build Artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
+        with:
+          name: nextjob-extension-chrome-mv3
+          path: extension/.output/chrome-mv3/
+          retention-days: 14

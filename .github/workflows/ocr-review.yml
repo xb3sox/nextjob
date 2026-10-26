@@ -1,11 +1,11 @@
 name: AI Review
 
-# Runs OpenCodeReview on every PR. Posts inline review comments + a sticky
-# summary. Unrelated to ci.yml: that gates typecheck/lint/audit/tests, this
-# only adds review findings and never blocks a merge.
+# Runs OpenCodeReview on PRs from trusted actors or maintainer-approved labels.
+# In a public repo, pull_request_target must be gated to prevent untrusted
+# forks from consuming tokens, writing spam comments, or prompt injection.
 on:
   pull_request_target:
-    types: [opened, synchronize, ready_for_review]
+    types: [opened, synchronize, ready_for_review, labeled]
 
 permissions:
   contents: read
@@ -17,7 +17,14 @@ concurrency:
 
 jobs:
   ocr:
-    if: github.event.pull_request.draft == false
+    if: >-
+      github.event.pull_request.draft == false &&
+      (
+        github.event.pull_request.author_association == 'OWNER' ||
+        github.event.pull_request.author_association == 'MEMBER' ||
+        github.event.pull_request.author_association == 'COLLABORATOR' ||
+        contains(github.event.pull_request.labels.*.name, 'ai-review-approved')
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
