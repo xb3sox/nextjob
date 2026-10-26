@@ -230,6 +230,14 @@ gh issue list --state open --search '-label:jules-queued -label:human -label:jul
 **Status flow** = `Todo` → `In Progress` (dispatched) → `In Review` (PR open) → `Done` (merged).
 `Blocked` requires a native blocked-by, not prose.
 
+### Jules Features & Operating Contract
+
+Jules is Google's asynchronous coding agent running in an isolated cloud VM (full operating manual: [docs/JULES.md](docs/JULES.md)).
+- **Triggers:** GitHub issue label `jules` (dispatch trigger), Web UI (`jules.google.com`), CLI (`@google/jules`), or REST API (`jules.googleapis.com/v1alpha`).
+- **Autonomous Flow:** Clones `main` -> reads `AGENTS.md` context -> generates implementation plan -> executes scoped edits (<=400 lines) -> runs test gates -> opens PR with summary & optional audio changelog.
+- **Review & Feedback Loop:** Jules reads PR review comments (tag `@jules` or review directly). It acknowledges with 👀, applies requested revisions in its VM, verifies tests, and pushes commits to update the PR.
+- **Boundaries:** Never dispatch with `jules-queued` or `human`. Never touch protected paths (`evals/`, `docs/PRD.md`, `docs/TECH.md`, `packages/policy/`, `packages/eligibility/`). Jules never pushes to `main` or self-merges.
+
 ### Workflow
 
 1. Pick ready work. Read its brief. **Adding `jules` dispatches the agent** — that single label is the trigger, never an assignment. The four preconditions are in [docs/JULES.md](docs/JULES.md#2-dispatch).
