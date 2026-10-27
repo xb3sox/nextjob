@@ -317,7 +317,11 @@ export default function TailorPage() {
                       onClick={() => decide(key, 'accepted')}
                       aria-label={`Accept ${label.toLowerCase()} statement`}
                       aria-pressed={review.decision === 'accepted'}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-1.5 text-xs font-medium hover:border-moss/40 hover:text-moss transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
+                      className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss ${
+                        review.decision === 'accepted'
+                          ? 'border-moss/60 bg-moss/10 text-moss font-semibold'
+                          : 'border-white/15 text-paper hover:border-moss/40 hover:text-moss'
+                      }`}
                     >
                       <Check className="w-3.5 h-3.5" aria-hidden="true" />
                       Accept
@@ -330,7 +334,11 @@ export default function TailorPage() {
                       }}
                       aria-label={`Edit ${label.toLowerCase()} statement`}
                       aria-pressed={review.decision === 'edited'}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-1.5 text-xs font-medium hover:border-white/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
+                      className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss ${
+                        review.decision === 'edited'
+                          ? 'border-moss/60 bg-moss/10 text-moss font-semibold'
+                          : 'border-white/15 text-paper hover:border-white/30'
+                      }`}
                     >
                       <Pencil className="w-3.5 h-3.5" aria-hidden="true" />
                       Edit
@@ -340,7 +348,11 @@ export default function TailorPage() {
                       onClick={() => decide(key, 'rejected')}
                       aria-label={`Reject ${label.toLowerCase()} statement`}
                       aria-pressed={review.decision === 'rejected'}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 px-3 py-1.5 text-xs font-medium hover:border-danger/40 hover:text-danger transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
+                      className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss ${
+                        review.decision === 'rejected'
+                          ? 'border-danger/60 bg-danger/10 text-danger font-semibold'
+                          : 'border-white/15 text-paper hover:border-danger/40 hover:text-danger'
+                      }`}
                     >
                       <X className="w-3.5 h-3.5" aria-hidden="true" />
                       Reject
