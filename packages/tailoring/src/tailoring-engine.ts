@@ -271,10 +271,11 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
+    // Track unsupported claims (O(1) Set lookup instead of O(N) Array.prototype.find)
+    const usedClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     const allClaims = claims;
     for (const claim of allClaims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -357,9 +358,10 @@ export class TailoringEngine {
       preserved: [],
     });
 
-    // Track unsupported claims
+    // Track unsupported claims (O(1) Set lookup instead of O(N) Array.prototype.find)
+    const usedClaimIdsCoverLetter = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedClaimIdsCoverLetter.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -420,9 +422,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
+    // Track unsupported claims (O(1) Set lookup instead of O(N) Array.prototype.find)
+    const usedClaimIdsAnswer = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedClaimIdsAnswer.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -482,9 +485,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
+    // Track unsupported claims (O(1) Set lookup instead of O(N) Array.prototype.find)
+    const usedClaimIdsSummary = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedClaimIdsSummary.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -540,9 +544,10 @@ export class TailoringEngine {
       return (priorityOrder[a.priority ?? 'low'] ?? 2) - (priorityOrder[b.priority ?? 'low'] ?? 2);
     });
 
-    // Track unsupported claims
+    // Track unsupported claims (O(1) Set lookup instead of O(N) Array.prototype.find)
+    const usedClaimIdsSkills = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedClaimIdsSkills.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -982,6 +987,8 @@ export class TailoringEngine {
    */
   private validateEvidenceConstraints(result: TailoringResult, claims: CareerClaim[]): void {
     const violations: ConstraintViolation[] = [];
+    // Optimization: Create a Map for O(1) claim lookups instead of O(N) Array.prototype.find
+    const claimsMap = new Map<string, CareerClaim>(claims.map((c) => [c.id, c]));
 
     // Check for fabricated company names
     const experienceSections = result.sections?.filter((s) => s.type === 'experience') || [];
@@ -991,7 +998,7 @@ export class TailoringEngine {
         continue;
       }
 
-      const claim = claims.find((c) => c.id === section.evidenceClaimIds[0]);
+      const claim = claimsMap.get(section.evidenceClaimIds[0]);
       if (claim?.content?.company) {
         if (!section.content.includes(claim.content.company)) {
           violations.push({
@@ -1010,7 +1017,7 @@ export class TailoringEngine {
     // Check for skill level upgrades
     const skills = result.skills || [];
     for (const skill of skills) {
-      const claim = claims.find((c) => c.id === skill.evidenceClaimId);
+      const claim = claimsMap.get(skill.evidenceClaimId);
       if (claim?.content?.level) {
         if (skill.level !== claim.content.level) {
           violations.push({
