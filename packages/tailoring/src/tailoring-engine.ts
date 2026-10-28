@@ -196,9 +196,19 @@ export class TailoringEngine {
     const unsupportedClaims: string[] = [];
     const warnings: string[] = [];
 
+    // Group claims by type in a single O(N) pass to avoid multiple array iterations
+    const claimsByType = new Map<string, CareerClaim[]>();
+    for (const claim of claims) {
+      const existing = claimsByType.get(claim.type);
+      if (existing) {
+        existing.push(claim);
+      } else {
+        claimsByType.set(claim.type, [claim]);
+      }
+    }
+
     // Process experience claims
-    const experienceClaims = claims.filter((c) => c.type === 'experience');
-    for (const claim of experienceClaims) {
+    for (const claim of claimsByType.get('experience') || []) {
       const section = this.generateExperienceSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -212,8 +222,7 @@ export class TailoringEngine {
     }
 
     // Process education claims
-    const educationClaims = claims.filter((c) => c.type === 'education');
-    for (const claim of educationClaims) {
+    for (const claim of claimsByType.get('education') || []) {
       const section = this.generateEducationSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -227,8 +236,7 @@ export class TailoringEngine {
     }
 
     // Process skill claims
-    const skillClaims = claims.filter((c) => c.type === 'skill');
-    for (const claim of skillClaims) {
+    for (const claim of claimsByType.get('skill') || []) {
       const section = this.generateSkillSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -242,8 +250,7 @@ export class TailoringEngine {
     }
 
     // Process certification claims
-    const certificationClaims = claims.filter((c) => c.type === 'certification');
-    for (const claim of certificationClaims) {
+    for (const claim of claimsByType.get('certification') || []) {
       const section = this.generateCertificationSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -257,8 +264,7 @@ export class TailoringEngine {
     }
 
     // Process project claims
-    const projectClaims = claims.filter((c) => c.type === 'project');
-    for (const claim of projectClaims) {
+    for (const claim of claimsByType.get('project') || []) {
       const section = this.generateProjectSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -271,10 +277,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
-    const allClaims = claims;
-    for (const claim of allClaims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+    // Track unsupported claims using O(1) Set lookups instead of nested linear searches
+    const tracedClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
+    for (const claim of claims) {
+      if (!tracedClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -357,9 +363,10 @@ export class TailoringEngine {
       preserved: [],
     });
 
-    // Track unsupported claims
+    // Track unsupported claims using O(1) Set lookups instead of nested linear searches
+    const tracedClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!tracedClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -406,9 +413,10 @@ export class TailoringEngine {
         preserved: answer.preserved,
       });
 
-      // Track evidence
+      // Track evidence - pre-index claims by ID for O(1) lookup
+      const claimsById = new Map(claims.map((c) => [c.id, c]));
       for (const claimId of answer.claimIds) {
-        const claim = claims.find((c) => c.id === claimId);
+        const claim = claimsById.get(claimId);
         if (claim) {
           evidenceTrace.push({
             claimId: claim.id,
@@ -420,9 +428,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
+    // Track unsupported claims using O(1) Set lookups instead of nested linear searches
+    const tracedClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!tracedClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -468,9 +477,10 @@ export class TailoringEngine {
         preserved: summary.preserved,
       });
 
-      // Track evidence
+      // Track evidence - pre-index claims by ID for O(1) lookup
+      const claimsById = new Map(claims.map((c) => [c.id, c]));
       for (const claimId of summary.claimIds) {
-        const claim = claims.find((c) => c.id === claimId);
+        const claim = claimsById.get(claimId);
         if (claim) {
           evidenceTrace.push({
             claimId: claim.id,
@@ -482,9 +492,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
+    // Track unsupported claims using O(1) Set lookups instead of nested linear searches
+    const tracedClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!tracedClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -540,9 +551,10 @@ export class TailoringEngine {
       return (priorityOrder[a.priority ?? 'low'] ?? 2) - (priorityOrder[b.priority ?? 'low'] ?? 2);
     });
 
-    // Track unsupported claims
+    // Track unsupported claims using O(1) Set lookups instead of nested linear searches
+    const tracedClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!tracedClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -983,6 +995,9 @@ export class TailoringEngine {
   private validateEvidenceConstraints(result: TailoringResult, claims: CareerClaim[]): void {
     const violations: ConstraintViolation[] = [];
 
+    // Pre-index claims by ID for O(1) lookups during constraint validation
+    const claimsById = new Map(claims.map((c) => [c.id, c]));
+
     // Check for fabricated company names
     const experienceSections = result.sections?.filter((s) => s.type === 'experience') || [];
     for (const section of experienceSections) {
@@ -991,7 +1006,7 @@ export class TailoringEngine {
         continue;
       }
 
-      const claim = claims.find((c) => c.id === section.evidenceClaimIds[0]);
+      const claim = claimsById.get(section.evidenceClaimIds[0]);
       if (claim?.content?.company) {
         if (!section.content.includes(claim.content.company)) {
           violations.push({
@@ -1010,7 +1025,7 @@ export class TailoringEngine {
     // Check for skill level upgrades
     const skills = result.skills || [];
     for (const skill of skills) {
-      const claim = claims.find((c) => c.id === skill.evidenceClaimId);
+      const claim = claimsById.get(skill.evidenceClaimId);
       if (claim?.content?.level) {
         if (skill.level !== claim.content.level) {
           violations.push({
