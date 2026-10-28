@@ -53,6 +53,23 @@ describe('Tenant Isolation Middleware', () => {
       expect(next).not.toHaveBeenCalled();
     });
 
+    it('should safely handle undefined req.body and req.params', () => {
+      req.body = undefined;
+      req.params = undefined as any;
+      requireTenant(req as Request, res as Response, next);
+
+      expect(next).toHaveBeenCalled();
+      expect(res.status).not.toHaveBeenCalled();
+    });
+
+    it('should correctly handle header values supplied as an array', () => {
+      req.headers = { 'x-tenant-id': ['tenant-1', 'tenant-2'] as any };
+      requireTenant(req as Request, res as Response, next);
+
+      expect(next).toHaveBeenCalled();
+      expect(res.status).not.toHaveBeenCalled();
+    });
+
     it('should allow super_admin to access any tenant', () => {
       req.user = {
         id: 'admin-1',
