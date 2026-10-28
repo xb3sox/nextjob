@@ -34,6 +34,12 @@ export class EvidenceStorageService {
 
   constructor(config: Partial<StorageConfig> = {}) {
     this.config = { ...DEFAULT_STORAGE_CONFIG, ...config };
+    if (
+      !Number.isSafeInteger(this.config.signedUrlExpiration) ||
+      this.config.signedUrlExpiration <= 0
+    ) {
+      throw new Error('Signed URL expiration must be a positive integer');
+    }
     // A hardcoded fallback would make every signature forgeable. Without an
     // explicit secret, generate a per-process key: signed URLs then stop
     // working across restarts/instances, which is the safe failure mode.
@@ -59,6 +65,10 @@ export class EvidenceStorageService {
       accessControl,
     } = request;
 
+    if (this.config.provider !== 'memory') {
+      throw new Error(`Storage provider not implemented: ${this.config.provider}`);
+    }
+
     // Validate file size
     if (file.length > this.config.maxFileSize) {
       throw new FileSizeExceededError(file.length, this.config.maxFileSize);
@@ -77,11 +87,6 @@ export class EvidenceStorageService {
 
     const now = new Date().toISOString();
     const fileId = uuidv4();
-
-    // Store file content (for memory provider)
-    if (this.config.provider === 'memory') {
-      this.fileContentStore.set(fileId, file);
-    }
 
     // Create evidence file record
     const evidenceFile: EvidenceFile = {
@@ -112,6 +117,7 @@ export class EvidenceStorageService {
     // Validate and store
     const validatedFile = EvidenceFileSchema.parse(evidenceFile);
     this.filesStore.set(fileId, validatedFile);
+    this.fileContentStore.set(fileId, Buffer.from(file));
 
     // Generate signed URL
     const signedUrl = await this.generateSignedUrl(fileId, userId, tenantId);
@@ -125,7 +131,7 @@ export class EvidenceStorageService {
     validatedFile.signedUrlExpiresAt = signedUrl.expiresAt;
 
     return {
-      file: validatedFile,
+      file: structuredClone(validatedFile),
       downloadUrl,
       signedUrl: signedUrl.signedUrl,
       signedUrlExpiresAt: signedUrl.expiresAt,
@@ -145,7 +151,7 @@ export class EvidenceStorageService {
     // Check access
     this.checkAccess(file, userId, tenantId, 'read');
 
-    return file;
+    return structuredClone(file);
   }
 
   /**
@@ -159,7 +165,7 @@ export class EvidenceStorageService {
       if (!content) {
         throw new EvidenceNotFoundError(fileId);
       }
-      return content;
+      return Buffer.from(content);
     }
 
     // For S3 or local, would fetch from storage
@@ -178,7 +184,10 @@ export class EvidenceStorageService {
   ): Promise<GetSignedUrlResponse> {
     const _file = await this.getEvidenceFile(fileId, userId, tenantId);
 
-    const expirationSeconds = expiresIn || this.config.signedUrlExpiration;
+    const expirationSeconds = expiresIn ?? this.config.signedUrlExpiration;
+    if (!Number.isSafeInteger(expirationSeconds) || expirationSeconds <= 0) {
+      throw new Error('Signed URL expiration must be a positive integer');
+    }
     const expiresAt = new Date(Date.now() + expirationSeconds * 1000).toISOString();
 
     // Generate signed URL (simplified implementation)
@@ -195,8 +204,12 @@ export class EvidenceStorageService {
    * Validate signed URL
    */
   async validateSignedUrl(fileId: string, signature: string, expiresAt: string): Promise<boolean> {
+    const expiration = Date.parse(expiresAt);
+    if (!Number.isFinite(expiration)) return false;
+    if (!this.filesStore.has(fileId) || this.filesStore.get(fileId)?.deleted) return false;
+
     // Check expiration
-    if (new Date(expiresAt) < new Date()) {
+    if (expiration <= Date.now()) {
       throw new SignedUrlExpiredError(fileId);
     }
 
@@ -245,7 +258,7 @@ export class EvidenceStorageService {
     const paginatedFiles = files.slice(startIndex, endIndex);
 
     return {
-      files: paginatedFiles,
+      files: structuredClone(paginatedFiles),
       total,
       page,
       pageSize,
@@ -278,7 +291,7 @@ export class EvidenceStorageService {
     const validatedFile = EvidenceFileSchema.parse(updatedFile);
     this.filesStore.set(fileId, validatedFile);
 
-    return validatedFile;
+    return structuredClone(validatedFile);
   }
 
   /**
@@ -344,7 +357,7 @@ export class EvidenceStorageService {
     const validatedFile = EvidenceFileSchema.parse(updatedFile);
     this.filesStore.set(fileId, validatedFile);
 
-    return validatedFile;
+    return structuredClone(validatedFile);
   }
 
   /**

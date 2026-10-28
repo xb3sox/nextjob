@@ -13,6 +13,8 @@ concurrency:
 
 jobs:
   deploy:
+    # Manual production deployments must use main, not an arbitrary branch.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # In a public repo on GitHub Free, environment protection rules (Required Reviewers)

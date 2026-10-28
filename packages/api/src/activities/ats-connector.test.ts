@@ -66,84 +66,31 @@ describe('ATS Connector Activities', () => {
     });
   });
 
-  describe('executeATSConnector', () => {
-    it('should execute connector successfully', async () => {
-      const params = {
-        connectorType: 'greenhouse',
-        applicationData: {
-          resume: 'resume-content',
-          coverLetter: 'cover-letter-content',
-          answers: { question1: 'answer1' },
-          personalInfo: {
-            name: 'John Doe',
-            email: 'john@example.com',
-          },
-        },
-        jobId: 'job-123',
-        userId: 'user-456',
-        tenantId: 'tenant-789',
-      };
-
-      const result = await executeATSConnector(params);
-
-      expect(result.success).toBe(true);
-      expect(result.submissionId).toBeDefined();
-      expect(result.receiptId).toBeDefined();
-      expect(db.insert).toHaveBeenCalled();
+  it('does not report a simulated submission or write a receipt', async () => {
+    const result = await executeATSConnector({
+      connectorType: 'greenhouse',
+      applicationData: {
+        resume: 'resume',
+        answers: {},
+        personalInfo: { name: 'Jane', email: 'jane@example.com' },
+      },
+      jobId: 'job',
+      userId: 'user',
+      tenantId: 'tenant',
     });
-
-    it('should handle connector execution errors', async () => {
-      vi.mocked(db.insert).mockImplementationOnce(() => {
-        throw new Error('Insert failed');
-      });
-
-      const params = {
-        connectorType: 'greenhouse',
-        applicationData: {
-          resume: 'resume-content',
-          answers: {},
-          personalInfo: {
-            name: 'John Doe',
-            email: 'john@example.com',
-          },
-        },
-        jobId: 'job-123',
-        userId: 'user-456',
-        tenantId: 'tenant-789',
-      };
-
-      const result = await executeATSConnector(params);
-
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Insert failed');
-    });
+    expect(result).toEqual({ success: false, error: 'ATS connector is not implemented' });
+    expect(db.insert).not.toHaveBeenCalled();
   });
 
-  describe('verifySubmission', () => {
-    it('should verify submission successfully', async () => {
-      const result = await verifySubmission({
-        submissionId: 'submission-123',
-        connectorType: 'greenhouse',
-      });
-
-      expect(result.verified).toBe(true);
-      expect(result.confirmationData).toBeDefined();
-      expect(result.confirmationData.submissionId).toBe('submission-123');
-      expect(db.update).toHaveBeenCalled();
+  it('does not fabricate a verification', async () => {
+    const result = await verifySubmission({
+      submissionId: 'submission',
+      connectorType: 'greenhouse',
     });
-
-    it('should handle verification errors', async () => {
-      vi.mocked(db.update).mockImplementationOnce(() => {
-        throw new Error('Update failed');
-      });
-
-      const result = await verifySubmission({
-        submissionId: 'submission-123',
-        connectorType: 'greenhouse',
-      });
-
-      expect(result.verified).toBe(false);
-      expect(result.error).toBe('Update failed');
+    expect(result).toEqual({
+      verified: false,
+      error: 'ATS submission verification is not implemented',
     });
+    expect(db.update).not.toHaveBeenCalled();
   });
 });

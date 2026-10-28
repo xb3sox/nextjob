@@ -5,7 +5,6 @@ import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
-import WaitlistForm from './components/WaitlistForm';
 import { useI18n } from './i18n';
 
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
@@ -124,12 +123,6 @@ function LandingPage() {
                 Start free — create your account
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" aria-hidden="true" />
               </Link>
-              <a
-                href="#waitlist"
-                className="inline-flex items-center justify-center px-6 py-3.5 border border-white/15 hover:border-white/30 text-paper font-medium rounded-lg transition-colors"
-              >
-                Join the waitlist instead
-              </a>
             </div>
             <p className="mb-14 text-xs text-fog/70">
               Free while in beta · No credit card · Your data stays yours
@@ -456,14 +449,6 @@ function LandingPage() {
               >
                 Already have an account? Sign in
               </Link>
-            </div>
-
-            {/* Waitlist kept for pre-launch visitors */}
-            <div id="waitlist" className="mt-16 scroll-mt-24 border-t border-white/5 pt-10">
-              <p className="text-sm text-fog mb-4">
-                Prefer early access without an account yet? Join the beta waitlist:
-              </p>
-              <WaitlistForm />
             </div>
           </div>
         </Reveal>

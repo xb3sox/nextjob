@@ -32,8 +32,8 @@ describe('safeReturnPath', () => {
   });
 
   it('rejects in-page anchors captured by the router hash', () => {
-    // Landing CTAs like href="#waitlist" become location.hash on navigation.
-    expect(safeReturnPath({ pathname: '/signup', hash: '#waitlist' })).toBe('/dashboard');
+    // In-page anchors become location.hash on navigation.
+    expect(safeReturnPath({ pathname: '/signup', hash: '#section' })).toBe('/dashboard');
     expect(isSafeInternalPath('/#pricing')).toBe(false);
     expect(isSafeInternalPath('/jobs#top')).toBe(false);
   });

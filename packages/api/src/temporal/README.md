@@ -2,13 +2,15 @@
 
 This module provides durable workflow execution for NextJob's ATS connector system using Temporal.
 
+> **Not production-ready:** ATS submission and verification are unimplemented and fail closed. The duplicate check only looks at application status; the supplied idempotency key is not enforced. Do not enable submissions until real connectors, durable idempotency and integration tests exist.
+
 ## Overview
 
 Temporal is used to orchestrate the complex, multi-step process of submitting job applications to various ATS (Applicant Tracking Systems). It provides:
 
 - **Durable execution** - Workflows survive server restarts
 - **Automatic retries** - Failed activities are retried with exponential backoff
-- **Idempotency** - Prevents duplicate submissions
+- **Idempotency** - Planned; not yet enforced
 - **Visibility** - Full audit trail of all operations
 - **Timeouts** - Configurable timeouts for each step
 
@@ -87,7 +89,7 @@ Defines the workflow logic for executing ATS connectors.
 
 Executes the complete application submission process:
 
-1. **Check Duplicate** - Ensures idempotency
+1. **Check Duplicate** - Checks application status only
 2. **Execute Connector** - Submits to ATS
 3. **Verify Submission** - Confirms successful submission
 

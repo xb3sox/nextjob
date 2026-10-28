@@ -285,31 +285,6 @@ function toSafeUser(u: typeof users.$inferSelect): User {
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const ACCESS_TOKEN_TTL_S = 3600; // 1 hour
 
-/**
- * Registry mapping raw access tokens to their issue time, so the advertised
- * `expiresIn` (ACCESS_TOKEN_TTL_S) is actually enforced server-side. Entries
- * are pruned opportunistically and on session teardown.
- * NOTE: in-memory only — a multi-instance deployment should move this to Redis
- * or switch to signed short-lived JWTs bound to the session id.
- */
-const accessTokenIssuedAt = new Map<string, number>();
-
-function rememberAccessToken(token: string): void {
-  accessTokenIssuedAt.set(token, Date.now());
-}
-
-function forgetAccessToken(token: string): void {
-  accessTokenIssuedAt.delete(token);
-}
-
-/** Opportunistic prune so the map cannot grow unbounded under load. */
-function pruneAccessTokens(): void {
-  const cutoff = Date.now() - SESSION_TTL_MS;
-  for (const [token, issued] of accessTokenIssuedAt) {
-    if (issued < cutoff) accessTokenIssuedAt.delete(token);
-  }
-}
-
 export async function createSession(userId: string, tenantId: string): Promise<Session> {
   const sessionToken = generateSessionToken();
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
@@ -332,15 +307,6 @@ export async function createSession(userId: string, tenantId: string): Promise<S
 export async function validateSession(rawToken: string): Promise<Session | null> {
   if (!rawToken || typeof rawToken !== 'string') return null;
 
-  // Enforce the advertised access-token TTL (see generateAuthTokens). Tokens
-  // issued more than ACCESS_TOKEN_TTL_S ago are rejected even if the underlying
-  // session is still alive — clients must use the refresh token to continue.
-  const issuedAt = accessTokenIssuedAt.get(rawToken);
-  if (issuedAt !== undefined && Date.now() - issuedAt > ACCESS_TOKEN_TTL_S * 1000) {
-    forgetAccessToken(rawToken);
-    return null;
-  }
-
   const session = await db.query.sessions.findFirst({
     where: eq(sessions.sessionToken, hashSessionToken(rawToken)),
   });
@@ -355,15 +321,10 @@ export async function validateSession(rawToken: string): Promise<Session | null>
     return null;
   }
 
-  pruneAccessTokens();
-
-  // Sliding expiration: renew when more than half the TTL has elapsed.
-  // This keeps active sessions alive without writing on every request.
-  const remainingMs = session.expires.getTime() - Date.now();
-  if (remainingMs < SESSION_TTL_MS / 2) {
-    const newExpiry = new Date(Date.now() + SESSION_TTL_MS);
-    await db.update(sessions).set({ expires: newExpiry }).where(eq(sessions.id, session.id));
-    session.expires = newExpiry;
+  // The access token lifetime is anchored to the persisted session creation
+  // time, so expiration cannot be bypassed by retries or another instance.
+  if (Date.now() - session.createdAt.getTime() >= ACCESS_TOKEN_TTL_S * 1000) {
+    return null;
   }
 
   // Reconstruct the raw token for downstream consumers (e.g. middleware).
@@ -371,7 +332,6 @@ export async function validateSession(rawToken: string): Promise<Session | null>
 }
 
 export async function deleteSession(rawToken: string): Promise<void> {
-  forgetAccessToken(rawToken);
   await deleteSessionByTokenHash(hashSessionToken(rawToken));
 }
 
@@ -400,9 +360,6 @@ async function generateAuthTokens(sessionToken: string, _tenantId: string): Prom
     .update(sessions)
     .set({ refreshTokenHash: hashRefreshToken(refreshToken) })
     .where(eq(sessions.sessionToken, hashSessionToken(sessionToken)));
-
-  // Track issue time so validateSession can enforce the advertised TTL.
-  rememberAccessToken(sessionToken);
 
   return {
     accessToken: sessionToken,

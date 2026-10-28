@@ -160,7 +160,7 @@ controls — are listed in [`AGENTS.md` §Completion Gates](AGENTS.md#completion
 ```
 ├── src/                    Vite + React 18 SPA (the shipped application)
 │   ├── pages/              landing, auth/*, dashboard, tailor, legal
-│   ├── components/         JobCard, WaitlistForm, ui/ (shadcn)
+│   ├── components/         JobCard, application-card, ui/ (shadcn)
 │   ├── contexts/           AuthContext (Supabase session)
 │   ├── i18n/               locale context, en/es/ar/he dictionaries, RTL support
 │   └── lib/                supabase client, cn(), redirect helpers

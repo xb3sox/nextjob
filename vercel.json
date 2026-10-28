@@ -51,11 +51,7 @@
   ],
   "rewrites": [
     {
-      "source": "/privacy",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/terms",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],

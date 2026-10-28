@@ -18,6 +18,73 @@ describe('EvidenceStorageService', () => {
     });
   });
 
+  it('rejects unimplemented storage providers before accepting files', async () => {
+    const unavailable = new EvidenceStorageService({ provider: 's3' });
+    await expect(
+      unavailable.uploadEvidence({
+        userId: 'owner',
+        tenantId: 'tenant',
+        file: Buffer.from('data'),
+        fileName: 'a.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume',
+      })
+    ).rejects.toThrow('Storage provider not implemented');
+  });
+
+  it('does not expose mutable metadata or file buffers', async () => {
+    const input = Buffer.from('data');
+    const uploaded = await service.uploadEvidence({
+      userId: 'owner',
+      tenantId: 'tenant',
+      file: input,
+      fileName: 'a.pdf',
+      mimeType: 'application/pdf',
+      category: 'resume',
+      accessControl: { read: ['reader'] },
+    });
+    input.fill(0);
+    uploaded.file.isPublic = true;
+    uploaded.file.accessControl?.read?.push('intruder');
+    const listed = await service.listEvidence({ userId: 'owner', tenantId: 'tenant' });
+    listed.files[0].userId = 'intruder';
+    const read = await service.getEvidenceFile(uploaded.file.id, 'reader', 'tenant');
+    read.accessControl?.read?.push('intruder');
+    const bytes = await service.getFileContent(uploaded.file.id, 'owner', 'tenant');
+    expect(bytes.toString()).toBe('data');
+    bytes.fill(0);
+    expect((await service.getFileContent(uploaded.file.id, 'owner', 'tenant')).toString()).toBe(
+      'data'
+    );
+    await expect(service.getEvidenceFile(uploaded.file.id, 'intruder', 'tenant')).rejects.toThrow(
+      FileAccessDeniedError
+    );
+  });
+
+  it('rejects invalid expirations and revokes URLs on deletion', async () => {
+    const uploaded = await service.uploadEvidence({
+      userId: 'owner',
+      tenantId: 'tenant',
+      file: Buffer.from('data'),
+      fileName: 'a.pdf',
+      mimeType: 'application/pdf',
+      category: 'resume',
+    });
+    await expect(
+      service.generateSignedUrl(uploaded.file.id, 'owner', 'tenant', 0)
+    ).rejects.toThrow();
+    expect(await service.validateSignedUrl(uploaded.file.id, 'signature', 'invalid')).toBe(false);
+    const url = new URL(uploaded.signedUrl);
+    await service.deleteEvidence({ fileId: uploaded.file.id, userId: 'owner', tenantId: 'tenant' });
+    expect(
+      await service.validateSignedUrl(
+        uploaded.file.id,
+        url.searchParams.get('signature') ?? '',
+        url.searchParams.get('expires') ?? ''
+      )
+    ).toBe(false);
+  });
+
   describe('uploadEvidence', () => {
     it('should upload evidence file successfully', async () => {
       const request = {

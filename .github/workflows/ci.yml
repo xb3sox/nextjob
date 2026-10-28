@@ -74,8 +74,7 @@ jobs:
         run: bun run lint
 
       # Critical advisories block. High advisories are reported, not blocked:
-      # six dev-only highs are outstanding (vite, happy-dom, undici, source-map-js,
-      # body-parser, zod) and are tracked for a dependency pass.
+      # See docs/AUDIT.md for the current high advisory and remediation work.
       - name: Audit (critical)
         run: bun audit --audit-level=critical
 

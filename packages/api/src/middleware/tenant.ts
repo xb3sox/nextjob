@@ -14,33 +14,13 @@ export function requireTenant(req: Request, res: Response, next: NextFunction): 
     return;
   }
 
-  // Extract tenant ID from request (header, param, or body)
-  const requestedTenantId = req.headers['x-tenant-id'] || req.params.tenantId || req.body.tenantId;
-
-  // If no tenant ID specified, use user's tenant
-  if (!requestedTenantId) {
-    next();
-    return;
-  }
-
-  // Verify user has access to requested tenant
-  if (requestedTenantId !== req.user.tenantId) {
-    // Check if user is super admin (can access any tenant)
-    if (req.user.role === 'super_admin') {
-      next();
-      return;
-    }
-
-    // Check if user is organization admin trying to access their organization
-    if (req.user.role === 'organization_admin') {
-      // In production, verify user belongs to this organization
-      // For now, we'll allow organization admins to access their tenant
-      if (requestedTenantId === req.user.tenantId) {
-        next();
-        return;
-      }
-    }
-
+  // Check every supplied source; a matching header must not mask a different
+  // tenant in a route parameter or request body.
+  const requestedTenantIds = [req.headers['x-tenant-id'], req.params.tenantId, req.body?.tenantId];
+  if (
+    req.user.role !== 'super_admin' &&
+    requestedTenantIds.some((id) => id != null && id !== req.user?.tenantId)
+  ) {
     res.status(403).json({ error: 'Access denied to this tenant' });
     return;
   }
@@ -82,7 +62,7 @@ export function validateResourceOwnership<T extends { tenantId: string }>(
 
 /**
  * Middleware to enforce tenant isolation on all routes.
- * Automatically filters all database queries by tenant ID.
+ * Route handlers must apply the attached filter to their database queries.
  */
 export function enforceTenantIsolation(req: Request, res: Response, next: NextFunction): void {
   if (!req.user) {

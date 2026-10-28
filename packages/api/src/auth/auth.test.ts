@@ -383,6 +383,16 @@ describe('Authentication', () => {
       expect(store.sessions).toHaveLength(0);
     });
 
+    it('rejects expired access tokens on every attempt while allowing refresh', async () => {
+      await registerUser({ email: 'ttl@example.com', password: 'password123', tenantId: 't' });
+      const login = await loginUser({ email: 'ttl@example.com', password: 'password123' });
+      setProp(store.sessions[0], 'createdAt', new Date(Date.now() - 3600_000));
+      expect(await validateSession(login.tokens.accessToken)).toBeNull();
+      expect(await validateSession(login.tokens.accessToken)).toBeNull();
+      const refreshed = await refreshSession({ refreshToken: login.tokens.refreshToken });
+      expect(await validateSession(refreshed.tokens.accessToken)).not.toBeNull();
+    });
+
     it('deletes sessions on logout', async () => {
       const s = await createSession('user-1', 'tenant-1');
       await deleteSession(s.sessionToken);
