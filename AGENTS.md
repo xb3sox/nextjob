@@ -46,7 +46,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 40/118 tasks complete (33.9%)
+**Progress:** 39/118 tasks complete (33.1%)
 
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
 > `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result

@@ -1,6 +1,6 @@
 # NextJob — Implementation Tasks
 
-**Status:** In Progress (40/118 tasks complete - 33.9%)
+**Status:** In Progress (39/118 tasks complete - 33.1%)
 **Last Updated:** 2026-10-25
 **Latest Update:** T-44 verified complete — `packages/applications/src/state-machine.ts` (shipped with T-25 in PR #128) already implements FR-ASM-01..04; the issue (#49) was closed instead of rebuilt. T-26 complete — submission receipts in `packages/applications/src/receipts.ts` (per-field and per-answer sha256, frozen content-hashed receipt, `submitApplication` seam wired to the T-25 state machine). T-03g complete — custom shadcn registry (`registry/`, `registry.json`, `public/r/`) with `application-card`, `job-card`, `waitlist-form`; registry build is a manual published-artifact step, not part of `bun run build`. T-47 complete — localization infrastructure (`packages/shared/src/i18n/`, `src/i18n/`). T-63 partially complete — static `public/og-image.png` wired into `index.html`; per-route dynamic OG deferred. T-64 complete — static `public/sitemap.xml` and `public/robots.txt` ship in `dist/`.
 

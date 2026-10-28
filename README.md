@@ -7,7 +7,7 @@
 An AI career agent that turns verified career evidence into roles that actually fit — and
 applications you can prove were submitted. No fabricated experience.
 
-[![CI](https://img.shields.io/badge/CI-GitHub_Actions-black?logo=githubactions&logoColor=white)](.github/workflows/ci.yml)
+[![CI](https://github.com/xb3sox/nextjob/actions/workflows/ci.yml/badge.svg)](https://github.com/xb3sox/nextjob/actions/workflows/ci.yml)
 [![Runtime](https://img.shields.io/badge/runtime-Bun_1.3.11-black)](https://bun.sh)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)](tsconfig.json)
 [![A11y](https://img.shields.io/badge/a11y_target-WCAG_2.2_AA-blue)](docs/PRD.md#accessibility--localization)
@@ -103,6 +103,9 @@ after filling `.env` the missing-configuration banner on `/login` disappears.
   project. Only `VITE_*` variables reach the browser bundle; never put a service-role key there.
 - **Lint rewrites unrelated files** — `bunx biome` resolves a newer version than `bun.lock`. Always
   use `bun run lint`.
+- **`db:migrate` reports a missing connection URL** — `DATABASE_URL` is not set. Pass it inline:
+  `DATABASE_URL=postgres://user:pass@host:5432/db bun run db:migrate`. Use a direct connection
+  rather than a transaction pooler, so migrations are not run through it.
 
 ### Extension
 
@@ -128,7 +131,7 @@ Load the unpacked build WXT writes under `extension/.output/` via `chrome://exte
 | `bun run test:eval` | AI evaluation suites in `evals/` |
 | `bun run test:coverage` | Coverage report (V8) |
 | `bun run db:generate` | Generate SQL migrations from the Drizzle schema |
-| `bun run db:migrate` | Apply pending migrations (needs `DATABASE_URL`) |
+| `DATABASE_URL=… bun run db:migrate` | Apply pending migrations |
 | `bun run registry:build` | Rebuild the shadcn registry into `public/r/` |
 | `bun run hooks:install` | Install the `pre-push` guard that blocks direct pushes to `main` |
 

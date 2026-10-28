@@ -8,11 +8,16 @@ name: deploy-vercel
 #   VERCEL_TOKEN        – account token with access to the project
 #   VERCEL_ORG_ID       – team/user id from `vercel project ls`
 #   VERCEL_PROJECT_ID   – project id from `vercel project ls`
-# Optional environment secret:
-#   VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY on the `production` environment.
 #
-# Until the secrets exist this workflow fails fast with an actionable message
-# instead of a confusing CLI error.
+# The Vercel CLI reads VERCEL_TOKEN from the environment; it is never passed on
+# the command line, where it would appear in the process table.
+#
+# Build-time `VITE_*` values are NOT passed here on purpose: `vercel pull`
+# fetches the project's production env, so the Vercel project stays the single
+# source of truth and cannot drift from the repository secrets.
+#
+# Until the three secrets exist this workflow fails fast with an actionable
+# message instead of a confusing CLI error.
 
 on:
   push:
@@ -33,14 +38,16 @@ jobs:
     environment:
       name: production
       url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      # Pinned major: `latest` would let an upstream release change what ships.
+      VERCEL_CLI_VERSION: '65'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check required secrets
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           missing=""
           [ -z "$VERCEL_TOKEN" ] && missing="$missing VERCEL_TOKEN"
@@ -64,8 +71,9 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
-      # The same gates CI runs, repeated here so a tag can never ship an
-      # unverified tree.
+      # A tag must never ship an unverified tree, so the CI gates run again.
+      # The production build itself is produced by `vercel build` below — running
+      # `bun run build` here as well would compile the SPA twice.
       - name: Typecheck
         run: bun run typecheck
 
@@ -77,35 +85,15 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: bunx vitest run --maxWorkers 2
 
-      - name: Build
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-        run: bun run build
-
       - name: Pull Vercel environment
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: bunx vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+        run: bunx "vercel@$VERCEL_CLI_VERSION" pull --yes --environment=production
 
       - name: Build with Vercel
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-        run: bunx vercel@latest build --prod --token="$VERCEL_TOKEN"
+        run: bunx "vercel@$VERCEL_CLI_VERSION" build --prod
 
       - name: Deploy prebuilt artifact
         id: deploy
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          url=$(bunx vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          url=$(bunx "vercel@$VERCEL_CLI_VERSION" deploy --prebuilt --prod)
           echo "url=$url" >> "$GITHUB_OUTPUT"
           echo "Deployed to $url"
