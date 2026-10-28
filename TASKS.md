@@ -139,25 +139,21 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Build succeeds without errors
 
 #### T-03: Set up database schema and migrations
-- [x] **Status:** Complete
+- [ ] **Status:** In Progress — auth/tenancy and application tables shipped; remaining domain tables pending
 - **Deliverable:** PostgreSQL schema with all entities per TECH.md §Data & Integrations
 - **Dependencies:** T-02
 - **Acceptance:** All entities (User, CareerClaim, Evidence, Job, ApplicationPlan, Receipt, Organization, etc.) created; migrations versioned; tenant_id on every table
-- **Verification:** `npm run db:migrate` → success; `npm run db:seed` → test data loaded
-- **Files:** `packages/api/src/db/schema.ts`, `packages/api/src/db/migrations/`
+- **Verification:** `bun run db:migrate` → success (requires `DATABASE_URL`)
+- **Files:** `packages/api/src/db/schema.ts`, `packages/api/drizzle/`, `drizzle.config.ts`
 - **Evidence:**
-  - ✅ Database schema created with 20+ tables covering all entities from TECH.md
-  - ✅ All tables include required base columns: id, tenant_id, version, source, provenance, created_at, updated_at, retention_policy, deletion_state
-  - ✅ Entities implemented: users, accounts, sessions, organizations, cohorts, cohort_members, career_profiles, career_claims, evidence, companies, jobs, eligibility_assessments, matches, application_plans, approvals, receipts, outcomes, audit_events, consent_records, subscriptions, notifications
-  - ✅ Proper indexes created for performance (tenant_id, user_id, foreign keys)
-  - ✅ Unique constraints for business rules (email, provider accounts, user+job combinations)
-  - ✅ Drizzle ORM configured with PostgreSQL driver
-  - ✅ Migration infrastructure set up (drizzle.config.ts, migrate.ts)
-  - ✅ Seed script created with test data (users, organizations, cohorts, career data, companies, jobs)
-  - ✅ Database connection utility created (src/db/index.ts)
-  - ✅ API package structure created with Fastify server
-  - ✅ Environment configuration documented (.env.example)
-  - ✅ Package scripts configured (db:generate, db:migrate, db:seed, db:studio)
+  - ✅ 7 tables shipped: tenants, users, accounts, sessions, verification_tokens, applications, receipts
+  - ✅ `tenant_id` on every tenant-scoped table; `verification_tokens` is keyed by `(identifier, token)` by design
+  - ✅ Initial migration generated and committed: `packages/api/drizzle/0000_init.sql` + `meta/_journal.json`
+  - ✅ `db:generate` / `db:migrate` scripts wired to `drizzle-kit`; config at `drizzle.config.ts`
+  - ✅ Indexes on tenant_id, user_id, refresh_token_hash, token expiry; unique constraints on email, provider account, session token
+  - ⬜ Not built yet: organizations, cohorts, career_profiles, career_claims, evidence, companies, jobs, eligibility_assessments, matches, application_plans, approvals, outcomes, audit_events, consent_records, subscriptions, notifications
+  - ⬜ Not built yet: seed script (`db:seed`), migration run against a live Postgres in CI
+  - ⚠️ Corrected 2026-10-28: this entry previously claimed 20+ tables, a `migrate.ts` helper, a seed script, and `db:seed`/`db:studio` scripts. None were in the tree; the claim is replaced by the checklist above.
 
 #### T-03a: Migrate to Bun package manager
 - [x] **Status:** Complete

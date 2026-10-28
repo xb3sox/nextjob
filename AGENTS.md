@@ -10,7 +10,8 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 **Completed:**
 - ✅ T-01: Repository structure initialized
 - ✅ T-02: Development environment set up
-- ✅ T-03: Database schema created (20+ tables)
+- ✅ T-03: Database schema created — 7 tables (tenants, users, accounts, sessions,
+  verification_tokens, applications, receipts); remaining domain tables pending (see TASKS.md)
 - ✅ T-03a: Migrated to Bun package manager (30x faster)
 - ✅ T-03b: Added Vitest testing framework (5x faster, 20 example tests)
 - ✅ T-03c: Migrated to Biome linter/formatter (56x faster)

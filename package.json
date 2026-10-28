@@ -25,7 +25,9 @@
     "format:check": "biome format .",
     "check": "biome check .",
     "check:fix": "biome check --apply .",
-    "hooks:install": "node scripts/install-hooks.mjs"
+    "hooks:install": "node scripts/install-hooks.mjs",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config drizzle.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.16",
