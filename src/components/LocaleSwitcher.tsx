@@ -12,7 +12,7 @@ export const LocaleSwitcher: React.FC<{ className?: string }> = ({ className = '
       <select
         value={locale}
         onChange={(e) => setLocale(e.target.value as SupportedLocale)}
-        className="bg-panel border border-white/10 rounded px-2 py-1 text-xs text-paper focus:outline-none focus:border-moss transition-colors cursor-pointer"
+        className="bg-panel border border-white/10 rounded px-2 py-1 text-xs text-paper focus:outline-none focus-visible:ring-2 focus-visible:ring-moss focus-visible:ring-offset-2 focus-visible:ring-offset-ink focus:border-moss transition-colors cursor-pointer"
         aria-label="Select language"
       >
         {Object.values(SUPPORTED_LOCALES).map((loc) => (
