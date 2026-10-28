@@ -152,6 +152,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ `db:generate` / `db:migrate` scripts wired to `drizzle-kit`; config at `drizzle.config.ts`
   - ✅ Indexes on tenant_id, user_id, refresh_token_hash, token expiry; unique constraints on email, provider account, session token
   - ⬜ Not built yet: organizations, cohorts, career_profiles, career_claims, evidence, companies, jobs, eligibility_assessments, matches, application_plans, approvals, outcomes, audit_events, consent_records, subscriptions, notifications
+  - ⬜ Follow-up from review: `applications` and `receipts` have no index on `tenant_id`,
+    `user_id`, or `application_id`; every tenant-scoped query will seq-scan as data grows
   - ⬜ Not built yet: seed script (`db:seed`), migration run against a live Postgres in CI
   - ⚠️ Corrected 2026-10-28: this entry previously claimed 20+ tables, a `migrate.ts` helper, a seed script, and `db:seed`/`db:studio` scripts. None were in the tree; the claim is replaced by the checklist above.
 

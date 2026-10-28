@@ -57,7 +57,7 @@ authentication only — the app stores no job, profile, or application data serv
 | Packages used by the SPA | `@nextjob/tailoring` (engine drives the review UI) and `@nextjob/shared` (i18n types), imported at runtime. |
 | Packages not yet wired | `packages/api` (Fastify + Temporal), `profile`, `ai-gateway`, `applications`. Strict-typechecked and unit-tested in CI, but the SPA does not import them. |
 | Database | Drizzle schema (`packages/api/src/db/schema.ts`) with 7 tables and a committed initial migration under `packages/api/drizzle/`. No seed data yet. |
-| Deploy | Vercel is the live target: `.github/workflows/deploy-vercel.yml` deploys on a `v*` tag after the full gate set. Cloudflare Workers stays a manual, opt-in path. |
+| Deploy | Vercel is the live target: `.github/workflows/deploy-vercel.yml` re-runs typecheck, lint, and tests, then deploys on a `v*` tag. Cloudflare Workers stays a manual, opt-in path. |
 
 `docs/TECH.md` describes the target architecture, including a future Next.js `apps/web`. That
 directory does not exist — [`AGENTS.md` §Structure](AGENTS.md#structure) maps task paths onto
@@ -65,7 +65,7 @@ today's tree.
 
 ## Quick start
 
-**Requires:** [Bun](https://bun.sh) 1.3.11 (pinned via `packageManager`). Optional: Node 22+ for
+**Requires:** [Bun](https://bun.sh) 1.3.11 (pinned via `packageManager`). Optional: Node (LTS) for
 `bun run hooks:install`, which shells out to `node`, and the Supabase CLI for local auth.
 
 ```bash
@@ -124,7 +124,7 @@ Load the unpacked build WXT writes under `extension/.output/` via `chrome://exte
 | `bun run build` | Production build: SPA (`dist/`) + extension |
 | `bun run preview` | Serve the production build locally |
 | `bun run typecheck` | `wxt prepare` + strict `tsc` for app and extension |
-| `bun run lint` / `lint:fix` | Biome lint + format check / safe autofix |
+| `bun run lint` / `lint:fix` | Biome lint + format check / autofix (`--write`) |
 | `bun run test` | Vitest in watch mode (projects: `node`, `dom`) |
 | `bunx vitest run` | Full suite once, as CI runs it |
 | `bunx vitest run src/components/JobCard.test.tsx` | Single test file |

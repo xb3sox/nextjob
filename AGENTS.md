@@ -13,7 +13,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-03: Database schema created — 7 tables (tenants, users, accounts, sessions,
   verification_tokens, applications, receipts); remaining domain tables pending (see TASKS.md)
 - ✅ T-03a: Migrated to Bun package manager (30x faster)
-- ✅ T-03b: Added Vitest testing framework (5x faster, 20 example tests)
+- ✅ T-03b: Added Vitest testing framework (5x faster)
 - ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
 - ⚠️ T-03d: Turborepo removed 2026-10-25 — the config was never wired to any script
 - ✅ T-03e: Integrated shadcn/ui component library (8 core components)

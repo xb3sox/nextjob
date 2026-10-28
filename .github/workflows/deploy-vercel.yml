@@ -2,22 +2,20 @@ name: deploy-vercel
 
 # Vercel owns the live site. Deploys happen only from a release tag (see
 # docs/OPERATING_MODEL.md: "Release — tag v0.x.y + generated notes; deploy only
-# from a tag"), or by hand from the Actions tab.
+# from a tag"), or by hand from the Actions tab on `main`.
 #
 # Required repository secrets:
 #   VERCEL_TOKEN        – account token with access to the project
 #   VERCEL_ORG_ID       – team/user id from `vercel project ls`
 #   VERCEL_PROJECT_ID   – project id from `vercel project ls`
 #
-# The Vercel CLI reads VERCEL_TOKEN from the environment; it is never passed on
-# the command line, where it would appear in the process table.
+# VERCEL_TOKEN is scoped to the three steps that call the CLI, never to the
+# job, so checkout/setup-bun/cache never receive it. The CLI reads it from the
+# environment, so it never appears on a command line or in the process table.
 #
 # Build-time `VITE_*` values are NOT passed here on purpose: `vercel pull`
 # fetches the project's production env, so the Vercel project stays the single
 # source of truth and cannot drift from the repository secrets.
-#
-# Until the three secrets exist this workflow fails fast with an actionable
-# message instead of a confusing CLI error.
 
 on:
   push:
@@ -33,6 +31,8 @@ concurrency:
 
 jobs:
   deploy:
+    # A manual dispatch from a feature branch must not reach production.
+    if: github.ref_type == 'tag' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment:
@@ -41,13 +41,14 @@ jobs:
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       # Pinned major: `latest` would let an upstream release change what ships.
       VERCEL_CLI_VERSION: '65'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check required secrets
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           missing=""
           [ -z "$VERCEL_TOKEN" ] && missing="$missing VERCEL_TOKEN"
@@ -71,9 +72,8 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
-      # A tag must never ship an unverified tree, so the CI gates run again.
-      # The production build itself is produced by `vercel build` below — running
-      # `bun run build` here as well would compile the SPA twice.
+      # A tag must never ship an unverified tree, so CI's gates run again here.
+      # The SPA is compiled once, by `vercel build` below, not twice.
       - name: Typecheck
         run: bun run typecheck
 
@@ -86,13 +86,19 @@ jobs:
         run: bunx vitest run --maxWorkers 2
 
       - name: Pull Vercel environment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: bunx "vercel@$VERCEL_CLI_VERSION" pull --yes --environment=production
 
       - name: Build with Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: bunx "vercel@$VERCEL_CLI_VERSION" build --prod
 
       - name: Deploy prebuilt artifact
         id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           url=$(bunx "vercel@$VERCEL_CLI_VERSION" deploy --prebuilt --prod)
           echo "url=$url" >> "$GITHUB_OUTPUT"
