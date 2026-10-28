@@ -71,6 +71,23 @@ describe('EvidenceStorageService', () => {
       await expect(service.uploadEvidence(request)).rejects.toThrow(InvalidFileTypeError);
     });
 
+    it('should sanitize filename to prevent path traversal in storage key', async () => {
+      const request = {
+        userId: 'user-123',
+        tenantId: 'tenant-456',
+        file: Buffer.from('test'),
+        fileName: '../../path/traversal/resume..pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const result = await service.uploadEvidence(request);
+
+      expect(result.file.storageKey).not.toContain('..');
+      expect(result.file.storageKey).not.toContain('path/traversal');
+      expect(result.file.storageKey).toMatch(/tenant-456\/user-123\/\d+-[a-f0-9]{8}-resume_pdf$/);
+    });
+
     it('should set access control if provided', async () => {
       const request = {
         userId: 'user-123',

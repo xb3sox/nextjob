@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import path from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
 import {
   DEFAULT_STORAGE_CONFIG,
@@ -410,7 +411,10 @@ export class EvidenceStorageService {
     hash: string
   ): string {
     const timestamp = Date.now();
-    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    // Strip directory path components to prevent path traversal attempts
+    const baseName = path.basename(fileName);
+    // Sanitize non-alphanumeric characters except dot/dash, and neutralize relative path traversal constructs like '..'
+    const sanitizedFileName = baseName.replace(/\.\./g, '_').replace(/[^a-zA-Z0-9.-]/g, '_');
     return `${tenantId}/${userId}/${timestamp}-${hash.substring(0, 8)}-${sanitizedFileName}`;
   }
 
