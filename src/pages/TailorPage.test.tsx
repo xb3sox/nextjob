@@ -53,10 +53,40 @@ describe('TailorPage', () => {
     fireEvent.click(edit[0]);
 
     const textarea = screen.getByLabelText('Edit proposed experience statement');
+    expect(textarea).toHaveFocus();
+
     fireEvent.change(textarea, { target: { value: 'Rewritten for this role.' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save edit' }));
 
     expect(screen.getByText('Rewritten for this role.')).toBeInTheDocument();
     expect(screen.getAllByText('edited').length).toBeGreaterThan(0);
+  });
+
+  it('saves edit via Cmd+Enter shortcut', async () => {
+    renderPage();
+
+    const edit = await screen.findAllByRole('button', { name: 'Edit experience statement' });
+    fireEvent.click(edit[0]);
+
+    const textarea = screen.getByLabelText('Edit proposed experience statement');
+    fireEvent.change(textarea, { target: { value: 'Saved via shortcut.' } });
+    fireEvent.keyDown(textarea, { key: 'Enter', metaKey: true });
+
+    expect(screen.getByText('Saved via shortcut.')).toBeInTheDocument();
+    expect(screen.getAllByText('edited').length).toBeGreaterThan(0);
+  });
+
+  it('cancels edit via Escape shortcut', async () => {
+    renderPage();
+
+    const edit = await screen.findAllByRole('button', { name: 'Edit experience statement' });
+    fireEvent.click(edit[0]);
+
+    const textarea = screen.getByLabelText('Edit proposed experience statement');
+    fireEvent.change(textarea, { target: { value: 'Will not save.' } });
+    fireEvent.keyDown(textarea, { key: 'Escape' });
+
+    expect(screen.queryByText('Will not save.')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Edit proposed experience statement')).not.toBeInTheDocument();
   });
 });
