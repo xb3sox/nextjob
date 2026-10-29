@@ -130,6 +130,11 @@ export function ApplicationCard({
             type="button"
             onClick={onApply}
             disabled={eligibilityStatus === 'ineligible'}
+            title={
+              eligibilityStatus === 'ineligible'
+                ? 'You do not meet the core eligibility criteria for this role.'
+                : undefined
+            }
             aria-label={
               eligibilityStatus === 'ineligible'
                 ? `Not eligible to apply for ${title} at ${company}`
