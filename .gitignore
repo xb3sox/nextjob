@@ -36,6 +36,8 @@ coverage/
 *.sqlite3
 *.db
 drizzle/meta/
+# ...except the committed migration journal for the app schema.
+!packages/api/drizzle/meta/
 data/local/
 
 # Logs

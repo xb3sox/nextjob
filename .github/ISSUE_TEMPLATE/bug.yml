@@ -1,7 +1,7 @@
 name: Bug
 description: Something is broken in a shipped surface.
 title: "bug: "
-labels: ["bug"]
+labels: ["type:bug"]
 body:
   - type: textarea
     id: what-happened
