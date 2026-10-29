@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
 import { useI18n } from './i18n';
+import { RouteMeta } from './lib/seo';
 
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
@@ -500,6 +501,7 @@ function LandingPage() {
 export default function App() {
   return (
     <BrowserRouter>
+      <RouteMeta />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
