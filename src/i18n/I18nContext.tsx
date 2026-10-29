@@ -18,7 +18,7 @@ import {
   type TranslationDictionary,
 } from '@nextjob/shared';
 import type React from 'react';
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { translations } from './translations.js';
 
 export interface I18nContextValue {
@@ -138,18 +138,34 @@ export const I18nProvider: React.FC<{
     [locale]
   );
 
-  const contextValue: I18nContextValue = {
-    locale,
-    dir,
-    isRTL,
-    setLocale,
-    t,
-    formatDate,
-    formatRelativeTime,
-    formatCurrency,
-    formatAddress,
-    formatPhoneNumber,
-  };
+  // Performance optimization: Memoize context value to preserve reference equality across renders,
+  // preventing unnecessary re-renders of all downstream components consuming useI18n().
+  const contextValue = useMemo<I18nContextValue>(
+    () => ({
+      locale,
+      dir,
+      isRTL,
+      setLocale,
+      t,
+      formatDate,
+      formatRelativeTime,
+      formatCurrency,
+      formatAddress,
+      formatPhoneNumber,
+    }),
+    [
+      locale,
+      dir,
+      isRTL,
+      setLocale,
+      t,
+      formatDate,
+      formatRelativeTime,
+      formatCurrency,
+      formatAddress,
+      formatPhoneNumber,
+    ]
+  );
 
   return <I18nContext.Provider value={contextValue}>{children}</I18nContext.Provider>;
 };
