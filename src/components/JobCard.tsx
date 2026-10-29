@@ -309,6 +309,11 @@ export function JobCard({
             type="button"
             onClick={onApply}
             disabled={eligibility === 'ineligible'}
+            title={
+              eligibility === 'ineligible'
+                ? 'You do not meet the core eligibility criteria for this role.'
+                : undefined
+            }
             aria-label={
               eligibility === 'ineligible'
                 ? `Not eligible to apply for ${title} at ${company}`
