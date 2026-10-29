@@ -184,6 +184,20 @@ export class TailoringEngine {
   // ============================================================================
 
   /**
+   * Group claims by type in a single pass O(N) to avoid multiple array iterations.
+   */
+  private groupClaimsByType(claims: CareerClaim[]): Record<string, CareerClaim[]> {
+    const grouped: Record<string, CareerClaim[]> = {};
+    for (const claim of claims) {
+      if (!grouped[claim.type]) {
+        grouped[claim.type] = [];
+      }
+      grouped[claim.type].push(claim);
+    }
+    return grouped;
+  }
+
+  /**
    * Tailor resume
    */
   private async tailorResume(
@@ -196,9 +210,11 @@ export class TailoringEngine {
     const unsupportedClaims: string[] = [];
     const warnings: string[] = [];
 
+    // Group claims by type in a single pass O(N) instead of filtering claims 5 times
+    const claimsByType = this.groupClaimsByType(claims);
+
     // Process experience claims
-    const experienceClaims = claims.filter((c) => c.type === 'experience');
-    for (const claim of experienceClaims) {
+    for (const claim of claimsByType.experience ?? []) {
       const section = this.generateExperienceSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -212,8 +228,7 @@ export class TailoringEngine {
     }
 
     // Process education claims
-    const educationClaims = claims.filter((c) => c.type === 'education');
-    for (const claim of educationClaims) {
+    for (const claim of claimsByType.education ?? []) {
       const section = this.generateEducationSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -227,8 +242,7 @@ export class TailoringEngine {
     }
 
     // Process skill claims
-    const skillClaims = claims.filter((c) => c.type === 'skill');
-    for (const claim of skillClaims) {
+    for (const claim of claimsByType.skill ?? []) {
       const section = this.generateSkillSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -242,8 +256,7 @@ export class TailoringEngine {
     }
 
     // Process certification claims
-    const certificationClaims = claims.filter((c) => c.type === 'certification');
-    for (const claim of certificationClaims) {
+    for (const claim of claimsByType.certification ?? []) {
       const section = this.generateCertificationSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -257,8 +270,7 @@ export class TailoringEngine {
     }
 
     // Process project claims
-    const projectClaims = claims.filter((c) => c.type === 'project');
-    for (const claim of projectClaims) {
+    for (const claim of claimsByType.project ?? []) {
       const section = this.generateProjectSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -271,10 +283,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
-    const allClaims = claims;
-    for (const claim of allClaims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+    // Track unsupported claims using Set O(1) lookups instead of O(N) array searches
+    const usedTraceClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
+    for (const claim of claims) {
+      if (!usedTraceClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -318,9 +330,11 @@ export class TailoringEngine {
       preserved: [],
     });
 
+    // Group claims by type in a single pass O(N)
+    const claimsByType = this.groupClaimsByType(claims);
+
     // Process experience claims
-    const experienceClaims = claims.filter((c) => c.type === 'experience');
-    for (const claim of experienceClaims) {
+    for (const claim of claimsByType.experience ?? []) {
       const section = this.generateCoverLetterExperienceSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -334,8 +348,7 @@ export class TailoringEngine {
     }
 
     // Process skill claims
-    const skillClaims = claims.filter((c) => c.type === 'skill');
-    for (const claim of skillClaims) {
+    for (const claim of claimsByType.skill ?? []) {
       const section = this.generateCoverLetterSkillSection(claim, jobRequirements);
       if (section) {
         sections.push(section);
@@ -357,9 +370,10 @@ export class TailoringEngine {
       preserved: [],
     });
 
-    // Track unsupported claims
+    // Track unsupported claims using Set O(1) lookups
+    const usedTraceClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedTraceClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -406,9 +420,12 @@ export class TailoringEngine {
         preserved: answer.preserved,
       });
 
+      // Map claims by ID for O(1) lookups
+      const claimsById = new Map(claims.map((c) => [c.id, c]));
+
       // Track evidence
       for (const claimId of answer.claimIds) {
-        const claim = claims.find((c) => c.id === claimId);
+        const claim = claimsById.get(claimId);
         if (claim) {
           evidenceTrace.push({
             claimId: claim.id,
@@ -420,9 +437,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
+    // Track unsupported claims using Set O(1) lookups
+    const usedTraceClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedTraceClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -468,9 +486,12 @@ export class TailoringEngine {
         preserved: summary.preserved,
       });
 
+      // Map claims by ID for O(1) lookups
+      const claimsById = new Map(claims.map((c) => [c.id, c]));
+
       // Track evidence
       for (const claimId of summary.claimIds) {
-        const claim = claims.find((c) => c.id === claimId);
+        const claim = claimsById.get(claimId);
         if (claim) {
           evidenceTrace.push({
             claimId: claim.id,
@@ -482,9 +503,10 @@ export class TailoringEngine {
       }
     }
 
-    // Track unsupported claims
+    // Track unsupported claims using Set O(1) lookups
+    const usedTraceClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedTraceClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -540,9 +562,10 @@ export class TailoringEngine {
       return (priorityOrder[a.priority ?? 'low'] ?? 2) - (priorityOrder[b.priority ?? 'low'] ?? 2);
     });
 
-    // Track unsupported claims
+    // Track unsupported claims using Set O(1) lookups
+    const usedTraceClaimIds = new Set(evidenceTrace.map((t) => t.claimId));
     for (const claim of claims) {
-      if (!evidenceTrace.find((t) => t.claimId === claim.id)) {
+      if (!usedTraceClaimIds.has(claim.id)) {
         unsupportedClaims.push(claim.id);
       }
     }
@@ -982,6 +1005,7 @@ export class TailoringEngine {
    */
   private validateEvidenceConstraints(result: TailoringResult, claims: CareerClaim[]): void {
     const violations: ConstraintViolation[] = [];
+    const claimsById = new Map(claims.map((c) => [c.id, c]));
 
     // Check for fabricated company names
     const experienceSections = result.sections?.filter((s) => s.type === 'experience') || [];
@@ -991,7 +1015,7 @@ export class TailoringEngine {
         continue;
       }
 
-      const claim = claims.find((c) => c.id === section.evidenceClaimIds[0]);
+      const claim = claimsById.get(section.evidenceClaimIds[0]);
       if (claim?.content?.company) {
         if (!section.content.includes(claim.content.company)) {
           violations.push({
@@ -1010,7 +1034,7 @@ export class TailoringEngine {
     // Check for skill level upgrades
     const skills = result.skills || [];
     for (const skill of skills) {
-      const claim = claims.find((c) => c.id === skill.evidenceClaimId);
+      const claim = claimsById.get(skill.evidenceClaimId);
       if (claim?.content?.level) {
         if (skill.level !== claim.content.level) {
           violations.push({
