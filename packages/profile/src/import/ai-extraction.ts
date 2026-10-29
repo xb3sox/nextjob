@@ -124,26 +124,36 @@ async function mockAIExtraction(text: string): Promise<ExtractedProfileData> {
 }
 
 /**
+ * Static mapping of skills to categories for O(1) lookups.
+ * Pre-allocated at module scope to avoid reallocating object literals
+ * and array entries on every skill categorization during profile extraction.
+ */
+const SKILL_CATEGORY_MAP: Record<string, string> = {
+  JavaScript: 'Programming Languages',
+  TypeScript: 'Programming Languages',
+  Python: 'Programming Languages',
+  Java: 'Programming Languages',
+  React: 'Frameworks',
+  'Node.js': 'Frameworks',
+  SQL: 'Databases',
+  PostgreSQL: 'Databases',
+  MongoDB: 'Databases',
+  AWS: 'Cloud',
+  Docker: 'Cloud',
+  Kubernetes: 'Cloud',
+  Git: 'Tools',
+  'CI/CD': 'Tools',
+  Agile: 'Methodologies',
+  Scrum: 'Methodologies',
+  Leadership: 'Soft Skills',
+  Communication: 'Soft Skills',
+};
+
+/**
  * Categorizes a skill into a category
  */
 function categorizeSkill(skill: string): string {
-  const categories: Record<string, string[]> = {
-    'Programming Languages': ['JavaScript', 'TypeScript', 'Python', 'Java'],
-    Frameworks: ['React', 'Node.js'],
-    Databases: ['SQL', 'PostgreSQL', 'MongoDB'],
-    Cloud: ['AWS', 'Docker', 'Kubernetes'],
-    Tools: ['Git', 'CI/CD'],
-    Methodologies: ['Agile', 'Scrum'],
-    'Soft Skills': ['Leadership', 'Communication'],
-  };
-
-  for (const [category, skills] of Object.entries(categories)) {
-    if (skills.includes(skill)) {
-      return category;
-    }
-  }
-
-  return 'Other';
+  return SKILL_CATEGORY_MAP[skill] ?? 'Other';
 }
 
 /**

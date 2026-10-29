@@ -182,6 +182,11 @@ export async function registerUser(params: {
 }): Promise<User> {
   const { email, password, name, tenantId, role = 'candidate' } = params;
 
+  const allowedRoles = ['candidate', 'admin', 'organization_admin'];
+  if (!allowedRoles.includes(role)) {
+    throw new AuthError('VALIDATION_FAILED', 'Invalid user role');
+  }
+
   if (!isValidEmail(email)) {
     throw new AuthError('VALIDATION_FAILED', 'Please provide a valid email address');
   }
