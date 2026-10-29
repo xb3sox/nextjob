@@ -76,7 +76,7 @@ describe('ApplicationCard', () => {
     expect(onSkip).toHaveBeenCalledTimes(1);
   });
 
-  it('disables apply button and shows ineligible label when ineligible', () => {
+  it('disables apply button and shows ineligible label with tooltip when ineligible', () => {
     const onApply = vi.fn();
 
     render(<ApplicationCard {...defaultProps} eligibilityStatus="ineligible" onApply={onApply} />);
@@ -86,6 +86,10 @@ describe('ApplicationCard', () => {
     });
 
     expect(applyButton).toBeDisabled();
+    expect(applyButton).toHaveAttribute(
+      'title',
+      'You do not meet the core eligibility criteria for this role.'
+    );
     expect(screen.getByText('Not Eligible')).toBeInTheDocument();
   });
 });
