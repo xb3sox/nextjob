@@ -73,10 +73,11 @@ Do **not** add `jules` to an issue also carrying `jules-queued` (blocked) or `hu
   work needs a credential or production action.
 - Update `TASKS.md` when the task is complete, with its verification line.
 
-## 5. Review loop
+## 5. Review loop & iteration
 
-PR opened → human reviews (diff, evidence, no secrets/PII) → squash merge → issue closed → board
-item moves to `Done`. Agents never merge and never push to `main`.
+1. **Review feedback:** Leave inline GitHub PR comments or reviews. Tag `@jules` to instruct it on changes.
+2. **Autonomous revisions:** Jules acknowledges with a 👀 reaction, loads the PR context in its VM, applies the requested fixes, runs local verification gates, replies to comments, and pushes new commits to the branch.
+3. **Merge:** Human reviews (diff, evidence, no secrets/PII) → squash merge → issue closed → board item moves to `Done`. Agents never merge and never push to `main`.
 
 ## 6. Fallback
 

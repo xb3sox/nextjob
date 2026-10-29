@@ -1,5 +1,5 @@
 {
-  "exclude": ["**/evals/**", "**/docs/**", "**/public/**", "**/*.lock"],
+  "exclude": ["**/evals/**", "**/docs/**", "**/public/**", "**/*.lock", "**/.github/**", "**/*.md"],
   "rules": [
     {
       "path": "**/*.{ts,tsx,js,jsx,mjs,cjs}",

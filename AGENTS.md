@@ -10,9 +10,10 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 **Completed:**
 - ✅ T-01: Repository structure initialized
 - ✅ T-02: Development environment set up
-- ✅ T-03: Database schema created (20+ tables)
+- ✅ T-03: Database schema created — 7 tables (tenants, users, accounts, sessions,
+  verification_tokens, applications, receipts); remaining domain tables pending (see TASKS.md)
 - ✅ T-03a: Migrated to Bun package manager (30x faster)
-- ✅ T-03b: Added Vitest testing framework (5x faster, 20 example tests)
+- ✅ T-03b: Added Vitest testing framework (5x faster)
 - ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
 - ⚠️ T-03d: Turborepo removed 2026-10-25 — the config was never wired to any script
 - ✅ T-03e: Integrated shadcn/ui component library (8 core components)
@@ -45,7 +46,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 40/118 tasks complete (33.9%)
+**Progress:** 39/118 tasks complete (33.1%)
 
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
 > `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
@@ -229,6 +230,14 @@ gh issue list --state open --search '-label:jules-queued -label:human -label:jul
 
 **Status flow** = `Todo` → `In Progress` (dispatched) → `In Review` (PR open) → `Done` (merged).
 `Blocked` requires a native blocked-by, not prose.
+
+### Jules Features & Operating Contract
+
+Jules is Google's asynchronous coding agent running in an isolated cloud VM (full operating manual: [docs/JULES.md](docs/JULES.md)).
+- **Triggers:** GitHub issue label `jules` (dispatch trigger), Web UI (`jules.google.com`), CLI (`@google/jules`), or REST API (`jules.googleapis.com/v1alpha`).
+- **Autonomous Flow:** Clones `main` -> reads `AGENTS.md` context -> generates implementation plan -> executes scoped edits (<=400 lines) -> runs test gates -> opens PR with summary & optional audio changelog.
+- **Review & Feedback Loop:** Jules reads PR review comments (tag `@jules` or review directly). It acknowledges with 👀, applies requested revisions in its VM, verifies tests, and pushes commits to update the PR.
+- **Boundaries:** Never dispatch with `jules-queued` or `human`. Never touch protected paths (`evals/`, `docs/PRD.md`, `docs/TECH.md`, `packages/policy/`, `packages/eligibility/`). Jules never pushes to `main` or self-merges.
 
 ### Workflow
 
