@@ -10,9 +10,10 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 **Completed:**
 - ✅ T-01: Repository structure initialized
 - ✅ T-02: Development environment set up
-- ✅ T-03: Database schema created (20+ tables)
+- ✅ T-03: Database schema created — 7 tables (tenants, users, accounts, sessions,
+  verification_tokens, applications, receipts); remaining domain tables pending (see TASKS.md)
 - ✅ T-03a: Migrated to Bun package manager (30x faster)
-- ✅ T-03b: Added Vitest testing framework (5x faster, 20 example tests)
+- ✅ T-03b: Added Vitest testing framework (5x faster)
 - ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
 - ⚠️ T-03d: Turborepo removed 2026-10-25 — the config was never wired to any script
 - ✅ T-03e: Integrated shadcn/ui component library (8 core components)
@@ -45,7 +46,7 @@ In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technolog
 - ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
 - ✅ T-80, T-95-T-99: Technical excellence features
 
-**Progress:** 40/118 tasks complete (33.9%)
+**Progress:** 39/118 tasks complete (33.1%)
 
 > Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
 > `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
