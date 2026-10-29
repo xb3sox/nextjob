@@ -1,6 +1,7 @@
 {
   "name": "nextjob",
   "private": true,
+  "license": "UNLICENSED",
   "type": "module",
   "workspaces": [
     "packages/*",
@@ -16,7 +17,7 @@
     "preview": "vite preview",
     "typecheck": "wxt prepare extension && tsc --noEmit && tsc --noEmit -p extension/tsconfig.json",
     "lint": "biome check .",
-    "lint:fix": "biome check --apply .",
+    "lint:fix": "biome check --write .",
     "test": "vitest",
     "test:eval": "vitest run --project node evals",
     "test:ui": "vitest --ui",
@@ -24,8 +25,10 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "check": "biome check .",
-    "check:fix": "biome check --apply .",
-    "hooks:install": "node scripts/install-hooks.mjs"
+    "check:fix": "biome check --write .",
+    "hooks:install": "node scripts/install-hooks.mjs",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config drizzle.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.16",
