@@ -1,408 +1,268 @@
-# NextJob
-
 <div align="center">
 
-### Your next job, intelligently.
+# NextJob
 
-**Find better jobs. Apply smarter. Get interviewed.**
+**Your next job, intelligently.**
 
-NextJob is your AI career agent that finds the right opportunities, prepares better applications, safely handles repetitive work, and learns what gets you interviews.
+An AI career agent that turns verified career evidence into roles that actually fit — and
+applications you can prove were submitted. No fabricated experience.
 
-[![Status: Build-ready MVP](https://img.shields.io/badge/Status-Build--ready_MVP-emerald)](docs/PRD.md)
-[![Evidence: Validation-ready](https://img.shields.io/badge/Evidence-Validation--ready-amber)](docs/PRD.md#validation)
-[![Delivery: Build-ready](https://img.shields.io/badge/Delivery-Build--ready-emerald)](TASKS.md)
-[![Requirements: 122](https://img.shields.io/badge/Requirements-122-blue)](docs/PRD.md)
-[![Tasks: 118](https://img.shields.io/badge/Tasks-118-blue)](TASKS.md) [![Progress: 28.0%](https://img.shields.io/badge/Progress-28.0%25-green)](TASKS.md) [![Quality: A+](https://img.shields.io/badge/Quality-A%2B-brightgreen)](TASKS.md#quality-review--fixes-2026-01-15)
-[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue)](docs/PRD.md#accessibility--localization)
+[![CI](https://github.com/xb3sox/nextjob/actions/workflows/ci.yml/badge.svg)](https://github.com/xb3sox/nextjob/actions/workflows/ci.yml)
+[![Runtime](https://img.shields.io/badge/runtime-Bun_1.3.11-black)](https://bun.sh)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)](tsconfig.json)
+[![A11y](https://img.shields.io/badge/a11y_target-WCAG_2.2_AA-blue)](docs/PRD.md#accessibility--localization)
+[![License](https://img.shields.io/badge/license-proprietary-lightgrey)](#license)
 
-[Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
+![NextJob — verified career evidence in, eligible applications out](public/og-image.png)
+
+[Quick start](#quick-start) · [Status](#status) · [Architecture](#architecture) ·
+[Roadmap](#roadmap) · [Docs](#documentation) · [Contributing](#contributing)
 
 </div>
 
----
+## Why NextJob
 
-## 🎯 The Problem
+Job search rewards volume over fit: hundreds of applications, weak matches, and AI-written claims
+nobody can verify. NextJob optimises one metric instead — the **verified qualified interview rate**:
+confirmed interviews divided by eligible, verified applications.
 
-Job searching is fragmented and repetitive. Users must:
-- Search across many sources
-- Judge whether jobs genuinely fit
-- Understand location/work-authorization requirements
-- Repeatedly tailor resumes
-- Re-enter identical information
-- Answer ambiguous application questions
-- Track applications manually
-- Manage recruiter communications
-- Prepare separately for interviews
+- **Verified, not generated** — every factual statement traces to a user-approved claim with
+  evidence provenance.
+- **Eligible first** — location, work-authorisation, and requirement checks run *before* ranking, so
+  effort is not wasted on roles you cannot take.
+- **In your control** — automation escalates consequential decisions for approval and returns a
+  receipt of exactly what was submitted.
 
-Existing automation can introduce additional problems:
-- Poor matches
-- Excessive applications
-- Incorrect answers
-- Fabricated experience
-- Duplicate submissions
-- Hidden automation
-- Unclear submission status
-- Weak user control
+### How it works
 
-**Core problem:** Job seekers need better outcomes with less effort—not more applications.
+1. **Import** a CV; extracted claims become a profile you review and approve.
+2. **Check eligibility**, then **rank** remaining roles with an explanation of the fit.
+3. **Tailor** applications using only approved evidence, with the source shown beside each change.
+4. **Submit** through assisted or manual flows, then record outcomes to improve future rankings.
 
-## 💡 The Solution
+Automation coverage grows by phase: current code stops at eligibility, matching, and tailoring
+review. Automated application submission is roadmap (see [`TASKS.md`](TASKS.md)), not a shipped
+capability — treat anything implying hands-off auto-apply as unbuilt.
 
-NextJob is your AI career agent that:
+## Status
 
-1. **Understands you** → Builds a verified profile from your CV and evidence
-2. **Finds jobs** → Discovers opportunities that genuinely fit
-3. **Checks eligibility** → Avoids wasting effort on unsuitable roles
-4. **Explains fit** → Shows why each job matters to you
-5. **Prepares truthful applications** → Tailors applications from verified facts only
-6. **Gets approval when needed** → Asks only about important exceptions
-7. **Applies safely** → Handles repetitive work with transparency
-8. **Confirms submission** → Provides receipts proving what was submitted
-9. **Tracks responses** → Monitors outcomes automatically
-10. **Prepares interviews** → Generates evidence-backed talking points
-11. **Learns what works** → Improves from verified interviews, rejections, and offers
-
-## 🔒 Core Differentiators
-
-| Feature | What It Means | Why It Matters |
-|---------|---------------|----------------|
-| **Verified profile** | Applications use real, user-approved facts | No hallucinated experience |
-| **Eligibility-first** | Avoid wasting effort on unsuitable roles | Save time and frustration |
-| **Quality-first** | Optimize interviews, not application volume | Better outcomes |
-| **Safe automation** | Automate routine work; escalate consequential decisions | You stay in control |
-| **Transparent** | Explain recommendations and show exactly what was submitted | Build trust |
-| **Outcome learning** | Improve from verified interviews, rejections, and offers | Get better over time |
-| **Global clarity** | Clearly distinguish supported, assisted, and manual workflows | No surprises |
-
-## 📊 Current Status
-
-<table>
-<tr>
-<td width="50%">
-
-### Evidence Readiness
-**Status:** Validation-ready
-
-Material problem, customer, and value assumptions require real-world validation experiments before market claims.
-
-**Next:** Commission validation experiments (see [PRD §Validation](docs/PRD.md#validation))
-
-</td>
-<td width="50%">
-
-### Delivery Readiness
-**Status:** Build-ready
-
-MVP requirements, UX flows, architecture, and acceptance criteria are sufficient to begin implementation.
-
-**Next:** Start [T-04: Authentication](TASKS.md#phase-1-environment--infrastructure)
-
-</td>
-</tr>
-</table>
-
-## 📚 Documentation
-
-### Core Documents
-
-| Document | Purpose | Status |
-|----------|---------|--------|
-| [**Product Requirements**](docs/PRD.md) | What we're building and why | ✅ Complete (122 requirements) |
-| [**Technical Design**](docs/TECH.md) | How we build it | ✅ Complete (approved stack) |
-| [**Design System**](docs/DESIGN.md) | Visual identity and components | ✅ Complete (YAML tokens) |
-| [**Agent Instructions**](AGENTS.md) | Rules for AI agents and developers | ✅ Complete |
-| [**Implementation Tasks**](TASKS.md) | Dependency-ordered task list | ✅ Complete (118 tasks, 33 phases) |
-
-### Requirement Coverage
-
-- **122 functional requirements** across 17 categories
-- **36 acceptance criteria** with Given/When/Then format
-- **118 implementation tasks** organized in 33 phases
-- **100% traceability** from requirements → acceptance → tasks
-
-### Key Sections
-
-- [Onboarding Requirements](docs/PRD.md#onboarding-requirements) — CV import, verification, preferences
-- [Application State Machine](docs/PRD.md#application-state-machine) — Lifecycle from discovery to outcome
-- [Failure & Edge Cases](docs/PRD.md#failure--edge-cases) — 22 explicit edge case handlers
-- [Accessibility & Localization](docs/PRD.md#accessibility--localization) — WCAG 2.2 AA compliance
-- [Marketing & Landing Page](docs/PRD.md#marketing--landing-page) — World-class conversion optimization
-- [Performance Excellence](docs/PRD.md#performance-excellence) — Core Web Vitals targets
-- [Advanced SEO](docs/PRD.md#advanced-seo) — Schema markup, AI search optimization
-- [Security & Privacy](docs/TECH.md#security--privacy) — Tenant isolation, encryption, audit
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Clients                                  │
-│  Web App (Next.js)  │  Browser Extension (WXT)  │  B2B Portal │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                    ┌───────▼───────┐
-                    │  Edge / API   │
-                    │  Auth + Rate  │
-                    └───────┬───────┘
-                            │
-        ┌───────────────────▼───────────────────┐
-        │        Modular Monolith (Fastify)      │
-        │                                        │
-        │  Identity  │  Career Graph  │  Evidence │
-        │  Jobs      │  Eligibility   │  Matching │
-        │  Tailoring │  Policy/Risk   │  Approvals│
-        │  Applications │  Receipts   │  Outcomes │
-        │  Organizations │  Billing   │  Notifs   │
-        └───────────────────┬───────────────────┘
-                            │
-        ┌───────────────────┼───────────────────┐
-        │                   │                   │
-  ┌─────▼─────┐      ┌─────▼─────┐      ┌─────▼─────┐
-  │  Temporal │      │ AI Gateway│      │ PostgreSQL│
-  │  Workers  │      │ + Models  │      │ + pgvector│
-  └───────────┘      └───────────┘      └───────────┘
-```
-
-See [Technical Design](docs/TECH.md#architecture) for full diagram and details.
-
-## 🛠️ Tech Stack
-
-| Layer | Technology | Status |
-|-------|-----------|--------|
-| **Web** | Next.js + TypeScript | ✅ Approved |
-| **UI** | shadcn/ui + Radix + Tailwind | ✅ Approved |
-| **Backend** | Fastify | ✅ Approved |
-| **Database** | PostgreSQL + pgvector | ✅ Approved |
-| **Workflow** | Temporal | ✅ Approved |
-| **AI** | Vercel AI SDK + provider abstraction | ✅ Approved |
-| **Extension** | WXT | ✅ Approved |
-| **Infrastructure** | AWS + Vercel | ✅ Approved |
-| **Package Manager** | Bun (30x faster than npm) | ✅ Complete |
-| **Testing** | Vitest (5x faster than Jest) | ✅ Complete |
-| **Linting** | Biome (56x faster than ESLint) | ✅ Complete |
-| **Monorepo** | Turborepo (9x faster builds) | ✅ Complete |
-
-See [Technical Design §Stack](docs/TECH.md#stack) for complete list with rationale.
-
-## 🚀 Getting Started
-
-> **Status:** In Progress. Modern toolchain and testing framework implemented.
-
-### For Developers
-
-1. **Read the docs** — Start with [PRD.md](docs/PRD.md) to understand the product
-2. **Review architecture** — Check [TECH.md](docs/TECH.md) for technical decisions
-3. **Understand tasks** — Browse [TASKS.md](TASKS.md) for implementation plan
-4. **Follow agent rules** — See [AGENTS.md](AGENTS.md) for development guidelines
-
-### Local setup
-
-```bash
-bun install --frozen-lockfile   # bun.lock is the only lockfile
-cp .env.example .env            # then fill in the Supabase project values
-bun run dev                     # http://localhost:3000
-
-# gates — these are what CI runs
-bun run typecheck
-bun run lint
-bunx vitest run --maxWorkers 2
-bun run build
-```
-
-`packages/*` are Bun workspaces: adding a dependency to a package's own
-`package.json` is enough, run `bun install` at the repo root.
-
-### Repository status
-
-What is actually wired and green today:
+Early MVP. The SPA deploys and runs with two workspace packages; the backend service packages are
+implemented and tested but are not called at runtime by any client yet. Supabase is used for
+authentication only — the app stores no job, profile, or application data server-side today.
 
 | Surface | State |
 | --- | --- |
-| App (`src/`) | Vite + React 18 SPA. Typecheck, lint, 603 tests, production build all green. |
-| `packages/tailoring` | Engine + types; typechecks clean, 18 unit tests. |
-| `packages/api`, `packages/profile`, `packages/ai-gateway` | Code and tests present (Fastify/Temporal, claims, providers). They do **not** typecheck in strict mode yet — 23 errors of the "Zod `.parse()` widens required fields to optional" kind. Tracked on the roadmap board; the app does not import them at runtime yet. |
-| Deploy | Vercel owns the live site (`vercel.json`); Cloudflare Workers is a manual, opt-in path (`wrangler.jsonc`, `deploy-cloudflare.yml`). |
+| `src/` — web app | Vite + React 18 SPA: landing, auth (Supabase), dashboard, tailoring review. Gated in CI by typecheck, lint, tests, and a production build. |
+| `extension/` — browser extension | WXT MV3 scaffold: popup, background, content scripts. Builds `chrome-mv3` only; requests just `activeTab` and `storage`. Not published. |
+| Packages used by the SPA | `@nextjob/tailoring` (engine drives the review UI) and `@nextjob/shared` (i18n types), imported at runtime. |
+| Packages not yet wired | `packages/api` (Fastify + Temporal), `profile`, `ai-gateway`, `applications`. Strict-typechecked and unit-tested in CI, but the SPA does not import them. |
+| Database | Drizzle schema (`packages/api/src/db/schema.ts`) with 7 tables and a committed initial migration under `packages/api/drizzle/`. No seed data yet. |
+| Deploy | Vercel is the live target: `.github/workflows/deploy-vercel.yml` re-runs typecheck, lint, and tests, then deploys on a `v*` tag. Cloudflare Workers stays a manual, opt-in path. |
 
-`docs/TECH.md` describes the target architecture (Next.js `apps/web`, WXT extension); those
-directories do not exist yet. See `AGENTS.md` §Structure for how task paths map onto today's tree.
+`docs/TECH.md` describes the target architecture, including a future Next.js `apps/web`. That
+directory does not exist — [`AGENTS.md` §Structure](AGENTS.md#structure) maps task paths onto
+today's tree.
 
-### Current Implementation
+## Quick start
 
-**Completed:**
-- ✅ Landing page with ultra-minimal design (Linear/Stripe/Vercel inspired)
-- ✅ Database schema with 20+ tables (PostgreSQL + Drizzle ORM)
-- ✅ Privacy Policy and Terms of Service pages (design consistent)
-- ✅ 404 page, loading states, form validation
-- ✅ SEO optimization with structured data
-- ✅ WCAG 2.1 AA accessibility compliance
-- ✅ **Bun package manager** - 30x faster than npm
-- ✅ **Vitest testing framework** - 5x faster than Jest, 20 example tests
-- ✅ **Biome linter/formatter** - 56x faster than ESLint+Prettier
-- ✅ **Turborepo** - 9x faster builds with caching
-- ✅ **shadcn/ui** - 8 core components installed
-- ✅ **Authentication** - OAuth 2.0 with tenant isolation and RBAC
-- ✅ **AI Gateway** - Multi-provider support with PII redaction and observability with CSS variables
-- ✅ **Temporal Workflows** - Durable execution for ATS connectors with idempotency
-- ✅ **Profile Import** - PDF/DOCX extraction with AI-powered data extraction
-- ✅ **Your Profile** - Claims management with evidence provenance and versioning
-- ✅ **Claim Verification** - User verification workflow with bulk operations
-- ✅ **Preferences Capture** - Comprehensive job search preferences with versioning
-- ✅ **Automation Policy** - Manual/Copilot/Autopilot modes with field-level overrides
-- ✅ **Evidence Storage** - S3/local/memory storage with signed URLs and access control
-- ✅ **Job Ingestion** - Multi-source job import with normalization and deduplication
-- ✅ **Eligibility Engine** - Rule-based eligibility checks with 10 check types and confidence scoring
-- ✅ **Design consistency** - Unified dark theme across all pages
-- ✅ **Form validation** - Email validation with error handling
-- ✅ **Loading states** - Spinners and disabled states
-- ✅ **Accessibility** - Skip links, ARIA labels, focus management
+**Requires:** [Bun](https://bun.sh) 1.3.11 (pinned via `packageManager`). Optional: Node (LTS) for
+`bun run hooks:install`, which shells out to `node`, and the Supabase CLI for local auth.
 
-**Next Tasks:**
+```bash
+git clone https://github.com/xb3sox/nextjob.git
+cd nextjob
 
-**Core Features (This Week):**
-1. **T-13: Eligibility evaluation dataset** - Test dataset for eligibility engine (8 hours)
-2. **T-14: Matching engine** - Job ranking with explainability (20 hours)
-3. **T-15: Job card UI** - Job card component with capability model (12 hours)
-
-**Tailoring (Next 2 Weeks):**
-4. **T-16: AI evaluation dataset for tailoring** - Test dataset (8 hours)
-5. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
-6. **T-18: Tailoring UI** - User interface for application tailoring (16 hours)
-
-**Application Flow (Next Month):**
-7. **T-17: Tailoring engine** - Evidence-constrained AI generation (32 hours)
-8. **T-23: First ATS connector** - Build first connector (40 hours)
-9. **T-25: Application state machine** - Complete lifecycle (24 hours)
-
-See [TASKS.md](TASKS.md) for complete task list.
-
-## 🗺️ Roadmap
-
-### MVP (0-3 months)
-Identity, Your Profile, evidence, jobs, eligibility, matching, tailoring, safety checks, approvals, browser extension, execution, receipts, tracker, organizations, billing, admin, analytics.
-
-### V1 (3-6 months)
-Email outcome detection, interview preparation, additional ATS support, localization, experimentation, Search pricing optimization.
-
-### V2 (6-12 months)
-Safe Auto Apply, outcome-informed ranking, expanded eligibility, B2B integrations, Career Vault, additional languages.
-
-See [TASKS.md](TASKS.md) for detailed task breakdown across all 33 phases.
-
-## 🤝 Contributing
-
-### Before You Start
-
-1. Read [AGENTS.md](AGENTS.md) — understand the rules and boundaries
-2. Check [TASKS.md](TASKS.md) — find an unblocked task
-3. Review [PRD.md](docs/PRD.md) — understand the requirements
-4. Check [TECH.md](docs/TECH.md) — understand the architecture
-
-### Development Workflow
-
-1. **Pick a task** — start with T-06 (Temporal workflows)
-2. **Create a branch** — `feature/T-XX-task-name`
-3. **Implement** — follow AGENTS.md rules
-4. **Test** — ensure all acceptance criteria pass
-5. **Document** — update relevant docs if needed
-6. **Submit PR** — request review from maintainers
-
-### Rules
-
-- Every generated factual statement MUST trace to verified profile information
-- Eligibility MUST run before ranking
-- Sensitive fields MUST be user-only
-- No PII in prompts or analytics
-- All external actions MUST be idempotent
-- Every automated action MUST be explainable
-
-See [AGENTS.md](AGENTS.md) for complete rules.
-
-## 🔐 Security & Privacy
-
-### Security Commitments
-
-- ✅ TLS everywhere, encryption at rest
-- ✅ Tenant isolation with penetration testing
-- ✅ RBAC with least privilege
-- ✅ Sensitive data vault for high-risk fields
-- ✅ PII redaction before AI prompts
-- ✅ Prompt-injection defenses
-- ✅ Immutable audit events
-
-### Privacy Rights
-
-Users can:
-- View all stored data
-- Correct inaccurate data
-- Export all data (machine-readable)
-- Delete all data
-- Revoke consent
-- Disconnect integrations
-- Disable learning from their data
-- Control retention periods
-
-**Commitment:** Private candidate data is never sold or used for recruiter advertising.
-
-See [PRD.md §Privacy Requirements](docs/PRD.md) and [TECH.md §Security & Privacy](docs/TECH.md#security--privacy) for details.
-
-## 📋 External Actions
-
-These actions require owner approval before proceeding:
-
-| Action | Owner | Evidence | Completion Criterion |
-|--------|-------|----------|---------------------|
-| Commission tenant isolation penetration test | Security Team | Pen test report | No unresolved critical findings |
-| Validate Search Pass pricing ($39/30 days) | Product Owner | Pricing experiment results | WTP validated with statistical significance |
-| Approve eligibility false-positive threshold | Product Owner | Signed PRD.md | Threshold documented and accepted |
-
-## 📈 Metrics & Goals
-
-### North Star Metric
-
-**Verified Qualified Interview Rate**
-
-```
-Verified Qualified Interviews
-─────────────────────────────
-Eligible Verified Applications
+bun install --frozen-lockfile   # bun.lock is the only lockfile
+bun run dev                     # http://localhost:3000
 ```
 
-### Key Performance Indicators
+The landing page renders without configuration. Authentication needs credentials:
 
-| Metric | Target | Purpose |
-|--------|--------|---------|
-| Activation rate | TBD | Product onboarding quality |
-| Eligibility false-positive rate | ≤2% | Matching safety |
-| Unsupported-claim rate | 0 | AI truthfulness |
-| Verified submission rate | ≥98% | Execution reliability |
-| Duplicate prevention | ≥95% | Execution safety |
-| Interview lift vs control | TBD | Actual product value |
+```bash
+cp .env.example .env
+# VITE_SUPABASE_URL=https://<project>.supabase.co
+# VITE_SUPABASE_ANON_KEY=<anon key>
+```
 
-See [PRD.md §Goals](docs/PRD.md#goals) for complete list.
+Or run Supabase locally (`supabase start`, then copy the URL and anon key from `supabase status`;
+the local API listens on port 54321).
 
-## 📄 License
+On Windows, run these in Git Bash or WSL, or use `Copy-Item .env.example .env` in PowerShell.
+The SPA targets current evergreen browsers; there is no IE or legacy-Safari support.
 
-To be determined. All rights reserved until license is selected.
+**Verify it works:** `http://localhost:3000` shows the landing page, `bun run build` exits 0, and
+after filling `.env` the missing-configuration banner on `/login` disappears.
 
-## 🙏 Acknowledgments
+### Troubleshooting
 
-NextJob is built on the shoulders of:
-- **Open-source community** — Next.js, Fastify, Temporal, PostgreSQL, and many more
-- **AI research** — Evidence-constrained generation, structured output validation
-- **Career coaching best practices** — STAR method, evidence-based applications
-- **Privacy research** — GDPR compliance, data minimization principles
+- **Port 3000 is taken** — Vite runs with `strictPort`, so it fails instead of drifting. Free the
+  port or change `server.port` in `vite.config.js`.
+- **Install fails with a lockfile mismatch** — you are on `bun.lock`; delete any `package-lock.json`
+  created by `npm`/`npx` and reinstall with Bun.
+- **Auth calls fail in the console** — `.env` values are missing or the anon key belongs to another
+  project. Only `VITE_*` variables reach the browser bundle; never put a service-role key there.
+- **Lint rewrites unrelated files** — `bunx biome` resolves a newer version than `bun.lock`. Always
+  use `bun run lint`.
+- **`db:migrate` reports a missing connection URL** — `DATABASE_URL` is not set. Pass it inline:
+  `DATABASE_URL=postgres://user:pass@host:5432/db bun run db:migrate`. Use a direct connection
+  rather than a transaction pooler, so migrations are not run through it.
 
-## 📞 Contact
+### Extension
 
-- **Documentation:** [docs/](docs/)
-- **Issues:** [GitHub Issues](#) (to be created)
-- **Discussions:** [GitHub Discussions](#) (to be created)
+```bash
+bun run build:extension         # or: cd extension && bun run dev
+```
 
----
+Load the unpacked build WXT writes under `extension/.output/` via `chrome://extensions` →
+*Load unpacked*.
 
-<div align="center">
+## Commands
 
-**Built with trust, transparency, and verified evidence.**
+| Command | Purpose |
+| --- | --- |
+| `bun run dev` | Vite dev server on port 3000 |
+| `bun run build` | Production build: SPA (`dist/`) + extension |
+| `bun run preview` | Serve the production build locally |
+| `bun run typecheck` | `wxt prepare` + strict `tsc` for app and extension |
+| `bun run lint` / `lint:fix` | Biome lint + format check / autofix (`--write`) |
+| `bun run test` | Vitest in watch mode (projects: `node`, `dom`) |
+| `bunx vitest run` | Full suite once, as CI runs it |
+| `bunx vitest run src/components/JobCard.test.tsx` | Single test file |
+| `bun run test:eval` | AI evaluation suites in `evals/` |
+| `bun run test:coverage` | Coverage report (V8) |
+| `bun run db:generate` | Generate SQL migrations from the Drizzle schema |
+| `DATABASE_URL=… bun run db:migrate` | Apply pending migrations |
+| `bun run registry:build` | Rebuild the shadcn registry into `public/r/` |
+| `bun run hooks:install` | Install the `pre-push` guard that blocks direct pushes to `main` |
 
-[Documentation](#documentation) • [Architecture](#architecture) • [Getting Started](#getting-started) • [Roadmap](#roadmap) • [Contributing](#contributing)
+Add a dependency to a workspace package by editing that package's `package.json`, then run
+`bun install` at the root. `packages/api` has no manifest; it is typechecked directly from its
+`tsconfig.json`.
 
-</div>
+## Quality gates
+
+CI (`.github/workflows/ci.yml`) runs on every pull request to `main` and must pass:
+
+```bash
+bun run typecheck                                      # app + extension
+bunx tsc --noEmit -p packages/<name>/tsconfig.json     # every package
+bun run lint                                           # warnings tolerated, errors block
+bun audit --audit-level=critical                       # blocking; high advisories reported only
+bun run build
+bunx vitest run --maxWorkers 2
+```
+
+Additional expectations before a feature merges — eval regression, accessibility, security, privacy
+controls — are listed in [`AGENTS.md` §Completion Gates](AGENTS.md#completion-gates).
+
+## Repository layout
+
+```
+├── src/                    Vite + React 18 SPA (the shipped application)
+│   ├── pages/              landing, auth/*, dashboard, tailor, legal
+│   ├── components/         JobCard, WaitlistForm, ui/ (shadcn)
+│   ├── contexts/           AuthContext (Supabase session)
+│   ├── i18n/               locale context, en/es/ar/he dictionaries, RTL support
+│   └── lib/                supabase client, cn(), redirect helpers
+├── packages/
+│   ├── api/                Fastify app, Temporal workflows, eligibility +
+│   │                       matching engines; drizzle/ holds committed migrations
+│   ├── profile/            claims, evidence storage, import/extraction,
+│   │                       preferences, verification, automation policy
+│   ├── tailoring/          evidence-constrained generation
+│   ├── ai-gateway/         model routing, Zod schemas, PII redaction
+│   ├── applications/       application state machine, receipts
+│   └── shared/             shared types (i18n, common contracts)
+├── extension/              WXT browser extension (MV3)
+├── evals/                  evaluation datasets and harnesses (protected)
+├── registry/ · public/r/   custom shadcn registry
+├── supabase/               local stack configuration
+├── scripts/                git hooks and repository tooling
+├── docs/                   PRD, TECH, DESIGN, API reference
+├── public/                 static assets, robots.txt, sitemap.xml
+├── drizzle.config.ts       Drizzle Kit config (schema -> packages/api/drizzle)
+└── AGENTS.md · TASKS.md    engineering contract and backlog
+```
+
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph shipped["Shipping today"]
+    Web["Web SPA<br/>Vite · React 18"] --> Auth["Supabase Auth"]
+    Web --> Pkg["@nextjob/tailoring<br/>@nextjob/shared"]
+  end
+  subgraph planned["In repo, not wired to the SPA"]
+    API["Fastify API<br/>+ Temporal"] --> DB[("PostgreSQL<br/>+ pgvector")]
+    API --> AI["AI gateway<br/>multi-provider"]
+  end
+  Ext["Extension<br/>WXT MV3 scaffold"] -.->|planned| API
+  Web -.->|no runtime import yet| API
+```
+
+In words: the browser app uses Supabase for identity and imports two workspace packages for
+tailoring and shared types. The Fastify service, its Temporal workflows, PostgreSQL/pgvector
+storage, and the AI gateway exist in-repo but are not called by any client at runtime yet; the
+extension is a separate client that will talk to the API directly.
+
+Design constraints that shape the system: tenant isolation with RBAC, immutable audit events,
+idempotent external actions, and evidence-constrained generation validated by Zod schemas. Details
+in [`docs/TECH.md`](docs/TECH.md).
+
+## Roadmap
+
+Tracked as GitHub milestones, not dates: **MVP** = one real application submitted end-to-end;
+**Beta** = ten external users. Open work lives on the
+[roadmap board](https://github.com/users/xb3sox/projects/11) and in [`TASKS.md`](TASKS.md).
+The issue → PR → release flow, labels, and issue contract are in
+[`docs/OPERATING_MODEL.md`](docs/OPERATING_MODEL.md).
+
+## Documentation
+
+| Document | Purpose |
+| --- | --- |
+| [`docs/PRD.md`](docs/PRD.md) | Product requirements, flows, acceptance criteria |
+| [`docs/TECH.md`](docs/TECH.md) | Technical design, stack decisions, security model |
+| [`docs/DESIGN.md`](docs/DESIGN.md) | Design system and design tokens |
+| [`docs/api/`](docs/api/README.md) | REST API reference and OpenAPI schema |
+| [`docs/OPERATING_MODEL.md`](docs/OPERATING_MODEL.md) | Issue → PR → release flow, project fields |
+| [`docs/JULES.md`](docs/JULES.md) | Running the Jules agent on this repo |
+| [`AGENTS.md`](AGENTS.md) | Engineering rules, agent contract, repo conventions |
+| [`TASKS.md`](TASKS.md) | Dependency-ordered implementation backlog |
+
+## Contributing
+
+1. Read [`AGENTS.md`](AGENTS.md) and check the
+   [roadmap board](https://github.com/users/xb3sox/projects/11), then pick an unblocked task from
+   [`TASKS.md`](TASKS.md). Bugs and tasks are filed through the repository's issue forms — blank
+   issues are disabled.
+2. Branch from `main`: `feature/T-XX-short-name`. One task per PR — no unrelated refactors.
+3. Run the [quality gates](#quality-gates) locally and paste the output in the PR's Evidence
+   section.
+4. Disclosure in the PR template is required for agent-authored work (name the agent and tool).
+5. Protected paths need owner approval: `docs/PRD.md`, `docs/TECH.md`, `evals/`, eligibility and
+   policy rules.
+
+Non-negotiable invariants:
+
+- Generated facts must trace to a verified claim; unknown eligibility never becomes "eligible".
+- Eligibility runs before ranking; every automated action is idempotent and explainable.
+- Sensitive fields (demographics, disability, health) are user-only and never sent to models or
+  analytics.
+- No secrets, PII, or CV content in code, tests, prompts, logs, or analytics.
+
+## Security and privacy
+
+Report vulnerabilities privately via [`SECURITY.md`](SECURITY.md) — never in a public issue.
+
+- **Least privilege** — the extension requests only `activeTab` and `storage`, and only `VITE_*`
+  configuration reaches the browser bundle; service-role keys stay server-side.
+- **Data rights** — candidates can access, correct, export, and delete their data. Private candidate
+  data is never sold or used for recruiter advertising.
+- **Legal** — the app ships [privacy](src/pages/PrivacyPolicy.tsx) and
+  [terms](src/pages/TermsOfService.tsx) pages at `/privacy` and `/terms`.
+
+## License
+
+Proprietary — see [`LICENSE`](LICENSE). All rights reserved; no license is granted until one is
+selected. Third-party dependencies remain under their own licenses.

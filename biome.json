@@ -45,6 +45,7 @@
     "includes": [
       "**",
       "!!node_modules",
+      "!!packages/api/drizzle",
       "!!dist",
       "!!build",
       "!!coverage",

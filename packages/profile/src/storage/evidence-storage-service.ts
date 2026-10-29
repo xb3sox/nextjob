@@ -195,21 +195,22 @@ export class EvidenceStorageService {
    * Validate signed URL
    */
   async validateSignedUrl(fileId: string, signature: string, expiresAt: string): Promise<boolean> {
-    // Check expiration
-    if (new Date(expiresAt) < new Date()) {
+    // Check expiration and validate date string
+    const expiresDate = new Date(expiresAt);
+    if (Number.isNaN(expiresDate.getTime()) || expiresDate < new Date()) {
       throw new SignedUrlExpiredError(fileId);
     }
 
-    // Verify signature using constant-time comparison to prevent timing attacks
+    // Verify signature using constant-time comparison to prevent timing attacks.
+    // Hash both signatures to fixed-length digests before comparing to avoid leaking signature length.
     const expectedSignature = this.generateSignature(fileId, expiresAt);
-    const sigBuf = Buffer.from(signature, 'utf8');
-    const expectedBuf = Buffer.from(expectedSignature, 'utf8');
+    const sigDigest = crypto
+      .createHash('sha256')
+      .update(signature || '')
+      .digest();
+    const expectedDigest = crypto.createHash('sha256').update(expectedSignature).digest();
 
-    if (sigBuf.length !== expectedBuf.length) {
-      return false;
-    }
-
-    return crypto.timingSafeEqual(sigBuf, expectedBuf);
+    return crypto.timingSafeEqual(sigDigest, expectedDigest);
   }
 
   /**
@@ -401,7 +402,7 @@ export class EvidenceStorageService {
   }
 
   /**
-   * Generate storage key for file
+   * Generate storage key for file safely to prevent path traversal
    */
   private generateStorageKey(
     userId: string,
@@ -410,8 +411,13 @@ export class EvidenceStorageService {
     hash: string
   ): string {
     const timestamp = Date.now();
-    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
-    return `${tenantId}/${userId}/${timestamp}-${hash.substring(0, 8)}-${sanitizedFileName}`;
+    const cleanTenantId = tenantId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const cleanUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const baseName = fileName.replace(/\\/g, '/').split('/').pop() || '';
+    const sanitizedFileName = baseName.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/^\.+/, '');
+    const safeFileName = sanitizedFileName || 'file';
+
+    return `${cleanTenantId || 'tenant'}/${cleanUserId || 'user'}/${timestamp}-${hash.substring(0, 8)}-${safeFileName}`;
   }
 
   /**
