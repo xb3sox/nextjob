@@ -91,6 +91,22 @@ describe('EvidenceStorageService', () => {
       expect(result.file.accessControl?.read).toEqual(['user-456', 'user-789']);
       expect(result.file.accessControl?.write).toEqual(['user-456']);
     });
+
+    it('should neutralize path traversal sequences in storage keys', async () => {
+      const request = {
+        userId: '../user-123/..',
+        tenantId: '../../tenant-456',
+        file: Buffer.from('test'),
+        fileName: '../../path/traversal/resume.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const result = await service.uploadEvidence(request);
+
+      expect(result.file.storageKey).not.toContain('..');
+      expect(result.file.storageKey).toMatch(/^tenant-456\/user-123\/\d+-[a-f0-9]{8}-resume\.pdf$/);
+    });
   });
 
   describe('getEvidenceFile', () => {

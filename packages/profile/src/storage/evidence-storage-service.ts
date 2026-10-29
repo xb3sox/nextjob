@@ -402,7 +402,7 @@ export class EvidenceStorageService {
   }
 
   /**
-   * Generate storage key for file
+   * Generate storage key for file safely to prevent path traversal
    */
   private generateStorageKey(
     userId: string,
@@ -411,8 +411,13 @@ export class EvidenceStorageService {
     hash: string
   ): string {
     const timestamp = Date.now();
-    const sanitizedFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '_');
-    return `${tenantId}/${userId}/${timestamp}-${hash.substring(0, 8)}-${sanitizedFileName}`;
+    const cleanTenantId = tenantId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const cleanUserId = userId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const baseName = fileName.replace(/\\/g, '/').split('/').pop() || '';
+    const sanitizedFileName = baseName.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/^\.+/, '');
+    const safeFileName = sanitizedFileName || 'file';
+
+    return `${cleanTenantId || 'tenant'}/${cleanUserId || 'user'}/${timestamp}-${hash.substring(0, 8)}-${safeFileName}`;
   }
 
   /**
