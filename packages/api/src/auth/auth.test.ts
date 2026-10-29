@@ -310,6 +310,26 @@ describe('Authentication', () => {
         registerUser({ email: 'not-an-email', password: 'longEnough1', tenantId: 'tenant-1' })
       ).rejects.toThrow(/valid email/i);
     });
+
+    it('rejects invalid or unauthorized roles during registration', async () => {
+      await expect(
+        registerUser({
+          email: 'hacker@example.com',
+          password: 'testPassword123',
+          tenantId: 'tenant-1',
+          role: 'super_admin' as any,
+        })
+      ).rejects.toThrow(/Invalid user role/);
+
+      await expect(
+        registerUser({
+          email: 'hacker2@example.com',
+          password: 'testPassword123',
+          tenantId: 'tenant-1',
+          role: 'unknown_role' as any,
+        })
+      ).rejects.toThrow(/Invalid user role/);
+    });
   });
 
   describe('User Login', () => {
