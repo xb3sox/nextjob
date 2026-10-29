@@ -56,6 +56,20 @@ jobs:
       - name: Typecheck (packages/shared)
         run: bunx tsc --noEmit -p packages/shared/tsconfig.json
 
+      # Guards the schema -> migration contract: a schema edit without a
+      # regenerated migration leaves the database behind the code.
+      # `git status` rather than `git diff`: a new migration is an untracked
+      # file, and `git diff` only reports tracked paths.
+      - name: Check migrations are in sync with the schema
+        run: |
+          bun run db:generate
+          changed="$(git status --porcelain -- packages/api/drizzle)"
+          if [ -n "$changed" ]; then
+            echo "::error::packages/api/src/db/schema.ts changed without a committed migration. Run 'bun run db:generate' and commit packages/api/drizzle/."
+            echo "$changed"
+            exit 1
+          fi
+
       - name: Lint
         run: bun run lint
 

@@ -5,6 +5,7 @@ import {
   FileAccessDeniedError,
   FileSizeExceededError,
   InvalidFileTypeError,
+  SignedUrlExpiredError,
 } from './types.js';
 
 describe('EvidenceStorageService', () => {
@@ -308,6 +309,75 @@ describe('EvidenceStorageService', () => {
       const tamperedSig = `${signature[0] === '0' ? '1' : '0'}${signature.slice(1)}`;
       const isValid = await service.validateSignedUrl(uploaded.file.id, tamperedSig, expires);
       expect(isValid).toBe(false);
+    });
+
+    it('should throw SignedUrlExpiredError for expired signed URL', async () => {
+      const uploadRequest = {
+        userId: 'user-123',
+        tenantId: 'tenant-456',
+        file: Buffer.from('test'),
+        fileName: 'test.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const uploaded = await service.uploadEvidence(uploadRequest);
+      const pastDate = new Date(Date.now() - 10000).toISOString();
+
+      await expect(
+        service.validateSignedUrl(uploaded.file.id, 'dummy-signature', pastDate)
+      ).rejects.toThrow(SignedUrlExpiredError);
+    });
+
+    it('should throw SignedUrlExpiredError for malformed or invalid expires date string', async () => {
+      const uploadRequest = {
+        userId: 'user-123',
+        tenantId: 'tenant-456',
+        file: Buffer.from('test'),
+        fileName: 'test.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const uploaded = await service.uploadEvidence(uploadRequest);
+
+      await expect(
+        service.validateSignedUrl(uploaded.file.id, 'dummy-signature', 'invalid-date')
+      ).rejects.toThrow(SignedUrlExpiredError);
+    });
+
+    it('should reject signatures with invalid or mismatched lengths safely without timing side-channels', async () => {
+      const uploadRequest = {
+        userId: 'user-123',
+        tenantId: 'tenant-456',
+        file: Buffer.from('test'),
+        fileName: 'test.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const uploaded = await service.uploadEvidence(uploadRequest);
+      const signedUrl = await service.generateSignedUrl(
+        uploaded.file.id,
+        'user-123',
+        'tenant-456',
+        3600
+      );
+
+      const url = new URL(signedUrl.signedUrl);
+      const signature = url.searchParams.get('signature')!;
+      const expires = url.searchParams.get('expires')!;
+
+      // Signature truncated
+      expect(
+        await service.validateSignedUrl(uploaded.file.id, signature.slice(0, 10), expires)
+      ).toBe(false);
+      // Signature elongated
+      expect(await service.validateSignedUrl(uploaded.file.id, signature + 'ffff', expires)).toBe(
+        false
+      );
+      // Empty signature
+      expect(await service.validateSignedUrl(uploaded.file.id, '', expires)).toBe(false);
     });
   });
 
