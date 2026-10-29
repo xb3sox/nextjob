@@ -102,7 +102,10 @@ export function ApplicationCard({
           <ul className="space-y-1">
             {strengths.slice(0, 3).map((s) => (
               <li key={s} className="flex items-start gap-2 text-sm text-white/60">
-                <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
+                <CheckCircle
+                  className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{s}</span>
               </li>
             ))}
@@ -116,7 +119,10 @@ export function ApplicationCard({
           <ul className="space-y-1">
             {gaps.slice(0, 2).map((g) => (
               <li key={g} className="flex items-start gap-2 text-sm text-white/60">
-                <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
+                <AlertCircle
+                  className="w-4 h-4 text-amber-400 mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{g}</span>
               </li>
             ))}
@@ -132,7 +138,7 @@ export function ApplicationCard({
             disabled={eligibilityStatus === 'ineligible'}
             title={
               eligibilityStatus === 'ineligible'
-? 'You do not meet the core eligibility criteria for this role.'
+                ? 'You do not meet the core eligibility criteria for this role.'
                 : undefined
             }
             aria-label={

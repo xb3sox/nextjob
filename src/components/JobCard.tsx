@@ -205,7 +205,10 @@ export function JobCard({
           <ul className="space-y-1">
             {strengths.slice(0, 3).map((strength) => (
               <li key={strength} className="flex items-start gap-2 text-sm text-white/60">
-                <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
+                <CheckCircle
+                  className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{strength}</span>
               </li>
             ))}
@@ -225,13 +228,19 @@ export function JobCard({
             {missingRequirements && missingRequirements.length > 0
               ? missingRequirements.slice(0, 2).map((req) => (
                   <li key={req} className="flex items-start gap-2 text-sm text-white/60">
-                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
+                    <AlertCircle
+                      className="w-4 h-4 text-amber-400 mt-0.5 shrink-0"
+                      aria-hidden="true"
+                    />
                     <span>{req}</span>
                   </li>
                 ))
               : weaknesses.slice(0, 2).map((weakness) => (
                   <li key={weakness} className="flex items-start gap-2 text-sm text-white/60">
-                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
+                    <AlertCircle
+                      className="w-4 h-4 text-amber-400 mt-0.5 shrink-0"
+                      aria-hidden="true"
+                    />
                     <span>{weakness}</span>
                   </li>
                 ))}
@@ -311,7 +320,7 @@ export function JobCard({
             disabled={eligibility === 'ineligible'}
             title={
               eligibility === 'ineligible'
-? 'You do not meet the core eligibility criteria for this role.'
+                ? 'You do not meet the core eligibility criteria for this role.'
                 : undefined
             }
             aria-label={

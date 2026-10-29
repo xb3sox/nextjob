@@ -88,7 +88,7 @@ describe('ApplicationCard', () => {
     expect(applyButton).toBeDisabled();
     expect(applyButton).toHaveAttribute(
       'title',
-      'You do not meet the minimum eligibility criteria for this role'
+      'You do not meet the core eligibility criteria for this role.'
     );
     expect(screen.getByText('Not Eligible')).toBeInTheDocument();
   });
