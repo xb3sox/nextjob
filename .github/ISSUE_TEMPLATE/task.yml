@@ -24,6 +24,10 @@ body:
       description: Mirrors the project `Phase` field.
       options:
         - "1. Environment & Infrastructure"
+        - "2. Your Profile & Evidence"
+        - "3. Jobs & Eligibility"
+        - "4. Matching & Ranking"
+        - "5. Tailoring Engine"
         - "6. Policy & Approvals"
         - "7. Browser Extension & Connectors"
         - "8. Applications & Receipts"
