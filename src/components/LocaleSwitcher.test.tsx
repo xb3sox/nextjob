@@ -28,6 +28,8 @@ describe('LocaleSwitcher component', () => {
     expect(getByTestId('isRTL').textContent).toBe('false');
 
     const select = getByRole('combobox');
+    expect(select.className).toContain('focus-visible:ring-moss');
+
     fireEvent.change(select, { target: { value: 'ar-SA' } });
 
     expect(getByTestId('locale').textContent).toBe('ar-SA');
