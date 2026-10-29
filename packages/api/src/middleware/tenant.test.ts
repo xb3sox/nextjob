@@ -78,6 +78,15 @@ describe('Tenant Isolation Middleware', () => {
       });
       expect(next).not.toHaveBeenCalled();
     });
+
+    it('should handle undefined req.body or req.params without throwing', () => {
+      req.body = undefined as any;
+      req.params = undefined as any;
+      requireTenant(req as Request, res as Response, next);
+
+      expect(next).toHaveBeenCalled();
+      expect(res.status).not.toHaveBeenCalled();
+    });
   });
 
   describe('getTenantFilter', () => {
