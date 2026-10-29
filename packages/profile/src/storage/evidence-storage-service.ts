@@ -201,16 +201,16 @@ export class EvidenceStorageService {
       throw new SignedUrlExpiredError(fileId);
     }
 
-    // Verify signature using constant-time comparison to prevent timing attacks
+    // Verify signature using constant-time comparison to prevent timing attacks.
+    // Hash both signatures to fixed-length digests before comparing to avoid leaking signature length.
     const expectedSignature = this.generateSignature(fileId, expiresAt);
-    const sigBuf = Buffer.from(signature, 'utf8');
-    const expectedBuf = Buffer.from(expectedSignature, 'utf8');
+    const sigDigest = crypto
+      .createHash('sha256')
+      .update(signature || '')
+      .digest();
+    const expectedDigest = crypto.createHash('sha256').update(expectedSignature).digest();
 
-    if (sigBuf.length !== expectedBuf.length) {
-      return false;
-    }
-
-    return crypto.timingSafeEqual(sigBuf, expectedBuf);
+    return crypto.timingSafeEqual(sigDigest, expectedDigest);
   }
 
   /**

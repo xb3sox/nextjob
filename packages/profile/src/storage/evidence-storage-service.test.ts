@@ -329,6 +329,40 @@ describe('EvidenceStorageService', () => {
         service.validateSignedUrl(uploaded.file.id, 'dummy-signature', 'invalid-date')
       ).rejects.toThrow(SignedUrlExpiredError);
     });
+
+    it('should reject signatures with invalid or mismatched lengths safely without timing side-channels', async () => {
+      const uploadRequest = {
+        userId: 'user-123',
+        tenantId: 'tenant-456',
+        file: Buffer.from('test'),
+        fileName: 'test.pdf',
+        mimeType: 'application/pdf',
+        category: 'resume' as const,
+      };
+
+      const uploaded = await service.uploadEvidence(uploadRequest);
+      const signedUrl = await service.generateSignedUrl(
+        uploaded.file.id,
+        'user-123',
+        'tenant-456',
+        3600
+      );
+
+      const url = new URL(signedUrl.signedUrl);
+      const signature = url.searchParams.get('signature')!;
+      const expires = url.searchParams.get('expires')!;
+
+      // Signature truncated
+      expect(
+        await service.validateSignedUrl(uploaded.file.id, signature.slice(0, 10), expires)
+      ).toBe(false);
+      // Signature elongated
+      expect(await service.validateSignedUrl(uploaded.file.id, signature + 'ffff', expires)).toBe(
+        false
+      );
+      // Empty signature
+      expect(await service.validateSignedUrl(uploaded.file.id, '', expires)).toBe(false);
+    });
   });
 
   describe('listEvidence', () => {
