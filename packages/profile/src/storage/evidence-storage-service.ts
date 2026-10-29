@@ -195,8 +195,9 @@ export class EvidenceStorageService {
    * Validate signed URL
    */
   async validateSignedUrl(fileId: string, signature: string, expiresAt: string): Promise<boolean> {
-    // Check expiration
-    if (new Date(expiresAt) < new Date()) {
+    // Check expiration and validate date string
+    const expiresDate = new Date(expiresAt);
+    if (Number.isNaN(expiresDate.getTime()) || expiresDate < new Date()) {
       throw new SignedUrlExpiredError(fileId);
     }
 
