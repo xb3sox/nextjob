@@ -266,11 +266,35 @@ export default function TailorPage() {
                         </label>
                         <textarea
                           id={`${key}-draft`}
+                          // biome-ignore lint/a11y/noAutofocus: focus editing textarea when user initiates edit mode
+                          autoFocus
                           value={draft}
                           onChange={(event) => setDraft(event.target.value)}
+                          onKeyDown={(event) => {
+                            if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+                              event.preventDefault();
+                              decide(key, 'edited', draft);
+                            } else if (event.key === 'Escape') {
+                              event.preventDefault();
+                              setEditing(null);
+                            }
+                          }}
                           rows={4}
                           className="w-full rounded-lg border border-white/15 bg-ink p-3 text-sm text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
                         />
+                        <div className="mt-1.5 flex items-center justify-between">
+                          <span className="text-[11px] text-fog/60">
+                            Press{' '}
+                            <kbd className="font-sans px-1 py-0.5 rounded bg-white/5 border border-white/10">
+                              ⌘/Ctrl+Enter
+                            </kbd>{' '}
+                            to save,{' '}
+                            <kbd className="font-sans px-1 py-0.5 rounded bg-white/5 border border-white/10">
+                              Esc
+                            </kbd>{' '}
+                            to cancel
+                          </span>
+                        </div>
                         <div className="mt-2 flex gap-2">
                           <button
                             type="button"

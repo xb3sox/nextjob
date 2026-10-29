@@ -14,8 +14,10 @@ export function requireTenant(req: Request, res: Response, next: NextFunction): 
     return;
   }
 
-  // Extract tenant ID from request (header, param, or body)
-  const requestedTenantId = req.headers['x-tenant-id'] || req.params.tenantId || req.body.tenantId;
+  // Safely extract tenant ID from request (header, param, or body)
+  const tenantHeader = req.headers['x-tenant-id'];
+  const headerTenantId = Array.isArray(tenantHeader) ? tenantHeader[0] : tenantHeader;
+  const requestedTenantId = headerTenantId || req.params?.tenantId || req.body?.tenantId;
 
   // If no tenant ID specified, use user's tenant
   if (!requestedTenantId) {

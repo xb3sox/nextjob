@@ -11,6 +11,26 @@ import {
   type RankJobsResponse,
 } from './types.js';
 
+/**
+ * Fast O(1) lookup maps for degree and seniority levels to avoid repeated array instantiations
+ * and linear indexOf searches on every evaluation.
+ */
+const DEGREE_LEVEL_MAP: Record<string, number> = {
+  high_school: 0,
+  associate: 1,
+  bachelor: 2,
+  master: 3,
+  doctorate: 4,
+};
+
+const SENIORITY_LEVEL_MAP: Record<string, number> = {
+  entry: 0,
+  mid: 1,
+  senior: 2,
+  lead: 3,
+  executive: 4,
+};
+
 // ============================================================================
 // Matching Engine Service
 // ============================================================================
@@ -122,32 +142,33 @@ export class MatchingEngineService {
 
   /**
    * Rank multiple jobs for a user
+   * Optimized: calculates job matches concurrently using Promise.all to avoid sequential blocking loops.
    */
   async rankJobs(request: RankJobsRequest): Promise<RankJobsResponse> {
     const { userId, tenantId, userProfile, jobs } = request;
 
-    const matches: RankJobsResponse['matches'] = [];
+    const matches = await Promise.all(
+      jobs.map(async (job) => {
+        const matchRequest: CalculateMatchRequest = {
+          userId,
+          tenantId,
+          jobId: job.id,
+          eligibilityId: 'temp', // Will be replaced with actual eligibility check
+          userProfile,
+          job,
+        };
 
-    for (const job of jobs) {
-      const matchRequest: CalculateMatchRequest = {
-        userId,
-        tenantId,
-        jobId: job.id,
-        eligibilityId: 'temp', // Will be replaced with actual eligibility check
-        userProfile,
-        job,
-      };
+        const result = await this.calculateMatch(matchRequest);
 
-      const result = await this.calculateMatch(matchRequest);
-
-      matches.push({
-        jobId: job.id,
-        score: result.match.score,
-        status: result.match.status,
-        strengths: result.match.strengths,
-        weaknesses: result.match.weaknesses,
-      });
-    }
+        return {
+          jobId: job.id,
+          score: result.match.score,
+          status: result.match.status,
+          strengths: result.match.strengths,
+          weaknesses: result.match.weaknesses,
+        };
+      })
+    );
 
     // Sort by score (descending)
     matches.sort((a, b) => b.score - a.score);
@@ -293,14 +314,13 @@ export class MatchingEngineService {
     let score = 100;
     const explanations: string[] = [];
 
-    // Check degree level
+    // Check degree level (using O(1) map lookup)
     if (jobEducation.minimumDegree) {
-      const degreeLevels = ['high_school', 'associate', 'bachelor', 'master', 'doctorate'];
-      const requiredLevel = degreeLevels.indexOf(jobEducation.minimumDegree.toLowerCase());
+      const requiredLevel = DEGREE_LEVEL_MAP[jobEducation.minimumDegree.toLowerCase()] ?? -1;
 
       const hasRequiredDegree = userEducation.some((edu) => {
-        const userLevel = degreeLevels.indexOf(edu.degree.toLowerCase());
-        return userLevel >= requiredLevel;
+        const userLevel = DEGREE_LEVEL_MAP[edu.degree.toLowerCase()] ?? -1;
+        return userLevel >= requiredLevel && userLevel !== -1;
       });
 
       if (!hasRequiredDegree) {
@@ -523,15 +543,14 @@ export class MatchingEngineService {
       };
     }
 
-    // Estimate user seniority from experience
+    // Estimate user seniority from experience (using O(1) map lookup)
     const totalYears = userExperience.reduce((sum, exp) => sum + (exp.years || 0), 0);
 
-    const seniorityLevels = ['entry', 'mid', 'senior', 'lead', 'executive'];
     const userSeniority = this.estimateSeniority(totalYears);
     const requiredSeniority = jobSeniority.toLowerCase();
 
-    const userLevel = seniorityLevels.indexOf(userSeniority);
-    const requiredLevel = seniorityLevels.indexOf(requiredSeniority);
+    const userLevel = SENIORITY_LEVEL_MAP[userSeniority] ?? -1;
+    const requiredLevel = SENIORITY_LEVEL_MAP[requiredSeniority] ?? -1;
 
     if (userLevel === -1 || requiredLevel === -1) {
       return {
