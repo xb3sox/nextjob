@@ -102,7 +102,7 @@ function EligibilityBadge({ status }: { status: EligibilityStatus }) {
 
   return (
     <div className="flex items-center gap-2">
-      <Icon className={cn('w-4 h-4', color)} />
+      <Icon className={cn('w-4 h-4', color)} aria-hidden="true" />
       <span className="text-sm text-white/60">{label}</span>
     </div>
   );
@@ -177,13 +177,13 @@ export function JobCard({
       {/* Meta Info */}
       <div className="flex items-center gap-4 text-sm text-white/60 mb-4">
         <div className="flex items-center gap-1">
-          <MapPin className="w-4 h-4" />
+          <MapPin className="w-4 h-4" aria-hidden="true" />
           <span>{location}</span>
           {remote && <span className="text-emerald-400">· Remote</span>}
         </div>
         {salary && (
           <div className="flex items-center gap-1">
-            <DollarSign className="w-4 h-4" />
+            <DollarSign className="w-4 h-4" aria-hidden="true" />
             <span>
               {salary.min && `$${(salary.min / 1000).toFixed(0)}k`}
               {salary.min && salary.max && ' - '}
@@ -205,7 +205,7 @@ export function JobCard({
           <ul className="space-y-1">
             {strengths.slice(0, 3).map((strength) => (
               <li key={strength} className="flex items-start gap-2 text-sm text-white/60">
-                <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
                 <span>{strength}</span>
               </li>
             ))}
@@ -225,13 +225,13 @@ export function JobCard({
             {missingRequirements && missingRequirements.length > 0
               ? missingRequirements.slice(0, 2).map((req) => (
                   <li key={req} className="flex items-start gap-2 text-sm text-white/60">
-                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
                     <span>{req}</span>
                   </li>
                 ))
               : weaknesses.slice(0, 2).map((weakness) => (
                   <li key={weakness} className="flex items-start gap-2 text-sm text-white/60">
-                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                    <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" aria-hidden="true" />
                     <span>{weakness}</span>
                   </li>
                 ))}
@@ -311,7 +311,7 @@ export function JobCard({
             disabled={eligibility === 'ineligible'}
             title={
               eligibility === 'ineligible'
-                ? 'You do not meet the core eligibility criteria for this role.'
+? 'You do not meet the core eligibility criteria for this role.'
                 : undefined
             }
             aria-label={

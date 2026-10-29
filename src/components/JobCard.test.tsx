@@ -231,7 +231,7 @@ describe('JobCard', () => {
     expect(onView).toHaveBeenCalledTimes(1);
   });
 
-  it('disables apply button when ineligible', () => {
+  it('disables apply button when ineligible and provides tooltip explanation', () => {
     const onApply = vi.fn();
     render(
       <JobCard
@@ -246,6 +246,10 @@ describe('JobCard', () => {
 
     const applyButton = screen.getByText('Not Eligible');
     expect(applyButton).toBeDisabled();
+    expect(applyButton).toHaveAttribute(
+      'title',
+      'You do not meet the minimum eligibility criteria for this role'
+    );
   });
 
   it('renders without salary when not provided', () => {
