@@ -1788,12 +1788,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 33: Monitoring & Optimization
 
 #### T-105: Implement conversion funnel tracking
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Conversion funnel tracking: visitor → page view → CTA click → signup start → signup complete → first application; with drop-off rates and timestamps
 - **Dependencies:** T-48, T-52
 - **Acceptance:** FR-MON-01 satisfied; all funnel stages tracked; drop-off rates calculated; timestamps recorded; accessible in analytics dashboard
-- **Verification:** Complete signup flow → verify all stages tracked; check analytics → verify drop-off rates; verify timestamps → verify accuracy
-- **Files:** `apps/web/src/lib/analytics/funnel.ts`, `apps/web/src/app/api/analytics/funnel/route.ts`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; `bun x vitest run src/lib/analytics/funnel.test.ts` (6/6 passed)
+- **Files:** `src/lib/analytics/funnel.ts`, `src/pages/api/analytics/funnel/route.ts`, `src/pages/admin/AdminConsolePage.tsx`
 
 #### T-106: Set up performance monitoring
 - [ ] **Status:** Not started

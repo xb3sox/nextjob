@@ -1,6 +1,17 @@
-import { Activity, Cpu, Database, Power, RefreshCw, Search, Shield, Users } from 'lucide-react';
+import {
+  Activity,
+  BarChart3,
+  Cpu,
+  Database,
+  Power,
+  RefreshCw,
+  Search,
+  Shield,
+  Users,
+} from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
+import { funnelTracker } from '../../lib/analytics/funnel';
 import type {
   AdminTab,
   AuditLogEntry,
@@ -293,6 +304,7 @@ export default function AdminConsolePage(): React.ReactElement {
           {(
             [
               { key: 'overview', label: 'Overview', icon: Activity },
+              { key: 'funnel', label: 'Conversion Funnel', icon: BarChart3 },
               { key: 'connectors', label: 'Connectors & Kill Switches', icon: Power },
               { key: 'workflows', label: 'Workflows & Reconciliation', icon: RefreshCw },
               { key: 'users', label: 'Users & Organizations', icon: Users },
@@ -319,6 +331,97 @@ export default function AdminConsolePage(): React.ReactElement {
       </nav>
 
       <main className="mx-auto max-w-7xl p-6">
+        {/* CONVERSION FUNNEL TAB */}
+        {activeTab === 'funnel' && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-base font-semibold text-paper">
+                Conversion Funnel & Drop-off Analytics (FR-MON-01)
+              </h2>
+              <p className="text-xs text-fog">
+                Stage progression: Visitor &rarr; Page View &rarr; CTA Click &rarr; Signup Start
+                &rarr; Signup Complete &rarr; First Application.
+              </p>
+            </div>
+
+            {(() => {
+              const report = funnelTracker.calculateReport();
+              return (
+                <div className="space-y-6">
+                  {/* Summary Metrics */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
+                      <span className="text-xs text-fog">Total Tracked Sessions</span>
+                      <p className="text-2xl font-bold text-paper mt-1">{report.totalSessions}</p>
+                      <p className="text-xs text-fog mt-1">Unique visitor sessions recorded</p>
+                    </div>
+
+                    <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
+                      <span className="text-xs text-fog">Overall Funnel Conversion Rate</span>
+                      <p className="text-2xl font-bold text-emerald-400 mt-1">
+                        {report.overallConversionRate}%
+                      </p>
+                      <p className="text-xs text-fog mt-1">Visitor &rarr; First Application</p>
+                    </div>
+
+                    <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-4">
+                      <span className="text-xs text-fog">Total Funnel Drop-off Rate</span>
+                      <p className="text-2xl font-bold text-amber-400 mt-1">
+                        {report.totalDropoffRate}%
+                      </p>
+                      <p className="text-xs text-fog mt-1">Cumulative loss across stages</p>
+                    </div>
+                  </div>
+
+                  {/* Stage Details Table */}
+                  <div className="overflow-x-auto rounded-lg border border-zinc-800">
+                    <table className="w-full text-left text-xs">
+                      <thead className="border-b border-zinc-800 bg-zinc-900/80 text-fog">
+                        <tr>
+                          <th className="p-3">Funnel Stage</th>
+                          <th className="p-3">Count</th>
+                          <th className="p-3">Stage Conversion</th>
+                          <th className="p-3">Drop-off Rate</th>
+                          <th className="p-3">Overall Conversion</th>
+                          <th className="p-3">Avg Time from Prev</th>
+                          <th className="p-3">Last Recorded Timestamp</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-800 bg-zinc-950">
+                        {report.stages.map((st) => (
+                          <tr key={st.stage} className="hover:bg-zinc-900/40">
+                            <td className="p-3 font-semibold text-paper capitalize">
+                              {st.stage.replace('_', ' ')}
+                            </td>
+                            <td className="p-3 font-mono text-paper">{st.count}</td>
+                            <td className="p-3 text-emerald-400 font-medium">
+                              {st.conversionFromPrevious}%
+                            </td>
+                            <td className="p-3 text-amber-400 font-medium">
+                              {st.dropoffFromPrevious}%
+                            </td>
+                            <td className="p-3 text-paper font-medium">{st.overallConversion}%</td>
+                            <td className="p-3 text-fog font-mono">
+                              {st.avgTimeFromPreviousMs > 0
+                                ? `${(st.avgTimeFromPreviousMs / 1000).toFixed(1)}s`
+                                : '—'}
+                            </td>
+                            <td className="p-3 text-fog font-mono text-[11px]">
+                              {st.lastRecordedAt
+                                ? st.lastRecordedAt.replace('T', ' ').substring(0, 19) + ' UTC'
+                                : 'No data'}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
         {/* OVERVIEW TAB */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
