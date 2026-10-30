@@ -554,7 +554,7 @@ function LandingPage() {
         </Reveal>
       </div>
 
-            {/* NextJob for Institutions & Bootcamps (T-53, FR-MKT-08) */}
+      {/* NextJob for Institutions & Bootcamps (T-53, FR-MKT-08) */}
       <div className="border-t border-white/5 cwv-offscreen-section">
         <Reveal>
           <Suspense fallback={<SectionFallback minHeight="500px" />}>
