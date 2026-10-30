@@ -37,6 +37,9 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const CustomerLogos = lazy(() =>
   import('./components/marketing/customer-logos').then((m) => ({ default: m.CustomerLogos }))
 );
+const IntegrationLogos = lazy(() =>
+  import('./components/marketing/integration-logos').then((m) => ({ default: m.IntegrationLogos }))
+);
 const SampleOutputs = lazy(() =>
   import('./components/marketing/sample-outputs').then((m) => ({ default: m.SampleOutputs }))
 );
@@ -304,6 +307,15 @@ function LandingPage() {
         <Reveal>
           <Suspense fallback={<SectionFallback minHeight="120px" />}>
             <CustomerLogos />
+          </Suspense>
+        </Reveal>
+      </div>
+
+      {/* Supported ATS Integration Logos (T-92, FR-TRUST-05) */}
+      <div className="border-t border-white/5 cwv-offscreen-section">
+        <Reveal>
+          <Suspense fallback={<SectionFallback minHeight="350px" />}>
+            <IntegrationLogos />
           </Suspense>
         </Reveal>
       </div>

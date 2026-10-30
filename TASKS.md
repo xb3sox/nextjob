@@ -1593,12 +1593,17 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `src/components/marketing/sample-outputs.tsx`, `src/components/marketing/sample-outputs-data.ts`, `src/components/marketing/sample-outputs.test.tsx`, `public/images/samples/`
 
 #### T-92: Implement integration logos
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Supported ATS integration logos: Greenhouse, Lever, Workday, iCIMS; with "coming soon" indicators for planned integrations
 - **Dependencies:** T-52, T-77, T-23
 - **Acceptance:** FR-TRUST-05 satisfied; logos displayed accurately; "coming soon" indicators clear; responsive grid; accessible
-- **Verification:** Review logos → verify accuracy; check "coming soon" → verify clarity; test mobile → verify responsive
-- **Files:** `apps/web/src/components/marketing/integration-logos.tsx`, `public/images/integrations/`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; verified supported ATS integration logos (Greenhouse, Lever, Workday, iCIMS) and clear "coming soon" indicators for planned integrations (Ashby, BambooHR, SmartRecruiters, Workable), responsive grid, and WCAG 2.2 AA accessibility unit tests (`integration-logos.test.tsx`, 5/5 passed).
+- **Files:** `src/components/marketing/integration-logos.tsx`, `src/components/marketing/integration-logos.test.tsx`, `public/images/integrations/`
+- **Evidence:**
+  - ✅ IntegrationLogos component implemented with supported ATS connectors (Greenhouse, Lever, Workday, iCIMS) and clear "coming soon" indicators for planned ATS integrations
+  - ✅ Clean SVG logos added in `public/images/integrations/`
+  - ✅ Integrated with lazy loading in `src/App.tsx` and exported from `src/components/marketing/index.ts`
+  - ✅ 5 unit tests passing in `src/components/marketing/integration-logos.test.tsx`
 
 #### T-93: Create press/media section
 - [x] **Status:** Complete (2026-10-30)
@@ -1899,7 +1904,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-TRUST-02 (Security certifications) | T-89 | Not started |
 | FR-TRUST-03 (Data transparency) | T-90 | Not started |
 | FR-TRUST-04 (Sample outputs) | T-91 | Not started |
-| FR-TRUST-05 (Integration logos) | T-92 | Not started |
+| FR-TRUST-05 (Integration logos) | T-92 | Complete |
 | FR-TRUST-06 (Press/media) | T-93 | Complete |
 | FR-TRUST-07 (Case studies) | Not in MVP scope | N/A |
 | FR-TRUST-08 (Trust badges) | T-89 | Not started |
