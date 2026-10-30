@@ -1,3 +1,4 @@
+export * from './animated-section';
 export * from './animations';
 export * from './b2b';
 export * from './CtaButton';
