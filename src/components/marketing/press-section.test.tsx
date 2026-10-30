@@ -1,10 +1,19 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { PRESS_MENTIONS, PressSection } from './press-section';
 
+function renderPressSection() {
+  return render(
+    <MemoryRouter>
+      <PressSection />
+    </MemoryRouter>
+  );
+}
+
 describe('PressSection (T-93, FR-TRUST-06)', () => {
   it('renders press section heading, badge, and description', () => {
-    render(<PressSection />);
+    renderPressSection();
 
     expect(
       screen.getByRole('heading', { level: 2, name: /trusted by the press/i })
@@ -14,7 +23,7 @@ describe('PressSection (T-93, FR-TRUST-06)', () => {
   });
 
   it('renders all default press mentions', () => {
-    render(<PressSection />);
+    renderPressSection();
 
     for (const mention of PRESS_MENTIONS) {
       expect(screen.getByText(mention.title)).toBeInTheDocument();
@@ -23,7 +32,7 @@ describe('PressSection (T-93, FR-TRUST-06)', () => {
   });
 
   it('filters press mentions when clicking category tabs', () => {
-    render(<PressSection />);
+    renderPressSection();
 
     // Click "Articles" tab
     const articlesTab = screen.getByRole('tab', { name: /articles/i });
@@ -71,7 +80,7 @@ describe('PressSection (T-93, FR-TRUST-06)', () => {
   });
 
   it('verifies press article external links have security and a11y attributes', () => {
-    render(<PressSection />);
+    renderPressSection();
 
     const techcrunchLink = screen.getByRole('link', {
       name: /nextjob builds the cryptographic antidote to ai resume hallucination on techcrunch/i,
@@ -83,7 +92,7 @@ describe('PressSection (T-93, FR-TRUST-06)', () => {
   });
 
   it('renders publication dates using semantic time elements', () => {
-    render(<PressSection />);
+    renderPressSection();
 
     const timeElements = document.querySelectorAll('time');
     expect(timeElements.length).toBeGreaterThanOrEqual(PRESS_MENTIONS.length);
@@ -94,7 +103,7 @@ describe('PressSection (T-93, FR-TRUST-06)', () => {
   });
 
   it('renders press media inquiry contact link', () => {
-    render(<PressSection />);
+    renderPressSection();
 
     const pressMailto = screen.getByRole('link', { name: 'press@nextjob.ai' });
     expect(pressMailto).toHaveAttribute('href', 'mailto:press@nextjob.ai');

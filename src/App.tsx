@@ -26,6 +26,7 @@ const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ApplicationsPage = lazy(() => import('./pages/applications/ApplicationsPage'));
 const CohortReportPage = lazy(() => import('./pages/organizations/CohortReportPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const PressKitPage = lazy(() => import('./pages/PressKitPage'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TailorPage = lazy(() => import('./pages/TailorPage'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
@@ -560,6 +561,9 @@ function LandingPage() {
             >
               Sign in
             </Link>
+            <Link to="/press-kit" className="hover:text-paper transition-colors">
+              Press Kit
+            </Link>
             <Link to="/privacy" className="hover:text-paper transition-colors">
               Privacy
             </Link>
@@ -598,6 +602,7 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/press-kit" element={<PressKitPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/login" element={<LoginPage />} />

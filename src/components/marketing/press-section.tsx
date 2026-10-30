@@ -1,6 +1,7 @@
 import { Award, ExternalLink, Headphones, Newspaper, Radio } from 'lucide-react';
 import type React from 'react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export type PressCategory = 'all' | 'article' | 'podcast' | 'award';
 
@@ -226,7 +227,14 @@ export function PressSection({ className = '' }: PressSectionProps) {
             >
               press@nextjob.ai
             </a>{' '}
-            · Brand assets available upon request.
+            · Access downloadable logos and brand guidelines in our{' '}
+            <Link
+              to="/press-kit"
+              className="text-moss hover:underline font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-moss rounded"
+            >
+              Press Kit
+            </Link>
+            .
           </p>
         </div>
       </div>
