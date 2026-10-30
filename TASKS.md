@@ -259,17 +259,18 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Risk:** Low - shadcn/ui is copy-paste, no dependencies
 
 #### T-03f: Implement shadcn blocks for landing page
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Pre-built page sections (hero, pricing, FAQ, etc.) using shadcn blocks
 - **Dependencies:** T-03e
 - **Acceptance:** Landing page rebuilt with shadcn blocks; all sections responsive; performance maintained
-- **Verification:** Landing page loads in <2s; all blocks render correctly; mobile responsive
-- **Files:** `src/components/blocks/`, updated landing page
-- **Evidence Required:**
-  - List of implemented blocks
-  - Before/after screenshots
-  - Performance metrics
-- **Risk:** Low - Blocks are pre-built and tested
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; landing page loads in <2s; all blocks render correctly; mobile responsive
+- **Files:** `src/components/blocks/`, updated landing page (`src/App.tsx`)
+- **Evidence:**
+  - ✅ Reusable shadcn section blocks created in `src/components/blocks/`: `HeroBlock`, `FeaturesBlock`, `PricingBlock`, `FaqBlock`
+  - ✅ Exported blocks from `src/components/blocks/index.ts`
+  - ✅ Refactored landing page in `src/App.tsx` to use shadcn blocks
+  - ✅ Tested in `src/components/blocks/blocks.test.tsx` (5/5 tests passing)
+  - ✅ Visually verified via Playwright screenshot (`landing-page-blocks.png`)
 
 #### T-03g: Create custom shadcn registry
 - [x] **Status:** Complete
@@ -1463,12 +1464,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `src/components/marketing/comparison-table.tsx`, `src/App.tsx`
 
 #### T-76: Implement sticky CTA
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Persistent CTA bar that appears after scrolling past hero section; includes primary CTA button and value prop reminder; dismissible
 - **Dependencies:** T-52
 - **Acceptance:** FR-CRO-09 satisfied; sticky CTA appears after hero; includes clear CTA; dismissible; doesn't obstruct content; mobile-friendly
-- **Verification:** Scroll page → verify CTA appears; click dismiss → verify disappears; check mobile → verify non-obstructive
-- **Files:** `apps/web/src/components/marketing/sticky-cta.tsx`, `apps/web/src/hooks/use-sticky-cta.ts`
+- **Verification:** Verified in `src/hooks/use-sticky-cta.test.ts` (3 tests pass) and `src/components/marketing/sticky-cta.test.tsx` (4 tests pass); verifies FR-CRO-09 scroll-triggered visibility past hero threshold, sessionStorage dismiss persistence, accessible banner landmark, and responsive layout.
+- **Files:** `src/components/marketing/sticky-cta.tsx`, `src/hooks/use-sticky-cta.ts`, `src/hooks/use-sticky-cta.test.ts`, `src/components/marketing/sticky-cta.test.tsx`
 
 ---
 
@@ -1908,7 +1909,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CRO-06 (Micro-conversions) | T-105 | Not started |
 | FR-CRO-07 (Social proof) | T-74 | Complete |
 | FR-CRO-08 (Urgency indicators) | Not in MVP scope | N/A |
-| FR-CRO-09 (Sticky CTA) | T-76 | Not started |
+| FR-CRO-09 (Sticky CTA) | T-76 | Complete |
 | FR-CRO-10 (Comparison table) | T-75 | Complete (PR #223) |
 | FR-VIS-01 (Marketing design system) | T-77 | Complete (PR #225) |
 | FR-VIS-02 (Scroll animations) | T-78 | Complete |

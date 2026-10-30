@@ -17,6 +17,7 @@ export * from './press-section';
 export * from './product-demo';
 export * from './sample-outputs';
 export * from './social-proof-carousel';
+export * from './sticky-cta';
 export * from './TestimonialCard';
 export * from './TrustBadges';
 export * from './video-player';
