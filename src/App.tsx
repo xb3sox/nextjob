@@ -3,9 +3,11 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
+import { CommunityLinks } from './components/marketing/community-links';
 import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
 import { CustomerLogos } from './components/marketing/customer-logos';
+import { PressSection } from './components/marketing/press-section';
 import { ProductDemo } from './components/marketing/product-demo';
 import { SampleOutputs } from './components/marketing/sample-outputs';
 import { SocialProofCarousel } from './components/marketing/social-proof-carousel';
@@ -488,6 +490,16 @@ function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Press & Media Recognition (T-93, FR-TRUST-06) */}
+      <Reveal>
+        <PressSection />
+      </Reveal>
+
+      {/* Community Links (T-103, FR-GROW-04) */}
+      <Reveal>
+        <CommunityLinks />
+      </Reveal>
 
       {/* Final CTA */}
       <section className="py-28 px-6 border-t border-white/5 relative overflow-hidden">
