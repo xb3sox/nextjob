@@ -1,12 +1,14 @@
 import { ArrowLeft, FileCheck, LogOut, Search, ShieldAlert, Zap } from 'lucide-react';
-import { useId, useMemo } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { ALLOWED_OUTCOME_TRANSITIONS, OutcomeModal } from './OutcomeModal';
 import { verifyReceipt } from './receiptVerifier';
 import {
   APPLICATION_GROUPS,
   type ApplicationGroup,
+  type ApplicationState,
   STATE_TO_GROUP,
   type TrackedApplication,
 } from './types';
@@ -16,7 +18,8 @@ export default function ApplicationsPage() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [applications] = useApplications();
+  const [applications, setApplications] = useApplications();
+  const [outcomeTargetApp, setOutcomeTargetApp] = useState<TrackedApplication | null>(null);
   const searchInputId = useId();
 
   const query = searchParams.get('q') || '';
@@ -38,13 +41,13 @@ export default function ApplicationsPage() {
         }
       }
 
-      // Filter by search query
+      // Filter by query string
       if (query.trim()) {
         const q = query.toLowerCase();
-        const titleMatch = app.jobTitle?.toLowerCase().includes(q);
-        const companyMatch = app.companyName?.toLowerCase().includes(q);
-        const idMatch = app.id.toLowerCase().includes(q);
-        if (!titleMatch && !companyMatch && !idMatch) {
+        const title = (app.jobTitle || '').toLowerCase();
+        const company = (app.companyName || '').toLowerCase();
+        const id = app.id.toLowerCase();
+        if (!title.includes(q) && !company.includes(q) && !id.includes(q)) {
           return false;
         }
       }
@@ -53,7 +56,7 @@ export default function ApplicationsPage() {
     });
   }, [applications, stateFilter, query]);
 
-  // Group applications by the eight defined groups in exact order
+  // Group applications by the 8 lifecycle groups
   const groupedApps = useMemo(() => {
     const map = new Map<ApplicationGroup, TrackedApplication[]>();
     for (const group of APPLICATION_GROUPS) {
@@ -61,111 +64,140 @@ export default function ApplicationsPage() {
     }
     for (const app of filteredApps) {
       const group = STATE_TO_GROUP[app.state] || 'Planned';
-      map.get(group)?.push(app);
+      const list = map.get(group);
+      if (list) {
+        list.push(app);
+      }
     }
     return map;
   }, [filteredApps]);
 
+  // Auth gate after hooks
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  const handleSearchChange = (newQuery: string) => {
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        if (newQuery) {
-          next.set('q', newQuery);
-        } else {
-          next.delete('q');
-        }
-        return next;
-      },
-      { replace: true }
-    );
+  const handleGroupFilter = (group: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (group === 'all') {
+      next.delete('state');
+    } else {
+      next.set('state', group.toLowerCase().replace(/\s+/g, '-'));
+    }
+    setSearchParams(next);
   };
 
-  const handleGroupFilter = (groupOrAll: string) => {
-    setSearchParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        if (groupOrAll === 'all') {
-          next.delete('state');
-        } else {
-          next.set('state', groupOrAll.toLowerCase().replace(/\s+/g, '-'));
-        }
-        return next;
-      },
-      { replace: true }
-    );
+  const handleSearchChange = (val: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (val.trim()) {
+      next.set('q', val);
+    } else {
+      next.delete('q');
+    }
+    setSearchParams(next);
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
+  const handleSaveOutcome = (
+    applicationId: string,
+    newOutcome: ApplicationState,
+    notes?: string
+  ) => {
+    setApplications((prev) =>
+      prev.map((app) => {
+        if (app.id !== applicationId) return app;
+        const newAudit = {
+          at: new Date().toISOString(),
+          from: app.state,
+          to: newOutcome,
+          actor: 'candidate',
+          reason: notes || `Outcome updated to ${newOutcome}`,
+        };
+        return {
+          ...app,
+          state: newOutcome,
+          audit: [...(app.audit || []), newAudit],
+        };
+      })
+    );
   };
 
   const hasAnyApps = applications.length > 0;
   const hasMatchingApps = filteredApps.length > 0;
 
   return (
-    <div className="min-h-screen bg-ink text-paper">
-      {/* Header */}
-      <header className="border-b border-white/5 bg-ink/80 backdrop-blur-sm sticky top-0 z-20">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-2 font-semibold text-sm hover:opacity-90 transition-opacity"
-            >
-              <Zap className="w-5 h-5 text-moss" aria-hidden="true" />
-              <span>NextJob</span>
-            </Link>
-            <span className="text-white/20">/</span>
-            <span className="text-sm font-medium text-white/80">Application Tracker</span>
-          </div>
-
+    <div className="min-h-screen bg-ink text-paper flex flex-col font-sans selection:bg-moss/20">
+      {/* Top Header */}
+      <header className="border-b border-white/10 bg-ink/80 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
               to="/dashboard"
-              className="inline-flex items-center gap-1.5 text-xs text-fog hover:text-paper transition-colors"
+              className="p-2 -ml-2 rounded-lg text-fog hover:text-paper hover:bg-white/5 transition-colors"
+              aria-label="Back to Dashboard"
             >
-              <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Dashboard</span>
+              <ArrowLeft className="w-5 h-5" aria-hidden="true" />
             </Link>
-            <span className="hidden sm:block text-xs text-fog/60 truncate max-w-40">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-moss animate-pulse" />
+              <span className="font-bold tracking-tight text-lg text-paper">NextJob</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-fog font-mono ml-1">
+                Tracker
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-fog hidden sm:inline" data-testid="user-email">
               {user.email}
             </span>
             <button
               type="button"
-              onClick={handleSignOut}
-              className="inline-flex items-center gap-1.5 text-xs text-fog hover:text-paper transition-colors"
+              onClick={() => {
+                signOut();
+                navigate('/login');
+              }}
+              className="p-2 rounded-lg text-fog hover:text-paper hover:bg-white/5 transition-colors"
+              aria-label="Sign out"
             >
-              <LogOut className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Sign out</span>
+              <LogOut className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-6 py-10">
-        {/* Page Title & Controls */}
+      {/* Main Container */}
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
+        {/* Title and Controls */}
         <div className="mb-8">
-          <h1 className="font-display text-4xl mb-2">Application Tracker</h1>
-          <p className="text-fog text-sm max-w-xl">
-            Track and verify the end-to-end lifecycle of every job application, from planned
-            tailoring to immutable submission receipts.
-          </p>
-        </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-paper tracking-tight flex items-center gap-2">
+                <span>Application Tracker</span>
+                <span className="text-xs font-mono font-normal text-moss px-2 py-0.5 rounded-full bg-moss/10 border border-moss/20">
+                  {applications.length} Total
+                </span>
+              </h1>
+              <p className="text-sm text-fog mt-1">
+                Track and inspect lifecycle stages, cryptographic receipts, and outcome progress.
+              </p>
+            </div>
 
-        {/* Filter & Search Bar */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8 justify-between items-stretch sm:items-center">
-          <div className="relative flex-1 max-w-md">
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-moss/10 border border-moss/30 hover:bg-moss/20 text-moss text-xs font-semibold transition-colors shrink-0"
+            >
+              <Zap className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Match New Jobs</span>
+            </Link>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative mb-4">
             <label htmlFor={searchInputId} className="sr-only">
-              Search applications by title, company, or ID
+              Search applications
             </label>
             <Search
-              className="w-4 h-4 text-fog/60 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-fog/60 pointer-events-none"
               aria-hidden="true"
             />
             <input
@@ -173,16 +205,16 @@ export default function ApplicationsPage() {
               type="search"
               value={query}
               onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder="Search applications..."
-              className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm text-paper placeholder:text-fog/50 focus:outline-none focus:ring-2 focus:ring-moss focus:border-transparent transition-all"
+              placeholder="Search by job title, company, or ID..."
+              className="w-full text-sm rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 py-2 text-paper placeholder:text-fog/50 focus:outline-none focus:ring-1 focus:ring-moss focus:border-moss transition-all"
             />
           </div>
 
-          {/* Group Filter Tabs (Buttons) */}
+          {/* Lifecycle Group Tabs */}
           <div
-            className="flex items-center gap-1 overflow-x-auto pb-2 sm:pb-0 scrollbar-none"
             role="tablist"
-            aria-label="Filter applications by state"
+            aria-label="Lifecycle groups"
+            className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none"
           >
             <button
               type="button"
@@ -272,7 +304,11 @@ export default function ApplicationsPage() {
                   ) : (
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {apps.map((app) => (
-                        <ApplicationItem key={app.id} application={app} />
+                        <ApplicationItem
+                          key={app.id}
+                          application={app}
+                          onOpenOutcome={(target) => setOutcomeTargetApp(target)}
+                        />
                       ))}
                     </div>
                   )}
@@ -281,14 +317,32 @@ export default function ApplicationsPage() {
             })}
           </div>
         )}
+
+        {/* Modal for capturing outcome */}
+        {outcomeTargetApp && (
+          <OutcomeModal
+            application={outcomeTargetApp}
+            isOpen={!!outcomeTargetApp}
+            onClose={() => setOutcomeTargetApp(null)}
+            onSaveOutcome={handleSaveOutcome}
+          />
+        )}
       </main>
     </div>
   );
 }
 
-function ApplicationItem({ application }: { application: TrackedApplication }) {
+function ApplicationItem({
+  application,
+  onOpenOutcome,
+}: {
+  application: TrackedApplication;
+  onOpenOutcome: (app: TrackedApplication) => void;
+}) {
   const { id, state, jobTitle, companyName, receipt, audit } = application;
   const isReceiptValid = receipt ? verifyReceipt(receipt) : true;
+  const allowed = ALLOWED_OUTCOME_TRANSITIONS[state] || [];
+  const canUpdateOutcome = allowed.length > 0;
 
   return (
     <div className="border border-white/10 rounded-xl bg-white/[0.03] hover:border-white/20 transition-all p-5 flex flex-col justify-between">
@@ -311,45 +365,62 @@ function ApplicationItem({ application }: { application: TrackedApplication }) {
         )}
       </div>
 
-      {/* Submission Receipt Section */}
-      {receipt && (
-        <div className="mt-4 pt-3 border-t border-white/10">
-          <div className="flex items-center justify-between text-xs mb-1.5">
-            <span className="text-fog flex items-center gap-1">
-              <FileCheck className="w-3.5 h-3.5 text-moss" aria-hidden="true" />
-              <span>Receipt:</span>
-            </span>
-            <span
-              className={cn(
-                'font-mono text-[11px] px-1.5 py-0.5 rounded capitalize',
-                receipt.verificationStatus === 'verified'
-                  ? 'bg-emerald-500/10 text-emerald-400'
-                  : 'bg-amber-500/10 text-amber-400'
-              )}
-            >
-              {receipt.verificationStatus}
-            </span>
-          </div>
-
-          <div
-            className="text-[11px] font-mono text-fog/80 truncate mb-1"
-            title={receipt.contentHash}
-          >
-            Hash: {receipt.contentHash.slice(0, 16)}...
-          </div>
-
-          {/* Tamper / Verification Warning */}
-          {!isReceiptValid && (
-            <div
-              role="alert"
-              className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-xs text-red-400"
-            >
-              <ShieldAlert className="w-4 h-4 shrink-0 text-red-400" aria-hidden="true" />
-              <span>Warning: Receipt verification mismatch. Submission may be tampered.</span>
+      <div>
+        {/* Submission Receipt Section */}
+        {receipt && (
+          <div className="mt-4 pt-3 border-t border-white/10">
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-fog flex items-center gap-1">
+                <FileCheck className="w-3.5 h-3.5 text-moss" aria-hidden="true" />
+                <span>Receipt:</span>
+              </span>
+              <span
+                className={cn(
+                  'font-mono text-[11px] px-1.5 py-0.5 rounded capitalize',
+                  receipt.verificationStatus === 'verified'
+                    ? 'bg-emerald-500/10 text-emerald-400'
+                    : 'bg-amber-500/10 text-amber-400'
+                )}
+              >
+                {receipt.verificationStatus}
+              </span>
             </div>
+
+            <div
+              className="text-[11px] font-mono text-fog/80 truncate mb-1"
+              title={receipt.contentHash}
+            >
+              Hash: {receipt.contentHash.slice(0, 16)}...
+            </div>
+
+            {/* Tamper / Verification Warning */}
+            {!isReceiptValid && (
+              <div
+                role="alert"
+                className="mt-2 p-2 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-xs text-red-400"
+              >
+                <ShieldAlert className="w-4 h-4 shrink-0 text-red-400" aria-hidden="true" />
+                <span>Warning: Receipt verification mismatch. Submission may be tampered.</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Outcome Update Action */}
+        <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+          {canUpdateOutcome ? (
+            <button
+              type="button"
+              onClick={() => onOpenOutcome(application)}
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-moss/10 hover:bg-moss/20 text-moss border border-moss/20 hover:border-moss/40 transition-colors"
+            >
+              Update Outcome
+            </button>
+          ) : (
+            <span className="text-[11px] text-fog/60 italic">Outcome finalized</span>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
