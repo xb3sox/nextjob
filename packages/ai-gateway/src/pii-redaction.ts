@@ -177,8 +177,6 @@ export function redactWithContext(
         preserveEmail: false,
         preservePhone: false,
       });
-
-    case 'general':
     default:
       // For general text, redact all PII
       return redactPII(text);

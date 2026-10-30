@@ -147,7 +147,7 @@
           errDiv.style = 'position:fixed;bottom:0;left:0;right:0;background:#7f1d1d;color:#fee2e2;padding:16px;z-index:99999;font-family:monospace;font-size:14px;white-space:pre-wrap;border-top:2px solid #ef4444;max-height:50vh;overflow:auto;';
           document.body.appendChild(errDiv);
         }
-        errDiv.textContent += (e.error ? (e.error.stack || e.error.message) : e.message) + '\n';
+        errDiv.textContent += `${e.error ? (e.error.stack || e.error.message) : e.message}\n`;
       });
       window.addEventListener('unhandledrejection', (e) => {
         var errDiv = document.getElementById('debug-error-banner');
@@ -157,7 +157,7 @@
           errDiv.style = 'position:fixed;bottom:0;left:0;right:0;background:#7f1d1d;color:#fee2e2;padding:16px;z-index:99999;font-family:monospace;font-size:14px;white-space:pre-wrap;border-top:2px solid #ef4444;max-height:50vh;overflow:auto;';
           document.body.appendChild(errDiv);
         }
-        errDiv.textContent += 'Unhandled Promise Rejection: ' + (e.reason ? (e.reason.stack || e.reason.message || e.reason) : '') + '\n';
+        errDiv.textContent += `Unhandled Promise Rejection: ${e.reason ? (e.reason.stack || e.reason.message || e.reason) : ''}\n`;
       });
     </script>
     
