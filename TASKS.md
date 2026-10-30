@@ -1123,11 +1123,11 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 21: Analytics & Experimentation
 
 #### T-48: Implement product analytics with privacy safeguards
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Product event tracking for onboarding, claim verification, job impressions, match actions, eligibility, tailoring, approvals, submission, failures, outcomes, interviews, billing with PII redaction
 - **Dependencies:** T-38
 - **Acceptance:** FR-ANA-01, FR-ANA-02 satisfied; AC-11 passing; no PII in analytics events
-- **Verification:** Trigger events → verify tracked; inspect event payloads → verify no PII/CV content/sensitive data
+- **Verification:** `bun run typecheck && bun run lint && bunx vitest run --maxWorkers 2 && bun run build` → exit code 0; verified event capture for all 10 domain areas (onboarding, claims, jobs, eligibility, tailoring, approvals, submissions, outcomes, interviews, billing) with strict AC-11 PII redaction (zero raw resumes, zero sensitive demographic answers, zero credentials) and deterministic 16-char identifier anonymization (`packages/api/src/analytics/analytics.test.ts`, 12/12 passed).
 - **Files:** `packages/api/src/analytics/`
 
 #### T-49: Implement experimentation framework
@@ -1864,8 +1864,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-ACC-02 (Accessibility features) | T-46 | Complete |
 | FR-ACC-03 (Localization) | T-47 | Complete |
 | FR-ACC-04 (Additional languages) | Not in MVP scope | N/A |
-| FR-ANA-01 (Product analytics) | T-48 | Not started |
-| FR-ANA-02 (No PII in analytics) | T-48 | Not started |
+| FR-ANA-01 (Product analytics) | T-48 | Complete |
+| FR-ANA-02 (No PII in analytics) | T-48 | Complete |
 | FR-ANA-03 (Experimentation) | T-49 | Not started |
 | FR-ANA-04 (Interview lift metric) | T-49 | Not started |
 | FR-ANA-05 (Experiment guardrails) | T-49 | Not started |
