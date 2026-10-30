@@ -3,6 +3,8 @@
  * Aligned with docs/DESIGN.md - Ultra-minimal, typography-driven.
  */
 
+@import "./critical.css";
+
 :root {
   /* Marketing Backgrounds */
   --mkt-bg-ink: #0b0d0c;
