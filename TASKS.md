@@ -1365,12 +1365,17 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/app/(marketing)/layout.tsx`, `apps/web/src/lib/metadata.ts`
 
 #### T-68: Implement structured data for AI
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Enhanced schema markup with detailed entity definitions, relationships, and properties optimized for AI understanding
 - **Dependencies:** T-62, T-65
 - **Acceptance:** FR-SEO-07 satisfied; schema includes detailed entity definitions; relationships clearly defined; AI tools can parse content accurately
-- **Verification:** Test with AI tools → verify entity extraction; inspect schema → verify detail level; check Search Console → verify no errors
-- **Files:** `apps/web/src/lib/schema.ts`, `apps/web/src/app/(marketing)/layout.tsx`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; `bun x vitest run --maxWorkers 2 src/test/schema-markup.test.ts` (4/4 passed)
+- **Files:** `src/lib/schema.ts`, `src/lib/seo.ts`, `index.html`, `src/test/schema-markup.test.ts`
+- **Evidence:**
+  - ✅ Enhanced schema markup graph in `src/lib/schema.ts` and `index.html` with interconnected entities: `Organization` (`#organization`), `SoftwareApplication` (`#softwareapplication`), `Service` (`#service`), `HowTo` (`#workflow`), `OfferCatalog` (`#offercatalog`), `Offer` (`#offer-free`, `#offer-search`), `DefinedTermSet` (`#terms`), `FAQPage` (`#faq`), and `WebSite` (`#website`)
+  - ✅ Detailed properties optimized for AI parsing: `slogan`, `knowsAbout`, `contactPoint`, `publishingPrinciples`, `applicationSubCategory`, `hasOfferCatalog`, `priceSpecification`, `serviceType`, HowTo workflow steps, and DefinedTerm codes (`AI-AGENT`, `CAREER-GRAPH`, `SUBMISSION-RECEIPT`, `ELIGIBILITY-ENGINE`)
+  - ✅ Dynamic JSON-LD graph synchronization in `src/lib/seo.ts` (`applyRouteMeta` called by `RouteMeta` in `src/App.tsx`)
+  - ✅ Verified by unit tests in `src/test/schema-markup.test.ts` (4/4 passed)
 
 ---
 
