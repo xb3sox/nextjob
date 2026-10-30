@@ -20,6 +20,7 @@
     "lint:fix": "biome check --write .",
     "test": "vitest",
     "test:eval": "vitest run --project node evals",
+    "test:e2e": "vitest run src/test/e2e",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "format": "biome format --write .",
