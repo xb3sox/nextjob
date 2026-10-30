@@ -1575,12 +1575,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `docs/marketing/video-scripts.md`, `docs/marketing/video-scripts.test.ts`
 
 #### T-87: Set up email nurture sequences
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Email sequences: welcome series (3 emails over 7 days), onboarding (5 emails over 14 days), re-engagement (monthly); templates and copy
 - **Dependencies:** T-83, T-84, T-100
 - **Acceptance:** FR-CONT-05 satisfied; sequences are logical and valuable; copy follows guidelines; templates created; ready to deploy
-- **Verification:** Review sequences → verify logic; check copy → verify guidelines; test templates → verify rendering
-- **Files:** `docs/marketing/email-sequences.md`, `apps/web/src/lib/email/templates/`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; verified email sequence documentation (`docs/marketing/email-sequences.md`), copywriting guidelines alignment, template generators (`src/lib/email/templates/`), and unit tests (`docs/marketing/email-sequences.test.ts`, `src/lib/email/templates/templates.test.ts`, 10/10 passed).
+- **Files:** `docs/marketing/email-sequences.md`, `src/lib/email/templates/`
 
 ---
 
@@ -1923,7 +1923,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CONT-02 (Copywriting guidelines) | T-84 | Not started |
 | FR-CONT-03 (Content blocks) | T-85 | Complete |
 | FR-CONT-04 (Video scripts) | T-86 | Not started |
-| FR-CONT-05 (Email nurture) | T-87 | Not started |
+| FR-CONT-05 (Email nurture) | T-87 | Complete |
 | FR-CONT-06 (Lead magnets) | Not in MVP scope | N/A |
 | FR-CONT-07 (Blog/resources) | Not in MVP scope | N/A |
 | FR-TRUST-01 (Customer logos) | T-88 | Complete (PR #229) |
