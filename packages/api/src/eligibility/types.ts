@@ -52,7 +52,7 @@ export const EligibilityRuleSchema = z.object({
 
   // Rule configuration
   required: z.boolean().default(true),
-  condition: z.record(z.any()), // Rule-specific condition
+  condition: z.record(z.string(), z.any()), // Rule-specific condition
 
   // Priority and ordering
   priority: z.number().int().default(0), // Higher = checked first
