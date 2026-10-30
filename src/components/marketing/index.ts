@@ -7,6 +7,7 @@ export * from './community-links';
 export * from './comparison';
 export * from './comparison-table';
 export * from './customer-logos';
+export * from './email-capture';
 export * from './exit-intent';
 export * from './FeatureSection';
 export * from './HeroSection';

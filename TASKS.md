@@ -1743,12 +1743,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 32: Growth Infrastructure
 
 #### T-100: Implement email capture
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Email capture forms: newsletter signup in footer, lead magnet download forms, exit intent capture; with validation and success states
 - **Dependencies:** T-52, T-72, T-86
 - **Acceptance:** FR-GROW-01 satisfied; forms are accessible and validated; success states shown; emails stored securely; GDPR compliant
-- **Verification:** Submit forms → verify validation and success; check database → verify storage; test GDPR → verify consent
-- **Files:** `apps/web/src/components/marketing/email-capture.tsx`, `apps/web/src/app/api/newsletter/route.ts`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run src/components/marketing/email-capture.test.tsx src/pages/api/newsletter/route.test.ts src/components/marketing/exit-intent.test.tsx && bun run build` → exit code 0; verified email format validation, required GDPR consent check, memory/store persistence with timestamps, and WCAG 2.2 AA accessible component rendering in footer and exit intent modal.
+- **Files:** `src/components/marketing/email-capture.tsx`, `src/pages/api/newsletter/route.ts`
 
 #### T-101: Set up email nurture
 - [ ] **Status:** Not started
@@ -1941,7 +1941,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-TECH-06 (Form validation) | T-99 | Complete |
 | FR-TECH-07 (Bot protection) | Not in MVP scope | N/A |
 | FR-TECH-08 (Enhanced accessibility) | T-46 | Complete |
-| FR-GROW-01 (Email capture) | T-100 | Not started |
+| FR-GROW-01 (Email capture) | T-100 | Complete |
 | FR-GROW-02 (Email service) | T-101 | Not started |
 | FR-GROW-03 (Webinar promotion) | T-102 | Not started |
 | FR-GROW-04 (Community links) | T-103 | Complete |
