@@ -1063,12 +1063,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 19: Failure & Edge Cases
 
 #### T-45: Implement failure handling for all edge cases
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-31)
 - **Deliverable:** Explicit handling for all edge cases per FR-FEC-01: duplicate jobs, closed jobs, changed descriptions, missing/conflicting evidence, unknown eligibility, unsupported/sensitive questions, CAPTCHA, MFA, ATS timeout, partial submission, unknown results, connector outage, revoked OAuth, expired auth, model failure, invalid output, malicious content, user edits during execution, job removed during application, duplicate recruiter confirmation
 - **Dependencies:** T-25, T-24
 - **Acceptance:** FR-FEC-01, FR-FEC-02, FR-FEC-03 satisfied; every failure produces status + explanation + recovery action; AC-09 passing
-- **Verification:** Simulate each edge case → verify appropriate handling; check failure messages → verify status/explanation/recovery present
-- **Files:** `packages/applications/src/failures.ts`, `packages/connectors/src/errors.ts`
+- **Verification:** `bun x vitest run packages/applications/src/failures.test.ts` → 5/5 tests passed; explicit handling for all 22 required failure edge cases with status, explanation, and recoveryAction; state machine transitions and non-retryability constraints for ambiguous submissions (ATS_TIMEOUT, PARTIAL_SUBMISSION, UNKNOWN_SUBMISSION_RESULT) enforced per FR-FEC-03 and AC-09.
+- **Files:** `packages/applications/src/failures.ts`, `packages/connectors/src/errors.ts`, `packages/applications/src/failures.test.ts`
 
 ---
 
