@@ -15,6 +15,7 @@ export * from './integration-logos';
 export * from './PricingCard';
 export * from './press-section';
 export * from './product-demo';
+export * from './roi-calculator';
 export * from './sample-outputs';
 export * from './social-proof-carousel';
 export * from './sticky-cta';
