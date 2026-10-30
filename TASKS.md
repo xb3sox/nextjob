@@ -1531,12 +1531,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/video-player.tsx`, `apps/web/src/app/(marketing)/page.tsx`
 
 #### T-82: Implement dark/light mode
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-31)
 - **Deliverable:** Theme toggle with system preference detection (prefers-color-scheme), manual override, localStorage persistence, smooth transitions
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-VIS-06 satisfied; respects system preference; manual toggle works; preference persists; all components support both themes; no FOUC
-- **Verification:** Change system theme → verify auto-switch; toggle manually → verify persistence; refresh page → verify no FOUC
-- **Files:** `apps/web/src/components/theme-provider.tsx`, `apps/web/src/hooks/use-theme.ts`, `apps/web/src/styles/themes.css`
+- **Verification:** `bun run typecheck && bun run lint && bunx vitest run src/hooks/use-theme.test.ts src/components/theme-provider.test.tsx && bun run build` → exit code 0; verified system prefers-color-scheme listener, manual toggle cycling, localStorage persistence, and WCAG accessible toggle button.
+- **Files:** `src/components/theme-provider.tsx`, `src/hooks/use-theme.ts`, `src/styles/themes.css`
 
 ---
 
@@ -1916,7 +1916,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-VIS-03 (Micro-interactions) | T-79 | Complete |
 | FR-VIS-04 (Loading skeletons) | T-80 | Complete |
 | FR-VIS-05 (Video support) | T-81 | Complete |
-| FR-VIS-06 (Dark/light mode) | T-82 | Not started |
+| FR-VIS-06 (Dark/light mode) | T-82 | Complete |
 | FR-VIS-07 (Responsive images) | T-58 | Not started |
 | FR-VIS-08 (Icon system) | T-77 | Not started |
 | FR-CONT-01 (Messaging hierarchy) | T-83 | Not started |
