@@ -17,9 +17,18 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 class NewsletterStore {
   private subscribers: Map<string, NewsletterSubscriber> = new Map();
+  private readonly MAX_CAPACITY = 5000;
 
   addSubscriber(subscriber: NewsletterSubscriber): NewsletterSubscriber {
-    this.subscribers.set(subscriber.email.toLowerCase(), subscriber);
+    const key = subscriber.email.toLowerCase();
+    // Prevent unbounded memory growth via FIFO eviction if cap reached
+    if (this.subscribers.size >= this.MAX_CAPACITY && !this.subscribers.has(key)) {
+      const oldestKey = this.subscribers.keys().next().value;
+      if (oldestKey) {
+        this.subscribers.delete(oldestKey);
+      }
+    }
+    this.subscribers.set(key, subscriber);
     return subscriber;
   }
 
@@ -31,6 +40,10 @@ class NewsletterStore {
     return Array.from(this.subscribers.values());
   }
 
+  getCount(): number {
+    return this.subscribers.size;
+  }
+
   clear(): void {
     this.subscribers.clear();
   }
@@ -39,13 +52,12 @@ class NewsletterStore {
 export const newsletterStore = new NewsletterStore();
 
 export async function GET(): Promise<RouteResponse> {
-  const subscribers = newsletterStore.getAllSubscribers();
+  // Aggregate count only - never expose subscriber PII publicly without admin auth
   return {
     status: 200,
     body: {
       success: true,
-      count: subscribers.length,
-      data: subscribers,
+      count: newsletterStore.getCount(),
     },
   };
 }

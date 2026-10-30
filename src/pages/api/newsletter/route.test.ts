@@ -50,12 +50,16 @@ describe('Newsletter API Route (T-100, FR-GROW-01)', () => {
     expect(body.data.leadMagnetId).toBe('evidence_playbook_2026');
     expect(body.data.consentTimestamp).toBeDefined();
 
-    // Verify retrieval via GET
+    // Verify aggregate retrieval via GET without exposing raw PII
     const getRes = await GET();
     expect(getRes.status).toBe(200);
-    const getBody = getRes.body as { count: number; data: unknown[] };
+    const getBody = getRes.body as { count: number; success: boolean };
     expect(getBody.count).toBe(1);
-    expect(getBody.data[0]).toMatchObject({
+    expect(getBody.success).toBe(true);
+
+    // Verify stored entity directly
+    const stored = newsletterStore.getSubscriber('candidate@example.com');
+    expect(stored).toMatchObject({
       email: 'candidate@example.com',
       consent: true,
       source: 'lead_magnet',

@@ -161,7 +161,7 @@ export function EmailCapture({
                 if (status === 'error') setStatus('idle');
               }}
               disabled={status === 'loading'}
-              aria-invalid={status === 'error' && !email}
+              aria-invalid={status === 'error'}
               aria-describedby={status === 'error' ? errorId : undefined}
               className="w-full rounded-lg border border-white/15 bg-neutral-900/90 px-3.5 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 disabled:opacity-50"
             />
