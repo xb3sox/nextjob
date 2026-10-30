@@ -1,3 +1,4 @@
+export * from './animations';
 export * from './b2b';
 export * from './CtaButton';
 export * from './community-links';

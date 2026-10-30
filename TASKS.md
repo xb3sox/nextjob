@@ -1453,12 +1453,13 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ 17 unit tests in `src/components/marketing/marketing.test.tsx` passing green
 
 #### T-78: Implement scroll animations
-- [ ] **Status:** Not started
-- **Deliverable:** Framer Motion scroll animations: parallax effects, reveal animations, stagger animations; performance-optimized with will-change and transform
+- [x] **Status:** Complete (2026-10-30)
+- **Verification Evidence:** `bunx vitest run src/components/marketing/animations.test.tsx` (7 passed); `src/components/marketing/animations.tsx` (`ScrollReveal`, `StaggerGroup`, `StaggerItem`, `Parallax`, `usePrefersReducedMotion`), `src/styles/animations.css` with 60fps GPU-accelerated transforms (`transform3d`, `will-change`), IntersectionObserver reveal triggers, and full `prefers-reduced-motion: reduce` disabling.
+- **Deliverable:** Scroll animations: parallax effects, reveal animations, stagger animations; performance-optimized with will-change and transform
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-VIS-02 satisfied; animations are smooth (60fps); respect prefers-reduced-motion; no performance degradation; mobile-optimized
 - **Verification:** Scroll through page → verify animations; enable reduced motion → verify disabled; check performance → verify 60fps
-- **Files:** `apps/web/src/components/marketing/animations.tsx`, `apps/web/src/styles/animations.css`
+- **Files:** `src/components/marketing/animations.tsx`, `src/styles/animations.css`, `src/components/marketing/animations.test.tsx`
 
 #### T-79: Implement micro-interactions
 - [x] **Status:** Complete (2026-10-30)
@@ -1870,7 +1871,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CRO-09 (Sticky CTA) | T-76 | Not started |
 | FR-CRO-10 (Comparison table) | T-75 | Complete (PR #223) |
 | FR-VIS-01 (Marketing design system) | T-77 | Complete (PR #225) |
-| FR-VIS-02 (Scroll animations) | T-78 | Not started |
+| FR-VIS-02 (Scroll animations) | T-78 | Complete |
 | FR-VIS-03 (Micro-interactions) | T-79 | Complete |
 | FR-VIS-04 (Loading skeletons) | T-80 | Complete |
 | FR-VIS-05 (Video support) | T-81 | Complete |

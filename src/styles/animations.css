@@ -1,0 +1,45 @@
+/*
+ * NextJob Scroll Animation Utilities (T-78, FR-VIS-02)
+ * Hardware-accelerated 60fps animations with prefers-reduced-motion safety.
+ */
+
+.scroll-gpu {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.scroll-reveal-base {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-parallax {
+  will-change: transform;
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  transition: transform 100ms linear;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal-base {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .scroll-parallax {
+    transform: none;
+    transition: none;
+  }
+
+  .scroll-gpu {
+    will-change: auto;
+  }
+}
