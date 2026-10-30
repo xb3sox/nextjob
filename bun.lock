@@ -76,6 +76,10 @@
       "name": "@nextjob/applications",
       "version": "0.1.0",
     },
+    "packages/policy": {
+      "name": "@nextjob/policy",
+      "version": "0.1.0",
+    },
     "packages/profile": {
       "name": "@nextjob/profile",
       "version": "0.1.0",
@@ -354,6 +358,8 @@
     "@nextjob/applications": ["@nextjob/applications@workspace:packages/applications"],
 
     "@nextjob/extension": ["@nextjob/extension@workspace:extension"],
+
+    "@nextjob/policy": ["@nextjob/policy@workspace:packages/policy"],
 
     "@nextjob/profile": ["@nextjob/profile@workspace:packages/profile"],
 
