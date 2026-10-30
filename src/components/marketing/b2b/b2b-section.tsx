@@ -296,9 +296,9 @@ export function B2BSection({ className = '' }: B2BSectionProps) {
             <blockquote className="p-5 rounded-xl border border-white/5 bg-white/[0.01] text-xs text-fog leading-relaxed italic">
               "NextJob doubled our bootcamp's 90-day placement rate while maintaining 100% student
               privacy trust. Our career team finally has objective, aggregate metrics."
-              <footer className="mt-2 font-semibold not-italic text-paper">
+              <cite className="block mt-2 font-semibold not-italic text-paper">
                 — Director of Career Outcomes, Apex Tech Academy
-              </footer>
+              </cite>
             </blockquote>
           </div>
 
