@@ -6,5 +6,6 @@ export * from './FeatureSection';
 export * from './HeroSection';
 export * from './PricingCard';
 export * from './product-demo';
+export * from './social-proof-carousel';
 export * from './TestimonialCard';
 export * from './TrustBadges';

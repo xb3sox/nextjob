@@ -7,6 +7,7 @@ import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
 import { CustomerLogos } from './components/marketing/customer-logos';
 import { ProductDemo } from './components/marketing/product-demo';
+import { SocialProofCarousel } from './components/marketing/social-proof-carousel';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
@@ -432,6 +433,13 @@ function LandingPage() {
           </p>
         </div>
       </section>
+
+      {/* Social Proof Rotation (T-74, FR-CRO-07) */}
+      <div className="border-t border-white/5">
+        <Reveal>
+          <SocialProofCarousel />
+        </Reveal>
+      </div>
 
       {/* FAQ */}
       <section className="py-24 px-6 border-t border-white/5">

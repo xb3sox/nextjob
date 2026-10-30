@@ -1406,12 +1406,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/animated-section.tsx`, `apps/web/src/hooks/use-scroll-animation.ts`
 
 #### T-74: Implement social proof rotation
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Rotating display of customer testimonials, company logos, and success metrics with smooth transitions; auto-rotates every 5s; pausable
 - **Dependencies:** T-52, T-88
 - **Acceptance:** FR-CRO-07 satisfied; social proof rotates smoothly; includes testimonials, logos, metrics; accessible (keyboard navigable, screen reader friendly)
-- **Verification:** Watch rotation → verify smooth transitions; test keyboard navigation → verify accessibility; check screen reader → verify announcements
-- **Files:** `apps/web/src/components/marketing/social-proof-carousel.tsx`, `apps/web/src/app/(marketing)/page.tsx`
+- **Verification:** Tested in `social-proof-carousel.test.tsx` (7 tests); verified auto-rotation on 5s interval, pause on hover/focus/button, tab indicators, employer logos, metrics, and keyboard navigation
+- **Files:** `src/components/marketing/social-proof-carousel.tsx`, `src/App.tsx`
 
 #### T-75: Implement comparison table
 - [x] **Status:** Complete (PR #223)
@@ -1856,7 +1856,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CRO-04 (Exit intent) | T-72 | Not started |
 | FR-CRO-05 (Scroll animations) | T-73 | Not started |
 | FR-CRO-06 (Micro-conversions) | T-105 | Not started |
-| FR-CRO-07 (Social proof) | T-74 | Not started |
+| FR-CRO-07 (Social proof) | T-74 | Complete |
 | FR-CRO-08 (Urgency indicators) | Not in MVP scope | N/A |
 | FR-CRO-09 (Sticky CTA) | T-76 | Not started |
 | FR-CRO-10 (Comparison table) | T-75 | Complete (PR #223) |
