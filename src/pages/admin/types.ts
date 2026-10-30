@@ -1,5 +1,6 @@
 export type AdminTab =
   | 'overview'
+  | 'funnel'
   | 'connectors'
   | 'workflows'
   | 'users'
