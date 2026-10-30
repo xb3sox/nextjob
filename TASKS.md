@@ -1481,7 +1481,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Build successful with skeleton components integrated
 
 #### T-81: Implement video content support
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR pending)
 - **Deliverable:** Video player component supporting hero backgrounds (muted, autoplay, loop), product walkthroughs, testimonials with captions and transcripts
 - **Dependencies:** T-52
 - **Acceptance:** FR-VIS-05 satisfied; videos load efficiently (lazy loading); captions available; transcripts provided; mobile-optimized (poster images)
@@ -1868,7 +1868,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-VIS-02 (Scroll animations) | T-78 | Not started |
 | FR-VIS-03 (Micro-interactions) | T-79 | Complete |
 | FR-VIS-04 (Loading skeletons) | T-80 | Complete |
-| FR-VIS-05 (Video support) | T-81 | Not started |
+| FR-VIS-05 (Video support) | T-81 | Complete |
 | FR-VIS-06 (Dark/light mode) | T-82 | Not started |
 | FR-VIS-07 (Responsive images) | T-58 | Not started |
 | FR-VIS-08 (Icon system) | T-77 | Not started |
