@@ -197,19 +197,25 @@ export function FormField({
           placeholder={placeholder}
           aria-invalid={hasError ? 'true' : 'false'}
           aria-describedby={hasError ? `${name}-error` : undefined}
-          className={`w-full rounded-lg border px-4 py-2.5 text-sm transition-colors ${
+          className={`w-full rounded-lg border pl-4 pr-10 py-2.5 text-sm transition-colors ${
             hasError
               ? 'border-danger bg-danger/5 text-paper focus:border-danger focus:ring-danger/20'
               : isValid
                 ? 'border-moss-deep bg-moss/5 text-paper focus:border-moss-deep focus:ring-moss/20'
                 : 'border-white/15 bg-panel text-paper focus:border-moss-deep focus:ring-moss/20'
-          } focus:outline-none focus:ring-2`}
+          } focus-visible:outline-none focus-visible:ring-2`}
         />
         {isValid && (
-          <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-moss" />
+          <CheckCircle
+            className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-moss pointer-events-none"
+            aria-hidden="true"
+          />
         )}
         {hasError && (
-          <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-danger" />
+          <AlertCircle
+            className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-danger pointer-events-none"
+            aria-hidden="true"
+          />
         )}
       </div>
       {hasError && (

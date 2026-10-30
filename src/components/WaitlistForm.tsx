@@ -47,13 +47,13 @@ export default function WaitlistForm() {
 
   return (
     <div id="signup" className="mb-6">
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3" noValidate>
         <label htmlFor="waitlist-email" className="sr-only">
           Email address
         </label>
         <input
           id="waitlist-email"
-          type="text"
+          type="email"
           inputMode="email"
           autoComplete="email"
           value={email}
@@ -66,7 +66,7 @@ export default function WaitlistForm() {
           }}
           placeholder="you@company.com"
           disabled={busy}
-          className={`flex-1 px-4 py-3 bg-white/5 border rounded-lg text-white placeholder:text-fog/70 focus:outline-none transition-colors ${
+          className={`flex-1 px-4 py-3 bg-white/5 border rounded-lg text-white placeholder:text-fog/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss/50 focus-visible:ring-offset-1 focus-visible:ring-offset-ink transition-colors ${
             status === 'error'
               ? 'border-danger/60 focus:border-danger'
               : 'border-white/10 focus:border-moss/50'
@@ -77,7 +77,7 @@ export default function WaitlistForm() {
         <button
           type="submit"
           disabled={busy}
-          className="px-6 py-3 bg-moss-deep hover:bg-moss disabled:bg-moss-deep/50 disabled:cursor-not-allowed text-moss-dark font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+          className="px-6 py-3 bg-moss-deep hover:bg-moss disabled:bg-moss-deep/50 disabled:cursor-not-allowed text-moss-dark font-medium rounded-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
           {status === 'loading' ? (
             <>
