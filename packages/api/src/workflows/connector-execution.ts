@@ -1,17 +1,17 @@
 import { proxyActivities } from '@temporalio/workflow';
 import type * as activities from '../activities/ats-connector.js';
 
-// Import activities for workflow execution
-const { executeATSConnector, verifySubmission, checkDuplicate } = proxyActivities<
-  typeof activities
->({
-  startToCloseTimeout: '5 minutes',
-  retry: {
-    maximumAttempts: 3,
-    initialInterval: '1s',
-    backoffCoefficient: 2,
-  },
-});
+// Import activities with durable retry policy
+const { checkKillSwitch, checkDuplicate, executeATSConnector, verifySubmission, reconcileFailure } =
+  proxyActivities<typeof activities>({
+    startToCloseTimeout: '5 minutes',
+    retry: {
+      maximumAttempts: 3,
+      initialInterval: '1s',
+      backoffCoefficient: 2,
+      nonRetryableErrorTypes: ['KillSwitchError', 'DuplicateApplicationError'],
+    },
+  });
 
 // ============================================================================
 // Types
@@ -40,27 +40,49 @@ export interface ConnectorExecutionResult {
   success: boolean;
   submissionId?: string;
   receiptId?: string;
-  status: 'SUBMITTED' | 'FAILED' | 'DUPLICATE' | 'TIMEOUT';
+  status: 'SUBMITTED' | 'FAILED' | 'DUPLICATE' | 'KILL_SWITCH_BLOCKED';
   error?: string;
   verified: boolean;
   timestamp: string;
 }
 
 // ============================================================================
-// Connector Execution Workflow
+// Connector Execution Workflow (T-24, FR-05)
 // ============================================================================
 
 /**
- * Main workflow for executing ATS connector
- * Handles the complete lifecycle of job application submission
+ * Main Temporal workflow for orchestrating ATS connector execution.
+ * Handles kill switch verification, idempotency duplicate prevention,
+ * durable activity retries, receipt verification, and failure reconciliation.
  */
 export async function connectorExecutionWorkflow(
   params: ConnectorExecutionParams
 ): Promise<ConnectorExecutionResult> {
-  const _startTime = new Date().toISOString();
+  const timestamp = new Date().toISOString();
 
   try {
-    // Step 1: Check for duplicates (idempotency)
+    // Step 1: Kill switch check (immediate circuit breaker)
+    const killSwitch = await checkKillSwitch({
+      connectorType: params.connectorType,
+    });
+
+    if (killSwitch.isBlocked) {
+      await reconcileFailure({
+        applicationId: params.applicationId,
+        error: killSwitch.reason || 'Kill switch is active',
+        connectorType: params.connectorType,
+      });
+
+      return {
+        success: false,
+        status: 'KILL_SWITCH_BLOCKED',
+        error: killSwitch.reason || `Connector ${params.connectorType} is disabled by kill switch`,
+        verified: false,
+        timestamp,
+      };
+    }
+
+    // Step 2: Check for duplicates (idempotency - FR-05, AC-05)
     const duplicateCheck = await checkDuplicate({
       applicationId: params.applicationId,
       idempotencyKey: params.idempotencyKey,
@@ -70,13 +92,14 @@ export async function connectorExecutionWorkflow(
       return {
         success: false,
         status: 'DUPLICATE',
-        error: 'Application already submitted',
+        error: 'Application already submitted for this job',
         verified: true,
-        timestamp: new Date().toISOString(),
+        submissionId: duplicateCheck.existingSubmissionId,
+        timestamp,
       };
     }
 
-    // Step 2: Execute the ATS connector
+    // Step 3: Execute the ATS connector (durable with retries)
     const executionResult = await executeATSConnector({
       connectorType: params.connectorType,
       applicationData: params.applicationData,
@@ -86,18 +109,24 @@ export async function connectorExecutionWorkflow(
     });
 
     if (!executionResult.success) {
+      await reconcileFailure({
+        applicationId: params.applicationId,
+        error: executionResult.error || 'ATS connector execution failed',
+        connectorType: params.connectorType,
+      });
+
       return {
         success: false,
         status: 'FAILED',
         error: executionResult.error,
         verified: false,
-        timestamp: new Date().toISOString(),
+        timestamp,
       };
     }
 
-    // Step 3: Verify the submission
+    // Step 4: Verify the submission
     const verificationResult = await verifySubmission({
-      submissionId: executionResult.submissionId!,
+      submissionId: executionResult.submissionId ?? '',
       connectorType: params.connectorType,
     });
 
@@ -107,17 +136,30 @@ export async function connectorExecutionWorkflow(
       receiptId: executionResult.receiptId,
       status: 'SUBMITTED',
       verified: verificationResult.verified,
-      timestamp: new Date().toISOString(),
+      timestamp,
     };
   } catch (error) {
-    console.error('Connector execution workflow failed:', error);
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown workflow execution error';
+    console.error('Connector execution workflow failed:', errorMessage);
+
+    // Reconcile application state to failed
+    try {
+      await reconcileFailure({
+        applicationId: params.applicationId,
+        error: errorMessage,
+        connectorType: params.connectorType,
+      });
+    } catch (reconcileErr) {
+      console.error('Failed to reconcile workflow failure:', reconcileErr);
+    }
 
     return {
       success: false,
       status: 'FAILED',
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: errorMessage,
       verified: false,
-      timestamp: new Date().toISOString(),
+      timestamp,
     };
   }
 }

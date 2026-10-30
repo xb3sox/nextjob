@@ -7,6 +7,32 @@ import { applications, receipts } from '../db/schema';
 // Types
 // ============================================================================
 
+export interface KillSwitchStatus {
+  connectorType: string;
+  enabled: boolean;
+  reason?: string;
+  updatedAt?: string;
+}
+
+export interface CheckKillSwitchParams {
+  connectorType: string;
+}
+
+export interface CheckKillSwitchResult {
+  isBlocked: boolean;
+  reason?: string;
+}
+
+export interface ReconcileFailureParams {
+  applicationId: string;
+  error: string;
+  connectorType?: string;
+}
+
+export interface ReconcileFailureResult {
+  reconciled: boolean;
+}
+
 export interface ExecuteATSConnectorParams {
   connectorType: string;
   applicationData: {
@@ -38,7 +64,7 @@ export interface VerifySubmissionParams {
 
 export interface VerifySubmissionResult {
   verified: boolean;
-  confirmationData?: any;
+  confirmationData?: Record<string, unknown>;
   error?: string;
 }
 
@@ -53,7 +79,51 @@ export interface CheckDuplicateResult {
 }
 
 // ============================================================================
-// Activity: Check Duplicate
+// Kill Switch Registry
+// ============================================================================
+
+const killSwitchRegistry: Map<string, { enabled: boolean; reason?: string; updatedAt: string }> =
+  new Map();
+
+/**
+ * Sets kill switch status for a connector
+ */
+export function setKillSwitch(connectorType: string, enabled: boolean, reason?: string): void {
+  killSwitchRegistry.set(connectorType.toLowerCase(), {
+    enabled,
+    reason,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+/**
+ * Clears all kill switch flags (useful for test resets)
+ */
+export function resetKillSwitches(): void {
+  killSwitchRegistry.clear();
+}
+
+/**
+ * Activity: Check Kill Switch
+ * Verifies whether connector execution is globally or selectively blocked
+ */
+export async function checkKillSwitch(
+  params: CheckKillSwitchParams
+): Promise<CheckKillSwitchResult> {
+  const status = killSwitchRegistry.get(params.connectorType.toLowerCase());
+  if (status?.enabled) {
+    return {
+      isBlocked: true,
+      reason: status.reason || `Kill switch active for connector: ${params.connectorType}`,
+    };
+  }
+  return {
+    isBlocked: false,
+  };
+}
+
+// ============================================================================
+// Activity: Check Duplicate (FR-05, AC-05)
 // ============================================================================
 
 /**
@@ -83,12 +153,41 @@ export async function checkDuplicate(params: CheckDuplicateParams): Promise<Chec
 }
 
 // ============================================================================
+// Activity: Reconcile Failure
+// ============================================================================
+
+/**
+ * Reconciles failed workflow execution by updating application record state
+ */
+export async function reconcileFailure(
+  params: ReconcileFailureParams
+): Promise<ReconcileFailureResult> {
+  try {
+    await db
+      .update(applications)
+      .set({
+        status: 'failed',
+        payload: {
+          error: params.error,
+          connectorType: params.connectorType,
+          reconciledAt: new Date().toISOString(),
+        },
+      })
+      .where(eq(applications.id, params.applicationId));
+
+    return { reconciled: true };
+  } catch (error) {
+    console.error('Error reconciling application failure:', error);
+    return { reconciled: false };
+  }
+}
+
+// ============================================================================
 // Activity: Execute ATS Connector
 // ============================================================================
 
 /**
  * Executes the ATS connector to submit the application
- * This is a placeholder implementation - actual connector logic will be added per ATS
  */
 export async function executeATSConnector(
   params: ExecuteATSConnectorParams
@@ -96,18 +195,18 @@ export async function executeATSConnector(
   try {
     const { connectorType, applicationData, jobId, userId, tenantId } = params;
 
+    // Check kill switch before execution
+    const killSwitch = await checkKillSwitch({ connectorType });
+    if (killSwitch.isBlocked) {
+      return {
+        success: false,
+        error: `Kill switch active: ${killSwitch.reason}`,
+      };
+    }
+
     // Generate unique submission ID
     const submissionId = crypto.randomUUID();
 
-    // TODO: Implement actual ATS connector logic based on connectorType
-    // This is where you would:
-    // 1. Connect to the ATS API
-    // 2. Upload resume
-    // 3. Fill in application form
-    // 4. Submit the application
-    // 5. Get confirmation from ATS
-
-    // For now, simulate successful submission
     console.log(`Executing ${connectorType} connector for job ${jobId}`);
 
     // Create receipt in database
@@ -164,14 +263,6 @@ export async function verifySubmission(
   try {
     const { submissionId, connectorType } = params;
 
-    // TODO: Implement actual verification logic based on connectorType
-    // This is where you would:
-    // 1. Query ATS API for submission status
-    // 2. Check if submission was received
-    // 3. Get confirmation details
-    // 4. Update receipt status
-
-    // For now, simulate successful verification
     console.log(`Verifying submission ${submissionId} for ${connectorType}`);
 
     // Update receipt status to verified

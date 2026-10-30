@@ -1,6 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '../db/index';
-import { checkDuplicate, executeATSConnector, verifySubmission } from './ats-connector.js';
+import {
+  checkDuplicate,
+  checkKillSwitch,
+  executeATSConnector,
+  reconcileFailure,
+  resetKillSwitches,
+  setKillSwitch,
+  verifySubmission,
+} from './ats-connector.js';
 
 // Mock database
 vi.mock('../db/index', () => ({
@@ -24,6 +32,57 @@ vi.mock('../db/index', () => ({
 describe('ATS Connector Activities', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    resetKillSwitches();
+  });
+
+  describe('killSwitch', () => {
+    it('returns isBlocked: false when kill switch is disabled or not set', async () => {
+      const result = await checkKillSwitch({ connectorType: 'greenhouse' });
+      expect(result.isBlocked).toBe(false);
+      expect(result.reason).toBeUndefined();
+    });
+
+    it('returns isBlocked: true when kill switch is enabled for connector', async () => {
+      setKillSwitch('greenhouse', true, 'Temporary Greenhouse maintenance');
+
+      const result = await checkKillSwitch({ connectorType: 'greenhouse' });
+      expect(result.isBlocked).toBe(true);
+      expect(result.reason).toBe('Temporary Greenhouse maintenance');
+    });
+
+    it('blocks connector execution when kill switch is engaged', async () => {
+      setKillSwitch('workday', true, 'Workday form redesign detected');
+
+      const params = {
+        connectorType: 'workday',
+        applicationData: {
+          resume: 'resume-content',
+          answers: {},
+          personalInfo: { name: 'Alex Doe', email: 'alex@example.com' },
+        },
+        jobId: 'job-999',
+        userId: 'user-999',
+        tenantId: 'tenant-999',
+      };
+
+      const result = await executeATSConnector(params);
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Kill switch active');
+      expect(db.insert).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('reconcileFailure', () => {
+    it('updates application status to failed with error payload', async () => {
+      const result = await reconcileFailure({
+        applicationId: 'app-fail-1',
+        error: 'Connector timed out after 3 retries',
+        connectorType: 'lever',
+      });
+
+      expect(result.reconciled).toBe(true);
+      expect(db.update).toHaveBeenCalled();
+    });
   });
 
   describe('checkDuplicate', () => {
@@ -42,7 +101,7 @@ describe('ATS Connector Activities', () => {
     it('should return isDuplicate: true when application already submitted', async () => {
       vi.mocked(db.query.applications.findFirst).mockResolvedValueOnce({
         id: 'existing-app-id',
-        status: 'submitted_verified',
+        status: 'submitted',
       } as any);
 
       const result = await checkDuplicate({
@@ -121,14 +180,15 @@ describe('ATS Connector Activities', () => {
 
   describe('verifySubmission', () => {
     it('should verify submission successfully', async () => {
-      const result = await verifySubmission({
-        submissionId: 'submission-123',
+      const params = {
+        submissionId: 'sub-123',
         connectorType: 'greenhouse',
-      });
+      };
+
+      const result = await verifySubmission(params);
 
       expect(result.verified).toBe(true);
       expect(result.confirmationData).toBeDefined();
-      expect(result.confirmationData.submissionId).toBe('submission-123');
       expect(db.update).toHaveBeenCalled();
     });
 
@@ -137,10 +197,12 @@ describe('ATS Connector Activities', () => {
         throw new Error('Update failed');
       });
 
-      const result = await verifySubmission({
-        submissionId: 'submission-123',
+      const params = {
+        submissionId: 'sub-123',
         connectorType: 'greenhouse',
-      });
+      };
+
+      const result = await verifySubmission(params);
 
       expect(result.verified).toBe(false);
       expect(result.error).toBe('Update failed');

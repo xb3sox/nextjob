@@ -35,11 +35,18 @@ export async function startWorker(config: WorkerConfig): Promise<void> {
       connection = await NativeConnection.connect({ address: config.address });
     }
 
+    let workflowsPath: string;
+    try {
+      workflowsPath = require.resolve('../workflows/connector-execution.js');
+    } catch {
+      workflowsPath = require.resolve('../workflows/connector-execution.ts');
+    }
+
     worker = await Worker.create({
       connection,
       namespace: config.namespace,
       taskQueue: config.taskQueue,
-      workflowsPath: require.resolve('../workflows/connector-execution.js'),
+      workflowsPath,
       activities,
       // The SDK option is `maxConcurrentActivityTaskExecutions`; the config
       // field keeps its shorter public name.
