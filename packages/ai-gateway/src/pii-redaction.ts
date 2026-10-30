@@ -9,7 +9,7 @@ import type { AIMessage } from './types.js';
  */
 const PII_PATTERNS = {
   // Email addresses
-  email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+  email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g,
 
   // Phone numbers (various formats)
   phone: /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g,
@@ -65,8 +65,60 @@ export function detectPII(text: string): Record<string, string[]> {
   return found;
 }
 
+// ============================================================================
+// Optimized Combined Patterns for Single-Pass Redaction
+// ============================================================================
+
+/**
+ * Pre-compiled combined regex patterns for single-pass string replacement.
+ * Reduces 8-10 regex scans per string down to 1 pass.
+ */
+const PATTERN_SOURCES = {
+  email: '\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b',
+  phone: '(?:\\+?\\d{1,3}[-.\\s]?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}',
+  creditCard: '\\b\\d{4}[-\\s]?\\d{4}[-\\s]?\\d{4}[-\\s]?\\d{4}\\b',
+  ssn: '\\b\\d{3}-\\d{2}-\\d{4}\\b',
+  ipAddress: '\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b',
+  dob: '\\b(?:0[1-9]|1[0-2])\\/(?:0[1-9]|[12]\\d|3[01])\\/(?:19|20)\\d{2}\\b',
+  passport: '\\b[A-Z]{1,2}\\d{6,9}\\b',
+  bankAccount: '\\b\\d{8,17}\\b',
+  streetAddress:
+    '\\b\\d+\\s+[A-Za-z]+\\s+(?:[Ss][Tt][Rr][Ee][Ee][Tt]|[Ss][Tt]|[Aa][Vv][Ee][Nn][Uu][Ee]|[Aa][Vv][Ee]|[Rr][Oo][Aa][Dd]|[Rr][Dd]|[Bb][Oo][Uu][Ll][Ee][Vv][Aa][Rr][Dd]|[Bb][Ll][Vv][Dd]|[Dd][Rr][Ii][Vv][Ee]|[Dd][Rr]|[Ll][Aa][Nn][Ee]|[Ll][Nn]|[Cc][Oo][Uu][Rr][Tt]|[Cc][Tt]|[Pp][Ll][Aa][Cc][Ee]|[Pp][Ll])\\b',
+  zipCode: '\\b\\d{5}(?:-\\d{4})?\\b',
+};
+
+const SENSITIVE_SOURCES = [
+  PATTERN_SOURCES.creditCard,
+  PATTERN_SOURCES.ssn,
+  PATTERN_SOURCES.ipAddress,
+  PATTERN_SOURCES.dob,
+  PATTERN_SOURCES.passport,
+  PATTERN_SOURCES.bankAccount,
+  PATTERN_SOURCES.streetAddress,
+  PATTERN_SOURCES.zipCode,
+];
+
+// Pre-compiled combined regexes for standard option combinations
+const COMBINED_REGEX_ALL = new RegExp(
+  [PATTERN_SOURCES.email, PATTERN_SOURCES.phone, ...SENSITIVE_SOURCES].join('|'),
+  'g'
+);
+
+const COMBINED_REGEX_NO_EMAIL = new RegExp(
+  [PATTERN_SOURCES.phone, ...SENSITIVE_SOURCES].join('|'),
+  'g'
+);
+
+const COMBINED_REGEX_NO_PHONE = new RegExp(
+  [PATTERN_SOURCES.email, ...SENSITIVE_SOURCES].join('|'),
+  'g'
+);
+
+const COMBINED_REGEX_NO_EMAIL_NO_PHONE = new RegExp(SENSITIVE_SOURCES.join('|'), 'g');
+
 /**
  * Redacts PII from text
+ * Optimized with single-pass regex replacement for high-throughput AI message processing.
  */
 export function redactPII(
   text: string,
@@ -76,29 +128,25 @@ export function redactPII(
     customPatterns?: Array<{ name: string; pattern: RegExp }>;
   }
 ): string {
-  let redacted = text;
+  const preserveEmail = options?.preserveEmail ?? false;
+  const preservePhone = options?.preservePhone ?? false;
 
-  // Redact emails
-  if (!options?.preserveEmail) {
-    redacted = redacted.replace(PII_PATTERNS.email, REDACTION_PLACEHOLDER);
+  // Choose pre-compiled single-pass regex based on email/phone preservation options
+  let combinedRegex: RegExp;
+  if (!preserveEmail && !preservePhone) {
+    combinedRegex = COMBINED_REGEX_ALL;
+  } else if (preserveEmail && !preservePhone) {
+    combinedRegex = COMBINED_REGEX_NO_EMAIL;
+  } else if (!preserveEmail && preservePhone) {
+    combinedRegex = COMBINED_REGEX_NO_PHONE;
+  } else {
+    combinedRegex = COMBINED_REGEX_NO_EMAIL_NO_PHONE;
   }
 
-  // Redact phone numbers
-  if (!options?.preservePhone) {
-    redacted = redacted.replace(PII_PATTERNS.phone, REDACTION_PLACEHOLDER);
-  }
+  // Perform single-pass redaction
+  let redacted = text.replace(combinedRegex, REDACTION_PLACEHOLDER);
 
-  // Always redact sensitive data
-  redacted = redacted.replace(PII_PATTERNS.creditCard, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.ssn, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.ipAddress, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.dob, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.passport, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.bankAccount, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.streetAddress, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.zipCode, REDACTION_PLACEHOLDER);
-
-  // Apply custom patterns
+  // Apply custom patterns if provided
   if (options?.customPatterns) {
     for (const { pattern } of options.customPatterns) {
       redacted = redacted.replace(pattern, REDACTION_PLACEHOLDER);
