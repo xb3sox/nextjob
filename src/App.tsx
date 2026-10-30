@@ -12,16 +12,6 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
-import { B2BSection } from './components/marketing/b2b';
-import { CommunityLinks } from './components/marketing/community-links';
-import { BeforeAfterComparison } from './components/marketing/comparison';
-import { ComparisonTable } from './components/marketing/comparison-table';
-import { CustomerLogos } from './components/marketing/customer-logos';
-import { PressSection } from './components/marketing/press-section';
-import { ProductDemo } from './components/marketing/product-demo';
-import { SampleOutputs } from './components/marketing/sample-outputs';
-import { SocialProofCarousel } from './components/marketing/social-proof-carousel';
-import { VideoPlayer } from './components/marketing/video-player';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
@@ -29,6 +19,7 @@ import { useI18n } from './i18n';
 import { analytics, getExperimentVariant, HERO_COPY_EXPERIMENT } from './lib/analytics';
 import { RouteMeta } from './lib/seo';
 
+// Lazy loaded page routes
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
@@ -41,6 +32,56 @@ const PressKitPage = lazy(() => import('./pages/PressKitPage'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TailorPage = lazy(() => import('./pages/TailorPage'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+
+// Lazy loaded below-the-fold marketing components for Core Web Vitals optimization (T-57, FR-PERF-01)
+const CustomerLogos = lazy(() =>
+  import('./components/marketing/customer-logos').then((m) => ({ default: m.CustomerLogos }))
+);
+const SampleOutputs = lazy(() =>
+  import('./components/marketing/sample-outputs').then((m) => ({ default: m.SampleOutputs }))
+);
+const ProductDemo = lazy(() =>
+  import('./components/marketing/product-demo').then((m) => ({ default: m.ProductDemo }))
+);
+const VideoPlayer = lazy(() =>
+  import('./components/marketing/video-player').then((m) => ({ default: m.VideoPlayer }))
+);
+const BeforeAfterComparison = lazy(() =>
+  import('./components/marketing/comparison').then((m) => ({ default: m.BeforeAfterComparison }))
+);
+const ComparisonTable = lazy(() =>
+  import('./components/marketing/comparison-table').then((m) => ({ default: m.ComparisonTable }))
+);
+const SocialProofCarousel = lazy(() =>
+  import('./components/marketing/social-proof-carousel').then((m) => ({
+    default: m.SocialProofCarousel,
+  }))
+);
+const PressSection = lazy(() =>
+  import('./components/marketing/press-section').then((m) => ({ default: m.PressSection }))
+);
+const CommunityLinks = lazy(() =>
+  import('./components/marketing/community-links').then((m) => ({ default: m.CommunityLinks }))
+);
+const B2BSection = lazy(() =>
+  import('./components/marketing/b2b').then((m) => ({ default: m.B2BSection }))
+);
+
+/* ------------------------------------------------------------------ */
+/* Layout Fallback for Lazy Sections (CLS < 0.1)                      */
+/* ------------------------------------------------------------------ */
+
+function SectionFallback({ minHeight = '200px' }: { minHeight?: string }) {
+  return (
+    <div
+      style={{ minHeight }}
+      className="cwv-contained-section flex items-center justify-center p-8"
+      aria-busy="true"
+    >
+      <div className="w-full max-w-2xl h-24 cwv-skeleton" />
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* Landing page                                                        */
@@ -61,7 +102,7 @@ function LandingPage() {
       </a>
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-ink/80 backdrop-blur-md border-b border-white/5">
+      <nav className="cwv-critical-nav fixed top-0 left-0 right-0 z-50 bg-ink/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             to="/"
@@ -106,7 +147,7 @@ function LandingPage() {
             <Link
               to="/signup"
               onClick={() => analytics.trackCtaClick('nav_get_started', '/signup')}
-              className="text-sm font-medium px-3.5 py-2 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark transition-colors"
+              className="text-sm font-medium px-3.5 py-2 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark transition-colors cwv-fast-interaction"
             >
               Get started
             </Link>
@@ -115,7 +156,10 @@ function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <main id="main-content" className="relative pt-36 pb-24 px-6 overflow-hidden">
+      <main
+        id="main-content"
+        className="cwv-critical-hero relative pt-36 pb-24 px-6 overflow-hidden"
+      >
         {/* Ambient background: one soft moss glow + faint grid, very low contrast */}
         <div aria-hidden="true" className="absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(233,237,234,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(233,237,234,0.03)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,black,transparent)]" />
@@ -162,14 +206,14 @@ function LandingPage() {
               <Link
                 to="/signup"
                 onClick={() => analytics.trackCtaClick('hero_signup', '/signup')}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors shadow-[0_0_40px_-12px_rgba(52,211,153,0.5)]"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors shadow-[0_0_40px_-12px_rgba(52,211,153,0.5)] cwv-fast-interaction"
               >
                 Start free — create your account
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" aria-hidden="true" />
               </Link>
               <a
                 href="#waitlist"
-                className="inline-flex items-center justify-center px-6 py-3.5 border border-white/15 hover:border-white/30 text-paper font-medium rounded-lg transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3.5 border border-white/15 hover:border-white/30 text-paper font-medium rounded-lg transition-colors cwv-fast-interaction"
               >
                 Join the waitlist instead
               </a>
@@ -256,21 +300,25 @@ function LandingPage() {
       </main>
 
       {/* Customer / Employer Logos section (T-88, FR-TRUST-01) */}
-      <div className="border-t border-white/5">
+      <div className="border-t border-white/5 cwv-offscreen-section">
         <Reveal>
-          <CustomerLogos />
+          <Suspense fallback={<SectionFallback minHeight="120px" />}>
+            <CustomerLogos />
+          </Suspense>
         </Reveal>
       </div>
 
       {/* Sample Outputs Gallery section (T-91, FR-TRUST-04) */}
-      <div className="border-t border-white/5">
+      <div className="border-t border-white/5 cwv-offscreen-section">
         <Reveal>
-          <SampleOutputs />
+          <Suspense fallback={<SectionFallback minHeight="400px" />}>
+            <SampleOutputs />
+          </Suspense>
         </Reveal>
       </div>
 
       {/* Features */}
-      <section className="py-24 px-6 border-t border-white/5">
+      <section className="py-24 px-6 border-t border-white/5 cwv-offscreen-section">
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <h2 className="font-display text-4xl mb-4 text-center">
@@ -313,14 +361,16 @@ function LandingPage() {
       </section>
 
       {/* Interactive Product Demo (T-69, FR-CRO-01) */}
-      <div className="border-t border-white/5">
+      <div className="border-t border-white/5 cwv-offscreen-section">
         <Reveal>
-          <ProductDemo />
+          <Suspense fallback={<SectionFallback minHeight="500px" />}>
+            <ProductDemo />
+          </Suspense>
         </Reveal>
       </div>
 
       {/* Product Video Walkthrough (T-81, FR-VIS-05) */}
-      <section className="py-24 px-6 border-t border-white/5">
+      <section className="py-24 px-6 border-t border-white/5 cwv-offscreen-section">
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <div className="text-center mb-10">
@@ -335,17 +385,22 @@ function LandingPage() {
             </div>
           </Reveal>
           <Reveal delay={120}>
-            <VideoPlayer
-              title="NextJob Product Walkthrough & Evidence Engine"
-              src="/videos/nextjob-walkthrough.mp4"
-              poster="/images/video-poster.jpg"
-            />
+            <Suspense fallback={<SectionFallback minHeight="450px" />}>
+              <VideoPlayer
+                title="NextJob Product Walkthrough & Evidence Engine"
+                src="/videos/nextjob-walkthrough.mp4"
+                poster="/images/video-poster.jpg"
+              />
+            </Suspense>
           </Reveal>
         </div>
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-24 px-6 border-t border-white/5 scroll-mt-20">
+      <section
+        id="how-it-works"
+        className="py-24 px-6 border-t border-white/5 scroll-mt-20 cwv-offscreen-section"
+      >
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2 className="font-display text-4xl mb-14 text-center">How it works</h2>
@@ -385,14 +440,16 @@ function LandingPage() {
       </section>
 
       {/* Before & After Process Comparison (T-70, FR-CRO-02) */}
-      <div className="border-t border-white/5">
+      <div className="border-t border-white/5 cwv-offscreen-section">
         <Reveal>
-          <BeforeAfterComparison />
+          <Suspense fallback={<SectionFallback minHeight="400px" />}>
+            <BeforeAfterComparison />
+          </Suspense>
         </Reveal>
       </div>
 
       {/* Comparison Table (T-75, FR-CRO-10) */}
-      <section className="py-24 px-6 border-t border-white/5">
+      <section className="py-24 px-6 border-t border-white/5 cwv-offscreen-section">
         <div className="max-w-5xl mx-auto">
           <Reveal>
             <div className="text-center mb-12">
@@ -404,13 +461,15 @@ function LandingPage() {
             </div>
           </Reveal>
           <Reveal delay={100}>
-            <ComparisonTable />
+            <Suspense fallback={<SectionFallback minHeight="400px" />}>
+              <ComparisonTable />
+            </Suspense>
           </Reveal>
         </div>
       </section>
 
       {/* Pricing */}
-      <section className="py-24 px-6 border-t border-white/5">
+      <section className="py-24 px-6 border-t border-white/5 cwv-offscreen-section">
         <div className="max-w-4xl mx-auto">
           <Reveal>
             <h2 id="pricing" className="font-display text-4xl mb-14 text-center scroll-mt-28">
@@ -441,7 +500,7 @@ function LandingPage() {
                 <Link
                   to="/signup"
                   onClick={() => analytics.trackCtaClick('pricing_free', '/signup')}
-                  className="mt-8 inline-flex w-full items-center justify-center px-4 py-2.5 rounded-lg border border-white/15 hover:border-white/30 font-medium text-sm transition-colors"
+                  className="mt-8 inline-flex w-full items-center justify-center px-4 py-2.5 rounded-lg border border-white/15 hover:border-white/30 font-medium text-sm transition-colors cwv-fast-interaction"
                 >
                   Create free account
                 </Link>
@@ -473,7 +532,7 @@ function LandingPage() {
                 <Link
                   to="/signup"
                   onClick={() => analytics.trackCtaClick('pricing_search_pass', '/signup')}
-                  className="mt-8 inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark font-semibold text-sm transition-colors"
+                  className="mt-8 inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark font-semibold text-sm transition-colors cwv-fast-interaction"
                 >
                   Start Search Pass{' '}
                   <ArrowRight className="w-4 h-4 rtl:rotate-180" aria-hidden="true" />
@@ -488,19 +547,25 @@ function LandingPage() {
       </section>
 
       {/* Social Proof Rotation (T-74, FR-CRO-07) */}
-      <div className="border-t border-white/5">
+      <div className="border-t border-white/5 cwv-offscreen-section">
         <Reveal>
-          <SocialProofCarousel />
+          <Suspense fallback={<SectionFallback minHeight="300px" />}>
+            <SocialProofCarousel />
+          </Suspense>
         </Reveal>
       </div>
 
       {/* NextJob for Institutions & Bootcamps (T-53, FR-MKT-08) */}
-      <Reveal>
-        <B2BSection />
-      </Reveal>
+      <div className="border-t border-white/5 cwv-offscreen-section">
+        <Reveal>
+          <Suspense fallback={<SectionFallback minHeight="500px" />}>
+            <B2BSection />
+          </Suspense>
+        </Reveal>
+      </div>
 
       {/* FAQ */}
-      <section className="py-24 px-6 border-t border-white/5">
+      <section className="py-24 px-6 border-t border-white/5 cwv-offscreen-section">
         <div className="max-w-3xl mx-auto">
           <Reveal>
             <h2 id="faq" className="font-display text-4xl mb-12 text-center scroll-mt-28">
@@ -540,17 +605,25 @@ function LandingPage() {
       </section>
 
       {/* Press & Media Recognition (T-93, FR-TRUST-06) */}
-      <Reveal>
-        <PressSection />
-      </Reveal>
+      <div className="cwv-offscreen-section">
+        <Reveal>
+          <Suspense fallback={<SectionFallback minHeight="300px" />}>
+            <PressSection />
+          </Suspense>
+        </Reveal>
+      </div>
 
       {/* Community Links (T-103, FR-GROW-04) */}
-      <Reveal>
-        <CommunityLinks />
-      </Reveal>
+      <div className="cwv-offscreen-section">
+        <Reveal>
+          <Suspense fallback={<SectionFallback minHeight="250px" />}>
+            <CommunityLinks />
+          </Suspense>
+        </Reveal>
+      </div>
 
       {/* Final CTA */}
-      <section className="py-28 px-6 border-t border-white/5 relative overflow-hidden">
+      <section className="py-28 px-6 border-t border-white/5 relative overflow-hidden cwv-offscreen-section">
         <div
           aria-hidden="true"
           className="absolute bottom-[-40%] left-1/2 -translate-x-1/2 w-[720px] h-[420px] rounded-full bg-moss/[0.06] blur-[120px]"
@@ -568,7 +641,7 @@ function LandingPage() {
               <Link
                 to="/signup"
                 onClick={() => analytics.trackCtaClick('bottom_signup', '/signup')}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors cwv-fast-interaction"
               >
                 Start free
                 <ArrowRight className="w-4 h-4 rtl:rotate-180" aria-hidden="true" />
