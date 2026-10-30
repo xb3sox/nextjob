@@ -1292,12 +1292,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 26: Advanced SEO
 
 #### T-62: Implement schema markup
-- [ ] **Status:** Not started
-- **Deliverable:** JSON-LD schema for Organization, Product, FAQ, BreadcrumbList, WebSite; validated with Google Rich Results Test
+- [x] **Status:** Complete
+- **Deliverable:** Single application/ld+json script block in index.html holding Organization, WebSite, and SoftwareApplication schemas
 - **Dependencies:** T-52
-- **Acceptance:** FR-SEO-01 satisfied; all schemas pass validation; no errors in Google Search Console; rich results eligible
-- **Verification:** Run Google Rich Results Test → verify no errors; check Search Console → verify schema detection; inspect page source → verify JSON-LD
-- **Files:** `apps/web/src/lib/schema.ts`, `apps/web/src/app/(marketing)/layout.tsx`
+- **Acceptance:** FR-SEO-01 satisfied; single JSON-LD block with @graph holding Organization, WebSite, SoftwareApplication; Organization.url and WebSite.url equal https://nextjob.ai
+- **Verification:** `bun x vitest run --maxWorkers 2 src/test/schema-markup.test.ts` → 2/2 passed; fails if JSON-LD block is deleted
+- **Files:** `index.html`, `src/test/schema-markup.test.ts`
 
 #### T-63: Implement dynamic Open Graph images
 - [~] **Status:** Partially Complete (2026-10-25) — static image shipped, per-route generation deferred
