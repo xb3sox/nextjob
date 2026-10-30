@@ -1735,7 +1735,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/community-links.tsx`, `apps/web/src/app/(marketing)/community/page.tsx`
 
 #### T-104: Create press kit
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Downloadable press kit: logo pack (SVG, PNG, dark/light), brand guidelines PDF, media contact form, high-res product screenshots
 - **Dependencies:** T-52, T-93
 - **Acceptance:** FR-GROW-07 satisfied; all assets downloadable; brand guidelines comprehensive; contact form functional; screenshots high-quality
@@ -1906,7 +1906,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-GROW-04 (Community links) | T-103 | Complete |
 | FR-GROW-05 (Social sharing) | T-63 | Not started |
 | FR-GROW-06 (Partner/affiliate) | Not in MVP scope | N/A |
-| FR-GROW-07 (Press kit) | T-104 | Not started |
+| FR-GROW-07 (Press kit) | T-104 | Complete |
 | FR-MON-01 (Conversion funnel) | T-105 | Not started |
 | FR-MON-02 (Performance monitoring) | T-106 | Not started |
 | FR-MON-03 (Error tracking) | T-107 | Not started |
