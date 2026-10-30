@@ -179,7 +179,7 @@ export default function TailorPage() {
         <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-fog hover:text-paper transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm text-fog hover:text-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss rounded"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             Dashboard
@@ -299,14 +299,14 @@ export default function TailorPage() {
                           <button
                             type="button"
                             onClick={() => decide(key, 'edited', draft)}
-                            className="rounded-lg bg-moss-deep hover:bg-moss px-3 py-1.5 text-xs font-semibold text-moss-dark transition-colors"
+                            className="rounded-lg bg-moss-deep hover:bg-moss px-3 py-1.5 text-xs font-semibold text-moss-dark transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
                           >
                             Save edit
                           </button>
                           <button
                             type="button"
                             onClick={() => setEditing(null)}
-                            className="rounded-lg border border-white/15 px-3 py-1.5 text-xs text-fog hover:text-paper transition-colors"
+                            className="rounded-lg border border-white/15 px-3 py-1.5 text-xs text-fog hover:text-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
                           >
                             Cancel
                           </button>
