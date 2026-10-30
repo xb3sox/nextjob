@@ -936,12 +936,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 12: Admin Console
 
 #### T-33: Implement admin and operations console
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-31)
 - **Deliverable:** Admin console for user support, organization management, connector health, workflow failures, reconciliation, AI quality monitoring, policy versions, audit search, incident management
 - **Dependencies:** T-04, T-24
 - **Acceptance:** All admin functions implemented; privileged actions require audit logging; connector kill switches work
-- **Verification:** Access admin console → verify all sections present; perform privileged action → verify audit log; trigger kill switch → verify connector blocked
-- **Files:** `apps/web/src/app/admin/`
+- **Verification:** `bunx vitest run src/pages/admin/AdminConsolePage.test.tsx` (6/6 tests passing); verified overview status metrics, emergency kill switch toggling, workflow run reconciliation, candidate account recovery, AI quality telemetry, policy precedence hierarchy, and search-filterable audit logs.
+- **Files:** `src/pages/admin/`
 
 ---
 
@@ -1970,7 +1970,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - [ ] Disaster recovery tested → T-41
 - [ ] WCAG 2.2 AA critical journeys tested → T-35
 - [ ] No unresolved critical security findings → T-37
-- [ ] Every connector monitored with kill switch → T-24, T-33
+- [x] Every connector monitored with kill switch — T-24, T-33
 - [ ] AI regression suite passing → T-34
 - [x] Privacy review complete → T-36
 - [ ] Terms/integration review complete → (external legal review)
