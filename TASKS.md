@@ -831,12 +831,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `extension/src/connectors/greenhouse.ts`, `extension/src/connectors/types.ts`, `extension/src/connectors/index.ts`
 
 #### T-24: Implement Temporal connector workers
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Temporal workers for orchestrating connector execution with retries and reconciliation
 - **Dependencies:** T-06, T-23
 - **Acceptance:** FR-05 satisfied; workflows durable; retries work; reconciliation handles failures; kill switch implemented
-- **Verification:** Submit application → verify workflow executes; simulate failure → verify retry; trigger kill switch → verify blocked
-- **Files:** `packages/connectors/src/workflows/`, `packages/connectors/src/activities/`
+- **Verification:** Tested in `packages/api/src/workflows/connector-execution.test.ts` (5 tests), `packages/api/src/activities/ats-connector.test.ts` (11 tests), and `packages/api/src/temporal/worker.test.ts` (3 tests); verified durable submission lifecycle, idempotency duplicate prevention (FR-05, AC-05), active kill switch blocking, failure reconciliation, and worker task queue execution
+- **Files:** `packages/api/src/workflows/connector-execution.ts`, `packages/api/src/activities/ats-connector.ts`, `packages/api/src/temporal/worker.ts`
 
 ---
 
