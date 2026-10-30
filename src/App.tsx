@@ -32,6 +32,7 @@ const PressKitPage = lazy(() => import('./pages/PressKitPage'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TailorPage = lazy(() => import('./pages/TailorPage'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const AdminConsolePage = lazy(() => import('./pages/admin/AdminConsolePage'));
 
 // Lazy loaded below-the-fold marketing components for Core Web Vitals optimization (T-57, FR-PERF-01)
 const CustomerLogos = lazy(() =>
@@ -774,6 +775,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <CohortReportPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminConsolePage />
               </ProtectedRoute>
             }
           />
