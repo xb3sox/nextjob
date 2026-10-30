@@ -49,7 +49,12 @@ export class AnalyticsService {
     tenantId: string,
     userId: string,
     stage: 'started' | 'completed',
-    metadata: { stepCount?: number; durationMs?: number } = {}
+    metadata: {
+      stepCount?: number;
+      durationMs?: number;
+      referralCode?: string;
+      [key: string]: unknown;
+    } = {}
   ): Promise<ProductAnalyticsEvent> {
     return this.track(
       stage === 'started' ? 'onboarding_started' : 'onboarding_completed',

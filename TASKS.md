@@ -1131,11 +1131,11 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `packages/api/src/analytics/`
 
 #### T-49: Implement experimentation framework
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Feature flag system for experiments (ranking, match explanations, tailoring, approval UX, notifications, pricing, onboarding) with guardrails (unsupported claims, ineligible applications, duplicate submissions, sensitive-field errors, complaints, connector failures)
 - **Dependencies:** T-48
 - **Acceptance:** FR-ANA-03, FR-ANA-04, FR-ANA-05 satisfied; primary outcome is interview lift; guardrails monitored
-- **Verification:** Create experiment → verify assignment; monitor guardrails → verify alerts trigger on violations
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; verified experiment creation and deterministic variant assignment across all 7 domains (ranking, match explanations, tailoring, approval UX, notifications, pricing, onboarding), primary outcome tracking (`interview_lift`), and guardrail monitoring with automated alerting/pausing across all 6 guardrail metrics (`packages/api/src/experiments/experiments.test.ts`, 5/5 passed).
 - **Files:** `packages/api/src/experiments/`
 
 ---
@@ -1265,12 +1265,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Build successful with all legal pages
 
 #### T-56: Implement referral program infrastructure
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Referral link generation, referral tracking, referral incentive display, referral conversion tracking in analytics
 - **Dependencies:** T-52, T-48
 - **Acceptance:** FR-MKT-10 satisfied; users can generate and share referral links; referrals tracked and attributed; incentives displayed
-- **Verification:** Generate referral link → verify unique; share link → verify tracking; check analytics → verify referral conversions tracked
-- **Files:** `packages/api/src/referrals/`, `apps/web/src/components/referral/`
+- **Verification:** `bun run typecheck && bun run lint && bunx vitest run --maxWorkers 2 && bun run build` → exit code 0; verified unique referral code/URL generation, click tracking, signup attribution with self-referral prevention, credit incentive accrual, and accessible frontend ReferralCard component (`packages/api/src/referrals/referral.test.ts` 7/7 passed, `src/components/referral/ReferralCard.test.tsx` 4/4 passed).
+- **Files:** `packages/api/src/referrals/`, `src/components/referral/`
 
 ---
 
@@ -1866,9 +1866,9 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-ACC-04 (Additional languages) | Not in MVP scope | N/A |
 | FR-ANA-01 (Product analytics) | T-48 | Complete |
 | FR-ANA-02 (No PII in analytics) | T-48 | Complete |
-| FR-ANA-03 (Experimentation) | T-49 | Not started |
-| FR-ANA-04 (Interview lift metric) | T-49 | Not started |
-| FR-ANA-05 (Experiment guardrails) | T-49 | Not started |
+| FR-ANA-03 (Experimentation) | T-49 | Complete |
+| FR-ANA-04 (Interview lift metric) | T-49 | Complete |
+| FR-ANA-05 (Experiment guardrails) | T-49 | Complete |
 | FR-MON-01 (Free tier) | T-50 | Complete (PR #221) |
 | FR-MON-02 (Search Pass) | T-50 | Complete (PR #221) |
 | FR-MON-03 (Agent Pass) | Not in MVP scope | N/A |
