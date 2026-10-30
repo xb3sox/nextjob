@@ -14,6 +14,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
 const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 const SignupPage = lazy(() => import('./pages/auth/SignupPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const ApplicationsPage = lazy(() => import('./pages/applications/ApplicationsPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TailorPage = lazy(() => import('./pages/TailorPage'));
@@ -517,6 +518,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/applications"
+            element={
+              <ProtectedRoute>
+                <ApplicationsPage />
               </ProtectedRoute>
             }
           />
