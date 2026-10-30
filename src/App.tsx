@@ -1,4 +1,13 @@
-import { ArrowRight, Check, ChevronDown, FileSearch, Lock, ShieldCheck, Zap } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  ChevronDown,
+  FileSearch,
+  Lock,
+  Play,
+  ShieldCheck,
+  Zap,
+} from 'lucide-react';
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PageLoader } from './components/Loading';
@@ -11,6 +20,7 @@ import { PressSection } from './components/marketing/press-section';
 import { ProductDemo } from './components/marketing/product-demo';
 import { SampleOutputs } from './components/marketing/sample-outputs';
 import { SocialProofCarousel } from './components/marketing/social-proof-carousel';
+import { VideoPlayer } from './components/marketing/video-player';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
@@ -300,6 +310,31 @@ function LandingPage() {
           <ProductDemo />
         </Reveal>
       </div>
+
+      {/* Product Video Walkthrough (T-81, FR-VIS-05) */}
+      <section className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-4xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-10">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-moss/10 text-moss border border-moss/20 mb-4">
+                <Play className="w-3 h-3 fill-current" aria-hidden="true" /> Product Walkthrough
+              </span>
+              <h2 className="font-display text-4xl mb-4">Watch NextJob in action</h2>
+              <p className="text-fog max-w-xl mx-auto text-base">
+                See how NextJob checks eligibility upfront, proves claims from your career history,
+                and generates immutable submission receipts.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={120}>
+            <VideoPlayer
+              title="NextJob Product Walkthrough & Evidence Engine"
+              src="/videos/nextjob-walkthrough.mp4"
+              poster="/images/video-poster.jpg"
+            />
+          </Reveal>
+        </div>
+      </section>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-24 px-6 border-t border-white/5 scroll-mt-20">
