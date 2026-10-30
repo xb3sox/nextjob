@@ -15,6 +15,7 @@ const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 const SignupPage = lazy(() => import('./pages/auth/SignupPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const ApplicationsPage = lazy(() => import('./pages/applications/ApplicationsPage'));
+const CohortReportPage = lazy(() => import('./pages/organizations/CohortReportPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TailorPage = lazy(() => import('./pages/TailorPage'));
@@ -534,6 +535,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <TailorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/organizations/:id/reports"
+            element={
+              <ProtectedRoute>
+                <CohortReportPage />
               </ProtectedRoute>
             }
           />
