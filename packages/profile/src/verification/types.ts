@@ -54,7 +54,7 @@ export const VerificationRequestSchema = z.object({
   userId: z.string().min(1),
   tenantId: z.string().min(1),
   action: z.enum(['confirm', 'edit', 'remove', 'mark_unverified']),
-  editedContent: z.record(z.any()).optional(),
+  editedContent: z.record(z.string(), z.any()).optional(),
   notes: z.string().optional(),
 });
 
@@ -65,7 +65,7 @@ export const BulkVerificationRequestSchema = z.object({
     z.object({
       claimId: z.string().min(1),
       action: z.enum(['confirm', 'edit', 'remove', 'mark_unverified']),
-      editedContent: z.record(z.any()).optional(),
+      editedContent: z.record(z.string(), z.any()).optional(),
       notes: z.string().optional(),
     })
   ),

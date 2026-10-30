@@ -55,7 +55,7 @@ export const ProfileClaimSchema = z.object({
   previousVersionId: z.string().min(1).optional(),
 
   // Content (varies by type)
-  content: z.record(z.any()),
+  content: z.record(z.string(), z.any()),
 
   // Metadata
   createdAt: z.string().datetime(),
@@ -210,7 +210,7 @@ export const ProfileVersionSchema = z.object({
   claimIds: z.array(z.string().min(1)),
 
   // Snapshot of profile at this version
-  snapshot: z.record(z.any()),
+  snapshot: z.record(z.string(), z.any()),
 
   // Metadata
   createdAt: z.string().datetime(),

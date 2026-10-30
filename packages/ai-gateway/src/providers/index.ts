@@ -42,7 +42,7 @@ export class OpenAIProvider implements Provider {
         model: this.client(model),
         messages,
         temperature: options?.temperature,
-        maxTokens: options?.maxTokens,
+        maxOutputTokens: options?.maxTokens,
       });
       return result.text;
     } catch (error) {
@@ -66,7 +66,7 @@ export class OpenAIProvider implements Provider {
         messages,
         schema,
         temperature: options?.temperature,
-        maxTokens: options?.maxTokens,
+        maxOutputTokens: options?.maxTokens,
       });
       return result.object;
     } catch (error) {
@@ -99,7 +99,7 @@ export class AnthropicProvider implements Provider {
         model: this.client(model),
         messages,
         temperature: options?.temperature,
-        maxTokens: options?.maxTokens,
+        maxOutputTokens: options?.maxTokens,
       });
       return result.text;
     } catch (error) {
@@ -123,7 +123,7 @@ export class AnthropicProvider implements Provider {
         messages,
         schema,
         temperature: options?.temperature,
-        maxTokens: options?.maxTokens,
+        maxOutputTokens: options?.maxTokens,
       });
       return result.object;
     } catch (error) {
@@ -156,7 +156,7 @@ export class GoogleProvider implements Provider {
         model: this.client(model),
         messages,
         temperature: options?.temperature,
-        maxTokens: options?.maxTokens,
+        maxOutputTokens: options?.maxTokens,
       });
       return result.text;
     } catch (error) {
@@ -180,7 +180,7 @@ export class GoogleProvider implements Provider {
         messages,
         schema,
         temperature: options?.temperature,
-        maxTokens: options?.maxTokens,
+        maxOutputTokens: options?.maxTokens,
       });
       return result.object;
     } catch (error) {
