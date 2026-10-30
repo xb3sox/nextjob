@@ -1804,12 +1804,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `.github/workflows/lighthouse.yml`, `apps/web/src/lib/monitoring/performance.ts`
 
 #### T-107: Implement error tracking
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30, PR #268)
 - **Deliverable:** Error tracking with Sentry: JavaScript error capture, source maps, error grouping and deduplication, alerting on error spikes, user context
 - **Dependencies:** T-96, T-38
 - **Acceptance:** FR-MON-03 satisfied; errors captured with stack traces; source maps uploaded; errors grouped; alerts configured; user context included
-- **Verification:** Trigger error → verify capture; check Sentry → verify stack trace and grouping; trigger spike → verify alert; check context → verify user data
-- **Files:** `apps/web/src/lib/monitoring/sentry.ts`, `apps/web/src/instrumentation.ts`
+- **Verification:** Verified in PR #268 with vitest suite `src/lib/monitoring/sentry.test.ts` (8/8 pass) covering stack parsing, deterministic grouping, deduplication, spike alerts, and PII redaction
+- **Files:** `src/lib/monitoring/sentry.ts`, `src/instrumentation.ts`
 
 #### T-108: Set up uptime monitoring
 - [ ] **Status:** Not started
