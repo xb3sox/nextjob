@@ -41,6 +41,11 @@ const PII_PATTERNS = {
 };
 
 /**
+ * Pre-computed entries array to avoid runtime Object.entries allocations per invocation.
+ */
+const PII_PATTERN_ENTRIES = Object.entries(PII_PATTERNS);
+
+/**
  * Redaction placeholder
  */
 const REDACTION_PLACEHOLDER = '[REDACTED]';
@@ -50,15 +55,28 @@ const REDACTION_PLACEHOLDER = '[REDACTED]';
 // ============================================================================
 
 /**
- * Detects PII in text and returns found patterns
+ * Detects PII in text and returns found patterns.
+ * Performance optimized: pre-screens input string for required character triggers ('@' and digits)
+ * to skip regex evaluations when input cannot possibly match, and avoids runtime array allocations.
  */
 export function detectPII(text: string): Record<string, string[]> {
-  const found: Record<string, string[]> = {};
+  if (!text) return {};
 
-  for (const [type, pattern] of Object.entries(PII_PATTERNS)) {
+  const found: Record<string, string[]> = {};
+  const hasAt = text.includes('@');
+  const hasDigits = /\d/.test(text);
+
+  // Quick early return if text contains neither email symbol nor any digits
+  if (!hasAt && !hasDigits) return found;
+
+  for (let i = 0; i < PII_PATTERN_ENTRIES.length; i++) {
+    const [type, pattern] = PII_PATTERN_ENTRIES[i];
+    if (type === 'email' && !hasAt) continue;
+    if (type !== 'email' && !hasDigits) continue;
+
     const matches = text.match(pattern);
     if (matches && matches.length > 0) {
-      found[type] = [...new Set(matches)]; // Remove duplicates
+      found[type] = Array.from(new Set(matches)); // Remove duplicates
     }
   }
 
@@ -66,7 +84,9 @@ export function detectPII(text: string): Record<string, string[]> {
 }
 
 /**
- * Redacts PII from text
+ * Redacts PII from text.
+ * Performance optimized: pre-screens text for '@' and digits before running global regex replacements,
+ * skipping up to 10 sequential RegExp passes on non-matching strings.
  */
 export function redactPII(
   text: string,
@@ -76,27 +96,31 @@ export function redactPII(
     customPatterns?: Array<{ name: string; pattern: RegExp }>;
   }
 ): string {
-  let redacted = text;
+  if (!text) return text;
 
-  // Redact emails
-  if (!options?.preserveEmail) {
+  let redacted = text;
+  const hasAt = text.includes('@');
+  const hasDigits = /\d/.test(text);
+
+  // Redact emails (only if text contains '@')
+  if (!options?.preserveEmail && hasAt) {
     redacted = redacted.replace(PII_PATTERNS.email, REDACTION_PLACEHOLDER);
   }
 
-  // Redact phone numbers
-  if (!options?.preservePhone) {
-    redacted = redacted.replace(PII_PATTERNS.phone, REDACTION_PLACEHOLDER);
+  // Redact numeric-based PII patterns (only if text contains digits)
+  if (hasDigits) {
+    if (!options?.preservePhone) {
+      redacted = redacted.replace(PII_PATTERNS.phone, REDACTION_PLACEHOLDER);
+    }
+    redacted = redacted.replace(PII_PATTERNS.creditCard, REDACTION_PLACEHOLDER);
+    redacted = redacted.replace(PII_PATTERNS.ssn, REDACTION_PLACEHOLDER);
+    redacted = redacted.replace(PII_PATTERNS.ipAddress, REDACTION_PLACEHOLDER);
+    redacted = redacted.replace(PII_PATTERNS.dob, REDACTION_PLACEHOLDER);
+    redacted = redacted.replace(PII_PATTERNS.passport, REDACTION_PLACEHOLDER);
+    redacted = redacted.replace(PII_PATTERNS.bankAccount, REDACTION_PLACEHOLDER);
+    redacted = redacted.replace(PII_PATTERNS.streetAddress, REDACTION_PLACEHOLDER);
+    redacted = redacted.replace(PII_PATTERNS.zipCode, REDACTION_PLACEHOLDER);
   }
-
-  // Always redact sensitive data
-  redacted = redacted.replace(PII_PATTERNS.creditCard, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.ssn, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.ipAddress, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.dob, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.passport, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.bankAccount, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.streetAddress, REDACTION_PLACEHOLDER);
-  redacted = redacted.replace(PII_PATTERNS.zipCode, REDACTION_PLACEHOLDER);
 
   // Apply custom patterns
   if (options?.customPatterns) {
