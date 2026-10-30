@@ -1,6 +1,6 @@
 import type { ApprovalDecision, ApprovalRequest } from '@nextjob/policy';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface ApprovalDialogProps {
   isOpen: boolean;
@@ -17,6 +17,22 @@ export function ApprovalDialog({
 }: ApprovalDialogProps): React.ReactElement | null {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState('');
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-focus the dialog when opened for screen readers and keyboard users
+  useEffect(() => {
+    if (isOpen) {
+      dialogRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  // Focus textarea when entering edit mode
+  useEffect(() => {
+    if (isEditing) {
+      textareaRef.current?.focus();
+    }
+  }, [isEditing]);
 
   // Handle Escape key to close
   useEffect(() => {
@@ -55,7 +71,9 @@ export function ApprovalDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+      ref={dialogRef}
+      tabIndex={-1}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm focus:outline-none"
       role="dialog"
       aria-modal="true"
       aria-labelledby="approval-dialog-title"
@@ -101,6 +119,7 @@ export function ApprovalDialog({
             {isEditing ? (
               <div className="mt-1.5 space-y-2">
                 <textarea
+                  ref={textareaRef}
                   value={editedText}
                   onChange={(e) => setEditedText(e.target.value)}
                   className="w-full rounded-md border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
