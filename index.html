@@ -49,67 +49,25 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "NextJob",
-      "url": "https://nextjob.ai",
-      "logo": "https://nextjob.ai/logo.png",
-      "description": "AI career agent that converts verified career evidence into eligible, high-quality applications",
-      "sameAs": [
-        "https://twitter.com/nextjob",
-        "https://linkedin.com/company/nextjob",
-        "https://github.com/nextjob"
-      ]
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "NextJob",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "description": "AI career agent that converts verified career evidence into eligible applications",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "description": "Free tier available"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "1247"
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
+      "@graph": [
         {
-          "@type": "Question",
-          "name": "How is NextJob different from other AI job tools?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "NextJob is the only AI career agent that constrains generation to verified evidence. We never fabricate experience, we check eligibility before you apply, and we provide verified receipts for every submission."
-          }
+          "@type": "Organization",
+          "name": "NextJob",
+          "url": "https://nextjob.ai",
+          "logo": "https://nextjob.ai/logo.png",
+          "description": "AI career agent that converts verified career evidence into eligible, high-quality applications."
         },
         {
-          "@type": "Question",
-          "name": "Is my data safe?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Absolutely. We use encryption at rest and in transit, tenant isolation, and never sell your data. You can export or delete your data at any time. We're GDPR compliant and privacy-first by design."
-          }
+          "@type": "WebSite",
+          "name": "NextJob",
+          "url": "https://nextjob.ai"
         },
         {
-          "@type": "Question",
-          "name": "What if I'm an international candidate?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "NextJob is built for global candidates. We check work authorization, sponsorship requirements, and location restrictions before showing you opportunities."
-          }
+          "@type": "SoftwareApplication",
+          "name": "NextJob",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web",
+          "description": "AI career agent that converts verified career evidence into eligible, high-quality applications."
         }
       ]
     }
