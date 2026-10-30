@@ -1,6 +1,7 @@
 export * from './CtaButton';
 export * from './comparison';
 export * from './comparison-table';
+export * from './customer-logos';
 export * from './FeatureSection';
 export * from './HeroSection';
 export * from './PricingCard';

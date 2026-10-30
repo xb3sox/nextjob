@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 32" fill="#FFFFFF">
+  <title>Notion logo</title>
+  <path d="M6 4h12c2 0 3.5 1.5 3.5 3.5v17c0 2-1.5 3.5-3.5 3.5H6c-2 0-3.5-1.5-3.5-3.5v-17C2.5 5.5 4 4 6 4zm3 5v14h3V9H9zm5 0v14h3V9h-3z"/>
+  <text x="30" y="22" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="16" fill="#FFFFFF">Notion</text>
+</svg>

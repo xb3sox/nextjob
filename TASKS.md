@@ -1543,12 +1543,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 30: Trust & Credibility
 
 #### T-88: Implement customer logos section
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #229)
 - **Deliverable:** Customer logo display section: 6-12 company logos in grayscale, color on hover, with permission; responsive grid layout
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-TRUST-01 satisfied; logos displayed with permission; grayscale by default; color on hover; responsive grid; accessible
-- **Verification:** Review logos → verify permissions; test hover → verify color change; check mobile → verify responsive
-- **Files:** `apps/web/src/components/marketing/customer-logos.tsx`, `public/images/logos/`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; verified 8 company logos with permission statement, grayscale styling with hover transition, responsive grid layout, and accessibility unit tests (`customer-logos.test.tsx`, 4/4 passed).
+- **Files:** `src/components/marketing/customer-logos.tsx`, `src/components/marketing/customer-logos.test.tsx`, `public/images/logos/`
 
 #### T-89: Implement security certifications display
 - [ ] **Status:** Not started
@@ -1875,7 +1875,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CONT-05 (Email nurture) | T-87 | Not started |
 | FR-CONT-06 (Lead magnets) | Not in MVP scope | N/A |
 | FR-CONT-07 (Blog/resources) | Not in MVP scope | N/A |
-| FR-TRUST-01 (Customer logos) | T-88 | Not started |
+| FR-TRUST-01 (Customer logos) | T-88 | Complete (PR #229) |
 | FR-TRUST-02 (Security certifications) | T-89 | Not started |
 | FR-TRUST-03 (Data transparency) | T-90 | Not started |
 | FR-TRUST-04 (Sample outputs) | T-91 | Not started |
