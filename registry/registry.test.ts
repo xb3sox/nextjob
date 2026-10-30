@@ -1,6 +1,25 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import type { ApplicationCardProps as SrcAppProps } from '../src/components/application-card';
+import type {
+  JobCapabilityModel as SrcJobCapabilityModel,
+  JobCardProps as SrcJobCardProps,
+} from '../src/components/JobCard';
+import type { ApplicationCardProps as RegAppProps } from './components/application-card/application-card';
+import type {
+  JobCapabilityModel as RegJobCapabilityModel,
+  JobCardProps as RegJobCardProps,
+} from './components/job-card/job-card';
+
+// Compile-time static type parity assertions
+type AssertEqual<T, U> = [T] extends [U] ? ([U] extends [T] ? true : false) : false;
+const _assertJobCardProps: AssertEqual<SrcJobCardProps, RegJobCardProps> = true;
+const _assertJobCapability: AssertEqual<SrcJobCapabilityModel, RegJobCapabilityModel> = true;
+const _assertAppProps: AssertEqual<SrcAppProps, RegAppProps> = true;
+void _assertJobCardProps;
+void _assertJobCapability;
+void _assertAppProps;
 
 const rootDir = process.cwd();
 const registryJsonPath = path.join(rootDir, 'registry.json');
@@ -66,5 +85,46 @@ describe('Custom Shadcn Registry', () => {
         expect(file.content).toContain('export');
       }
     }
+  });
+
+  it('ships built artifacts that match source registry files', () => {
+    const registry = readJson<{ items: RegistryItem[] }>(registryJsonPath);
+
+    for (const item of registry.items) {
+      const artifactPath = path.join(publicRDir, `${item.name}.json`);
+      const artifact = readJson<BuiltArtifact>(artifactPath);
+      const sourceFile = path.join(rootDir, item.files[0].path);
+      const sourceContent = fs.readFileSync(sourceFile, 'utf-8');
+
+      expect(artifact.files[0].content.replace(/\r\n/g, '\n').trim()).toBe(
+        sourceContent.replace(/\r\n/g, '\n').trim()
+      );
+    }
+  });
+
+  it('maintains export surface parity between registry/ and src/ components', async () => {
+    const [srcJobCard, regJobCard] = await Promise.all([
+      import('../src/components/JobCard'),
+      import('./components/job-card/job-card'),
+    ]);
+    expect(Object.keys(regJobCard).sort()).toEqual(Object.keys(srcJobCard).sort());
+    expect(typeof regJobCard.JobCard).toBe('function');
+    expect(typeof regJobCard.JobCardSkeleton).toBe('function');
+
+    const [srcAppCard, regAppCard] = await Promise.all([
+      import('../src/components/application-card'),
+      import('./components/application-card/application-card'),
+    ]);
+    expect(Object.keys(regAppCard).sort()).toEqual(Object.keys(srcAppCard).sort());
+    expect(typeof regAppCard.ApplicationCard).toBe('function');
+
+    const [srcWaitlist, regWaitlist] = await Promise.all([
+      import('../src/components/WaitlistForm'),
+      import('./components/waitlist-form/waitlist-form'),
+    ]);
+    expect(typeof regWaitlist.WaitlistForm).toBe('function');
+    expect(typeof regWaitlist.default).toBe('function');
+    expect(typeof srcWaitlist.WaitlistForm).toBe('function');
+    expect(typeof srcWaitlist.default).toBe('function');
   });
 });

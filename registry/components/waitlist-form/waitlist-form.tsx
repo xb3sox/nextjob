@@ -111,3 +111,5 @@ export function WaitlistForm() {
     </div>
   );
 }
+
+export default WaitlistForm;
