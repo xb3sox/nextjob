@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
+import { ComparisonTable } from './components/marketing/comparison-table';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
@@ -325,6 +326,24 @@ function LandingPage() {
               </Reveal>
             ))}
           </ol>
+        </div>
+      </section>
+
+      {/* Comparison Table (T-75, FR-CRO-10) */}
+      <section className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-12">
+              <h2 className="font-display text-4xl mb-4">Why NextJob is different</h2>
+              <p className="text-fog max-w-xl mx-auto text-base">
+                Generic tools hallucinate claims and spray unverified applications. NextJob is built
+                on proof, eligibility verification, and cryptographic submission receipts.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={100}>
+            <ComparisonTable />
+          </Reveal>
         </div>
       </section>
 
