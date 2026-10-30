@@ -1336,12 +1336,17 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ℹ️ No Search Console submission was made — it is a manual operator step, and the legacy `google.com/ping?sitemap=` ping endpoint used by the earlier draft was retired in 2023
 
 #### T-65: Implement AI search optimization
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** llms.txt file for AI crawlers, structured data optimized for AI consumption, clear entity definitions, FAQ format for AI parsing
 - **Dependencies:** T-52, T-62
 - **Acceptance:** FR-SEO-07 satisfied; llms.txt present and comprehensive; structured data includes entity definitions; content formatted for AI extraction
-- **Verification:** Check /llms.txt → verify content; test with AI tools → verify entity recognition; inspect structured data → verify clarity
-- **Files:** `apps/web/src/app/llms.txt`, `apps/web/src/lib/schema.ts`
+- **Verification:** `bun x vitest run --maxWorkers 2 src/test/schema-markup.test.ts` → 4/4 passed; `/llms.txt` present in `public/llms.txt`; structured data includes Organization, WebSite, SoftwareApplication, DefinedTermSet, and FAQPage schemas; `src/lib/schema.ts` exports structured data generators
+- **Files:** `public/llms.txt`, `src/lib/schema.ts`, `index.html`, `src/test/schema-markup.test.ts`
+- **Evidence:**
+  - ✅ `public/llms.txt` shipped with AI crawler summary, entity definitions (AI Career Agent, Career Graph, Submission Receipt, Eligibility Engine), FAQ section, and site navigation links
+  - ✅ `src/lib/schema.ts` implements type-safe JSON-LD graph generators for Organization (with knowsAbout and sameAs), WebSite, SoftwareApplication (with featureList), DefinedTermSet, and FAQPage
+  - ✅ `index.html` updated with comprehensive JSON-LD structured data matching `src/lib/schema.ts`
+  - ✅ `src/test/schema-markup.test.ts` validates `public/llms.txt` existence, schema parsing, entity graph types, and `src/lib/schema.ts` generator functions
 
 #### T-66: Implement canonical URLs and hreflang
 - [ ] **Status:** Not started
@@ -1857,7 +1862,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-SEO-04 (Sitemap) | T-64 | Complete |
 | FR-SEO-05 (Robots.txt) | T-64 | Complete |
 | FR-SEO-06 (Canonical URLs) | T-66 | Complete (PR #214) |
-| FR-SEO-07 (AI search) | T-65, T-68 | Not started |
+| FR-SEO-07 (AI search) | T-65, T-68 | Complete |
 | FR-SEO-08 (Hreflang) | T-66 | Complete (PR #214) |
 | FR-CRO-01 (Interactive demo) | T-69 | Complete |
 | FR-CRO-02 (Before/after) | T-70 | Complete |
