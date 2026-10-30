@@ -1,6 +1,6 @@
-import { act, renderHook } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { useFormValidation } from './FormValidation';
+import { act, render, renderHook, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { FormField, useFormValidation } from './FormValidation';
 
 describe('useFormValidation', () => {
   it('initializes with empty fields', () => {
@@ -166,5 +166,28 @@ describe('useFormValidation', () => {
     });
 
     expect(result.current.fields.password.error).toBeNull();
+  });
+});
+
+describe('FormField', () => {
+  it('renders input with right padding (pr-10) and aria-hidden validation icons', () => {
+    const { container } = render(
+      <FormField
+        label="Email"
+        name="email"
+        value="user@example.com"
+        error={null}
+        touched={true}
+        onChange={vi.fn()}
+        onBlur={vi.fn()}
+      />
+    );
+
+    const input = screen.getByLabelText('Email');
+    expect(input).toHaveClass('pr-10');
+
+    const svg = container.querySelector('svg');
+    expect(svg).not.toBeNull();
+    expect(svg).toHaveAttribute('aria-hidden', 'true');
   });
 });
