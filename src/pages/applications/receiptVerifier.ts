@@ -136,8 +136,23 @@ export function computeContentHash(
 }
 
 /**
+ * Constant-time string comparison to prevent timing side-channel attacks during hash verification.
+ */
+function timingSafeEqualString(a: string, b: string): boolean {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  let result = a.length ^ b.length;
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    const charA = i < a.length ? a.charCodeAt(i) : 0;
+    const charB = i < b.length ? b.charCodeAt(i) : 0;
+    result |= charA ^ charB;
+  }
+  return result === 0;
+}
+
+/**
  * Browser-compatible verifyReceipt: recomputes sha256 contentHash over receipt body
- * and asserts matching contentHash and receiptId.
+ * and asserts matching contentHash and receiptId using constant-time equality checks.
  */
 export function verifyReceipt(receipt: SubmissionReceipt): boolean {
   if (!receipt || !receipt.contentHash || !receipt.receiptId) {
@@ -145,5 +160,10 @@ export function verifyReceipt(receipt: SubmissionReceipt): boolean {
   }
   const { contentHash, receiptId, ...body } = receipt;
   const expected = computeContentHash(body);
-  return contentHash === expected && receiptId === `rcpt_${expected.slice(0, 32)}`;
+  const expectedReceiptId = `rcpt_${expected.slice(0, 32)}`;
+
+  return (
+    timingSafeEqualString(contentHash, expected) &&
+    timingSafeEqualString(receiptId, expectedReceiptId)
+  );
 }
