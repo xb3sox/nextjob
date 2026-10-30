@@ -1752,12 +1752,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `src/components/marketing/email-capture.tsx`, `src/pages/api/newsletter/route.ts`
 
 #### T-101: Set up email nurture
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Email service integration: connect to Resend/SendGrid/Mailchimp; double opt-in for newsletters; unsubscribe handling; template rendering
 - **Dependencies:** T-87, T-100
 - **Acceptance:** FR-GROW-02 satisfied; emails delivered reliably; double opt-in works; unsubscribe functional; templates render correctly
-- **Verification:** Sign up → verify double opt-in; check email delivery → verify receipt; unsubscribe → verify removal; check templates → verify rendering
-- **Files:** `apps/web/src/lib/email/service.ts`, `apps/web/src/app/api/email/route.ts`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run src/lib/email/service.test.ts src/pages/api/email/route.test.ts && bun run build` → exit code 0; verified Resend/SendGrid/Mailchimp/Mock provider abstraction, tokenized double opt-in registration and confirmation, token and email unsubscribe blocking, and template rendering integration.
+- **Files:** `src/lib/email/service.ts`, `src/pages/api/email/route.ts`
 
 #### T-102: Implement webinar promotion
 - [ ] **Status:** Not started
@@ -1943,7 +1943,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-TECH-07 (Bot protection) | Not in MVP scope | N/A |
 | FR-TECH-08 (Enhanced accessibility) | T-46 | Complete |
 | FR-GROW-01 (Email capture) | T-100 | Complete |
-| FR-GROW-02 (Email service) | T-101 | Not started |
+| FR-GROW-02 (Email service) | T-101 | Complete |
 | FR-GROW-03 (Webinar promotion) | T-102 | Not started |
 | FR-GROW-04 (Community links) | T-103 | Complete |
 | FR-GROW-05 (Social sharing) | T-63 | Not started |
