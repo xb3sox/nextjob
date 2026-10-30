@@ -1,12 +1,13 @@
 import { ArrowRight, Check, ChevronDown, FileSearch, Lock, ShieldCheck, Zap } from 'lucide-react';
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
 import { useI18n } from './i18n';
+import { analytics, getExperimentVariant, HERO_COPY_EXPERIMENT } from './lib/analytics';
 import { RouteMeta } from './lib/seo';
 
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'));
@@ -27,6 +28,7 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
 function LandingPage() {
   const { t } = useI18n();
+  const heroVariant = getExperimentVariant(HERO_COPY_EXPERIMENT);
 
   return (
     <div className="min-h-screen bg-ink text-paper antialiased">
@@ -69,6 +71,7 @@ function LandingPage() {
             </a>
             <Link
               to="/login"
+              onClick={() => analytics.trackCtaClick('nav_signin', '/login')}
               className="hidden sm:block text-sm text-fog hover:text-paper transition-colors"
             >
               Sign in
@@ -76,6 +79,7 @@ function LandingPage() {
             <LocaleSwitcher />
             <Link
               to="/signup"
+              onClick={() => analytics.trackCtaClick('nav_get_started', '/signup')}
               className="text-sm font-medium px-3.5 py-2 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark transition-colors"
             >
               Get started
@@ -105,8 +109,17 @@ function LandingPage() {
 
           <Reveal delay={80}>
             <h1 className="font-display text-6xl md:text-7xl leading-[1.04] mb-6">
-              Find better jobs. <em className="not-italic text-moss">Apply smarter.</em> Get
-              interviewed.
+              {heroVariant === 'variant_direct' ? (
+                <>
+                  Land your dream role. <em className="not-italic text-moss">Zero fluff.</em>{' '}
+                  Verified proof.
+                </>
+              ) : (
+                <>
+                  Find better jobs. <em className="not-italic text-moss">Apply smarter.</em> Get
+                  interviewed.
+                </>
+              )}
             </h1>
           </Reveal>
 
@@ -122,6 +135,7 @@ function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-3 mb-4">
               <Link
                 to="/signup"
+                onClick={() => analytics.trackCtaClick('hero_signup', '/signup')}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors shadow-[0_0_40px_-12px_rgba(52,211,153,0.5)]"
               >
                 Start free — create your account
@@ -345,6 +359,7 @@ function LandingPage() {
                 </ul>
                 <Link
                   to="/signup"
+                  onClick={() => analytics.trackCtaClick('pricing_free', '/signup')}
                   className="mt-8 inline-flex w-full items-center justify-center px-4 py-2.5 rounded-lg border border-white/15 hover:border-white/30 font-medium text-sm transition-colors"
                 >
                   Create free account
@@ -376,6 +391,7 @@ function LandingPage() {
                 </ul>
                 <Link
                   to="/signup"
+                  onClick={() => analytics.trackCtaClick('pricing_search_pass', '/signup')}
                   className="mt-8 inline-flex w-full items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-moss-deep hover:bg-moss text-moss-dark font-semibold text-sm transition-colors"
                 >
                   Start Search Pass{' '}
@@ -448,6 +464,7 @@ function LandingPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 to="/signup"
+                onClick={() => analytics.trackCtaClick('bottom_signup', '/signup')}
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-moss-deep hover:bg-moss text-moss-dark font-semibold rounded-lg transition-colors"
               >
                 Start free
@@ -455,6 +472,7 @@ function LandingPage() {
               </Link>
               <Link
                 to="/login"
+                onClick={() => analytics.trackCtaClick('bottom_signin', '/login')}
                 className="px-7 py-3.5 text-sm text-fog hover:text-paper transition-colors"
               >
                 Already have an account? Sign in
@@ -480,7 +498,11 @@ function LandingPage() {
             <span>© 2026 NextJob</span>
           </div>
           <nav aria-label="Footer" className="flex gap-6 text-sm text-fog">
-            <Link to="/login" className="hover:text-paper transition-colors">
+            <Link
+              to="/login"
+              onClick={() => analytics.trackCtaClick('footer_signin', '/login')}
+              className="hover:text-paper transition-colors"
+            >
               Sign in
             </Link>
             <Link to="/privacy" className="hover:text-paper transition-colors">
@@ -500,10 +522,24 @@ function LandingPage() {
 /* App                                                                 */
 /* ------------------------------------------------------------------ */
 
+function AnalyticsRouteTracker(): null {
+  const location = useLocation();
+
+  useEffect(() => {
+    analytics.trackPageView(location.pathname);
+    return () => {
+      analytics.recordTimeOnPage(location.pathname);
+    };
+  }, [location.pathname]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <RouteMeta />
+      <AnalyticsRouteTracker />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
