@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 135 32" fill="#FFFFFF">
+  <title>Greenhouse logo</title>
+  <path d="M12 8C9.79 8 8 9.79 8 12V20C8 22.21 9.79 24 12 24H18V18H14V14H20V24H24V12C24 9.79 22.21 8 20 8H12Z" fill="#34D399"/>
+  <text x="28" y="22" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="15" fill="#FFFFFF" letter-spacing="-0.3">Greenhouse</text>
+</svg>
