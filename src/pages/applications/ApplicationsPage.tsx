@@ -132,7 +132,7 @@ export default function ApplicationsPage() {
           <div className="flex items-center gap-4">
             <Link
               to="/dashboard"
-              className="p-2 -ml-2 rounded-lg text-fog hover:text-paper hover:bg-white/5 transition-colors"
+              className="p-2 -ml-2 rounded-lg text-fog hover:text-paper hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
               aria-label="Back to Dashboard"
             >
               <ArrowLeft className="w-5 h-5" aria-hidden="true" />
@@ -156,7 +156,7 @@ export default function ApplicationsPage() {
                 signOut();
                 navigate('/login');
               }}
-              className="p-2 rounded-lg text-fog hover:text-paper hover:bg-white/5 transition-colors"
+              className="p-2 rounded-lg text-fog hover:text-paper hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
               aria-label="Sign out"
             >
               <LogOut className="w-4 h-4" aria-hidden="true" />
@@ -184,7 +184,7 @@ export default function ApplicationsPage() {
 
             <Link
               to="/dashboard"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-moss/10 border border-moss/30 hover:bg-moss/20 text-moss text-xs font-semibold transition-colors shrink-0"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-moss/10 border border-moss/30 hover:bg-moss/20 text-moss text-xs font-semibold transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
             >
               <Zap className="w-3.5 h-3.5" aria-hidden="true" />
               <span>Match New Jobs</span>
@@ -206,7 +206,7 @@ export default function ApplicationsPage() {
               value={query}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search by job title, company, or ID..."
-              className="w-full text-sm rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 py-2 text-paper placeholder:text-fog/50 focus:outline-none focus:ring-1 focus:ring-moss focus:border-moss transition-all"
+              className="w-full text-sm rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 py-2 text-paper placeholder:text-fog/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-moss focus:border-moss transition-all"
             />
           </div>
 
@@ -222,7 +222,7 @@ export default function ApplicationsPage() {
               aria-selected={stateFilter === 'all'}
               onClick={() => handleGroupFilter('all')}
               className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors',
+                'px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss',
                 stateFilter === 'all'
                   ? 'bg-moss text-ink font-semibold'
                   : 'bg-white/5 text-fog hover:text-paper hover:bg-white/10'
@@ -246,7 +246,7 @@ export default function ApplicationsPage() {
                   aria-selected={isSelected}
                   onClick={() => handleGroupFilter(group)}
                   className={cn(
-                    'px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors',
+                    'px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss',
                     isSelected
                       ? 'bg-moss text-ink font-semibold'
                       : 'bg-white/5 text-fog hover:text-paper hover:bg-white/10'
@@ -412,7 +412,7 @@ function ApplicationItem({
             <button
               type="button"
               onClick={() => onOpenOutcome(application)}
-              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-moss/10 hover:bg-moss/20 text-moss border border-moss/20 hover:border-moss/40 transition-colors"
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-moss/10 hover:bg-moss/20 text-moss border border-moss/20 hover:border-moss/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
             >
               Update Outcome
             </button>
