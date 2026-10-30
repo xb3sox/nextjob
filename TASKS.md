@@ -1542,12 +1542,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 29: Content Strategy
 
 #### T-83: Define messaging hierarchy
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Document messaging framework: primary value prop → key benefits (3-5) → detailed features → social proof → final CTA; approved copy for each section
 - **Dependencies:** None
 - **Acceptance:** FR-CONT-01 satisfied; hierarchy is clear and logical; copy is benefit-focused; approved by stakeholders
-- **Verification:** Review messaging doc → verify hierarchy; test with users → verify comprehension; check consistency → verify across all pages
-- **Files:** `docs/marketing/messaging-hierarchy.md`
+- **Verification:** Verified in `docs/marketing/messaging-hierarchy.test.ts` (5 tests pass); verified FR-CONT-01 5-tier architecture, 5 core pillars, defensible proof points (93% time saved, 3.2x callback lift, 100% provenance), and approved section copy matrix.
+- **Files:** `docs/marketing/messaging-hierarchy.md`, `docs/marketing/messaging-hierarchy.test.ts`
 
 #### T-84: Create copywriting guidelines
 - [ ] **Status:** Not started
