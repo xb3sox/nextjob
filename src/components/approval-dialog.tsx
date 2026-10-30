@@ -1,6 +1,6 @@
 import type { ApprovalDecision, ApprovalRequest } from '@nextjob/policy';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface ApprovalDialogProps {
   isOpen: boolean;
@@ -17,6 +17,17 @@ export function ApprovalDialog({
 }: ApprovalDialogProps): React.ReactElement | null {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState('');
+
+  // Handle Escape key to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !request) {
     return null;
@@ -65,7 +76,7 @@ export function ApprovalDialog({
             type="button"
             onClick={onClose}
             aria-label="Close dialog"
-            className="text-zinc-400 hover:text-zinc-200 transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-500 rounded"
+            className="text-zinc-400 hover:text-zinc-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 rounded"
           >
             ✕
           </button>
@@ -92,7 +103,7 @@ export function ApprovalDialog({
                 <textarea
                   value={editedText}
                   onChange={(e) => setEditedText(e.target.value)}
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-zinc-100 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-900 p-2.5 text-sm text-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                   rows={3}
                   aria-label="Edit proposed answer"
                 />
@@ -100,7 +111,7 @@ export function ApprovalDialog({
                   <button
                     type="button"
                     onClick={() => setIsEditing(false)}
-                    className="px-3 py-1 text-xs text-zinc-400 hover:text-zinc-200"
+                    className="px-3 py-1 text-xs text-zinc-400 hover:text-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 rounded"
                   >
                     Cancel
                   </button>
@@ -108,7 +119,7 @@ export function ApprovalDialog({
                     type="button"
                     onClick={handleSaveEdit}
                     disabled={!editedText.trim()}
-                    className="rounded bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-950 hover:bg-white disabled:opacity-50"
+                    className="rounded bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-950 hover:bg-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
                   >
                     Save & Approve
                   </button>
@@ -138,35 +149,35 @@ export function ApprovalDialog({
             <button
               type="button"
               onClick={() => onDecision('block')}
-              className="rounded border border-red-900/60 bg-red-950/20 px-3 py-1.5 text-xs font-medium text-red-400 hover:bg-red-950/40 transition-colors"
+              className="rounded border border-red-900/60 bg-red-950/20 px-3 py-1.5 text-xs font-medium text-red-400 hover:bg-red-950/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             >
               Block Question
             </button>
             <button
               type="button"
               onClick={() => onDecision('reject')}
-              className="rounded border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-850 transition-colors"
+              className="rounded border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-850 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             >
               Reject
             </button>
             <button
               type="button"
               onClick={handleStartEdit}
-              className="rounded border border-zinc-700 bg-zinc-850 px-3 py-1.5 text-xs font-medium text-zinc-200 hover:bg-zinc-800 transition-colors"
+              className="rounded border border-zinc-700 bg-zinc-850 px-3 py-1.5 text-xs font-medium text-zinc-200 hover:bg-zinc-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             >
               Edit
             </button>
             <button
               type="button"
               onClick={() => onDecision('approve_always')}
-              className="rounded border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-100 hover:bg-zinc-750 transition-colors"
+              className="rounded border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-100 hover:bg-zinc-750 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             >
               Always Approve
             </button>
             <button
               type="button"
               onClick={() => onDecision('approve_once')}
-              className="rounded bg-zinc-100 px-3.5 py-1.5 text-xs font-semibold text-zinc-950 hover:bg-white shadow transition-colors"
+              className="rounded bg-zinc-100 px-3.5 py-1.5 text-xs font-semibold text-zinc-950 hover:bg-white shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
             >
               Approve Once
             </button>

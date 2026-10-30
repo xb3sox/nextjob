@@ -142,7 +142,7 @@ export function OutcomeModal({ application, isOpen, onClose, onSaveOutcome }: Ou
             type="button"
             onClick={onClose}
             aria-label="Close modal"
-            className="p-1 rounded-lg text-fog hover:text-paper hover:bg-white/10 transition-colors"
+            className="p-1 rounded-lg text-fog hover:text-paper hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -189,7 +189,7 @@ export function OutcomeModal({ application, isOpen, onClose, onSaveOutcome }: Ou
                     <label
                       key={outcome}
                       className={cn(
-                        'flex items-center gap-3 p-3 rounded-xl border text-left transition-all cursor-pointer',
+                        'flex items-center gap-3 p-3 rounded-xl border text-left transition-all cursor-pointer focus-within:ring-2 focus-within:ring-moss',
                         isSelected
                           ? 'border-moss bg-moss/10 ring-1 ring-moss text-paper'
                           : 'border-white/10 bg-white/[0.02] hover:border-white/20 text-fog hover:text-paper'
@@ -234,7 +234,7 @@ export function OutcomeModal({ application, isOpen, onClose, onSaveOutcome }: Ou
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="e.g. Completed technical round; offer deadline Nov 15..."
-                className="w-full text-xs rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-paper placeholder:text-fog/50 focus:outline-none focus:ring-1 focus:ring-moss focus:border-moss"
+                className="w-full text-xs rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-paper placeholder:text-fog/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-moss focus:border-moss"
               />
             </div>
 
@@ -243,13 +243,13 @@ export function OutcomeModal({ application, isOpen, onClose, onSaveOutcome }: Ou
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-fog hover:text-paper hover:bg-white/10 transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-medium text-fog hover:text-paper hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-moss hover:bg-moss/90 text-ink transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-moss hover:bg-moss/90 text-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss"
               >
                 Save Outcome
               </button>

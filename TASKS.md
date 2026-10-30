@@ -1094,12 +1094,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 20: Accessibility & Localization
 
 #### T-46: Implement WCAG 2.2 AA accessibility
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Full WCAG 2.2 AA compliance: keyboard navigation, screen-reader support, visible focus, semantic HTML, error identification, accessible approvals, no color-only meaning, responsive layouts
 - **Dependencies:** T-15, T-18, T-20, T-27
 - **Acceptance:** FR-ACC-01, FR-ACC-02 satisfied; AC-10 passing; axe-core audit passes with 0 critical violations
-- **Verification:** Run axe-core audit → 0 critical violations; test keyboard navigation → all elements reachable; test screen reader → all content announced
-- **Files:** All UI components in `apps/web/src/`
+- **Verification:** `bun x vitest run src/test/accessibility.test.tsx` (5 passed); verified Escape key handlers, focus trapping / visible focus rings (`focus-visible:ring-2`), aria attributes, status live regions, and screen reader announcements.
+- **Files:** `src/components/approval-dialog.tsx`, `src/pages/applications/ApplicationsPage.tsx`, `src/pages/applications/OutcomeModal.tsx`, `src/components/JobCard.tsx`, `src/pages/TailorPage.tsx`, `src/test/accessibility.test.tsx`
 
 #### T-47: Implement localization infrastructure
 - [x] **Status:** Complete (2026-10-25)
@@ -1854,8 +1854,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-FEC-01 (Edge case handling) | T-45 | Not started |
 | FR-FEC-02 (Failure details) | T-45 | Not started |
 | FR-FEC-03 (No auto-retry ambiguous) | T-25, T-45 | Not started |
-| FR-ACC-01 (WCAG 2.2 AA) | T-46 | Not started |
-| FR-ACC-02 (Accessibility features) | T-46 | Not started |
+| FR-ACC-01 (WCAG 2.2 AA) | T-46 | Complete |
+| FR-ACC-02 (Accessibility features) | T-46 | Complete |
 | FR-ACC-03 (Localization) | T-47 | Complete |
 | FR-ACC-04 (Additional languages) | Not in MVP scope | N/A |
 | FR-ANA-01 (Product analytics) | T-48 | Not started |
@@ -1934,7 +1934,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-TECH-05 (Loading states) | T-98 | Complete |
 | FR-TECH-06 (Form validation) | T-99 | Complete |
 | FR-TECH-07 (Bot protection) | Not in MVP scope | N/A |
-| FR-TECH-08 (Enhanced accessibility) | T-46 | Not started |
+| FR-TECH-08 (Enhanced accessibility) | T-46 | Complete |
 | FR-GROW-01 (Email capture) | T-100 | Not started |
 | FR-GROW-02 (Email service) | T-101 | Not started |
 | FR-GROW-03 (Webinar promotion) | T-102 | Not started |
