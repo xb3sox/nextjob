@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { ApprovalDialog } from '../components/approval-dialog';
-import { JobCard, type JobCapabilityModel } from '../components/JobCard';
+import { type JobCapabilityModel, JobCard } from '../components/JobCard';
 import LocaleSwitcher from '../components/LocaleSwitcher';
 import WaitlistForm from '../components/WaitlistForm';
 import { I18nProvider } from '../i18n';
@@ -97,18 +97,15 @@ describe('WCAG 2.2 AA Accessibility Audits & Focus Management (T-46, FR-ACC-01, 
     expect(applyButton).toBeInTheDocument();
     expect(applyButton.className).toContain('focus-visible:ring-2');
 
-    const saveButton = screen.getByRole('button', { name: /save senior software engineer at stripe/i });
+    const saveButton = screen.getByRole('button', {
+      name: /save senior software engineer at stripe/i,
+    });
     expect(saveButton).toBeInTheDocument();
   });
 
   it('OutcomeModal has accessible dialog landmarks, radio group, and keyboard handlers', () => {
     render(
-      <OutcomeModal
-        application={mockApp}
-        isOpen={true}
-        onClose={vi.fn()}
-        onSaveOutcome={vi.fn()}
-      />
+      <OutcomeModal application={mockApp} isOpen={true} onClose={vi.fn()} onSaveOutcome={vi.fn()} />
     );
 
     const dialog = screen.getByRole('dialog');
