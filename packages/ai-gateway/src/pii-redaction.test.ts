@@ -263,6 +263,19 @@ describe('redactObject', () => {
     expect(redacted.active).toBe(true);
     expect(redacted.data).toBe(null);
   });
+
+  it('should prevent prototype pollution by ignoring __proto__, constructor, and prototype keys', () => {
+    const malformed = JSON.parse(
+      '{"__proto__": {"polluted": true}, "constructor": {"prototype": {"polluted": true}}, "prototype": {"polluted": true}}'
+    );
+
+    const redacted = redactObject(malformed);
+
+    expect(Object.prototype.hasOwnProperty.call(redacted, '__proto__')).toBe(false);
+    expect(Object.prototype.hasOwnProperty.call(redacted, 'constructor')).toBe(false);
+    expect(Object.prototype.hasOwnProperty.call(redacted, 'prototype')).toBe(false);
+    expect((Object.prototype as Record<string, unknown>).polluted).toBeUndefined();
+  });
 });
 
 // ============================================================================
