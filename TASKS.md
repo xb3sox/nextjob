@@ -1583,7 +1583,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/integration-logos.tsx`, `public/images/integrations/`
 
 #### T-93: Create press/media section
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
+- **Verification Evidence:** `bunx vitest run src/components/marketing/press-section.test.tsx` (6 passed, 123ms); category filter tabs, external links with target="_blank" rel="noopener noreferrer", semantic time tags, press desk contact link.
 - **Deliverable:** Press and media section: publication mentions, awards, podcast appearances, founder interviews; with links and dates
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-TRUST-06 satisfied; mentions are accurate and up-to-date; links work; responsive layout; accessible
@@ -1880,7 +1881,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-TRUST-03 (Data transparency) | T-90 | Not started |
 | FR-TRUST-04 (Sample outputs) | T-91 | Not started |
 | FR-TRUST-05 (Integration logos) | T-92 | Not started |
-| FR-TRUST-06 (Press/media) | T-93 | Not started |
+| FR-TRUST-06 (Press/media) | T-93 | Complete |
 | FR-TRUST-07 (Case studies) | Not in MVP scope | N/A |
 | FR-TRUST-08 (Trust badges) | T-89 | Not started |
 | FR-TECH-01 (Security headers) | T-94 | Not started |

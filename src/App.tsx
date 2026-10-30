@@ -6,6 +6,7 @@ import LocaleSwitcher from './components/LocaleSwitcher';
 import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
 import { CustomerLogos } from './components/marketing/customer-logos';
+import { PressSection } from './components/marketing/press-section';
 import { ProductDemo } from './components/marketing/product-demo';
 import { SocialProofCarousel } from './components/marketing/social-proof-carousel';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -480,6 +481,11 @@ function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Press & Media Recognition (T-93, FR-TRUST-06) */}
+      <Reveal>
+        <PressSection />
+      </Reveal>
 
       {/* Final CTA */}
       <section className="py-28 px-6 border-t border-white/5 relative overflow-hidden">
