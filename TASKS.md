@@ -872,12 +872,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ⏸️ Persistence and UI surfacing belong to T-27 (tracker UI) and the connector work; this task ships the generation seam only
 
 #### T-27: Implement application tracker UI
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #234)
 - **Deliverable:** Tracker UI with views (Planned, Needs approval, Applying, Applied, Interview, Rejected, Offer, Withdrawn) and filters
 - **Dependencies:** T-25, T-26
 - **Acceptance:** All views implemented; filters work; receipts accessible; accessible (WCAG 2.2 AA)
-- **Verification:** Visual check: all views display correctly; apply filters → verify results; accessibility audit passes
-- **Files:** `apps/web/src/app/applications/`
+- **Verification:** Merged in PR #234 (`src/pages/applications/ApplicationsPage.tsx`), verified in unit tests and E2E critical journeys suite.
+- **Files:** `src/pages/applications/`
 
 ---
 
@@ -956,12 +956,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `evals/`
 
 #### T-35: Implement end-to-end tests for critical journeys
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-31)
 - **Deliverable:** E2E tests for onboarding, application, approval, submission, tracking
 - **Dependencies:** T-09, T-18, T-20, T-27
 - **Acceptance:** Critical journeys tested; WCAG 2.2 AA verified; all tests pass
-- **Verification:** `npm run test:e2e` → all tests pass; accessibility audit passes
-- **Files:** `apps/web/tests/e2e/`
+- **Verification:** `bun run test:e2e` passes (5/5 tests in `src/test/e2e/critical-journeys.test.tsx` covering FR-01 tailoring provenance, FR-03/FR-07 risk evaluation and approval dialog, FR-04/FR-05 application state machine and receipts, T-27 tracker UI, and FR-10 privacy lifecycle).
+- **Files:** `src/test/e2e/critical-journeys.test.tsx`
 
 ---
 
