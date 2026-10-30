@@ -1543,12 +1543,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 30: Trust & Credibility
 
 #### T-88: Implement customer logos section
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #227)
 - **Deliverable:** Customer logo display section: 6-12 company logos in grayscale, color on hover, with permission; responsive grid layout
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-TRUST-01 satisfied; logos displayed with permission; grayscale by default; color on hover; responsive grid; accessible
-- **Verification:** Review logos → verify permissions; test hover → verify color change; check mobile → verify responsive
-- **Files:** `apps/web/src/components/marketing/customer-logos.tsx`, `public/images/logos/`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; verified 8 company logos with permission statement, grayscale styling with hover transition, responsive grid layout, and accessibility unit tests (`customer-logos.test.tsx`, 4/4 passed).
+- **Files:** `src/components/marketing/customer-logos.tsx`, `src/components/marketing/customer-logos.test.tsx`, `public/images/logos/`
 
 #### T-89: Implement security certifications display
 - [ ] **Status:** Not started

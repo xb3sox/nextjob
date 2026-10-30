@@ -5,6 +5,7 @@ import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
 import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
+import { CustomerLogos } from './components/marketing/customer-logos';
 import { ProductDemo } from './components/marketing/product-demo';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
@@ -232,19 +233,10 @@ function LandingPage() {
         </div>
       </main>
 
-      {/* Trust line — honest positioning: target employers, not fabricated logos */}
-      <section className="py-16 px-6 border-t border-white/5">
+      {/* Customer / Employer Logos section (T-88, FR-TRUST-01) */}
+      <section className="border-t border-white/5">
         <Reveal>
-          <div className="max-w-6xl mx-auto text-center">
-            <p className="text-sm text-fog mb-8">Built for people targeting teams at</p>
-            <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-40">
-              {['Google', 'Stripe', 'Vercel', 'Linear', 'Figma'].map((company) => (
-                <span key={company} className="text-lg font-medium text-fog">
-                  {company}
-                </span>
-              ))}
-            </div>
-          </div>
+          <CustomerLogos />
         </Reveal>
       </section>
 
