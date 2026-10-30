@@ -6,6 +6,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ApplicationsPage from './ApplicationsPage';
+import { verifyReceipt } from './receiptVerifier';
 import type { TrackedApplication } from './types';
 import { APPLICATIONS_STORAGE_KEY } from './useApplications';
 
@@ -227,5 +228,32 @@ describe('ApplicationsPage (T-27 Tracker UI)', () => {
 
     expect(screen.getByText(/Outcome finalized/i)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /update outcome/i })).not.toBeInTheDocument();
+  });
+});
+
+describe('receiptVerifier (constant-time verification)', () => {
+  it('verifies a valid submission receipt', () => {
+    expect(verifyReceipt(validReceipt)).toBe(true);
+  });
+
+  it('rejects null, empty, or incomplete receipts', () => {
+    expect(verifyReceipt(null as any)).toBe(false);
+    expect(verifyReceipt({} as any)).toBe(false);
+    expect(verifyReceipt({ contentHash: 'abc' } as any)).toBe(false);
+  });
+
+  it('rejects receipts with tampered contentHash', () => {
+    const tampered = { ...validReceipt, contentHash: 'a'.repeat(64) };
+    expect(verifyReceipt(tampered)).toBe(false);
+  });
+
+  it('rejects receipts with tampered receiptId', () => {
+    const tampered = { ...validReceipt, receiptId: 'rcpt_fake' };
+    expect(verifyReceipt(tampered)).toBe(false);
+  });
+
+  it('rejects receipts with tampered body properties', () => {
+    const tampered = { ...validReceipt, jobVersion: 'v2.0.0' };
+    expect(verifyReceipt(tampered)).toBe(false);
   });
 });
