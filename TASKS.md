@@ -1568,12 +1568,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/app/(marketing)/data-handling/page.tsx`
 
 #### T-91: Implement sample outputs gallery
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Gallery of sample outputs: submission receipts, tailored resume snippets, cover letter examples; all sensitive data redacted
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-TRUST-04 satisfied; samples demonstrate value; all PII redacted; accessible; mobile-responsive
-- **Verification:** Review samples → verify value demonstration; check redaction → verify no PII; test mobile → verify responsive
-- **Files:** `apps/web/src/components/marketing/sample-outputs.tsx`, `public/images/samples/`
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` → exit code 0; verified submission receipts with cryptographic SHA-256 hashes, evidence-constrained resume tailoring snippets with claim provenance, and grounded cover letter examples with 100% redacted PII badges and WCAG 2.2 AA accessible tabbed navigation (`sample-outputs.test.tsx`, 4/4 passed).
+- **Files:** `src/components/marketing/sample-outputs.tsx`, `src/components/marketing/sample-outputs-data.ts`, `src/components/marketing/sample-outputs.test.tsx`, `public/images/samples/`
 
 #### T-92: Implement integration logos
 - [ ] **Status:** Not started
