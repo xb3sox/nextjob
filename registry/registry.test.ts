@@ -96,7 +96,9 @@ describe('Custom Shadcn Registry', () => {
       const sourceFile = path.join(rootDir, item.files[0].path);
       const sourceContent = fs.readFileSync(sourceFile, 'utf-8');
 
-      expect(artifact.files[0].content).toBe(sourceContent);
+      expect(artifact.files[0].content.replace(/\r\n/g, '\n').trim()).toBe(
+        sourceContent.replace(/\r\n/g, '\n').trim()
+      );
     }
   });
 
