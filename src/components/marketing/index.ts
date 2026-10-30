@@ -1,6 +1,7 @@
 export * from './animated-section';
 export * from './animations';
 export * from './b2b';
+export * from './blocks';
 export * from './CtaButton';
 export * from './community-links';
 export * from './comparison';
