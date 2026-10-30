@@ -7,6 +7,7 @@ import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
 import { CustomerLogos } from './components/marketing/customer-logos';
 import { ProductDemo } from './components/marketing/product-demo';
+import { SampleOutputs } from './components/marketing/sample-outputs';
 import { SocialProofCarousel } from './components/marketing/social-proof-carousel';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
@@ -238,6 +239,13 @@ function LandingPage() {
       <div className="border-t border-white/5">
         <Reveal>
           <CustomerLogos />
+        </Reveal>
+      </div>
+
+      {/* Sample Outputs Gallery section (T-91, FR-TRUST-04) */}
+      <div className="border-t border-white/5">
+        <Reveal>
+          <SampleOutputs />
         </Reveal>
       </div>
 
