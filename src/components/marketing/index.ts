@@ -1,3 +1,4 @@
+export * from './b2b';
 export * from './CtaButton';
 export * from './community-links';
 export * from './comparison';
@@ -12,3 +13,4 @@ export * from './sample-outputs';
 export * from './social-proof-carousel';
 export * from './TestimonialCard';
 export * from './TrustBadges';
+export * from './video-player';

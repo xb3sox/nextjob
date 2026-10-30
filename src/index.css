@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/marketing-tokens.css";
+@import "./styles/interactions.css";
 
 /* Self-hosted font declarations */
 @font-face {

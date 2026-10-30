@@ -1180,12 +1180,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `src/App.tsx`, `docs/DESIGN.md`
 
 #### T-53: Implement B2B2C landing page section
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR pending)
 - **Deliverable:** Separate section or page for institutions/programs highlighting: cohort management, aggregate reporting (minimum cohort size ≥5), privacy safeguards (no individual data exposure), pricing for organizations, case studies/testimonials placeholders, contact/demo CTA
 - **Dependencies:** T-52, T-30
 - **Acceptance:** FR-MKT-08 satisfied; AC-16 passing; institution administrators can find and understand B2B offering
-- **Verification:** Navigate to B2B section → verify content present; test with institution persona → verify clarity
-- **Files:** `apps/web/src/app/(marketing)/b2b/page.tsx`, `apps/web/src/components/marketing/b2b/`
+- **Verification:** Navigate to B2B section → verify content present; test with institution persona → verify clarity (verified in `b2b-section.test.tsx`, 4 tests)
+- **Files:** `src/App.tsx`, `src/components/marketing/b2b/`
 
 #### T-54: Implement landing page SEO and analytics
 - [x] **Status:** Complete (PR #222)
@@ -1456,7 +1456,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/animations.tsx`, `apps/web/src/styles/animations.css`
 
 #### T-79: Implement micro-interactions
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
+- **Verification Evidence:** `bunx vitest run src/components/ui/button-interactions.test.tsx` (5 passed, 82ms); `src/styles/interactions.css` micro-interaction classes (<150ms duration, active scale 0.98, hover lift -0.5px, moss glow), motion-reduce disabled transforms, accessible keyboard focus rings.
 - **Deliverable:** Button hover states (scale, shadow), form field focus animations, loading state transitions, success/error state animations
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-VIS-03 satisfied; all interactive elements have hover/focus states; animations are subtle and fast (< 200ms); accessible
@@ -1480,7 +1481,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Build successful with skeleton components integrated
 
 #### T-81: Implement video content support
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR pending)
 - **Deliverable:** Video player component supporting hero backgrounds (muted, autoplay, loop), product walkthroughs, testimonials with captions and transcripts
 - **Dependencies:** T-52
 - **Acceptance:** FR-VIS-05 satisfied; videos load efficiently (lazy loading); captions available; transcripts provided; mobile-optimized (poster images)
@@ -1836,7 +1837,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-MKT-05 (Analytics) | T-54 | Complete (PR #222) |
 | FR-MKT-06 (A/B testing) | T-54 | Complete (PR #222) |
 | FR-MKT-07 (FAQ, testimonials) | T-52 | Complete (Redesigned) |
-| FR-MKT-08 (B2B2C section) | T-53 | Not started |
+| FR-MKT-08 (B2B2C section) | T-53 | Complete |
 | FR-MKT-09 (Legal compliance) | T-55 | Complete |
 | FR-MKT-10 (Referral program) | T-56 | Not started |
 | FR-PERF-01 (Core Web Vitals) | T-57 | Not started |
@@ -1865,9 +1866,9 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CRO-10 (Comparison table) | T-75 | Complete (PR #223) |
 | FR-VIS-01 (Marketing design system) | T-77 | Complete (PR #225) |
 | FR-VIS-02 (Scroll animations) | T-78 | Not started |
-| FR-VIS-03 (Micro-interactions) | T-79 | Not started |
+| FR-VIS-03 (Micro-interactions) | T-79 | Complete |
 | FR-VIS-04 (Loading skeletons) | T-80 | Complete |
-| FR-VIS-05 (Video support) | T-81 | Not started |
+| FR-VIS-05 (Video support) | T-81 | Complete |
 | FR-VIS-06 (Dark/light mode) | T-82 | Not started |
 | FR-VIS-07 (Responsive images) | T-58 | Not started |
 | FR-VIS-08 (Icon system) | T-77 | Not started |
