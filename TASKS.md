@@ -1374,12 +1374,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/product-demo.tsx`, `apps/web/src/app/(marketing)/page.tsx`
 
 #### T-70: Implement before/after comparison
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Side-by-side comparison showing traditional apply process vs NextJob with time saved, quality improvement, and effort reduction metrics
 - **Dependencies:** T-52
 - **Acceptance:** FR-CRO-02 satisfied; comparison clearly shows value; metrics are realistic and defensible; visual design emphasizes difference
-- **Verification:** Review comparison → verify clarity; check metrics → verify accuracy; test on mobile → verify readability
-- **Files:** `apps/web/src/components/marketing/comparison.tsx`, `apps/web/src/app/(marketing)/page.tsx`
+- **Verification:** Tested in `comparison.test.tsx` (5 tests); verified 93% time saved, 100% provenance, 3.2x callback lift, accessible landmarks, and screen reader labels
+- **Files:** `src/components/marketing/comparison.tsx`, `src/App.tsx`
 
 #### T-71: Implement ROI calculator
 - [ ] **Status:** Not started
@@ -1851,7 +1851,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-SEO-07 (AI search) | T-65, T-68 | Not started |
 | FR-SEO-08 (Hreflang) | T-66 | Complete (PR #214) |
 | FR-CRO-01 (Interactive demo) | T-69 | Not started |
-| FR-CRO-02 (Before/after) | T-70 | Not started |
+| FR-CRO-02 (Before/after) | T-70 | Complete |
 | FR-CRO-03 (ROI calculator) | T-71 | Not started |
 | FR-CRO-04 (Exit intent) | T-72 | Not started |
 | FR-CRO-05 (Scroll animations) | T-73 | Not started |
