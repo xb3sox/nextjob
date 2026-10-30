@@ -57,7 +57,10 @@ export class ApplicationFailureError extends Error {
   public readonly details: FailureDetails;
 
   constructor(details: FailureDetails, cause?: unknown) {
-    super(`${details.status}: ${details.explanation}`, { cause });
+    super(`${details.status}: ${details.explanation}`);
+    if (cause !== undefined) {
+      (this as { cause?: unknown }).cause = cause;
+    }
     this.name = 'ApplicationFailureError';
     this.details = details;
   }

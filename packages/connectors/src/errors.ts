@@ -32,7 +32,10 @@ export class ConnectorError extends Error {
     isAmbiguous = false,
     options?: ConnectorErrorOptions
   ) {
-    super(message, { cause: options?.cause });
+    super(message);
+    if (options?.cause !== undefined) {
+      (this as { cause?: unknown }).cause = options.cause;
+    }
     this.name = 'ConnectorError';
     this.code = code;
     this.isAmbiguous = isAmbiguous;
