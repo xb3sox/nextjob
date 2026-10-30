@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 32" fill="#FFFFFF">
+  <title>Figma logo</title>
   <path d="M7 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0zm0 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0zm0 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0zm8-16a4 4 0 1 1 8 0 4 4 0 0 1-8 0zm0 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0z"/>
   <text x="32" y="22" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="16" fill="#FFFFFF">Figma</text>
 </svg>

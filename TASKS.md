@@ -1543,7 +1543,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 30: Trust & Credibility
 
 #### T-88: Implement customer logos section
-- [x] **Status:** Complete (PR #227)
+- [x] **Status:** Complete (PR #229)
 - **Deliverable:** Customer logo display section: 6-12 company logos in grayscale, color on hover, with permission; responsive grid layout
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-TRUST-01 satisfied; logos displayed with permission; grayscale by default; color on hover; responsive grid; accessible
@@ -1875,7 +1875,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CONT-05 (Email nurture) | T-87 | Not started |
 | FR-CONT-06 (Lead magnets) | Not in MVP scope | N/A |
 | FR-CONT-07 (Blog/resources) | Not in MVP scope | N/A |
-| FR-TRUST-01 (Customer logos) | T-88 | Not started |
+| FR-TRUST-01 (Customer logos) | T-88 | Complete (PR #229) |
 | FR-TRUST-02 (Security certifications) | T-89 | Not started |
 | FR-TRUST-03 (Data transparency) | T-90 | Not started |
 | FR-TRUST-04 (Sample outputs) | T-91 | Not started |

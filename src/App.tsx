@@ -234,11 +234,11 @@ function LandingPage() {
       </main>
 
       {/* Customer / Employer Logos section (T-88, FR-TRUST-01) */}
-      <section className="border-t border-white/5">
+      <div className="border-t border-white/5">
         <Reveal>
           <CustomerLogos />
         </Reveal>
-      </section>
+      </div>
 
       {/* Features */}
       <section className="py-24 px-6 border-t border-white/5">
