@@ -1429,12 +1429,17 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 28: Visual Excellence
 
 #### T-77: Create marketing design system
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Reusable marketing components: hero variants, feature sections, pricing cards, testimonial components, CTA button variants, trust badges
 - **Dependencies:** T-52
 - **Acceptance:** FR-VIS-01 satisfied; all components use design tokens; consistent spacing and typography; documented with Storybook or similar
-- **Verification:** Review components → verify consistency; check design tokens → verify usage; test responsiveness → verify all breakpoints
-- **Files:** `apps/web/src/components/marketing/`, `apps/web/src/styles/marketing-tokens.css`
+- **Verification:** `bun run typecheck`, `bun run lint`, `bun run test -- src/components/marketing/marketing.test.tsx` (17/17 passed), `bun run build` (success)
+- **Files:** `src/components/marketing/`, `src/styles/marketing-tokens.css`
+- **Evidence:**
+  - ✅ Marketing design tokens created in `src/styles/marketing-tokens.css` with CSS custom properties and utility classes (`.mkt-card`, `.mkt-badge`, `.mkt-btn-*`), imported in `src/index.css`
+  - ✅ Reusable components created in `src/components/marketing/`: `CtaButton`, `TrustBadges`, `HeroSection`, `FeatureSection`, `PricingCard`, `TestimonialCard`
+  - ✅ Complete documentation in `src/components/marketing/README.md`
+  - ✅ 17 unit tests in `src/components/marketing/marketing.test.tsx` passing green
 
 #### T-78: Implement scroll animations
 - [ ] **Status:** Not started
