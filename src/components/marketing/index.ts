@@ -8,6 +8,7 @@ export * from './comparison-table';
 export * from './customer-logos';
 export * from './FeatureSection';
 export * from './HeroSection';
+export * from './integration-logos';
 export * from './PricingCard';
 export * from './press-section';
 export * from './product-demo';

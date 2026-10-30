@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 32" fill="#FFFFFF">
+  <title>BambooHR logo</title>
+  <path d="M12 8C8.69 8 6 10.69 6 14V24H12V18C12 16.34 13.34 15 15 15C16.66 15 18 16.34 18 18V24H24V14C24 10.69 21.31 8 18 8H12Z" fill="#84CC16"/>
+  <text x="28" y="22" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" letter-spacing="-0.3">BambooHR</text>
+</svg>
