@@ -1,6 +1,7 @@
 import { ArrowRight, Check, CheckCircle2, Download, Sparkles, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type UseExitIntentOptions, useExitIntent } from '../../hooks/use-exit-intent';
+import { POST as submitNewsletter } from '../../pages/api/newsletter/route';
 
 export interface ExitIntentModalProps extends UseExitIntentOptions {
   forceOpen?: boolean;
@@ -34,6 +35,7 @@ export function ExitIntentModal({
 
   const isOpen = forceOpen || isTriggered;
   const [email, setEmail] = useState('');
+  const [consent, setConsent] = useState(true);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -90,11 +92,28 @@ export function ExitIntentModal({
       return;
     }
 
+    if (!consent) {
+      setStatus('error');
+      setErrorMessage('Please confirm your GDPR consent.');
+      return;
+    }
+
     setStatus('loading');
     setErrorMessage('');
     try {
-      if (onLeadCapture) await onLeadCapture(val);
-      else await new Promise((res) => setTimeout(res, 600));
+      if (onLeadCapture) {
+        await onLeadCapture(val);
+      } else {
+        const res = await submitNewsletter({
+          email: val,
+          consent: true,
+          source: 'exit_intent',
+          leadMagnetId: 'evidence_playbook_2026',
+        });
+        if (res.status < 200 || res.status >= 300) {
+          throw new Error('Newsletter submission failed');
+        }
+      }
       setStatus('success');
     } catch {
       setStatus('error');
@@ -211,6 +230,25 @@ export function ExitIntentModal({
                     {errorMessage}
                   </p>
                 )}
+              </div>
+
+              <div className="flex items-start gap-2 pt-0.5">
+                <input
+                  id="exit-intent-consent"
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => {
+                    setConsent(e.target.checked);
+                    if (status === 'error') setStatus('idle');
+                  }}
+                  className="mt-0.5 h-3.5 w-3.5 rounded border-white/20 bg-neutral-800 text-emerald-500 focus:ring-emerald-500"
+                />
+                <label
+                  htmlFor="exit-intent-consent"
+                  className="text-xs text-neutral-400 select-none cursor-pointer"
+                >
+                  I agree to receive the playbook and communications per GDPR policy.
+                </label>
               </div>
 
               <button

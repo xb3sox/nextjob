@@ -5,6 +5,7 @@ import { FaqBlock, FeaturesBlock, HeroBlock, PricingBlock } from './components/b
 import { CookieConsent } from './components/cookie-consent';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
+import { EmailCapture } from './components/marketing/email-capture';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
@@ -386,35 +387,41 @@ function LandingPage() {
 
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-white/5">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm text-fog">
-            <Zap className="w-4 h-4 text-moss" aria-hidden="true" />
-            <span>© 2026 NextJob</span>
+        <div className="max-w-6xl mx-auto space-y-10">
+          <div className="p-6 rounded-2xl border border-white/10 bg-neutral-900/60 max-w-xl">
+            <EmailCapture variant="footer" source="footer" />
           </div>
-          <nav aria-label="Footer" className="flex gap-6 text-sm text-fog">
-            <Link
-              to="/login"
-              onClick={() => analytics.trackCtaClick('footer_signin', '/login')}
-              className="hover:text-paper transition-colors"
-            >
-              Sign in
-            </Link>
-            <Link to="/press-kit" className="hover:text-paper transition-colors">
-              Press Kit
-            </Link>
-            <Link to="/privacy" className="hover:text-paper transition-colors">
-              Privacy
-            </Link>
-            <Link to="/data-handling" className="hover:text-paper transition-colors">
-              Data Handling
-            </Link>
-            <a href="#for-institutions" className="hover:text-paper transition-colors">
-              Institutions
-            </a>
-            <Link to="/terms" className="hover:text-paper transition-colors">
-              Terms
-            </Link>
-          </nav>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5">
+            <div className="flex items-center gap-2 text-sm text-fog">
+              <Zap className="w-4 h-4 text-moss" aria-hidden="true" />
+              <span>© 2026 NextJob</span>
+            </div>
+            <nav aria-label="Footer" className="flex gap-6 text-sm text-fog">
+              <Link
+                to="/login"
+                onClick={() => analytics.trackCtaClick('footer_signin', '/login')}
+                className="hover:text-paper transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link to="/press-kit" className="hover:text-paper transition-colors">
+                Press Kit
+              </Link>
+              <Link to="/privacy" className="hover:text-paper transition-colors">
+                Privacy
+              </Link>
+              <Link to="/data-handling" className="hover:text-paper transition-colors">
+                Data Handling
+              </Link>
+              <a href="#for-institutions" className="hover:text-paper transition-colors">
+                Institutions
+              </a>
+              <Link to="/terms" className="hover:text-paper transition-colors">
+                Terms
+              </Link>
+            </nav>
+          </div>
         </div>
       </footer>
     </div>
