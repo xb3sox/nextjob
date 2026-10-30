@@ -15,7 +15,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@nextjob/shared": ["./packages/shared/src/index.ts"],
-      "@nextjob/tailoring": ["./packages/tailoring/src/index.ts"]
+      "@nextjob/tailoring": ["./packages/tailoring/src/index.ts"],
+      "@nextjob/policy": ["./packages/policy/src/index.ts"]
     }
   },
   "include": ["src"]
