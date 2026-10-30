@@ -8,7 +8,7 @@ import {
   ShieldCheck,
   Zap,
 } from 'lucide-react';
-import { type KeyboardEvent, useState } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 
 export type DemoStepId = 'eligibility' | 'tailoring' | 'extension' | 'receipt';
 
@@ -86,6 +86,35 @@ export const MOCK_CRITERIA: CriterionResult[] = [
   },
 ];
 
+export interface AtsFormField {
+  label: string;
+  val: string;
+  source: string;
+}
+
+export const MOCK_ATS_FIELDS: AtsFormField[] = [
+  {
+    label: 'Full Legal Name',
+    val: 'Alex Mercer',
+    source: 'Verified Profile Vault',
+  },
+  {
+    label: 'Work Authorization Status',
+    val: 'Authorized to work for any US employer',
+    source: 'Grounded Visa Check',
+  },
+  {
+    label: 'Years of React/TypeScript Experience',
+    val: '8 years',
+    source: 'Calculated from CareerClaims',
+  },
+  {
+    label: 'Why are you interested in this role?',
+    val: 'Tailored response emphasizing high-scale frontend systems from verified Stripe claim history.',
+    source: 'Evidence Constrained Statement',
+  },
+];
+
 export interface ProductDemoProps {
   id?: string;
   className?: string;
@@ -119,9 +148,21 @@ export function ProductDemo({ id = 'interactive-demo', className = '' }: Product
     }
   };
 
-  const copyReceiptHash = () => {
+  useEffect(() => {
+    if (!copiedReceipt) return;
+    const timer = setTimeout(() => setCopiedReceipt(false), 2000);
+    return () => clearTimeout(timer);
+  }, [copiedReceipt]);
+
+  const copyReceiptHash = async () => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText('rec_9f82d1c0a87e44b3');
+      }
+    } catch {
+      // Ignore clipboard permission errors in test or headless environments
+    }
     setCopiedReceipt(true);
-    setTimeout(() => setCopiedReceipt(false), 2000);
   };
 
   return (
@@ -372,28 +413,7 @@ export function ProductDemo({ id = 'interactive-demo', className = '' }: Product
                 </div>
 
                 <div className="space-y-2.5">
-                  {[
-                    {
-                      label: 'Full Legal Name',
-                      val: 'Alex Mercer',
-                      source: 'Verified Profile Vault',
-                    },
-                    {
-                      label: 'Work Authorization Status',
-                      val: 'Authorized to work for any US employer',
-                      source: 'Grounded Visa Check',
-                    },
-                    {
-                      label: 'Years of React/TypeScript Experience',
-                      val: '8 years',
-                      source: 'Calculated from CareerClaims',
-                    },
-                    {
-                      label: 'Why are you interested in this role?',
-                      val: 'Tailored response emphasizing high-scale frontend systems from verified Stripe claim history.',
-                      source: 'Evidence Constrained Statement',
-                    },
-                  ].map((field) => (
+                  {MOCK_ATS_FIELDS.map((field) => (
                     <div
                       key={field.label}
                       className="p-3 rounded-lg border border-white/5 bg-ink flex flex-col sm:flex-row sm:items-center justify-between gap-2"
