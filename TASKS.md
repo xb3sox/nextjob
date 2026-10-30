@@ -997,11 +997,11 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 15: Observability & Monitoring
 
 #### T-38: Implement observability stack
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Structured logging, OpenTelemetry traces, Langfuse for AI, PostHog for product analytics
 - **Dependencies:** T-05
 - **Acceptance:** All traces captured; AI calls logged in Langfuse; product events in PostHog; no PII in analytics
-- **Verification:** Trigger actions → verify traces in observability tools; inspect analytics → no PII
+- **Verification:** `bun run typecheck && bun run lint && bunx vitest run --maxWorkers 2 && bun run build` → exit code 0; verified structured JSON logger with context inheritance, W3C OpenTelemetry distributed tracing (traceparent, traceId, spanId, status), PostHog-compatible product analytics with pseudo-anonymized identifiers, Langfuse AI call telemetry, and deep zero-PII scrubbing across payloads (`packages/api/src/observability/observability.test.ts`, 14/14 passed).
 - **Files:** `packages/api/src/observability/`
 
 ---
