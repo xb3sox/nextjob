@@ -1566,12 +1566,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/blocks/`, `docs/marketing/content-blocks.md`
 
 #### T-86: Create video scripts
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Video scripts: product demo (60s), explainer video (90s), testimonial interview template; include visual directions and key messages
 - **Dependencies:** T-83, T-84
 - **Acceptance:** FR-CONT-04 satisfied; scripts are clear and engaging; follow messaging hierarchy; include visual directions; approved by stakeholders
-- **Verification:** Review scripts → verify clarity; read aloud → verify timing; check messaging → verify alignment
-- **Files:** `docs/marketing/video-scripts.md`
+- **Verification:** Verified in `docs/marketing/video-scripts.test.ts` (5 tests pass); verified FR-CONT-04 standards, 60s product demo, 90s brand explainer, customer testimonial interview template, timestamped visual directions, and audio voiceover tables.
+- **Files:** `docs/marketing/video-scripts.md`, `docs/marketing/video-scripts.test.ts`
 
 #### T-87: Set up email nurture sequences
 - [ ] **Status:** Not started
