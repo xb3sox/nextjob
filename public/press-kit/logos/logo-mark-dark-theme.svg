@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <title>NextJob Logo Mark (Dark Theme)</title>
   <rect width="120" height="120" rx="24" fill="#0A0D0E" />
   <rect x="20" y="20" width="80" height="80" rx="18" fill="#052e16" stroke="#34D399" stroke-width="3" />
   <text x="60" y="73" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="48" fill="#34D399" text-anchor="middle">N</text>
