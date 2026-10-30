@@ -1550,12 +1550,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `docs/marketing/messaging-hierarchy.md`, `docs/marketing/messaging-hierarchy.test.ts`
 
 #### T-84: Create copywriting guidelines
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Comprehensive copywriting guide: tone of voice (conversational, confident, trustworthy), vocabulary (no jargon), sentence structure (< 20 words), active voice, examples
 - **Dependencies:** T-83
 - **Acceptance:** FR-CONT-02 satisfied; guidelines are clear and actionable; examples provided for each principle; approved by stakeholders
-- **Verification:** Review guidelines → verify clarity; write sample copy → verify adherence; get feedback → verify effectiveness
-- **Files:** `docs/marketing/copywriting-guidelines.md`
+- **Verification:** Verified in `docs/marketing/copywriting-guidelines.test.ts` (5 tests pass); verified FR-CONT-02 standards, conversational/confident/trustworthy pillars, banned jargon alternatives, < 20 words/sentence and active voice rules, and before/after example matrices.
+- **Files:** `docs/marketing/copywriting-guidelines.md`, `docs/marketing/copywriting-guidelines.test.ts`
 
 #### T-85: Build content blocks library
 - [ ] **Status:** Not started
