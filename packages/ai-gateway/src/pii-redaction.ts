@@ -184,6 +184,9 @@ export function redactObject<T>(obj: T, options?: Parameters<typeof redactPII>[1
   if (obj !== null && typeof obj === 'object') {
     const redacted: any = {};
     for (const [key, value] of Object.entries(obj)) {
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        continue;
+      }
       redacted[key] = redactObject(value, options);
     }
     return redacted;
