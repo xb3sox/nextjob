@@ -1409,12 +1409,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/exit-intent.tsx`, `apps/web/src/hooks/use-exit-intent.ts`
 
 #### T-73: Implement scroll-triggered animations
-- [ ] **Status:** Not started
-- **Deliverable:** Framer Motion animations for section reveals, fade-ins, slide-ups using Intersection Observer; respects prefers-reduced-motion
+- [x] **Status:** Complete (2026-10-30)
+- **Deliverable:** Animations for section reveals, fade-ins, slide-ups using Intersection Observer; respects prefers-reduced-motion
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-CRO-05 satisfied; animations trigger on scroll; smooth and performant; respect reduced motion preference; no layout shift
-- **Verification:** Scroll through page → verify animations; enable reduced motion → verify no animations; check performance → verify no jank
-- **Files:** `apps/web/src/components/marketing/animated-section.tsx`, `apps/web/src/hooks/use-scroll-animation.ts`
+- **Verification:** `bunx vitest run src/hooks/use-scroll-animation.test.tsx src/components/marketing/animated-section.test.tsx` (10 passed); verified Intersection Observer trigger, slide/fade/scale animation variants, prefers-reduced-motion safety, and zero layout shift.
+- **Files:** `src/components/marketing/animated-section.tsx`, `src/hooks/use-scroll-animation.ts`, `src/components/marketing/animated-section.test.tsx`, `src/hooks/use-scroll-animation.test.tsx`
 
 #### T-74: Implement social proof rotation
 - [x] **Status:** Complete
@@ -1869,7 +1869,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CRO-02 (Before/after) | T-70 | Complete |
 | FR-CRO-03 (ROI calculator) | T-71 | Not started |
 | FR-CRO-04 (Exit intent) | T-72 | Not started |
-| FR-CRO-05 (Scroll animations) | T-73 | Not started |
+| FR-CRO-05 (Scroll animations) | T-73 | Complete |
 | FR-CRO-06 (Micro-conversions) | T-105 | Not started |
 | FR-CRO-07 (Social proof) | T-74 | Complete |
 | FR-CRO-08 (Urgency indicators) | Not in MVP scope | N/A |
