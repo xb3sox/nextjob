@@ -4,5 +4,6 @@ export * from './comparison-table';
 export * from './FeatureSection';
 export * from './HeroSection';
 export * from './PricingCard';
+export * from './product-demo';
 export * from './TestimonialCard';
 export * from './TrustBadges';

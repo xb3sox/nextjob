@@ -5,6 +5,7 @@ import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
 import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
+import { ProductDemo } from './components/marketing/product-demo';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
 import WaitlistForm from './components/WaitlistForm';
@@ -289,6 +290,13 @@ function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Interactive Product Demo (T-69, FR-CRO-01) */}
+      <div className="border-t border-white/5">
+        <Reveal>
+          <ProductDemo />
+        </Reveal>
+      </div>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-24 px-6 border-t border-white/5 scroll-mt-20">
