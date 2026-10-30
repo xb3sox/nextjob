@@ -1,0 +1,86 @@
+/*
+ * NextJob Marketing Design System Tokens
+ * Aligned with docs/DESIGN.md - Ultra-minimal, typography-driven.
+ */
+
+:root {
+  /* Marketing Backgrounds */
+  --mkt-bg-ink: #0b0d0c;
+  --mkt-bg-panel: #101312;
+  --mkt-bg-surface: rgba(255, 255, 255, 0.02);
+  --mkt-bg-surface-hover: rgba(255, 255, 255, 0.05);
+
+  /* Marketing Text Colors */
+  --mkt-text-primary: #ffffff;
+  --mkt-text-secondary: rgba(255, 255, 255, 0.6);
+  --mkt-text-tertiary: rgba(255, 255, 255, 0.4);
+  --mkt-text-subtle: rgba(255, 255, 255, 0.3);
+
+  /* Marketing Accents */
+  --mkt-color-moss: #34d399;
+  --mkt-color-moss-deep: #10b981;
+  --mkt-color-moss-dark: #06402e;
+  --mkt-color-moss-subtle: rgba(52, 211, 153, 0.1);
+
+  /* Marketing Borders & Radii */
+  --mkt-border-default: rgba(255, 255, 255, 0.1);
+  --mkt-border-strong: rgba(255, 255, 255, 0.2);
+  --mkt-border-moss: rgba(52, 211, 153, 0.25);
+  --mkt-radius-sm: 6px;
+  --mkt-radius-md: 8px;
+  --mkt-radius-lg: 12px;
+  --mkt-radius-full: 9999px;
+
+  /* Marketing Layout & Spacing */
+  --mkt-max-width: 1152px;
+  --mkt-narrow-width: 768px;
+  --mkt-section-padding-y: 80px;
+}
+
+.mkt-card {
+  background-color: var(--mkt-bg-surface);
+  border: 1px solid var(--mkt-border-default);
+  border-radius: var(--mkt-radius-lg);
+  padding: 1.5rem;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.mkt-card:hover {
+  border-color: var(--mkt-border-strong);
+  background-color: var(--mkt-bg-surface-hover);
+}
+
+.mkt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--mkt-radius-full);
+  background-color: var(--mkt-color-moss-subtle);
+  border: 1px solid var(--mkt-border-moss);
+  color: var(--mkt-color-moss);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.mkt-btn-primary {
+  background-color: var(--mkt-color-moss-deep);
+  color: var(--mkt-color-moss-dark);
+}
+
+.mkt-btn-primary:hover {
+  background-color: var(--mkt-color-moss);
+}
+
+.mkt-btn-secondary {
+  background-color: var(--mkt-bg-surface-hover);
+  border: 1px solid var(--mkt-border-default);
+  color: var(--mkt-text-primary);
+}
+
+.mkt-btn-outline {
+  border: 1px solid var(--mkt-border-strong);
+  color: var(--mkt-text-primary);
+}
