@@ -2,7 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { createSubmissionReceipt } from '@nextjob/applications';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ApplicationsPage from './ApplicationsPage';
@@ -183,5 +183,49 @@ describe('ApplicationsPage (T-27 Tracker UI)', () => {
     for (const tab of tabs) {
       expect(tab.tagName.toLowerCase()).toBe('button');
     }
+  });
+  it('opens outcome modal and updates application state to INTERVIEW (T-29)', async () => {
+    localStorage.setItem(APPLICATIONS_STORAGE_KEY, JSON.stringify([mockApplications[2]])); // SUBMITTED_VERIFIED
+    renderWithRouter();
+
+    // Click Update Outcome
+    const updateBtn = screen.getByRole('button', { name: /update outcome/i });
+    expect(updateBtn).toBeInTheDocument();
+    fireEvent.click(updateBtn);
+
+    // Modal opens
+    const modal = screen.getByRole('dialog');
+    expect(modal).toBeInTheDocument();
+    expect(screen.getByText(/Record Application Outcome/i)).toBeInTheDocument();
+
+    // Select Interview radio
+    const interviewOption = screen.getByRole('radio', { name: /Interview/i });
+    fireEvent.click(interviewOption);
+
+    // Click Save Outcome
+    const saveBtn = screen.getByRole('button', { name: /save outcome/i });
+    fireEvent.click(saveBtn);
+
+    // Modal closed and state updated
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByText('INTERVIEW')).toBeInTheDocument();
+
+    // Check localStorage was updated
+    const saved = JSON.parse(localStorage.getItem(APPLICATIONS_STORAGE_KEY) || '[]');
+    expect(saved[0].state).toBe('INTERVIEW');
+    expect(saved[0].audit[saved[0].audit.length - 1].to).toBe('INTERVIEW');
+  });
+
+  it('shows outcome finalized for terminal application states', () => {
+    const hiredApp = {
+      ...mockApplications[0],
+      id: 'app-hired-1',
+      state: 'HIRED',
+    };
+    localStorage.setItem(APPLICATIONS_STORAGE_KEY, JSON.stringify([hiredApp]));
+    renderWithRouter();
+
+    expect(screen.getByText(/Outcome finalized/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /update outcome/i })).not.toBeInTheDocument();
   });
 });
