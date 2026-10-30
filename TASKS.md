@@ -1366,12 +1366,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 27: Conversion Optimization
 
 #### T-69: Implement interactive product demo
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Embedded interactive demo showing application flow with real-looking (mock) data, no signup required, step-by-step walkthrough
 - **Dependencies:** T-52
 - **Acceptance:** FR-CRO-01 satisfied; demo is interactive and explorable; no signup wall; demonstrates key value props; mobile-responsive
-- **Verification:** Test demo flow → verify interactivity; check mobile → verify responsive; monitor engagement → verify usage
-- **Files:** `apps/web/src/components/marketing/product-demo.tsx`, `apps/web/src/app/(marketing)/page.tsx`
+- **Verification:** Tested in `product-demo.test.tsx` (6 tests); verified all 4 walkthrough steps, hard criteria, tailoring acceptance, extension simulation, frozen receipt, and keyboard navigation
+- **Files:** `src/components/marketing/product-demo.tsx`, `src/App.tsx`
 
 #### T-70: Implement before/after comparison
 - [x] **Status:** Complete
@@ -1850,7 +1850,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-SEO-06 (Canonical URLs) | T-66 | Complete (PR #214) |
 | FR-SEO-07 (AI search) | T-65, T-68 | Not started |
 | FR-SEO-08 (Hreflang) | T-66 | Complete (PR #214) |
-| FR-CRO-01 (Interactive demo) | T-69 | Not started |
+| FR-CRO-01 (Interactive demo) | T-69 | Complete |
 | FR-CRO-02 (Before/after) | T-70 | Complete |
 | FR-CRO-03 (ROI calculator) | T-71 | Not started |
 | FR-CRO-04 (Exit intent) | T-72 | Not started |
