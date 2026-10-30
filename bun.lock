@@ -76,6 +76,10 @@
       "name": "@nextjob/applications",
       "version": "0.1.0",
     },
+    "packages/connectors": {
+      "name": "@nextjob/connectors",
+      "version": "0.1.0",
+    },
     "packages/policy": {
       "name": "@nextjob/policy",
       "version": "0.1.0",
@@ -356,6 +360,8 @@
     "@nextjob/ai-gateway": ["@nextjob/ai-gateway@workspace:packages/ai-gateway"],
 
     "@nextjob/applications": ["@nextjob/applications@workspace:packages/applications"],
+
+    "@nextjob/connectors": ["@nextjob/connectors@workspace:packages/connectors"],
 
     "@nextjob/extension": ["@nextjob/extension@workspace:extension"],
 
