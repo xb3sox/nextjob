@@ -814,7 +814,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ Integrated extension into monorepo workspace and build pipeline (`bun run build` generates `extension/.output/chrome-mv3/` with valid `manifest.json`)
 
 #### T-22: Create ATS connector synthetic test framework
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
+- **Verification Evidence:** `bunx vitest run extension/tests/synthetic/connector-synthetic.test.ts` (6 passed, 29ms); mock ATS page generators (Greenhouse, Lever, Workday, Generic), heuristic field detection, simulated autofill dispatch, and test run logger.
 - **Deliverable:** Framework for testing ATS connectors with mock ATS pages
 - **Dependencies:** T-21
 - **Acceptance:** Can create mock ATS page; extension can detect and fill fields; test results logged
