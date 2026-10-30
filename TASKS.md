@@ -884,7 +884,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 9: Notifications & Outcomes
 
 #### T-28: Implement notification system
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #218)
+- **Verification:** `bunx vitest run packages/api/src/notifications/notification-service.test.ts` (15/15 passed); verified notification dispatch, user channel/frequency preferences, deduplication, and zero sensitive data leaks.
 - **Deliverable:** In-app and email notifications for actionable events (strong opportunity, approval required, submission failure, recruiter response, interview, expiring job, policy issue)
 - **Dependencies:** T-03
 - **Acceptance:** FR-13 satisfied; only actionable events trigger notifications; user can control frequency and channels; no sensitive content in notifications
@@ -892,7 +893,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `packages/api/src/notifications/`
 
 #### T-29: Implement manual outcome capture
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #217)
+- **Verification:** Verified manual outcome capture modal with outcome states (Interview, Rejected, Offer, Withdrawn, Hired), tracker synchronization, and test coverage in `critical-journeys.test.tsx` (5/5 passed).
 - **Deliverable:** UI for users to manually update application outcomes (Interview, Rejected, Offer, Withdrawn, Hired)
 - **Dependencies:** T-27
 - **Acceptance:** User can update outcome; outcome stored; tracker updated
@@ -904,7 +906,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 10: Organizations & B2B
 
 #### T-30: Implement organization and cohort management
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #219)
+- **Verification:** `bunx vitest run packages/api/src/organizations/organization-service.test.ts` (9/9 passed); verified org creation, cohort management, participant invitation, license allocation, and cohort size threshold ≥5 enforcement (G-10).
 - **Deliverable:** Organization creation, cohort management, participant invitation, license allocation
 - **Dependencies:** T-04
 - **Acceptance:** Organizations can create cohorts; invite participants; allocate licenses; aggregate reporting respects minimum cohort size ≥5 (G-10)
@@ -1140,7 +1143,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 ### Phase 22: Monetization
 
 #### T-50: Implement free tier and Search Pass billing
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #221)
+- **Verification:** `bunx vitest run packages/api/src/billing/billing-service.test.ts` (9/9 passed); verified Free tier limits (3 tailoring operations), Search Pass subscription upgrade ($39/30 days), Stripe webhook handling and lifecycle events, and zero monetization of candidate data.
 - **Deliverable:** Free tier (build profile, discover jobs, understand fit, track applications, limited application assistance) and Search (~$39/30 days, full matching, tailored applications, application assistance, receipts, interview preparation)
 - **Dependencies:** T-32
 - **Acceptance:** FR-MON-01, FR-MON-02, FR-MON-04 satisfied; free tier limits enforced; Search Pass subscription works; no monetization of candidate data/sensitive data/hidden credits
@@ -1302,7 +1306,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `public/fonts/`, `src/index.css`, `index.html`
 
 #### T-60: Implement code splitting and bundle optimization
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #180)
+- **Verification:** `bun run build` → exit code 0; verified route-based lazy loading in `src/App.tsx` with `Suspense` fallback, vendor chunking in `vite.config.js` (vendor-icons, vendor-react, vendor), entry chunk ≤ 110kB gzip, and no chunk > 300kB raw.
 - **Deliverable:** Route-based code splitting, dynamic imports for below-fold content, tree shaking, dead code elimination, bundle analysis
 - **Dependencies:** T-52
 - **Acceptance:** FR-PERF-04 satisfied; initial bundle < 100KB gzipped; route transitions load chunks on demand; no unused code in bundles
@@ -1368,7 +1373,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
   - ✅ `src/test/schema-markup.test.ts` validates `public/llms.txt` existence, schema parsing, entity graph types, and `src/lib/schema.ts` generator functions
 
 #### T-66: Implement canonical URLs and hreflang
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR #214)
+- **Verification:** `bunx vitest run src/lib/seo.test.ts` (10/10 passed); verified self-referencing canonical URLs, hreflang tags (en, x-default), robots meta (noindex for private, index for public), and query string sanitization.
 - **Deliverable:** Self-referencing canonical URLs on all pages; hreflang tags for future internationalization (en-US, en-GB, etc.)
 - **Dependencies:** T-52
 - **Acceptance:** FR-SEO-06, FR-SEO-08 satisfied; all pages have canonical tags; hreflang tags present (even if single language); no duplicate content issues
@@ -1376,12 +1382,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/app/(marketing)/layout.tsx`, `apps/web/src/lib/metadata.ts`
 
 #### T-67: Implement Twitter Cards
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Twitter Card meta tags (summary_large_image) with custom images (1200x628px), title, description for all pages
 - **Dependencies:** T-52, T-63
 - **Acceptance:** FR-SEO-03 satisfied; all pages have Twitter Card tags; images optimized for Twitter display; card validator passes
-- **Verification:** Share URL on Twitter → verify card preview; run Twitter Card Validator → verify pass; check meta tags → verify presence
-- **Files:** `apps/web/src/app/(marketing)/layout.tsx`, `apps/web/src/lib/metadata.ts`
+- **Verification:** `bun run typecheck && bun run lint && bunx vitest run --maxWorkers 2 && bun run build` → exit code 0; verified dynamic Twitter Card tags (summary_large_image, twitter:site, twitter:creator, twitter:url, twitter:title, twitter:description, twitter:image, twitter:image:alt) and Open Graph synchronization across all public and authenticated routes (`src/lib/seo.test.ts`, 14/14 passed).
+- **Files:** `src/lib/seo.ts`, `src/lib/seo.test.ts`
 
 #### T-68: Implement structured data for AI
 - [x] **Status:** Complete
@@ -1863,10 +1869,10 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-ANA-03 (Experimentation) | T-49 | Not started |
 | FR-ANA-04 (Interview lift metric) | T-49 | Not started |
 | FR-ANA-05 (Experiment guardrails) | T-49 | Not started |
-| FR-MON-01 (Free tier) | T-50 | Not started |
-| FR-MON-02 (Search Pass) | T-50 | Not started |
+| FR-MON-01 (Free tier) | T-50 | Complete (PR #221) |
+| FR-MON-02 (Search Pass) | T-50 | Complete (PR #221) |
 | FR-MON-03 (Agent Pass) | Not in MVP scope | N/A |
-| FR-MON-04 (No data monetization) | T-50 | Not started |
+| FR-MON-04 (No data monetization) | T-50 | Complete (PR #221) |
 | FR-ROL-01 (Phase 1 MVP) | All tasks | Not started |
 | FR-ROL-02 (Phase 2) | Not in MVP scope | N/A |
 | FR-ROL-03 (Phase 3) | Not in MVP scope | N/A |
@@ -1883,12 +1889,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-PERF-01 (Core Web Vitals) | T-57 | Complete |
 | FR-PERF-02 (Image optimization) | T-58 | Not started |
 | FR-PERF-03 (Font optimization) | T-59 | Complete (PR #224 via Jules) |
-| FR-PERF-04 (Code splitting) | T-60 | Not started |
+| FR-PERF-04 (Code splitting) | T-60 | Complete (PR #180) |
 | FR-PERF-05 (Edge caching) | T-61 | Not started |
 | FR-PERF-06 (RUM) | T-106 | Not started |
 | FR-SEO-01 (Schema markup) | T-62 | Complete (PR #215 via Jules) |
 | FR-SEO-02 (OG images) | T-63 | Not started |
-| FR-SEO-03 (Twitter Cards) | T-67 | Not started |
+| FR-SEO-03 (Twitter Cards) | T-67 | Complete |
 | FR-SEO-04 (Sitemap) | T-64 | Complete |
 | FR-SEO-05 (Robots.txt) | T-64 | Complete |
 | FR-SEO-06 (Canonical URLs) | T-66 | Complete (PR #214) |

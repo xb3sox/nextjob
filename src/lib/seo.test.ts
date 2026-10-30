@@ -2,9 +2,15 @@
  * @vitest-environment happy-dom
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { applyRouteMeta, isPrivateRoute, normalizeCanonicalPath } from './seo';
+import {
+  applyRouteMeta,
+  DEFAULT_META,
+  getRouteMetadata,
+  isPrivateRoute,
+  normalizeCanonicalPath,
+} from './seo';
 
-describe('SEO & Route Meta (T-66)', () => {
+describe('SEO & Route Meta (T-66, T-67, FR-SEO-03, FR-SEO-06)', () => {
   beforeEach(() => {
     // Reset document.head before each test
     document.head.innerHTML = `
@@ -56,6 +62,24 @@ describe('SEO & Route Meta (T-66)', () => {
     });
   });
 
+  describe('getRouteMetadata', () => {
+    it('returns route metadata for known routes', () => {
+      const privacyMeta = getRouteMetadata('/privacy');
+      expect(privacyMeta.title).toBe('Privacy Policy — NextJob');
+      expect(privacyMeta.description).toContain('evidence provenance');
+      expect(privacyMeta.image).toBe('https://nextjob.ai/og-image.png');
+
+      const dataHandlingMeta = getRouteMetadata('/data-handling');
+      expect(dataHandlingMeta.title).toBe('Data Handling Transparency — NextJob');
+      expect(dataHandlingMeta.description).toContain('plain-language transparency');
+    });
+
+    it('falls back to default metadata for unknown routes', () => {
+      const unknownMeta = getRouteMetadata('/unknown-page');
+      expect(unknownMeta).toEqual(DEFAULT_META);
+    });
+  });
+
   describe('applyRouteMeta', () => {
     it('updates canonical and hreflang tags for a public route (/privacy)', () => {
       applyRouteMeta('/privacy');
@@ -100,6 +124,64 @@ describe('SEO & Route Meta (T-66)', () => {
       );
     });
 
+    it('sets Twitter Card tags with summary_large_image, url, title, description, and image (T-67, FR-SEO-03)', () => {
+      applyRouteMeta('/privacy');
+
+      const getMeta = (key: string) =>
+        document.head
+          .querySelector(`meta[name="${key}"], meta[property="${key}"]`)
+          ?.getAttribute('content');
+
+      expect(getMeta('twitter:card')).toBe('summary_large_image');
+      expect(getMeta('twitter:site')).toBe('@nextjob');
+      expect(getMeta('twitter:creator')).toBe('@nextjob');
+      expect(getMeta('twitter:url')).toBe('https://nextjob.ai/privacy');
+      expect(getMeta('twitter:title')).toBe('Privacy Policy — NextJob');
+      expect(getMeta('twitter:description')).toContain('evidence provenance');
+      expect(getMeta('twitter:image')).toBe('https://nextjob.ai/og-image.png');
+      expect(getMeta('twitter:image:alt')).toBe(
+        'NextJob Privacy Policy — User data ownership and evidence protection.'
+      );
+
+      // Open Graph parity
+      expect(getMeta('og:type')).toBe('website');
+      expect(getMeta('og:url')).toBe('https://nextjob.ai/privacy');
+      expect(getMeta('og:title')).toBe('Privacy Policy — NextJob');
+      expect(getMeta('og:description')).toContain('evidence provenance');
+      expect(getMeta('og:image')).toBe('https://nextjob.ai/og-image.png');
+    });
+
+    it('updates Twitter Card tags dynamically on route transition', () => {
+      applyRouteMeta('/');
+      const getMeta = (key: string) =>
+        document.head
+          .querySelector(`meta[name="${key}"], meta[property="${key}"]`)
+          ?.getAttribute('content');
+
+      expect(getMeta('twitter:title')).toBe('NextJob — Apply with Proof | AI Career Agent');
+      expect(getMeta('twitter:url')).toBe('https://nextjob.ai/');
+
+      applyRouteMeta('/data-handling');
+      expect(getMeta('twitter:title')).toBe('Data Handling Transparency — NextJob');
+      expect(getMeta('twitter:url')).toBe('https://nextjob.ai/data-handling');
+      expect(document.title).toBe('Data Handling Transparency — NextJob');
+
+      applyRouteMeta('/press-kit');
+      expect(getMeta('twitter:title')).toBe('Press Kit & Media Resources — NextJob');
+      expect(getMeta('twitter:url')).toBe('https://nextjob.ai/press-kit');
+
+      // Verify no duplicates created
+      const twitterCardTags = document.head.querySelectorAll(
+        'meta[name="twitter:card"], meta[property="twitter:card"]'
+      );
+      expect(twitterCardTags.length).toBe(1);
+
+      const twitterTitleTags = document.head.querySelectorAll(
+        'meta[name="twitter:title"], meta[property="twitter:title"]'
+      );
+      expect(twitterTitleTags.length).toBe(1);
+    });
+
     it('ignores query strings and trailing slashes in canonical URL (/privacy/?x=1)', () => {
       applyRouteMeta('/privacy/?x=1');
 
@@ -108,6 +190,7 @@ describe('SEO & Route Meta (T-66)', () => {
       expect(canonicals[0].getAttribute('href')).toBe('https://nextjob.ai/privacy');
 
       const enAlts = document.head.querySelectorAll('link[rel="alternate"][hreflang="en"]');
+      expect(enAlts.length).toBe(1);
       expect(enAlts[0].getAttribute('href')).toBe('https://nextjob.ai/privacy');
     });
 
