@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
+import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
 import ProtectedRoute from './components/ProtectedRoute';
 import Reveal from './components/Reveal';
@@ -328,6 +329,13 @@ function LandingPage() {
           </ol>
         </div>
       </section>
+
+      {/* Before & After Process Comparison (T-70, FR-CRO-02) */}
+      <div className="border-t border-white/5">
+        <Reveal>
+          <BeforeAfterComparison />
+        </Reveal>
+      </div>
 
       {/* Comparison Table (T-75, FR-CRO-10) */}
       <section className="py-24 px-6 border-t border-white/5">
