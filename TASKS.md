@@ -1456,7 +1456,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/animations.tsx`, `apps/web/src/styles/animations.css`
 
 #### T-79: Implement micro-interactions
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
+- **Verification Evidence:** `bunx vitest run src/components/ui/button-interactions.test.tsx` (5 passed, 82ms); `src/styles/interactions.css` micro-interaction classes (<150ms duration, active scale 0.98, hover lift -0.5px, moss glow), motion-reduce disabled transforms, accessible keyboard focus rings.
 - **Deliverable:** Button hover states (scale, shadow), form field focus animations, loading state transitions, success/error state animations
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-VIS-03 satisfied; all interactive elements have hover/focus states; animations are subtle and fast (< 200ms); accessible
@@ -1865,7 +1866,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CRO-10 (Comparison table) | T-75 | Complete (PR #223) |
 | FR-VIS-01 (Marketing design system) | T-77 | Complete (PR #225) |
 | FR-VIS-02 (Scroll animations) | T-78 | Not started |
-| FR-VIS-03 (Micro-interactions) | T-79 | Not started |
+| FR-VIS-03 (Micro-interactions) | T-79 | Complete |
 | FR-VIS-04 (Loading skeletons) | T-80 | Complete |
 | FR-VIS-05 (Video support) | T-81 | Not started |
 | FR-VIS-06 (Dark/light mode) | T-82 | Not started |
