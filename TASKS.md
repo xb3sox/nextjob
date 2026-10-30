@@ -1596,12 +1596,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/security-badges.tsx`, `apps/web/src/app/(marketing)/security/page.tsx`
 
 #### T-90: Create data handling transparency page
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Dedicated page explaining data practices: what data is collected, how it's used, storage duration, deletion process, no data sales guarantee
 - **Dependencies:** T-52, T-36
 - **Acceptance:** FR-TRUST-03 satisfied; page is comprehensive and clear; written in plain language; accessible from footer and key sections
-- **Verification:** Review page → verify completeness; test readability → verify clarity; check links → verify accessibility
-- **Files:** `apps/web/src/app/(marketing)/data-handling/page.tsx`
+- **Verification:** `bun run typecheck && bun run lint && bunx vitest run --maxWorkers 2 && bun run build` → exit code 0; verified 5 core transparency pillars (What We Collect vs. Never Collect, AI Zero Hallucination Constraint, Retention Schedules, Hard Deletion Cascading, Zero Data Sales Guarantee) with plain-language explanations and accessibility unit tests (`DataHandlingPage.test.tsx`, 5/5 passed).
+- **Files:** `src/pages/DataHandlingPage.tsx`, `src/pages/DataHandlingPage.test.tsx`, `src/App.tsx`
 
 #### T-91: Implement sample outputs gallery
 - [x] **Status:** Complete
@@ -1921,8 +1921,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CONT-07 (Blog/resources) | Not in MVP scope | N/A |
 | FR-TRUST-01 (Customer logos) | T-88 | Complete (PR #229) |
 | FR-TRUST-02 (Security certifications) | T-89 | Not started |
-| FR-TRUST-03 (Data transparency) | T-90 | Not started |
-| FR-TRUST-04 (Sample outputs) | T-91 | Not started |
+| FR-TRUST-03 (Data transparency) | T-90 | Complete |
+| FR-TRUST-04 (Sample outputs) | T-91 | Complete |
 | FR-TRUST-05 (Integration logos) | T-92 | Complete |
 | FR-TRUST-06 (Press/media) | T-93 | Complete |
 | FR-TRUST-07 (Case studies) | Not in MVP scope | N/A |

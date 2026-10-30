@@ -32,6 +32,7 @@ const PressKitPage = lazy(() => import('./pages/PressKitPage'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TailorPage = lazy(() => import('./pages/TailorPage'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const DataHandlingPage = lazy(() => import('./pages/DataHandlingPage'));
 const AdminConsolePage = lazy(() => import('./pages/admin/AdminConsolePage'));
 
 // Lazy loaded below-the-fold marketing components for Core Web Vitals optimization (T-57, FR-PERF-01)
@@ -700,6 +701,9 @@ function LandingPage() {
             <Link to="/privacy" className="hover:text-paper transition-colors">
               Privacy
             </Link>
+            <Link to="/data-handling" className="hover:text-paper transition-colors">
+              Data Handling
+            </Link>
             <a href="#for-institutions" className="hover:text-paper transition-colors">
               Institutions
             </a>
@@ -741,6 +745,7 @@ export default function App() {
           <Route path="/press-kit" element={<PressKitPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/data-handling" element={<DataHandlingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
