@@ -10,7 +10,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * Owns its state end-to-end: validation, loading, success, and error,
  * with accessible wiring (aria-invalid / aria-describedby / live regions).
  */
-export default function WaitlistForm() {
+export function WaitlistForm() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -139,3 +139,5 @@ export default function WaitlistForm() {
     </div>
   );
 }
+
+export default WaitlistForm;

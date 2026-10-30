@@ -63,13 +63,13 @@ export function ApplicationCard({
 
       <div className="flex items-center gap-4 text-sm text-white/60 mb-4">
         <div className="flex items-center gap-1">
-          <MapPin className="w-4 h-4" />
+          <MapPin className="w-4 h-4" aria-hidden="true" />
           <span>{location}</span>
           {remote && <span className="text-emerald-400">· Remote</span>}
         </div>
         {salary && (
           <div className="flex items-center gap-1">
-            <DollarSign className="w-4 h-4" />
+            <DollarSign className="w-4 h-4" aria-hidden="true" />
             <span>
               {salary.min && `$${(salary.min / 1000).toFixed(0)}k`}
               {salary.min && salary.max && ' - '}
@@ -81,11 +81,11 @@ export function ApplicationCard({
 
       <div className="flex items-center gap-2 mb-4">
         {eligibilityStatus === 'eligible' ? (
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+          <CheckCircle className="w-4 h-4 text-emerald-400" aria-hidden="true" />
         ) : eligibilityStatus === 'ineligible' ? (
-          <AlertCircle className="w-4 h-4 text-red-400" />
+          <AlertCircle className="w-4 h-4 text-red-400" aria-hidden="true" />
         ) : (
-          <Clock className="w-4 h-4 text-amber-400" />
+          <Clock className="w-4 h-4 text-amber-400" aria-hidden="true" />
         )}
         <span className="text-sm text-white/60">
           {eligibilityStatus === 'eligible'
@@ -102,7 +102,10 @@ export function ApplicationCard({
           <ul className="space-y-1">
             {strengths.slice(0, 3).map((s) => (
               <li key={s} className="flex items-start gap-2 text-sm text-white/60">
-                <CheckCircle className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" />
+                <CheckCircle
+                  className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{s}</span>
               </li>
             ))}
@@ -116,7 +119,10 @@ export function ApplicationCard({
           <ul className="space-y-1">
             {gaps.slice(0, 2).map((g) => (
               <li key={g} className="flex items-start gap-2 text-sm text-white/60">
-                <AlertCircle className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
+                <AlertCircle
+                  className="w-4 h-4 text-amber-400 mt-0.5 shrink-0"
+                  aria-hidden="true"
+                />
                 <span>{g}</span>
               </li>
             ))}
@@ -130,8 +136,18 @@ export function ApplicationCard({
             type="button"
             onClick={onApply}
             disabled={eligibilityStatus === 'ineligible'}
+            title={
+              eligibilityStatus === 'ineligible'
+                ? 'You do not meet the core eligibility criteria for this role.'
+                : undefined
+            }
+            aria-label={
+              eligibilityStatus === 'ineligible'
+                ? `Not eligible to apply for ${title} at ${company}`
+                : `Review and apply for ${title} at ${company}`
+            }
             className={cn(
-              'flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors',
+              'flex-1 px-4 py-2 rounded-lg font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
               eligibilityStatus === 'ineligible'
                 ? 'bg-white/5 text-white/30 cursor-not-allowed'
                 : 'bg-emerald-500 hover:bg-emerald-600 text-white'
@@ -144,7 +160,8 @@ export function ApplicationCard({
           <button
             type="button"
             onClick={onSave}
-            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors"
+            aria-label={`Save ${title} at ${company}`}
+            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Save
           </button>
@@ -153,7 +170,8 @@ export function ApplicationCard({
           <button
             type="button"
             onClick={onSkip}
-            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white/60 text-sm font-medium transition-colors"
+            aria-label={`Skip ${title} at ${company}`}
+            className="px-4 py-2 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] text-white/60 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Skip
           </button>
