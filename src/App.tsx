@@ -12,6 +12,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
+import { B2BSection } from './components/marketing/b2b';
 import { CommunityLinks } from './components/marketing/community-links';
 import { BeforeAfterComparison } from './components/marketing/comparison';
 import { ComparisonTable } from './components/marketing/comparison-table';
@@ -86,6 +87,12 @@ function LandingPage() {
               className="hidden sm:block text-sm text-fog hover:text-paper transition-colors"
             >
               Pricing
+            </a>
+            <a
+              href="#for-institutions"
+              className="hidden md:block text-sm text-fog hover:text-paper transition-colors"
+            >
+              For Institutions
             </a>
             <Link
               to="/login"
@@ -486,6 +493,11 @@ function LandingPage() {
         </Reveal>
       </div>
 
+      {/* NextJob for Institutions & Bootcamps (T-53, FR-MKT-08) */}
+      <Reveal>
+        <B2BSection />
+      </Reveal>
+
       {/* FAQ */}
       <section className="py-24 px-6 border-t border-white/5">
         <div className="max-w-3xl mx-auto">
@@ -598,6 +610,9 @@ function LandingPage() {
             <Link to="/privacy" className="hover:text-paper transition-colors">
               Privacy
             </Link>
+            <a href="#for-institutions" className="hover:text-paper transition-colors">
+              Institutions
+            </a>
             <Link to="/terms" className="hover:text-paper transition-colors">
               Terms
             </Link>
