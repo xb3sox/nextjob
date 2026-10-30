@@ -56,6 +56,7 @@
           "name": "NextJob",
           "url": "https://nextjob.ai",
           "logo": "https://nextjob.ai/logo.png",
+          "slogan": "Apply with Proof",
           "description": "The trustworthy AI career agent that converts verified career evidence into eligible, high-quality applications.",
           "sameAs": [
             "https://github.com/nextjob"
@@ -67,25 +68,80 @@
             "Submission Verification Receipts",
             "Resume Tailoring",
             "Work Eligibility Verification"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "support@nextjob.ai",
+            "url": "https://nextjob.ai/#faq"
+          },
+          "knowsLanguage": [
+            "en"
+          ],
+          "publishingPrinciples": "https://nextjob.ai/privacy",
+          "hasOfferCatalog": {
+            "@id": "https://nextjob.ai/#offercatalog"
+          }
+        },
+        {
+          "@type": "Offer",
+          "@id": "https://nextjob.ai/#offer-free",
+          "name": "Free Tier",
+          "description": "Build your verified profile, discover eligible jobs, and track applications at no cost.",
+          "price": "0",
+          "priceCurrency": "USD",
+          "category": "Free",
+          "itemOffered": {
+            "@id": "https://nextjob.ai/#softwareapplication"
+          }
+        },
+        {
+          "@type": "Offer",
+          "@id": "https://nextjob.ai/#offer-search",
+          "name": "Search Pass",
+          "description": "Full job matching, evidence-backed application tailoring, submission receipt generation, and interview preparation.",
+          "price": "39.00",
+          "priceCurrency": "USD",
+          "category": "Subscription",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "39.00",
+            "priceCurrency": "USD",
+            "referenceQuantity": {
+              "@type": "QuantitativeValue",
+              "value": "30",
+              "unitCode": "DAY"
+            }
+          },
+          "itemOffered": {
+            "@id": "https://nextjob.ai/#softwareapplication"
+          }
+        },
+        {
+          "@type": "OfferCatalog",
+          "@id": "https://nextjob.ai/#offercatalog",
+          "name": "NextJob Subscriptions & Services",
+          "itemListElement": [
+            {
+              "@id": "https://nextjob.ai/#offer-free"
+            },
+            {
+              "@id": "https://nextjob.ai/#offer-search"
+            }
           ]
         },
         {
-          "@type": "WebSite",
-          "@id": "https://nextjob.ai/#website",
-          "name": "NextJob",
-          "url": "https://nextjob.ai",
-          "publisher": {
-            "@id": "https://nextjob.ai/#organization"
-          },
-          "description": "NextJob — Apply with Proof. AI career agent that turns verified career evidence into eligible applications."
-        },
-        {
-          "@type": "SoftwareApplication",
+          "@type": [
+            "SoftwareApplication",
+            "WebApplication"
+          ],
           "@id": "https://nextjob.ai/#softwareapplication",
           "name": "NextJob AI Career Agent",
           "applicationCategory": "BusinessApplication",
-          "operatingSystem": "Web",
+          "applicationSubCategory": "Career Automation & Job Search",
+          "operatingSystem": "Web Browser",
           "url": "https://nextjob.ai",
+          "softwareVersion": "1.0.0-beta",
           "description": "AI career agent that converts verified career evidence into eligible, high-quality applications with proof for every claim.",
           "featureList": [
             "Zero-hallucination resume and cover letter tailoring",
@@ -93,45 +149,133 @@
             "Automated ATS submissions with immutable receipt generation",
             "Evidence-backed Career Graph management"
           ],
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+          "provider": {
+            "@id": "https://nextjob.ai/#organization"
           },
           "author": {
             "@id": "https://nextjob.ai/#organization"
+          },
+          "offers": [
+            {
+              "@id": "https://nextjob.ai/#offer-free"
+            },
+            {
+              "@id": "https://nextjob.ai/#offer-search"
+            }
+          ],
+          "hasPart": [
+            {
+              "@id": "https://nextjob.ai/#terms"
+            },
+            {
+              "@id": "https://nextjob.ai/#workflow"
+            }
+          ]
+        },
+        {
+          "@type": "Service",
+          "@id": "https://nextjob.ai/#service",
+          "name": "NextJob Job Application Verification & Automation",
+          "serviceType": "Automated Career Agent",
+          "description": "End-to-end evidence verification, pre-application eligibility pre-filtering, and cryptographic receipt emission for ATS submissions.",
+          "provider": {
+            "@id": "https://nextjob.ai/#organization"
+          },
+          "areaServed": "Worldwide",
+          "termsOfService": "https://nextjob.ai/terms",
+          "hasOfferCatalog": {
+            "@id": "https://nextjob.ai/#offercatalog"
           }
+        },
+        {
+          "@type": "HowTo",
+          "@id": "https://nextjob.ai/#workflow",
+          "name": "How NextJob Submits Verified Job Applications",
+          "description": "Step-by-step workflow of how the NextJob AI Career Agent extracts profile evidence, verifies job eligibility, drafts tailored applications, and emits submission receipts.",
+          "tool": {
+            "@id": "https://nextjob.ai/#softwareapplication"
+          },
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Build & Verify Career Profile",
+              "text": "Import resume or CV. NextJob extracts claims and grounds them against verified evidence in your Career Graph."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Discover & Filter Eligible Jobs",
+              "text": "The Eligibility Engine verifies work authorization, location, sponsorship, and mandatory qualifications before matching."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "Tailor Evidence-Constrained Application",
+              "text": "AI drafts tailored resume variants and cover letters strictly using verified claims with zero hallucinated experience."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 4,
+              "name": "Submit & Emit Immutable Receipt",
+              "text": "Application is submitted to ATS and an immutable, cryptographically verifiable submission receipt with field hashes is generated."
+            }
+          ]
         },
         {
           "@type": "DefinedTermSet",
           "@id": "https://nextjob.ai/#terms",
           "name": "NextJob Platform Terminology",
+          "description": "Core entity definitions and domain concepts powering the NextJob AI career agent platform.",
           "definedTerm": [
             {
               "@type": "DefinedTerm",
+              "@id": "https://nextjob.ai/#term-agent",
               "name": "AI Career Agent",
-              "description": "An autonomous assistant that finds matching job opportunities, evaluates candidate eligibility, tailors application materials, and submits applications on behalf of the candidate."
+              "termCode": "AI-AGENT",
+              "description": "An autonomous assistant that finds matching job opportunities, evaluates candidate eligibility, tailors application materials, and submits applications on behalf of the candidate.",
+              "inDefinedTermSet": {
+                "@id": "https://nextjob.ai/#terms"
+              }
             },
             {
               "@type": "DefinedTerm",
+              "@id": "https://nextjob.ai/#term-career-graph",
               "name": "Career Graph",
-              "description": "A structured, evidence-backed representation of a user's career profile, including verified skills, work achievements, education, and credentials."
+              "termCode": "CAREER-GRAPH",
+              "description": "A structured, evidence-backed representation of a user's career profile, including verified skills, work achievements, education, and credentials.",
+              "inDefinedTermSet": {
+                "@id": "https://nextjob.ai/#terms"
+              }
             },
             {
               "@type": "DefinedTerm",
+              "@id": "https://nextjob.ai/#term-receipt",
               "name": "Submission Receipt",
-              "description": "An immutable, cryptographically verifiable proof emitted for every completed application submission, providing transparency to job seekers and employers."
+              "termCode": "SUBMISSION-RECEIPT",
+              "description": "An immutable, cryptographically verifiable proof emitted for every completed application submission, providing transparency to job seekers and employers.",
+              "inDefinedTermSet": {
+                "@id": "https://nextjob.ai/#terms"
+              }
             },
             {
               "@type": "DefinedTerm",
+              "@id": "https://nextjob.ai/#term-eligibility",
               "name": "Eligibility Engine",
-              "description": "A deterministic pre-filtering system that verifies candidate eligibility (including work authorization, location, security clearance, and skill prerequisites) before an application is submitted."
+              "termCode": "ELIGIBILITY-ENGINE",
+              "description": "A deterministic pre-filtering system that verifies candidate eligibility (including work authorization, location, security clearance, and skill prerequisites) before an application is submitted.",
+              "inDefinedTermSet": {
+                "@id": "https://nextjob.ai/#terms"
+              }
             }
           ]
         },
         {
           "@type": "FAQPage",
           "@id": "https://nextjob.ai/#faq",
+          "about": {
+            "@id": "https://nextjob.ai/#softwareapplication"
+          },
           "mainEntity": [
             {
               "@type": "Question",
@@ -158,6 +302,30 @@
               }
             }
           ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://nextjob.ai/#website",
+          "name": "NextJob",
+          "url": "https://nextjob.ai",
+          "publisher": {
+            "@id": "https://nextjob.ai/#organization"
+          },
+          "about": [
+            {
+              "@id": "https://nextjob.ai/#softwareapplication"
+            },
+            {
+              "@id": "https://nextjob.ai/#service"
+            },
+            {
+              "@id": "https://nextjob.ai/#terms"
+            }
+          ],
+          "mainEntity": {
+            "@id": "https://nextjob.ai/#softwareapplication"
+          },
+          "description": "NextJob — Apply with Proof. AI career agent that turns verified career evidence into eligible applications."
         }
       ]
     }
