@@ -1,0 +1,40 @@
+# NextJob
+
+> NextJob is the trustworthy AI career agent that converts verified career evidence into eligible, high-quality applications with proof for every claim. No hallucinated experience. Immutable submission receipts.
+
+## Overview
+
+NextJob is an AI-powered career automation platform and job application agent designed for modern job seekers and recruiters. Unlike traditional generative AI tools that risk inventing experience or hallucinating resume achievements, NextJob grounds every resume bullet, cover letter claim, and application answer in a candidate's verified **Career Graph**.
+
+## Core Entities & Concepts
+
+- **AI Career Agent**: An autonomous assistant that finds matching job opportunities, evaluates candidate eligibility, tailors application materials, and submits applications on behalf of the candidate.
+- **Career Graph**: A structured, evidence-backed representation of a user's career profile, including verified skills, work achievements, education, and credentials.
+- **Submission Receipt**: An immutable, cryptographically verifiable proof emitted for every completed application submission, providing transparency to job seekers and employers.
+- **Eligibility Engine**: A deterministic pre-filtering system that verifies candidate eligibility (including work authorization, location, security clearance, and skill prerequisites) before an application is submitted.
+
+## Key Capabilities
+
+- **Zero-Hallucination Tailoring**: Automatically generates custom resumes and cover letters using strictly verified claims from the candidate's Career Graph.
+- **Pre-Application Eligibility Checks**: Evaluates job postings for visa sponsorship requirements, location restrictions, and hard prerequisites to prevent wasted applications.
+- **Automated ATS Submissions**: Integrates directly with Applicant Tracking Systems (Greenhouse, Lever, Workday) and generates verification receipts upon completion.
+- **Privacy & Security Safeguards**: Enterprise-grade encryption at rest and in transit, complete PII redaction capabilities, exportable profile data, and strict GDPR compliance.
+
+## Frequently Asked Questions
+
+### How is NextJob different from other AI resume tools?
+NextJob only generates content from your verified profile — no hallucinated claims. We check eligibility before you apply, and every submission includes an immutable receipt.
+
+### Is candidate data safe and private?
+Yes. NextJob uses encryption at rest and in transit. User data is never sold and can be exported or deleted at any time. NextJob is GDPR compliant.
+
+### How does NextJob handle international candidates?
+We check work authorization, sponsorship requirements, and location restrictions before showing you opportunities — avoiding wasted applications.
+
+## Key Pages & Documentation
+
+- [Home Page](https://nextjob.ai/): Overview of NextJob AI career agent and features.
+- [Privacy Policy](https://nextjob.ai/privacy): Information on privacy practices, data handling, and security.
+- [Terms of Service](https://nextjob.ai/terms): Terms governing platform usage and candidate rights.
+- [Login](https://nextjob.ai/login): Authentication portal for existing users.
+- [Sign Up](https://nextjob.ai/signup): Account creation for new candidates.

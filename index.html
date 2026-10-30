@@ -52,22 +52,112 @@
       "@graph": [
         {
           "@type": "Organization",
+          "@id": "https://nextjob.ai/#organization",
           "name": "NextJob",
           "url": "https://nextjob.ai",
           "logo": "https://nextjob.ai/logo.png",
-          "description": "AI career agent that converts verified career evidence into eligible, high-quality applications."
+          "description": "The trustworthy AI career agent that converts verified career evidence into eligible, high-quality applications.",
+          "sameAs": [
+            "https://github.com/nextjob"
+          ],
+          "knowsAbout": [
+            "AI Career Agent",
+            "Career Graph",
+            "Automated Job Applications",
+            "Submission Verification Receipts",
+            "Resume Tailoring",
+            "Work Eligibility Verification"
+          ]
         },
         {
           "@type": "WebSite",
+          "@id": "https://nextjob.ai/#website",
           "name": "NextJob",
-          "url": "https://nextjob.ai"
+          "url": "https://nextjob.ai",
+          "publisher": {
+            "@id": "https://nextjob.ai/#organization"
+          },
+          "description": "NextJob — Apply with Proof. AI career agent that turns verified career evidence into eligible applications."
         },
         {
           "@type": "SoftwareApplication",
-          "name": "NextJob",
+          "@id": "https://nextjob.ai/#softwareapplication",
+          "name": "NextJob AI Career Agent",
           "applicationCategory": "BusinessApplication",
           "operatingSystem": "Web",
-          "description": "AI career agent that converts verified career evidence into eligible, high-quality applications."
+          "url": "https://nextjob.ai",
+          "description": "AI career agent that converts verified career evidence into eligible, high-quality applications with proof for every claim.",
+          "featureList": [
+            "Zero-hallucination resume and cover letter tailoring",
+            "Pre-application eligibility checks and sponsorship verification",
+            "Automated ATS submissions with immutable receipt generation",
+            "Evidence-backed Career Graph management"
+          ],
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "author": {
+            "@id": "https://nextjob.ai/#organization"
+          }
+        },
+        {
+          "@type": "DefinedTermSet",
+          "@id": "https://nextjob.ai/#terms",
+          "name": "NextJob Platform Terminology",
+          "definedTerm": [
+            {
+              "@type": "DefinedTerm",
+              "name": "AI Career Agent",
+              "description": "An autonomous assistant that finds matching job opportunities, evaluates candidate eligibility, tailors application materials, and submits applications on behalf of the candidate."
+            },
+            {
+              "@type": "DefinedTerm",
+              "name": "Career Graph",
+              "description": "A structured, evidence-backed representation of a user's career profile, including verified skills, work achievements, education, and credentials."
+            },
+            {
+              "@type": "DefinedTerm",
+              "name": "Submission Receipt",
+              "description": "An immutable, cryptographically verifiable proof emitted for every completed application submission, providing transparency to job seekers and employers."
+            },
+            {
+              "@type": "DefinedTerm",
+              "name": "Eligibility Engine",
+              "description": "A deterministic pre-filtering system that verifies candidate eligibility (including work authorization, location, security clearance, and skill prerequisites) before an application is submitted."
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://nextjob.ai/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How is this different from other AI tools?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We only generate content from your verified profile — no hallucinated claims. We check eligibility before you apply, and every submission includes an immutable receipt."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is my data safe?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Encryption at rest and in transit, never sold, exportable or deletable at any time. GDPR compliant."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What if I'm an international candidate?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We check work authorization, sponsorship requirements, and location restrictions before showing you opportunities — no wasted applications."
+              }
+            }
+          ]
         }
       ]
     }
