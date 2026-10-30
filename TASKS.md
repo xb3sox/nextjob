@@ -1180,12 +1180,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `src/App.tsx`, `docs/DESIGN.md`
 
 #### T-53: Implement B2B2C landing page section
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (PR pending)
 - **Deliverable:** Separate section or page for institutions/programs highlighting: cohort management, aggregate reporting (minimum cohort size ≥5), privacy safeguards (no individual data exposure), pricing for organizations, case studies/testimonials placeholders, contact/demo CTA
 - **Dependencies:** T-52, T-30
 - **Acceptance:** FR-MKT-08 satisfied; AC-16 passing; institution administrators can find and understand B2B offering
-- **Verification:** Navigate to B2B section → verify content present; test with institution persona → verify clarity
-- **Files:** `apps/web/src/app/(marketing)/b2b/page.tsx`, `apps/web/src/components/marketing/b2b/`
+- **Verification:** Navigate to B2B section → verify content present; test with institution persona → verify clarity (verified in `b2b-section.test.tsx`, 4 tests)
+- **Files:** `src/App.tsx`, `src/components/marketing/b2b/`
 
 #### T-54: Implement landing page SEO and analytics
 - [x] **Status:** Complete (PR #222)
@@ -1842,7 +1842,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-MKT-05 (Analytics) | T-54 | Complete (PR #222) |
 | FR-MKT-06 (A/B testing) | T-54 | Complete (PR #222) |
 | FR-MKT-07 (FAQ, testimonials) | T-52 | Complete (Redesigned) |
-| FR-MKT-08 (B2B2C section) | T-53 | Not started |
+| FR-MKT-08 (B2B2C section) | T-53 | Complete |
 | FR-MKT-09 (Legal compliance) | T-55 | Complete |
 | FR-MKT-10 (Referral program) | T-56 | Not started |
 | FR-PERF-01 (Core Web Vitals) | T-57 | Complete |

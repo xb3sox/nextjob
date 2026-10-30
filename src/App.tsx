@@ -62,6 +62,9 @@ const PressSection = lazy(() =>
 const CommunityLinks = lazy(() =>
   import('./components/marketing/community-links').then((m) => ({ default: m.CommunityLinks }))
 );
+const B2BSection = lazy(() =>
+  import('./components/marketing/b2b').then((m) => ({ default: m.B2BSection }))
+);
 
 /* ------------------------------------------------------------------ */
 /* Layout Fallback for Lazy Sections (CLS < 0.1)                      */
@@ -125,6 +128,12 @@ function LandingPage() {
               className="hidden sm:block text-sm text-fog hover:text-paper transition-colors"
             >
               Pricing
+            </a>
+            <a
+              href="#for-institutions"
+              className="hidden md:block text-sm text-fog hover:text-paper transition-colors"
+            >
+              For Institutions
             </a>
             <Link
               to="/login"
@@ -545,6 +554,15 @@ function LandingPage() {
         </Reveal>
       </div>
 
+            {/* NextJob for Institutions & Bootcamps (T-53, FR-MKT-08) */}
+      <div className="border-t border-white/5 cwv-offscreen-section">
+        <Reveal>
+          <Suspense fallback={<SectionFallback minHeight="500px" />}>
+            <B2BSection />
+          </Suspense>
+        </Reveal>
+      </div>
+
       {/* FAQ */}
       <section className="py-24 px-6 border-t border-white/5 cwv-offscreen-section">
         <div className="max-w-3xl mx-auto">
@@ -665,6 +683,9 @@ function LandingPage() {
             <Link to="/privacy" className="hover:text-paper transition-colors">
               Privacy
             </Link>
+            <a href="#for-institutions" className="hover:text-paper transition-colors">
+              Institutions
+            </a>
             <Link to="/terms" className="hover:text-paper transition-colors">
               Terms
             </Link>
