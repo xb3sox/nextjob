@@ -1431,12 +1431,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/components/marketing/roi-calculator.tsx`, `apps/web/src/app/(marketing)/page.tsx`
 
 #### T-72: Implement exit intent popup
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Exit intent detection with popup offering lead magnet (career guide) or special discount; triggered only once per session; dismissible
 - **Dependencies:** T-52, T-86
 - **Acceptance:** FR-CRO-04 satisfied; popup triggers on exit intent; shows only once per session; offers valuable lead magnet; includes clear CTA and close button
-- **Verification:** Test exit intent → verify trigger; refresh page → verify no re-trigger; check mobile → verify no exit intent (not supported)
-- **Files:** `apps/web/src/components/marketing/exit-intent.tsx`, `apps/web/src/hooks/use-exit-intent.ts`
+- **Verification:** Verified in `src/hooks/use-exit-intent.test.ts` (6 tests pass) and `src/components/marketing/exit-intent.test.tsx` (7 tests pass); verifies FR-CRO-04 desktop exit-intent detection, sessionStorage session scoping, touch-device exclusion, lead magnet capture, and accessible dialog controls.
+- **Files:** `src/components/marketing/exit-intent.tsx`, `src/hooks/use-exit-intent.ts`, `src/hooks/use-exit-intent.test.ts`, `src/components/marketing/exit-intent.test.tsx`
 
 #### T-73: Implement scroll-triggered animations
 - [x] **Status:** Complete (2026-10-30)
@@ -1903,7 +1903,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-CRO-01 (Interactive demo) | T-69 | Complete |
 | FR-CRO-02 (Before/after) | T-70 | Complete |
 | FR-CRO-03 (ROI calculator) | T-71 | Not started |
-| FR-CRO-04 (Exit intent) | T-72 | Not started |
+| FR-CRO-04 (Exit intent) | T-72 | Complete |
 | FR-CRO-05 (Scroll animations) | T-73 | Complete |
 | FR-CRO-06 (Micro-conversions) | T-105 | Not started |
 | FR-CRO-07 (Social proof) | T-74 | Complete |
