@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
+import { CookieConsent } from './components/cookie-consent';
 import { PageLoader } from './components/Loading';
 import LocaleSwitcher from './components/LocaleSwitcher';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -740,6 +741,7 @@ export default function App() {
       <RouteMeta />
       <AnalyticsRouteTracker />
       <Suspense fallback={<PageLoader />}>
+        <CookieConsent />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/press-kit" element={<PressKitPage />} />
