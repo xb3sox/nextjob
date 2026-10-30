@@ -1424,12 +1424,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `src/components/marketing/comparison.tsx`, `src/App.tsx`
 
 #### T-71: Implement ROI calculator
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Interactive calculator estimating time saved, interview rate improvement, and application quality score based on user inputs (applications/month, current success rate)
 - **Dependencies:** T-52
 - **Acceptance:** FR-CRO-03 satisfied; calculator is interactive and responsive; estimates are realistic; results update in real-time; mobile-friendly
-- **Verification:** Test calculator → verify calculations; check mobile → verify responsive; monitor usage → verify engagement
-- **Files:** `apps/web/src/components/marketing/roi-calculator.tsx`, `apps/web/src/app/(marketing)/page.tsx`
+- **Verification:** Verified in src/components/marketing/roi-calculator.test.tsx (7 tests pass); verified FR-CRO-03 interactive inputs, real-time recalculation, search presets, 93% time reduction, 3.2x callback lift, and WCAG 2.2 AA accessibility.
+- **Files:** src/components/marketing/roi-calculator.tsx, src/components/marketing/roi-calculator.test.tsx
 
 #### T-72: Implement exit intent popup
 - [x] **Status:** Complete (2026-10-30)
@@ -1903,7 +1903,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-SEO-08 (Hreflang) | T-66 | Complete (PR #214) |
 | FR-CRO-01 (Interactive demo) | T-69 | Complete |
 | FR-CRO-02 (Before/after) | T-70 | Complete |
-| FR-CRO-03 (ROI calculator) | T-71 | Not started |
+| FR-CRO-03 (ROI calculator) | T-71 | Complete |
 | FR-CRO-04 (Exit intent) | T-72 | Complete |
 | FR-CRO-05 (Scroll animations) | T-73 | Complete |
 | FR-CRO-06 (Micro-conversions) | T-105 | Not started |
@@ -2073,5 +2073,3 @@ Notes:
 - T-04 through T-12 were completed since the last update (see evidence sections under each task and the session summaries).
 - PRD blocker B-02 still applies to the tailoring track: T-16 (AI evaluation dataset) must be created before T-17 (tailoring engine).
 - T-13 produces the evaluation data needed to verify the G-04 eligibility accuracy gate (false-positive ≤2%).
-
-
