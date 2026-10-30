@@ -6,6 +6,7 @@ import { renderWelcomeSeries } from './welcome';
 export { renderOnboardingSeries } from './onboarding';
 export { renderReengagementSeries } from './reengagement';
 export * from './types';
+export * from './utils';
 export { renderWelcomeSeries } from './welcome';
 
 export function renderEmailTemplate(

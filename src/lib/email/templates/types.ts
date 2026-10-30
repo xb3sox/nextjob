@@ -3,6 +3,7 @@ export interface EmailVariables {
   actionUrl: string;
   verifiedClaimsCount?: number;
   matchCount?: number;
+  unsubscribeUrl?: string;
   unsubscribedUrl?: string;
 }
 
