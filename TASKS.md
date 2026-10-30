@@ -1558,12 +1558,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `docs/marketing/copywriting-guidelines.md`, `docs/marketing/copywriting-guidelines.test.ts`
 
 #### T-85: Build content blocks library
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
 - **Deliverable:** Reusable content blocks: hero variants, feature sections, testimonials, pricing, FAQ, CTA sections; documented with usage guidelines
 - **Dependencies:** T-77, T-83, T-84
-- **Acceptance:** FR-CONT-03 satisfied; all blocks are reusable; consistent structure; documented; used across all marketing pages
-- **Verification:** Review blocks → verify reusability; check documentation → verify clarity; test on multiple pages → verify consistency
-- **Files:** `apps/web/src/components/marketing/blocks/`, `docs/marketing/content-blocks.md`
+- **Acceptance:** FR-CONT-03 satisfied; all blocks are reusable; consistent structure; documented; used across marketing pages
+- **Verification:** `bun run typecheck && bun run lint && bun x vitest run --maxWorkers 2 && bun run build` (101 test files / 1058 tests passing green)
+- **Files:** `src/components/marketing/blocks/`, `docs/marketing/content-blocks.md`
 
 #### T-86: Create video scripts
 - [x] **Status:** Complete (2026-10-30)
@@ -1920,7 +1920,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-VIS-08 (Icon system) | T-77 | Not started |
 | FR-CONT-01 (Messaging hierarchy) | T-83 | Not started |
 | FR-CONT-02 (Copywriting guidelines) | T-84 | Not started |
-| FR-CONT-03 (Content blocks) | T-85 | Not started |
+| FR-CONT-03 (Content blocks) | T-85 | Complete |
 | FR-CONT-04 (Video scripts) | T-86 | Not started |
 | FR-CONT-05 (Email nurture) | T-87 | Not started |
 | FR-CONT-06 (Lead magnets) | Not in MVP scope | N/A |
