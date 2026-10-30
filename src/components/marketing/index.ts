@@ -8,6 +8,7 @@ export * from './HeroSection';
 export * from './PricingCard';
 export * from './press-section';
 export * from './product-demo';
+export * from './sample-outputs';
 export * from './social-proof-carousel';
 export * from './TestimonialCard';
 export * from './TrustBadges';
