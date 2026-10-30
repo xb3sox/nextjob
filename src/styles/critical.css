@@ -1,0 +1,59 @@
+/* Critical CSS & Core Web Vitals Optimization Rules (T-57, FR-PERF-01) */
+
+/* Above-the-fold Critical Navigation & Hero Layout */
+.cwv-critical-nav {
+  contain: layout style;
+  will-change: transform;
+}
+
+.cwv-critical-hero {
+  contain: layout style;
+  min-height: calc(100vh - 4rem);
+}
+
+/* Off-screen Content Visibility Optimization (drastically reduces initial render & layout time for LCP < 2.5s) */
+.cwv-offscreen-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 350px;
+}
+
+/* Layout Containment to prevent Cumulative Layout Shift (CLS < 0.1) */
+.cwv-contained-section {
+  contain: layout paint;
+  min-height: 200px;
+}
+
+.cwv-skeleton {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  animation: cwv-pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes cwv-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Fast Interaction Response (INP < 200ms) */
+.cwv-fast-interaction {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Reduced motion accessibility fallback */
+@media (prefers-reduced-motion: reduce) {
+  .cwv-skeleton {
+    animation: none;
+    opacity: 0.5;
+  }
+  .cwv-fast-interaction {
+    will-change: auto;
+  }
+}
