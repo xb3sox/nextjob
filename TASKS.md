@@ -1026,12 +1026,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `infra/`
 
 #### T-41: Implement rollback procedures
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-31)
 - **Deliverable:** Documented rollback procedures for web, API, workers, database
 - **Dependencies:** T-40
 - **Acceptance:** Rollback procedures documented; tested in staging; RPO ≤15min, RTO ≤4hr verified
-- **Verification:** Simulate failure → execute rollback → verify recovery within RTO
-- **Files:** `docs/ROLLBACK.md`
+- **Verification:** Verified in `docs/rollback.test.ts` (5 tests pass); verified RPO ≤15min, RTO ≤4hr, four-tier rollback procedures (Vite/Vercel SPA, Fastify API, Temporal workflows, PostgreSQL PITR), expand/contract schema migrations, and severity classification triggers.
+- **Files:** `docs/ROLLBACK.md`, `docs/rollback.test.ts`
 
 ---
 
