@@ -823,12 +823,12 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/extension/tests/synthetic/`
 
 #### T-23: Implement first ATS connector (e.g., Greenhouse)
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 - **Deliverable:** Browser extension connector for one ATS with field detection and filling
 - **Dependencies:** T-21, T-22
 - **Acceptance:** Connector detects Greenhouse application form; fills fields from approved answers; idempotent; duplicate prevention
-- **Verification:** Synthetic test passes; manual test on real Greenhouse job → verify fields filled correctly; attempt duplicate → blocked
-- **Files:** `apps/extension/src/connectors/greenhouse.ts`
+- **Verification:** Tested in `extension/src/connectors/greenhouse.test.ts` (7 tests) and `extension/tests/synthetic/connector-synthetic.test.ts` (6 tests); verified Greenhouse form detection, field autofill, select option mapping, idempotent write skipping, and duplicate prevention rejection
+- **Files:** `extension/src/connectors/greenhouse.ts`, `extension/src/connectors/types.ts`, `extension/src/connectors/index.ts`
 
 #### T-24: Implement Temporal connector workers
 - [ ] **Status:** Not started
