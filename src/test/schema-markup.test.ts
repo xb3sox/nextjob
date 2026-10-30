@@ -14,7 +14,8 @@ const llmsTxtPath = path.join(repoRoot, 'public', 'llms.txt');
 const CANONICAL_URL = 'https://nextjob.ai';
 
 interface SchemaEntity {
-  '@type': string;
+  '@type': string | string[];
+  '@id'?: string;
   url?: string;
   [key: string]: unknown;
 }
@@ -40,7 +41,7 @@ describe('schema markup (JSON-LD) and AI search optimization', () => {
     expect(blocks).toHaveLength(1);
   });
 
-  it('holds valid JSON-LD with @context and @graph containing Organization, WebSite, SoftwareApplication, DefinedTermSet, and FAQPage', () => {
+  it('holds valid JSON-LD with detailed entity definitions and relationships', () => {
     const blocks = extractLdJsonBlocks(indexHtml);
     expect(blocks).toHaveLength(1);
 
@@ -50,19 +51,76 @@ describe('schema markup (JSON-LD) and AI search optimization', () => {
     expect(Array.isArray(schema['@graph'])).toBe(true);
 
     const graph = schema['@graph'];
-    const types = graph.map((entity) => entity['@type']);
+    const getEntityByType = (type: string) =>
+      graph.find((entity) =>
+        Array.isArray(entity['@type']) ? entity['@type'].includes(type) : entity['@type'] === type
+      );
 
-    expect(types).toContain('Organization');
-    expect(types).toContain('WebSite');
-    expect(types).toContain('SoftwareApplication');
-    expect(types).toContain('DefinedTermSet');
-    expect(types).toContain('FAQPage');
+    // Verify entity presence
+    const org = getEntityByType('Organization');
+    const website = getEntityByType('WebSite');
+    const app = getEntityByType('SoftwareApplication');
+    const service = getEntityByType('Service');
+    const howTo = getEntityByType('HowTo');
+    const catalog = getEntityByType('OfferCatalog');
+    const offer = getEntityByType('Offer');
+    const termsSet = getEntityByType('DefinedTermSet');
+    const faq = getEntityByType('FAQPage');
 
-    const org = graph.find((entity) => entity['@type'] === 'Organization');
-    const website = graph.find((entity) => entity['@type'] === 'WebSite');
+    expect(org).toBeDefined();
+    expect(website).toBeDefined();
+    expect(app).toBeDefined();
+    expect(service).toBeDefined();
+    expect(howTo).toBeDefined();
+    expect(catalog).toBeDefined();
+    expect(offer).toBeDefined();
+    expect(termsSet).toBeDefined();
+    expect(faq).toBeDefined();
 
+    // Verify Organization details & relationships
     expect(org?.url).toBe(CANONICAL_URL);
-    expect(website?.url).toBe(CANONICAL_URL);
+    expect(org?.slogan).toBe('Apply with Proof');
+    expect(org?.contactPoint).toEqual({
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      email: 'support@nextjob.ai',
+      url: `${CANONICAL_URL}/#faq`,
+    });
+    expect(org?.hasOfferCatalog).toEqual({
+      '@id': `${CANONICAL_URL}/#offercatalog`,
+    });
+
+    // Verify Offers & Price Specifications
+    const freeOffer = graph.find((e) => e['@id'] === `${CANONICAL_URL}/#offer-free`);
+    const searchOffer = graph.find((e) => e['@id'] === `${CANONICAL_URL}/#offer-search`);
+    expect(freeOffer).toBeDefined();
+    expect(freeOffer?.price).toBe('0');
+    expect(searchOffer).toBeDefined();
+    expect(searchOffer?.price).toBe('39.00');
+    expect(searchOffer?.priceSpecification).toBeDefined();
+
+    // Verify HowTo Workflow Steps
+    expect(howTo?.name).toBe('How NextJob Submits Verified Job Applications');
+    const steps = (howTo?.step ?? []) as Array<{ position: number; name: string; text: string }>;
+    expect(Array.isArray(steps)).toBe(true);
+    expect(steps).toHaveLength(4);
+    expect(steps[0]?.name).toBe('Build & Verify Career Profile');
+    expect(steps[3]?.name).toBe('Submit & Emit Immutable Receipt');
+
+    // Verify DefinedTermSet & Codes
+    const definedTerms = (termsSet?.definedTerm ?? []) as Array<{
+      name: string;
+      termCode: string;
+      inDefinedTermSet: { '@id': string };
+    }>;
+    expect(Array.isArray(definedTerms)).toBe(true);
+    expect(definedTerms).toHaveLength(4);
+    expect(definedTerms.map((t) => t.termCode)).toEqual([
+      'AI-AGENT',
+      'CAREER-GRAPH',
+      'SUBMISSION-RECEIPT',
+      'ELIGIBILITY-ENGINE',
+    ]);
   });
 
   it('provides matching schema graph generator from src/lib/schema.ts', () => {
@@ -70,13 +128,18 @@ describe('schema markup (JSON-LD) and AI search optimization', () => {
     expect(schema['@context']).toBe('https://schema.org');
     expect(Array.isArray(schema['@graph'])).toBe(true);
 
-    const types = schema['@graph'].map((entity) => entity['@type']);
-    expect(types).toEqual([
-      'Organization',
-      'WebSite',
-      'SoftwareApplication',
-      'DefinedTermSet',
-      'FAQPage',
+    const ids = schema['@graph'].map((entity) => entity['@id']);
+    expect(ids).toEqual([
+      `${CANONICAL_URL}/#organization`,
+      `${CANONICAL_URL}/#offer-free`,
+      `${CANONICAL_URL}/#offer-search`,
+      `${CANONICAL_URL}/#offercatalog`,
+      `${CANONICAL_URL}/#softwareapplication`,
+      `${CANONICAL_URL}/#service`,
+      `${CANONICAL_URL}/#workflow`,
+      `${CANONICAL_URL}/#terms`,
+      `${CANONICAL_URL}/#faq`,
+      `${CANONICAL_URL}/#website`,
     ]);
   });
 

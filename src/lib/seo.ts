@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { getStructuredDataJson } from './schema';
 
 const CANONICAL_ORIGIN = 'https://nextjob.ai';
 
@@ -37,6 +38,7 @@ export function isPrivateRoute(cleanPath: string): boolean {
  * - Exactly one link[rel="canonical"]
  * - Alternate links for hreflang="en" and hreflang="x-default"
  * - Robots meta tag (noindex, nofollow for private; index, follow for public)
+ * - Structured data (JSON-LD) graph synced with schema definitions
  */
 export function applyRouteMeta(pathname: string): void {
   if (typeof document === 'undefined') {
@@ -100,6 +102,23 @@ export function applyRouteMeta(pathname: string): void {
     document.head.appendChild(robotsEl);
   }
   robotsEl.setAttribute('content', robotsContent);
+
+  // 4. Structured Data (JSON-LD) Script Block
+  const ldJsonBlocks = Array.from(
+    document.head.querySelectorAll<HTMLScriptElement>('script[type="application/ld+json"]')
+  );
+  let ldJsonEl: HTMLScriptElement;
+  if (ldJsonBlocks.length > 0) {
+    ldJsonEl = ldJsonBlocks[0];
+    for (let i = 1; i < ldJsonBlocks.length; i++) {
+      ldJsonBlocks[i].remove();
+    }
+  } else {
+    ldJsonEl = document.createElement('script');
+    ldJsonEl.setAttribute('type', 'application/ld+json');
+    document.head.appendChild(ldJsonEl);
+  }
+  ldJsonEl.textContent = getStructuredDataJson();
 }
 
 /**
