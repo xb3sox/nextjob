@@ -1719,7 +1719,8 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 - **Files:** `apps/web/src/app/(marketing)/webinars/[slug]/page.tsx`, `apps/web/src/components/marketing/webinar-registration.tsx`
 
 #### T-103: Add community links
-- [ ] **Status:** Not started
+- [x] **Status:** Complete (2026-10-30)
+- **Verification Evidence:** `bunx vitest run src/components/marketing/community-links.test.tsx` (4 passed, 89ms); Discord, Slack, GitHub, and Open Forum channels with active member counters, verified external links with target="_blank" rel="noopener noreferrer", accessible landmarks and labels.
 - **Deliverable:** Community links section: Discord server invite, Slack community, forum link, GitHub repository; with descriptions and member counts
 - **Dependencies:** T-52, T-77
 - **Acceptance:** FR-GROW-04 satisfied; links are accurate and up-to-date; descriptions clear; member counts displayed; accessible
@@ -1895,7 +1896,7 @@ Build MVP per PRD.md §Scope: authentication, profile import, your profile, elig
 | FR-GROW-01 (Email capture) | T-100 | Not started |
 | FR-GROW-02 (Email service) | T-101 | Not started |
 | FR-GROW-03 (Webinar promotion) | T-102 | Not started |
-| FR-GROW-04 (Community links) | T-103 | Not started |
+| FR-GROW-04 (Community links) | T-103 | Complete |
 | FR-GROW-05 (Social sharing) | T-63 | Not started |
 | FR-GROW-06 (Partner/affiliate) | Not in MVP scope | N/A |
 | FR-GROW-07 (Press kit) | T-104 | Not started |
