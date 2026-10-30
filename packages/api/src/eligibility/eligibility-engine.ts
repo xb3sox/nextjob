@@ -177,7 +177,7 @@ export class EligibilityEngineService {
       return validatedRule;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        throw new InvalidRuleError(error.errors);
+        throw new InvalidRuleError(error.issues);
       }
       throw error;
     }
@@ -243,7 +243,7 @@ export class EligibilityEngineService {
       return validatedRule;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        throw new InvalidRuleError(error.errors);
+        throw new InvalidRuleError(error.issues);
       }
       throw error;
     }
