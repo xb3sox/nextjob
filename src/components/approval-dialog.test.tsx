@@ -50,7 +50,9 @@ describe('ApprovalDialog (T-20, Phase 6)', () => {
       />
     );
 
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(dialog).toHaveFocus();
     expect(screen.getByText('What is your target base salary?')).toBeInTheDocument();
     expect(screen.getByText('$170,000 USD')).toBeInTheDocument();
     expect(screen.getByText('HIGH Risk')).toBeInTheDocument();
@@ -126,6 +128,7 @@ describe('ApprovalDialog (T-20, Phase 6)', () => {
 
     const textarea = screen.getByRole('textbox', { name: /Edit proposed answer/i });
     expect(textarea).toHaveValue('$170,000 USD');
+    expect(textarea).toHaveFocus();
 
     fireEvent.change(textarea, { target: { value: '$185,000 USD' } });
     fireEvent.click(screen.getByRole('button', { name: /Save & Approve/i }));
