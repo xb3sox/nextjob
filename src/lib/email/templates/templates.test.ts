@@ -87,6 +87,12 @@ describe('Email Templates Generator (T-87, FR-CONT-05)', () => {
       'A &amp; B &lt; C &gt; &quot;D&quot; &#39;E&#39;'
     );
     expect(sanitizeUrl('https://valid.com')).toBe('https://valid.com');
+    expect(sanitizeUrl('/relative/path')).toBe('/relative/path');
     expect(sanitizeUrl('data:text/html,...')).toBe('#');
+    expect(sanitizeUrl('//evil.com')).toBe('#');
+    expect(sanitizeUrl('/\\evil.com')).toBe('#');
+    expect(sanitizeUrl('https://example.com/" onmouseover="alert(1)')).toBe(
+      'https://example.com/&quot; onmouseover=&quot;alert(1)'
+    );
   });
 });

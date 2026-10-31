@@ -11,8 +11,9 @@ export function escapeHtml(str: string): string {
 
 export function sanitizeUrl(url: string): string {
   const trimmed = url.trim();
-  if (/^(?:https?:|\/)/i.test(trimmed)) {
-    return trimmed;
+  // Allow only http://, https://, or single-slash relative paths (reject protocol-relative // or /\)
+  if (/^(?:https?:\/\/|\/(?![/\\]))/i.test(trimmed)) {
+    return escapeHtml(trimmed);
   }
   return '#';
 }
