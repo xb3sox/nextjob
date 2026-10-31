@@ -63,13 +63,15 @@ export function ReferralCard({
             type="text"
             readOnly
             value={referralUrl}
-            className="flex-1 bg-background border border-input rounded-md px-3 py-2 text-sm text-foreground font-mono focus:outline-none focus:ring-1 focus:ring-primary"
+            onFocus={(e) => e.target.select()}
+            className="flex-1 bg-background border border-input rounded-md px-3 py-2 text-sm text-foreground font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
             aria-label="Your unique referral link"
           />
           <button
             type="button"
             onClick={handleCopy}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            title={copied ? 'Link copied to clipboard' : 'Copy referral link to clipboard'}
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             aria-label={copied ? 'Link copied to clipboard' : 'Copy referral link to clipboard'}
           >
             {copied ? (

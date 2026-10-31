@@ -61,12 +61,26 @@ describe('ReferralCard Component (T-56, FR-MKT-10)', () => {
     expect(await screen.findByText('Copied!')).toBeDefined();
   });
 
-  it('provides accessible labels and polite live regions for screen readers', () => {
+  it('provides accessible labels, tooltip, and polite live regions for screen readers', () => {
     render(
       <ReferralCard referralCode="REF-ACC001" referralUrl="https://nextjob.ai/?ref=REF-ACC001" />
     );
 
     expect(screen.getByLabelText(/your unique referral link/i)).toBeDefined();
-    expect(screen.getByRole('button', { name: /copy referral link/i })).toBeDefined();
+    const copyButton = screen.getByRole('button', { name: /copy referral link/i });
+    expect(copyButton).toBeDefined();
+    expect(copyButton.getAttribute('title')).toBe('Copy referral link to clipboard');
+  });
+
+  it('selects the referral link text when the input receives focus', () => {
+    render(
+      <ReferralCard referralCode="REF-FOCUS" referralUrl="https://nextjob.ai/?ref=REF-FOCUS" />
+    );
+
+    const input = screen.getByLabelText(/your unique referral link/i) as HTMLInputElement;
+    const selectSpy = vi.spyOn(input, 'select');
+
+    fireEvent.focus(input);
+    expect(selectSpy).toHaveBeenCalledTimes(1);
   });
 });
