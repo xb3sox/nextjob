@@ -150,20 +150,33 @@ function timingSafeEqualString(a: string, b: string): boolean {
   return result === 0;
 }
 
+// Memoization cache for verification results across re-renders (Bolt ⚡: pure JS SHA-256 is expensive;
+// receipt objects are immutable once received). WeakMap ensures zero memory leaks when applications unmount.
+const verificationCache = new WeakMap<SubmissionReceipt, boolean>();
+
 /**
  * Browser-compatible verifyReceipt: recomputes sha256 contentHash over receipt body
  * and asserts matching contentHash and receiptId using constant-time equality checks.
+ * Caches results per receipt reference in a WeakMap to avoid recomputing JS SHA-256 on each render.
  */
 export function verifyReceipt(receipt: SubmissionReceipt): boolean {
-  if (!receipt || !receipt.contentHash || !receipt.receiptId) {
+  if (!receipt || typeof receipt !== 'object' || !receipt.contentHash || !receipt.receiptId) {
     return false;
   }
+
+  const cached = verificationCache.get(receipt);
+  if (cached !== undefined) {
+    return cached;
+  }
+
   const { contentHash, receiptId, ...body } = receipt;
   const expected = computeContentHash(body);
   const expectedReceiptId = `rcpt_${expected.slice(0, 32)}`;
 
-  return (
+  const isValid =
     timingSafeEqualString(contentHash, expected) &&
-    timingSafeEqualString(receiptId, expectedReceiptId)
-  );
+    timingSafeEqualString(receiptId, expectedReceiptId);
+
+  verificationCache.set(receipt, isValid);
+  return isValid;
 }

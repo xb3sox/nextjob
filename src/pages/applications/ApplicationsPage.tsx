@@ -72,6 +72,21 @@ export default function ApplicationsPage() {
     return map;
   }, [filteredApps]);
 
+  // Single-pass count of all applications by lifecycle group for tab badges (Bolt ⚡: O(N) instead of O(G * N))
+  const groupCounts = useMemo(() => {
+    const counts = {} as Record<ApplicationGroup, number>;
+    for (const group of APPLICATION_GROUPS) {
+      counts[group] = 0;
+    }
+    for (const app of applications) {
+      const group = STATE_TO_GROUP[app.state] || 'Planned';
+      if (counts[group] !== undefined) {
+        counts[group]++;
+      }
+    }
+    return counts;
+  }, [applications]);
+
   // Auth gate after hooks
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -232,9 +247,7 @@ export default function ApplicationsPage() {
             </button>
 
             {APPLICATION_GROUPS.map((group) => {
-              const count = applications.filter(
-                (a) => (STATE_TO_GROUP[a.state] || 'Planned') === group
-              ).length;
+              const count = groupCounts[group] ?? 0;
               const groupSlug = group.toLowerCase().replace(/\s+/g, '-');
               const isSelected = stateFilter === groupSlug;
 
