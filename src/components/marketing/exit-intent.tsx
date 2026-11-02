@@ -136,14 +136,21 @@ export function ExitIntentModal({
         ref={dialogRef}
         className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-neutral-900/95 p-6 sm:p-8 text-neutral-100 shadow-2xl backdrop-blur-xl"
       >
-        <button
-          type="button"
-          onClick={handleClose}
-          aria-label="Close modal"
-          className="absolute right-4 top-4 rounded-full p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
-        >
-          <X className="h-5 w-5" />
-        </button>
+        <div className="absolute right-4 top-4 flex items-center gap-1.5">
+          <kbd className="hidden sm:inline-flex items-center text-[10px] font-mono px-1.5 py-0.5 rounded bg-neutral-800/80 border border-white/10 text-neutral-400 select-none">
+            Esc
+          </kbd>
+          <button
+            type="button"
+            onClick={handleClose}
+            aria-label="Close modal"
+            aria-keyshortcuts="Escape"
+            title="Close modal (Esc)"
+            className="rounded-full p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
 
         {status === 'success' ? (
           <div className="py-6 text-center space-y-4">

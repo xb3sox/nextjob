@@ -25,6 +25,13 @@ describe('ExitIntentModal Component (T-72, FR-CRO-04)', () => {
     expect(dialog).toHaveAttribute('aria-modal', 'true');
     expect(dialog).toHaveAttribute('aria-labelledby', 'exit-intent-title');
     expect(dialog).toHaveAttribute('aria-describedby', 'exit-intent-desc');
+
+    const closeBtn = screen.getByRole('button', { name: /Close modal/i });
+    expect(closeBtn).toBeInTheDocument();
+    expect(closeBtn).toHaveAttribute('aria-keyshortcuts', 'Escape');
+    expect(closeBtn).toHaveAttribute('title', 'Close modal (Esc)');
+
+    expect(screen.getByText('Esc')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Download Free Playbook/i })).toBeInTheDocument();
   });
 
