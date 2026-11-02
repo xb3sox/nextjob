@@ -150,20 +150,36 @@ function timingSafeEqualString(a: string, b: string): boolean {
   return result === 0;
 }
 
+// WeakMap cache for receipt verification results.
+// Keys by receipt object reference so that identical unmodified receipt objects
+// avoid re-running expensive SHA-256 rounds across render passes, while any
+// shallow-copied / mutated object will naturally be verified afresh.
+const verifyReceiptCache = new WeakMap<object, boolean>();
+
 /**
  * Browser-compatible verifyReceipt: recomputes sha256 contentHash over receipt body
  * and asserts matching contentHash and receiptId using constant-time equality checks.
+ * Caches verification by receipt object identity to avoid redundant CPU hashing on re-renders.
  */
 export function verifyReceipt(receipt: SubmissionReceipt): boolean {
   if (!receipt || !receipt.contentHash || !receipt.receiptId) {
     return false;
   }
+
+  const cached = verifyReceiptCache.get(receipt);
+  if (cached !== undefined) {
+    return cached;
+  }
+
   const { contentHash, receiptId, ...body } = receipt;
   const expected = computeContentHash(body);
   const expectedReceiptId = `rcpt_${expected.slice(0, 32)}`;
 
-  return (
+  const isValid =
     timingSafeEqualString(contentHash, expected) &&
-    timingSafeEqualString(receiptId, expectedReceiptId)
-  );
+    timingSafeEqualString(receiptId, expectedReceiptId);
+
+  verifyReceiptCache.set(receipt, isValid);
+
+  return isValid;
 }

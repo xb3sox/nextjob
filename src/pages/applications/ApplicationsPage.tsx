@@ -1,5 +1,5 @@
 import { ArrowLeft, FileCheck, LogOut, Search, ShieldAlert, Zap } from 'lucide-react';
-import { useId, useMemo, useState } from 'react';
+import { memo, useId, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -71,6 +71,19 @@ export default function ApplicationsPage() {
     }
     return map;
   }, [filteredApps]);
+
+  // Precompute counts per lifecycle group in a single pass O(N) instead of O(8*N) during render
+  const groupCounts = useMemo(() => {
+    const counts = {} as Record<ApplicationGroup, number>;
+    for (const group of APPLICATION_GROUPS) {
+      counts[group] = 0;
+    }
+    for (const app of applications) {
+      const grp = STATE_TO_GROUP[app.state] || 'Planned';
+      counts[grp] = (counts[grp] || 0) + 1;
+    }
+    return counts;
+  }, [applications]);
 
   // Auth gate after hooks
   if (!user) {
@@ -232,9 +245,7 @@ export default function ApplicationsPage() {
             </button>
 
             {APPLICATION_GROUPS.map((group) => {
-              const count = applications.filter(
-                (a) => (STATE_TO_GROUP[a.state] || 'Planned') === group
-              ).length;
+              const count = groupCounts[group] ?? 0;
               const groupSlug = group.toLowerCase().replace(/\s+/g, '-');
               const isSelected = stateFilter === groupSlug;
 
@@ -332,7 +343,7 @@ export default function ApplicationsPage() {
   );
 }
 
-function ApplicationItem({
+const ApplicationItem = memo(function ApplicationItem({
   application,
   onOpenOutcome,
 }: {
@@ -423,4 +434,4 @@ function ApplicationItem({
       </div>
     </div>
   );
-}
+});
