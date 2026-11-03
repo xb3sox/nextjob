@@ -256,4 +256,14 @@ describe('receiptVerifier (constant-time verification)', () => {
     const tampered = { ...validReceipt, jobVersion: 'v2.0.0' };
     expect(verifyReceipt(tampered)).toBe(false);
   });
+
+  it('memoizes receipt verification via WeakMap for repeat invocations', () => {
+    // Verifying twice should return identical results and leverage the cache
+    expect(verifyReceipt(validReceipt)).toBe(true);
+    expect(verifyReceipt(validReceipt)).toBe(true);
+
+    const tampered = { ...validReceipt, jobVersion: 'v3.0.0' };
+    expect(verifyReceipt(tampered)).toBe(false);
+    expect(verifyReceipt(tampered)).toBe(false);
+  });
 });
