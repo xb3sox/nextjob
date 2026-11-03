@@ -56,21 +56,42 @@ export class JobIngestionService {
     });
 
     // Step 2: Check for duplicates
-    const existingJobs = Array.from(this.jobsStore.values()).filter(
-      (job) => job.tenantId === request.tenantId && !job.deleted
+    // Fast-path O(1) lookup: Check fingerprint index for exact matches first.
+    // In job scraping / high-volume ingestion streams, identical re-crawled jobs
+    // share canonical fingerprints. Looking up the hash map avoids O(N) array filtering
+    // and expensive fuzzy Levenshtein / word-set similarity comparisons across all jobs.
+    const incomingFingerprint = jobDeduplicationService.generateJobFingerprint(
+      normalizedData.normalized
     );
+    const existingJobId = this.fingerprintIndex.get(incomingFingerprint);
+    let canonicalJob: Job | undefined;
 
-    const potentialDuplicates = jobDeduplicationService.findPotentialDuplicates(
-      normalizedData.normalized,
-      existingJobs,
-      0.9 // High threshold for duplicate detection
-    );
+    if (existingJobId) {
+      const candidateJob = this.jobsStore.get(existingJobId);
+      if (candidateJob && candidateJob.tenantId === request.tenantId && !candidateJob.deleted) {
+        canonicalJob = candidateJob;
+      }
+    }
 
-    if (potentialDuplicates.length > 0) {
+    if (!canonicalJob) {
+      // Fallback: Fuzzy duplicate detection for near-duplicates across existing jobs in tenant
+      const existingJobs = Array.from(this.jobsStore.values()).filter(
+        (job) => job.tenantId === request.tenantId && !job.deleted
+      );
+
+      const potentialDuplicates = jobDeduplicationService.findPotentialDuplicates(
+        normalizedData.normalized,
+        existingJobs,
+        0.9 // High threshold for duplicate detection
+      );
+
+      if (potentialDuplicates.length > 0) {
+        canonicalJob = jobDeduplicationService.selectCanonicalJob(potentialDuplicates);
+      }
+    }
+
+    if (canonicalJob) {
       // Job is a duplicate
-      const canonicalJob = jobDeduplicationService.selectCanonicalJob(potentialDuplicates);
-
-      // Update canonical job with new data
       const mergedJob = jobDeduplicationService.mergeDuplicateJobs(canonicalJob, [
         normalizedData.normalized as Job,
       ]);
