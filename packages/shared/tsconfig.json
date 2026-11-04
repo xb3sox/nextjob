@@ -1,16 +1,8 @@
 {
+  "extends": "@workspace/tsconfig/internal.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "lib": ["ES2022", "DOM"],
-    "moduleResolution": "bundler",
-    "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true
+    "types": ["node"]
   },
-  "include": ["src/**/*"]
+  "include": ["*.ts", "src/**/*"],
+  "exclude": ["node_modules"]
 }

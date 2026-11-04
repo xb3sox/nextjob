@@ -1,0 +1,238 @@
+name: CI / E2E / Mobile
+
+on:
+  pull_request:
+    branches: ["*"]
+    types: [opened, synchronize, labeled]
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  MAESTRO_VERSION: "2.10.0"
+  MAESTRO_DRIVER_STARTUP_TIMEOUT: "120000"
+  MAESTRO_CLI_NO_ANALYTICS: "1"
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
+jobs:
+  android:
+    name: 🤖 Android
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'e2e') || contains(github.event.pull_request.labels.*.name, 'e2e-mobile')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: 🧹 Free disk space
+        uses: jlumbroso/free-disk-space@v2.0.0
+        with:
+          tool-cache: false
+          android: false
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
+      - name: ✅ Checkout code
+        uses: actions/checkout@v7
+
+      - name: 🔨 Setup
+        uses: ./tooling/github/setup
+
+      - name: 🐘 Start services
+        uses: ./tooling/github/docker
+
+      - name: 📋 Setup environment
+        run: |
+          cp .env.example .env
+          cp apps/web/.env.example apps/web/.env.local
+          cp apps/mobile/.env.example apps/mobile/.env
+
+      - name: 🗄️ Prepare database
+        run: pnpm with-env pnpm -F @workspace/db db:migrate && pnpm with-env pnpm -F @workspace/auth db:seed
+
+      - name: 🏗️ Setup EAS
+        uses: expo/expo-github-action@v9
+        with:
+          eas-version: 20.5.1
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🏗️ Build app
+        working-directory: apps/mobile
+        run: |
+          eas build --platform android --profile e2e --non-interactive --wait --json > /tmp/eas.json &
+          (cd ../.. && pnpm with-env pnpm turbo build --filter=web)
+          wait
+          eas build:download --build-id "$(jq -r '.[-1].id' /tmp/eas.json)" --non-interactive --json | jq -r '.path' > /tmp/app-path.txt
+
+      - name: 💾 Cache Maestro
+        id: maestro-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.maestro
+          key: ${{ runner.os }}-maestro-${{ env.MAESTRO_VERSION }}
+
+      - name: 🎭 Install Maestro
+        if: steps.maestro-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL "https://github.com/mobile-dev-inc/maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip" -o /tmp/maestro.zip
+          unzip -q /tmp/maestro.zip -d /tmp && mv /tmp/maestro ~/.maestro
+
+      - name: 🛤️ Add Maestro to PATH
+        run: echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: 🚀 Start API server
+        run: |
+          pnpm with-env pnpm --filter web start -H 0.0.0.0 -p 3000 &
+          start=$SECONDS
+          until curl -sf http://localhost:3000/api/status; do
+            (( SECONDS - start >= 120 )) && exit 1
+            sleep 2
+          done
+
+      - name: ⚡ Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: 🧪 Run E2E
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          cores: 4
+          ram-size: 4096M
+          disable-animations: true
+          emulator-boot-timeout: 900
+          script: |
+            export PATH="$HOME/.maestro/bin:$PATH"
+            rm -rf "$HOME/.maestro/sessions"
+            adb -s "emulator-${EMULATOR_PORT}" install -r "$(cat /tmp/app-path.txt)"
+            pnpm --filter mobile exec maestro test e2e --format junit --output e2e/test-results/report.xml --debug-output e2e/test-results --flatten-debug-output
+
+      - name: 📎 Upload Maestro report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-mobile-android-report
+          path: apps/mobile/e2e/test-results/report.xml
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 📎 Upload Maestro artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-mobile-android-results
+          path: apps/mobile/e2e/test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  ios:
+    name: 🍎 iOS
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'e2e') || contains(github.event.pull_request.labels.*.name, 'e2e-mobile')
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: ✅ Checkout code
+        uses: actions/checkout@v7
+
+      - name: 🔨 Setup
+        uses: ./tooling/github/setup
+
+      - name: 🐘 Start PostgreSQL
+        run: |
+          brew install postgresql@18
+          echo "$(brew --prefix postgresql@18)/bin" >> "$GITHUB_PATH"
+          brew services start postgresql@18
+          until pg_isready -q; do sleep 1; done
+          createuser -s turbostarter 2>/dev/null || true
+          psql postgres -c "ALTER USER turbostarter WITH PASSWORD 'turbostarter';" 2>/dev/null || \
+            psql postgres -c "CREATE USER turbostarter WITH PASSWORD 'turbostarter' SUPERUSER;"
+          createdb -O turbostarter core 2>/dev/null || true
+
+      - name: 📋 Setup environment
+        run: |
+          cp .env.example .env
+          cp apps/web/.env.example apps/web/.env.local
+          cp apps/mobile/.env.example apps/mobile/.env
+
+      - name: 🗄️ Prepare database
+        run: pnpm with-env pnpm -F @workspace/db db:migrate && pnpm with-env pnpm -F @workspace/auth db:seed
+
+      - name: 🏗️ Setup EAS
+        uses: expo/expo-github-action@v9
+        with:
+          eas-version: 20.5.1
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🏗️ Build app
+        working-directory: apps/mobile
+        run: |
+          eas build --platform ios --profile e2e --non-interactive --wait --json > /tmp/eas.json &
+          (cd ../.. && pnpm with-env pnpm turbo build --filter=web)
+          wait
+          eas build:download --build-id "$(jq -r '.[-1].id' /tmp/eas.json)" --non-interactive --json | jq -r '.path' > /tmp/app-path.txt
+
+      - name: 💾 Cache Maestro
+        id: maestro-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/.maestro
+          key: ${{ runner.os }}-maestro-${{ env.MAESTRO_VERSION }}
+
+      - name: 🎭 Install Maestro
+        if: steps.maestro-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL "https://github.com/mobile-dev-inc/maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip" -o /tmp/maestro.zip
+          unzip -q /tmp/maestro.zip -d /tmp && mv /tmp/maestro ~/.maestro
+
+      - name: 🛤️ Add Maestro to PATH
+        run: echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: 🚀 Start API server
+        run: |
+          pnpm with-env pnpm --filter web start -H 0.0.0.0 -p 3000 &
+          start=$SECONDS
+          until curl -sf http://localhost:3000/api/status; do
+            (( SECONDS - start >= 120 )) && exit 1
+            sleep 2
+          done
+
+      - name: 📱 Boot iOS Simulator
+        run: |
+          xcrun simctl boot "iPhone 17" 2>/dev/null || true
+          open -a Simulator
+
+      - name: 🧪 Run E2E
+        run: |
+          rm -rf "$HOME/.maestro/sessions"
+          xcrun simctl install booted "$(cat /tmp/app-path.txt)"
+          pnpm --filter mobile exec maestro test e2e --format junit --output e2e/test-results/report.xml --debug-output e2e/test-results --flatten-debug-output
+
+      - name: 📎 Upload Maestro report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-mobile-ios-report
+          path: apps/mobile/e2e/test-results/report.xml
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 📎 Upload Maestro artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-mobile-ios-results
+          path: apps/mobile/e2e/test-results/
+          retention-days: 7
+          if-no-files-found: ignore

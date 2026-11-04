@@ -1,0 +1,32 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "{{workerName}}",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-06-08",
+  "keep_vars": true,
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "images": {
+    "binding": "IMAGES",
+  },
+  "observability": {
+    "enabled": true,
+  },
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "{{r2BucketName}}",
+    },
+  ],
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "{{hyperdriveId}}",
+      "localConnectionString": "{{localDatabaseUrl}}",
+    },
+  ],
+  "upload_source_maps": true,
+}

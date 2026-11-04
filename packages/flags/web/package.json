@@ -1,0 +1,40 @@
+{
+  "name": "@workspace/flags-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.tsx",
+    "./env": "./src/env.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules"
+  },
+  "dependencies": {
+    "@growthbook/growthbook": "1.6.5",
+    "@openfeature/growthbook-client-provider": "0.1.2",
+    "@openfeature/growthbook-provider": "0.1.2",
+    "@openfeature/react-sdk": "1.4.1",
+    "@openfeature/server-sdk": "1.22.0",
+    "@openfeature/web-sdk": "1.9.0",
+    "@posthog/openfeature-node-provider": "0.1.0",
+    "@posthog/openfeature-web-provider": "0.1.0",
+    "@workspace/flags": "workspace:*",
+    "@workspace/shared": "workspace:*",
+    "envin": "catalog:",
+    "posthog-js": "1.414.0",
+    "posthog-node": "5.48.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:node24",
+    "@types/react": "catalog:react19",
+    "@workspace/tsconfig": "workspace:*",
+    "react": "catalog:react19",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:react19"
+  }
+}

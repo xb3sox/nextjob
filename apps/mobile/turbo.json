@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "dev": {
+      "interactive": true,
+      "env": ["ANDROID_HOME"]
+    },
+    "test:e2e": {
+      "cache": false
+    }
+  }
+}

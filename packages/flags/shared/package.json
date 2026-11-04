@@ -1,0 +1,27 @@
+{
+  "name": "@workspace/flags",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules"
+  },
+  "dependencies": {
+    "@openfeature/react-sdk": "1.4.1",
+    "@openfeature/server-sdk": "1.22.0",
+    "@openfeature/web-sdk": "1.9.0"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:react19",
+    "@workspace/tsconfig": "workspace:*",
+    "react": "catalog:react19",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:react19"
+  }
+}

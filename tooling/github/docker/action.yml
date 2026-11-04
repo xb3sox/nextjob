@@ -1,0 +1,32 @@
+name: "CI / Docker"
+description: "Cache Docker images and start compose services"
+
+runs:
+  using: "composite"
+  steps:
+    - name: 💾 Cache Docker images
+      id: docker-image-cache
+      uses: actions/cache@v6
+      with:
+        path: /tmp/docker-image-cache
+        key: docker-${{ hashFiles('docker-compose.yml') }}
+
+    - name: 📥 Load Docker images
+      shell: bash
+      run: |
+        if [ -f /tmp/docker-image-cache/images.tar ]; then
+          docker load -i /tmp/docker-image-cache/images.tar
+        fi
+
+    - name: 🐘 Start services
+      shell: bash
+      run: pnpm services:start
+
+    - name: 📤 Save Docker images
+      if: steps.docker-image-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        mkdir -p /tmp/docker-image-cache
+        docker pull postgres:18-alpine
+        docker pull axllent/mailpit:latest
+        docker save postgres:18-alpine axllent/mailpit:latest -o /tmp/docker-image-cache/images.tar

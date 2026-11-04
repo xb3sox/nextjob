@@ -1,0 +1,88 @@
+name: CI / E2E / Web
+
+on:
+  pull_request:
+    branches: ["*"]
+    types: [opened, synchronize, labeled]
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
+jobs:
+  e2e:
+    name: ${{ matrix.label }}
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'e2e') || contains(github.event.pull_request.labels.*.name, 'e2e-web')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project: chrome
+            label: 🌐 Chrome
+          - project: firefox
+            label: 🦊 Firefox
+          - project: safari
+            label: 🧭 Safari
+
+    steps:
+      - name: ✅ Checkout code
+        uses: actions/checkout@v7
+
+      - name: 🔨 Setup
+        uses: ./tooling/github/setup
+
+      - name: 🐘 Start services
+        uses: ./tooling/github/docker
+
+      - name: 📋 Setup environment
+        run: |
+          cp .env.example .env
+          cp apps/web/.env.example apps/web/.env.local
+
+      - name: 🏷️ Store Playwright version
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm ls @playwright/test --filter web | grep @playwright | sed 's/.*@//')
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+
+      - name: 💾 Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.project }}-${{ env.PLAYWRIGHT_VERSION }}
+
+      - name: 🎭 Install Playwright
+        run: |
+          browser="${{ matrix.project }}"
+          [ "$browser" = "chrome" ] && browser=chromium
+          [ "$browser" = "safari" ] && browser=webkit
+          pnpm --filter web exec playwright install --with-deps "$browser"
+
+      - name: 🧪 Run E2E
+        run: pnpm with-env pnpm --filter web exec playwright test --project='${{ matrix.project }}*'
+
+      - name: 📎 Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-web-${{ matrix.project }}-report
+          path: apps/web/e2e/playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 📎 Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-web-${{ matrix.project }}-results
+          path: apps/web/e2e/test-results/
+          retention-days: 7
+          if-no-files-found: ignore

@@ -1,0 +1,26 @@
+{
+  "name": "@workspace/monitoring-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules"
+  },
+  "dependencies": {
+    "@sentry/nextjs": "10.69.0",
+    "@workspace/monitoring": "workspace:*",
+    "@workspace/shared": "workspace:*",
+    "envin": "catalog:",
+    "posthog-js": "1.414.0",
+    "posthog-node": "5.48.1"
+  },
+  "devDependencies": {
+    "@workspace/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

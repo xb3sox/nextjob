@@ -1,0 +1,60 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".cache/tsbuildinfo.json", "dist/**", "build/**"]
+    },
+    "//#lint": {},
+    "//#lint:fix": {
+      "cache": false
+    },
+    "//#format": {},
+    "//#format:fix": {
+      "cache": false
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false
+    },
+    "clean": {
+      "cache": false
+    },
+    "setup": {
+      "cache": false,
+      "dependsOn": ["@workspace/db#db:setup"]
+    },
+    "test": {
+      "outputs": ["coverage.json"]
+    },
+    "test:e2e": {
+      "cache": false
+    },
+    "cf:build": {
+      "dependsOn": ["^build"],
+      "outputs": [".open-next/**", "!.open-next/cache/**"]
+    },
+    "cf:deploy": {
+      "cache": false
+    },
+    "cf:preview": {
+      "cache": false,
+      "persistent": true
+    },
+    "cf:typegen": {
+      "cache": false,
+      "outputs": ["cloudflare-env.d.ts"]
+    },
+    "cf:upload": {
+      "cache": false
+    }
+  },
+  "globalEnv": ["DATABASE_URL", "PRODUCT_NAME", "URL", "DEFAULT_LOCALE"],
+  "globalPassThroughEnv": [
+    "NODE_ENV",
+    "SKIP_ENV_VALIDATION",
+    "npm_lifecycle_event"
+  ]
+}

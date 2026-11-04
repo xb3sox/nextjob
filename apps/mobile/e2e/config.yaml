@@ -1,0 +1,9 @@
+flows:
+  - "flows/**"
+testOutputDir: test-results
+executionOrder:
+  continueOnFailure: false
+  flowsOrder:
+    - welcome
+    - sign-in-password
+    - sign-out

@@ -1,0 +1,13 @@
+appId: com.turbostarter.core
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+- extendedWaitUntil:
+    visible:
+      id: welcome-get-started
+    timeout: 120000
+- assertVisible:
+    id: welcome-get-started
+- assertVisible:
+    id: welcome-login

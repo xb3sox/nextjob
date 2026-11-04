@@ -1,0 +1,61 @@
+{
+  "name": "@workspace/ui-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#components/*": "./src/components/*.tsx",
+    "#hooks/*": "./src/hooks/*.tsx",
+    "#*": "./src/*.tsx"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./globals.css": "./src/styles/globals.css",
+    "./components/*": "./src/components/*.tsx",
+    "./hooks/*": "./src/hooks/*.tsx",
+    "./*": "./src/components/*.tsx"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "ui:add": "pnpm dlx @react-native-reusables/cli@latest add"
+  },
+  "dependencies": {
+    "@expo/material-symbols": "0.1.1",
+    "@expo/ui": "~58.0.19",
+    "@gorhom/bottom-sheet": "5.2.14",
+    "@react-native-community/slider": "5.2.1",
+    "@rn-primitives/avatar": "1.5.2",
+    "@rn-primitives/checkbox": "1.5.2",
+    "@rn-primitives/context-menu": "1.5.2",
+    "@rn-primitives/dropdown-menu": "1.5.2",
+    "@rn-primitives/label": "1.5.2",
+    "@rn-primitives/progress": "1.5.2",
+    "@rn-primitives/radio-group": "1.5.2",
+    "@rn-primitives/select": "1.5.2",
+    "@rn-primitives/slot": "1.5.2",
+    "@rn-primitives/switch": "1.5.2",
+    "@rn-primitives/table": "1.5.2",
+    "@rn-primitives/tabs": "1.5.2",
+    "@rn-primitives/tooltip": "1.5.2",
+    "@rn-primitives/types": "1.5.2",
+    "@workspace/i18n": "workspace:*",
+    "@workspace/oxlint": "workspace:*",
+    "@workspace/shared": "workspace:*",
+    "@workspace/ui": "workspace:*",
+    "culori": "4.0.2",
+    "input-otp-native": "0.6.0",
+    "lucide-react-native": "1.30.0",
+    "react-native": "catalog:",
+    "react-native-keyboard-controller": "1.22.7",
+    "react-native-reanimated": "4.7.1",
+    "react-native-worklets": "0.13.0",
+    "uniwind": "1.6.3"
+  },
+  "devDependencies": {
+    "@types/culori": "4.0.1",
+    "@workspace/tsconfig": "workspace:*",
+    "react": "catalog:react19",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  }
+}

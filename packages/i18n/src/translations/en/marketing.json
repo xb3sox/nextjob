@@ -1,0 +1,298 @@
+{
+  "home": {
+    "seo": {
+      "title": "NextJob — One Profile. Every Opportunity. Less Work."
+    }
+  },
+  "product": {
+    "title": "One Profile. Every Opportunity. Less Work.",
+    "description": "The open-source, evidence-backed AI career platform that eliminates repetitive data entry, simplifies job discovery, generates tailored applications, and supports safe, authorized automation.",
+    "mobile": {
+      "ios": {
+        "title": "iOS App",
+        "description": "Native experience on iPhone and iPad"
+      },
+      "android": {
+        "title": "Android App",
+        "description": "Optimized for Android phones"
+      }
+    },
+    "extension": {
+      "chrome": {
+        "title": "Chrome Extension",
+        "description": "Integration with Chrome browser"
+      },
+      "firefox": {
+        "title": "Firefox Add-on",
+        "description": "Enhanced browsing for Firefox users"
+      },
+      "edge": {
+        "title": "Edge Add-on",
+        "description": "Powerful tools for Microsoft Edge"
+      }
+    }
+  },
+  "announcement": "NextJob P0 — Open-Source Evidence-Backed Career Identity & Job Fit Platform",
+  "shippedWith": "Built with Next.js App Router, Hono, Better Auth, Drizzle & Zod",
+  "cta": {
+    "question": "Ready to simplify your career journey?",
+    "button": "Start for free",
+    "buy": {
+      "question": "Ready to take ownership of your career identity?",
+      "description": "Import your CV once, verify your career claims, discover high-fit opportunities, and generate tailored resumes without hallucinated facts.",
+      "button": "Open NextJob Workspace",
+      "join": {
+        "description": "Explore the open-source NextJob platform built for quality and time saved, not application spam.",
+        "button": "Explore Find Jobs"
+      }
+    }
+  },
+  "editToReload": "Edit <code>{{file}}</code> and save to reload.",
+  "workInProgress": {
+    "title": "We're working on it!",
+    "description": "{{feature}} is currently not available. We're working on it and it will be available soon."
+  },
+  "features": {
+    "label": "Capabilities",
+    "title": "One Authoritative Career Identity",
+    "description": "Designed for quality, transparency, and time saved across your entire career lifecycle.",
+    "feature": {
+      "core": {
+        "title": "Verified Career Profile & Conflict Detection",
+        "description": "Import CVs or JSON Resumes into structured claims with date conflict detection, revision history, and conversational updates."
+      },
+      "ai": {
+        "title": "Evidence-Constrained CV Tailoring",
+        "description": "Generate role-aligned resumes and cover letters backed strictly by your verified claims—zero invented qualifications."
+      },
+      "mobile": {
+        "title": "Explainable 5-Question Job Fit",
+        "description": "Every listing answers why it matches, what requirements you meet, required vs preferred gaps, credibility, and application steps."
+      },
+      "extension": {
+        "title": "Transparent Approvals & Receipts",
+        "description": "Human-in-the-loop payload hash approvals and SHA-256 submission receipts that clearly distinguish Confirmed from Submission Uncertain."
+      }
+    }
+  },
+  "testimonials": {
+    "label": "Principles",
+    "title": "Built for Trust, Privacy & Zero Fabrication",
+    "description": "Why engineers and career changers rely on NextJob's evidence-backed workflow.",
+    "rating": "{{rating}} from {{count}}+ verified workflows",
+    "reviews": {
+      "jack": {
+        "name": "Amira K.",
+        "position": "Senior Full-Stack Engineer",
+        "body": "NextJob caught a date conflict between two older CVs during import and let me resolve it before tailoring my resume."
+      },
+      "jill": {
+        "name": "David M.",
+        "position": "Staff Platform Architect",
+        "body": "The 5-question job fit breakdown immediately separates hard eligibility blockers from preferred skill gaps."
+      },
+      "john": {
+        "name": "Tariq H.",
+        "position": "Principal Frontend Engineer",
+        "body": "Full English and Arabic RTL support with instant DOCX, PDF, and JSON Resume export saved me hours every week."
+      },
+      "sarah": {
+        "name": "Elena R.",
+        "position": "Product Engineering Lead",
+        "body": "Every tailored bullet links directly to my verified career claim IDs. No hallucinated skills or employers ever."
+      },
+      "mike": {
+        "name": "Marcus V.",
+        "position": "Security Engineer",
+        "body": "Payload-hash-bound approvals and Submission Uncertain safeguards prevent accidental or duplicate submissions."
+      }
+    }
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "Frequently Asked Questions",
+    "description": "Learn how NextJob protects your career data, prevents AI fabrication, and keeps you in control.",
+    "cta": "Contact us",
+    "question": {
+      "whatDoesOurPlatformDo": {
+        "question": "What does NextJob do?",
+        "answer": "NextJob maintains one verified career profile and reuses it across job discovery, eligibility & fit evaluation, evidence-constrained resume tailoring, and application tracking."
+      },
+      "howWillThisBenefitMyBusiness": {
+        "question": "How does NextJob prevent AI hallucinations in resumes?",
+        "answer": "Our tailoring engine only uses claims you have explicitly marked as Verified (with confidence >= 0.8) and preserves exact employer names, institutions, and dates."
+      },
+      "isMyDataSafe": {
+        "question": "What happens when a job submission lacks confirmation?",
+        "answer": "NextJob never marks an application as Confirmed without confirmation evidence. Uncertain attempts enter 'Submission Uncertain' and block automatic retries."
+      },
+      "whatKindOfIntegrationsAreAvailable": {
+        "question": "What import and export formats are supported?",
+        "answer": "You can import PDF, DOCX, plain text resumes, and JSON Resume files, and export tailored documents to DOCX, print-ready PDF/HTML, and JSON Resume."
+      },
+      "howEasyIsItToOnboardMyTeam": {
+        "question": "How do conversational career updates work?",
+        "answer": "Tell the AI assistant about a promotion or new skill. It creates a structured proposal in pending review—your authoritative profile only changes after you approve it."
+      },
+      "whatTypesOfBusinessesCanUseThis": {
+        "question": "Does NextJob support Arabic and RTL layouts?",
+        "answer": "Yes. Both the web application and exported resume documents support English (LTR) and Arabic (RTL)."
+      },
+      "canICustomizeThisToFitMyBusinessNeeds": {
+        "question": "Is NextJob open-source and self-hostable?",
+        "answer": "Yes. NextJob is built on an open-source modular monolith stack with Next.js, Hono, Better Auth, Drizzle, and PostgreSQL."
+      }
+    }
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Get in touch with the NextJob team",
+    "cta": "Contact support",
+    "description": "Reach us for assistance or feedback",
+    "form": {
+      "name": {
+        "placeholder": "Jane Doe"
+      },
+      "email": {
+        "placeholder": "your@email.com"
+      },
+      "message": {
+        "placeholder": "How can we help you?"
+      },
+      "submit": "Send message",
+      "success": {
+        "title": "Message sent!",
+        "description": "Thank you for your message. We'll get back to you soon."
+      }
+    },
+    "email": {
+      "subject": "New NextJob contact form submission",
+      "body": "New contact form submission"
+    }
+  },
+  "blog": {
+    "label": "Blog",
+    "title": "Career engineering & platform updates",
+    "description": "Insights on evidence-backed AI, career identity ownership, and accessible job search workflows.",
+    "timeToRead": "{{time}} min read",
+    "tag": {
+      "learning": "learning",
+      "skills": "skills",
+      "progress": "progress",
+      "product": "product",
+      "development": "development",
+      "prototype": "prototype",
+      "launch": "launch"
+    }
+  },
+  "api": {
+    "title": "API Reference",
+    "description": "Build integrations with our Hono RPC API"
+  },
+  "mcp": {
+    "title": "MCP Server",
+    "description": "Connect to your favorite LLM"
+  },
+  "roadmap": {
+    "title": "Roadmap",
+    "description": "See what's coming next in P1 & P2"
+  },
+  "docs": {
+    "title": "Docs",
+    "description": "Learn how to use NextJob"
+  },
+  "ai": {
+    "description": "Use the NextJob Career Assistant to propose structured profile updates (e.g. 'I was promoted to Information Manager'), evaluate job fit, or prepare tailored application statements.",
+    "prompt": {
+      "history": "I was promoted to Information Manager at CloudScale",
+      "capitals": "Earned AWS Certified Solutions Architect certification",
+      "quantum": "Added Kubernetes, Go, and OpenTelemetry skills",
+      "realWorld": "Review my suitable jobs and pending approvals"
+    },
+    "placeholder": "Tell NextJob about a promotion, certification, or career update...",
+    "cta": "Propose Update",
+    "thinking": "Analyzing career update..."
+  },
+  "setup": {
+    "steps": {
+      "step": {
+        "start": {
+          "title": "Welcome to NextJob",
+          "description": "Press Continue to set up your career workspace"
+        },
+        "required": {
+          "title": "Privacy & Consent",
+          "description": "Verify your privacy preferences before continuing",
+          "fields": {
+            "data": "I understand that my career profile is private and under my control",
+            "privacy": "I've read and agree to the <a>Privacy Policy</a>"
+          }
+        },
+        "paywall": {
+          "title": "Open-Source Core",
+          "description": "NextJob P0 core is completely free and open-source",
+          "cta": "Continue",
+          "state": {
+            "title": "Workspace status",
+            "description": "Ready",
+            "status": {
+              "opening": "Opening…",
+              "dismissed": "Dismissed",
+              "skipped": "Skipped",
+              "error": "Error",
+              "idle": "Ready"
+            }
+          }
+        }
+      }
+    }
+  },
+  "update": {
+    "available": {
+      "title": "New update available!",
+      "description": "A new update is ready to be installed."
+    },
+    "installing": {
+      "title": "Installing update...",
+      "description": "The update is being installed. Please wait a moment."
+    }
+  },
+  "buyCta": {
+    "title": "NextJob Open-Source",
+    "description": "One Profile. Every Opportunity. Less Work.",
+    "link": "Explore Jobs"
+  },
+  "waitlist": {
+    "label": "Waitlist",
+    "description": "Get updates on managed hosting & browser extension",
+    "title": "Get notified when P1 Browser Extension launches",
+    "subtitle": "One-click assisted form autofill powered by your verified NextJob profile",
+    "proof": "Join <highlight>1,500+</highlight> professionals!",
+    "submit": "Notify me",
+    "success": {
+      "title": "You're on the list!",
+      "description": "We'll notify you when we launch.",
+      "cta": "Done"
+    }
+  },
+  "newsletter": {
+    "label": "Newsletter",
+    "title": "Career & Platform Updates",
+    "subtitle": "Open-source releases and career automation best practices",
+    "submit": "Subscribe",
+    "success": {
+      "title": "You're subscribed!",
+      "description": "Thanks for joining. We'll keep you posted.",
+      "cta": "You're in!"
+    }
+  },
+  "status": {
+    "operational": "All systems operational",
+    "degraded": "Systems degraded"
+  },
+  "featureFlags": {
+    "demo": {
+      "banner": "Feature flag \"{{flag}}\" is enabled"
+    }
+  }
+}

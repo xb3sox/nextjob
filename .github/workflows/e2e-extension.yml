@@ -1,0 +1,75 @@
+name: CI / E2E / Extension
+
+on:
+  pull_request:
+    branches: ["*"]
+    types: [opened, synchronize, labeled]
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
+jobs:
+  e2e:
+    name: 🌐 Chrome
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'e2e') || contains(github.event.pull_request.labels.*.name, 'e2e-extension')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: ✅ Checkout code
+        uses: actions/checkout@v7
+
+      - name: 🔨 Setup
+        uses: ./tooling/github/setup
+
+      - name: 🐘 Start services
+        uses: ./tooling/github/docker
+
+      - name: 📋 Setup environment
+        run: |
+          cp .env.example .env
+          cp apps/web/.env.example apps/web/.env.local
+          cp apps/extension/.env.example apps/extension/.env
+
+      - name: 🏷️ Store Playwright version
+        run: |
+          PLAYWRIGHT_VERSION=$(pnpm ls @playwright/test --filter extension | grep @playwright | sed 's/.*@//')
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+
+      - name: 💾 Cache Playwright browsers
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ env.PLAYWRIGHT_VERSION }}
+
+      - name: 🎭 Install Playwright
+        run: pnpm --filter extension exec playwright install --with-deps chromium
+
+      - name: 🧪 Run E2E
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" pnpm with-env pnpm --filter extension test:e2e
+
+      - name: 📎 Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-extension-report
+          path: apps/extension/e2e/playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 📎 Upload Playwright artifacts
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-extension-results
+          path: apps/extension/e2e/test-results/
+          retention-days: 7
+          if-no-files-found: ignore

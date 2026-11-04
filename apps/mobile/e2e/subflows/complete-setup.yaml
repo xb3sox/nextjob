@@ -1,0 +1,14 @@
+appId: com.turbostarter.core
+---
+- tapOn:
+    id: setup-step-continue
+- tapOn:
+    id: setup-step-data-checkbox
+    retryTapIfNoChange: false
+- tapOn:
+    id: setup-step-privacy-checkbox
+    retryTapIfNoChange: false
+- tapOn:
+    id: setup-step-continue
+- tapOn:
+    id: setup-step-skip

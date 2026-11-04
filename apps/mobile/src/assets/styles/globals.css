@@ -1,0 +1,12 @@
+@import "@workspace/ui-mobile/globals.css";
+
+@source "../../app";
+@source "../../modules";
+@source "../../../../../packages/ui/shared/";
+@source "../../../../../packages/ui/mobile/";
+
+@theme {
+  --font-sans: "Geist";
+  --font-serif: "Source Serif 4";
+  --font-mono: "Geist Mono";
+}

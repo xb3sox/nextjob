@@ -1,0 +1,27 @@
+import { execSync } from "node:child_process";
+import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const appDir = join(dirname(fileURLToPath(import.meta.url)), "..");
+const repoRoot = join(appDir, "..", "..");
+const buildEnv = {
+  ...process.env,
+  NEXT_PRIVATE_OUTPUT_TRACE_ROOT: repoRoot,
+  NEXT_PRIVATE_STANDALONE: "true",
+};
+
+execSync("pnpm build", { cwd: appDir, env: buildEnv, stdio: "inherit" });
+
+const instrumentation = join(appDir, ".next/server/instrumentation.js");
+const standaloneServer = join(appDir, ".next/standalone/apps/web/.next/server");
+
+if (existsSync(instrumentation)) {
+  mkdirSync(standaloneServer, { recursive: true });
+  copyFileSync(instrumentation, join(standaloneServer, "instrumentation.js"));
+}
+
+execSync("opennextjs-cloudflare build --skipNextBuild", {
+  cwd: appDir,
+  stdio: "inherit",
+});

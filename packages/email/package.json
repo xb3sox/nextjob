@@ -1,0 +1,31 @@
+{
+  "name": "@workspace/email",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "dotenv -e ../../apps/web/.env.local -c -- email dev --port 3005 --dir src/templates"
+  },
+  "dependencies": {
+    "@react-email/ui": "6.9.5",
+    "@workspace/i18n": "workspace:*",
+    "@workspace/ui": "workspace:*",
+    "culori": "4.0.2",
+    "nodemailer": "10.0.9",
+    "react-email": "6.9.5",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/culori": "4.0.1",
+    "@types/nodemailer": "8.0.1",
+    "@workspace/shared": "workspace:*",
+    "@workspace/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "560701221200",
+    "project_id": "turbostarter-d8ed2",
+    "storage_bucket": "turbostarter-d8ed2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560701221200:android:3cabbcfc00b427d88f6455",
+        "android_client_info": {
+          "package_name": "com.turbostarter.core"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbuJvvi--UpoOnbGPJ-5-4YLEEtGku0No"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

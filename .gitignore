@@ -1,88 +1,73 @@
-# Dependencies
-node_modules/
-jspm_packages/
-vendor/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
 .pnp
 .pnp.js
+.pnpm-store
 
-# Build output
-dist/
-build/
-out/
+# testing
+coverage
+coverage.json
+.playwright
+playwright-report
+test-results
+
+# next.js
 .next/
-next/
-.nuxt/
+.open-next/
+out/
+next-env.d.ts
+cloudflare-env.d.ts
+
+# nitro
+.nitro/
 .output/
-.wxt/
-.vercel/
-.netlify/
-.serverless/
-.webpack/
-*.tsbuildinfo
 
-# Test / coverage
-coverage/
-.nyc_output/
-.vitest/
-*.test-d.tsbuildinfo
+# expo
+.expo/
+expo-env.d.ts
+apps/*/ios
+apps/*/android
+*.ipa
+*.apk
+*.app
 
-# Environment files (keep .env.example tracked)
-.env
-.env.*
-!.env.example
+# wxt
+.wxt
+web-ext.config.ts
 
-# Local databases / artifacts commonly created during dev
-*.sqlite
-*.sqlite3
-*.db
-drizzle/meta/
-# ...except the committed migration journal for the app schema.
-!packages/api/drizzle/meta/
-data/local/
+# production
+build
 
-# Logs
-logs/
-*.log
+# misc
+.DS_Store
+*.pem
+**/.gitignore
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
+.pnpm-debug.log*
 
-# Caches
-.cache/
-.parcel-cache/
-.rollup-cache/
-.vite/
-.eslintcache
-.stylelintcache
-*.swp
-*.swo
-
-# OS / editor
-.DS_Store
-.DS_Store?
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-.idea/
-.sublime-workspace
-*.code-workspace
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json.template
-
-# Misc generated
-*.pid
-*.seed
-*.pid.lock
-tmp/
-temp/
-.codegraph/
-
-# Wrangler local state (generated)
+# local env files
+.env
+.env*.local
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
 .wrangler/
 
-# Agent scratch notes (local only)
-.jules/
-.Jules/
+# vercel
+.vercel
+
+# typescript
+dist/
+.cache
+
+# turbo
+.turbo
+
+# content collections
+.content-collections

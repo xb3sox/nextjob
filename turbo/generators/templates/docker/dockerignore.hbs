@@ -1,0 +1,68 @@
+# Docker
+Dockerfile
+.dockerignore
+**/Dockerfile
+
+# Dependencies
+node_modules
+**/node_modules
+.pnpm-store
+
+# Build outputs
+.next
+**/.next
+.turbo
+**/.turbo
+dist
+**/dist
+build
+**/build
+.cache
+**/.cache
+.content-collections
+**/.content-collections
+coverage
+**/coverage
+
+# Other apps (not needed for web Docker image)
+apps/mobile
+apps/extension
+
+# Native / tooling artifacts
+.expo
+**/.expo
+.wxt
+**/.wxt
+.wrangler
+**/.wrangler
+**/*.ipa
+**/*.apk
+apps/*/ios
+apps/*/android
+
+# Git / IDE
+.git
+.github
+
+# Env & secrets
+.env
+.env*.local
+.dev.vars
+.dev.vars.*
+
+# Logs & docs
+npm-debug.log
+**/.pnpm-debug.log
+README.md
+AGENTS.md
+CLAUDE.md
+
+# Vercel / Cloudflare local state
+.vercel
+**/.vercel
+.open-next
+**/.open-next
+.nitro
+**/.nitro
+.output
+**/.output

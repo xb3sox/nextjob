@@ -1,0 +1,79 @@
+import { createRequire } from "node:module";
+
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import { cache } from "react";
+
+import { env } from "./env";
+import * as schema from "./schema";
+
+const require = createRequire(import.meta.url);
+
+type Db = ReturnType<typeof createDb>;
+
+interface CloudflareEnvWithHyperdrive {
+  HYPERDRIVE?: {
+    connectionString: string;
+  };
+}
+
+function createDb(connectionString: string) {
+  const client = postgres(connectionString, {
+    max: 1,
+    prepare: true,
+    fetch_types: false,
+  });
+
+  return drizzle({ client, schema, casing: "snake_case" });
+}
+
+function readHyperdriveConnectionString(): string | undefined {
+  try {
+    const { getCloudflareContext } =
+      require("@opennextjs/cloudflare") as typeof import("@opennextjs/cloudflare");
+    const { env: cfEnv } = getCloudflareContext();
+
+    return (cfEnv as CloudflareEnvWithHyperdrive).HYPERDRIVE?.connectionString;
+  } catch {
+    return undefined;
+  }
+}
+
+const nodeDb = createDb(env.DATABASE_URL);
+
+const getHyperdriveConnectionString = cache(readHyperdriveConnectionString);
+
+const getWorkerDb = cache(() => {
+  const connectionString = getHyperdriveConnectionString();
+
+  if (!connectionString) {
+    throw new Error(
+      "HYPERDRIVE binding is missing. Add a hyperdrive binding to wrangler.jsonc.",
+    );
+  }
+
+  return createDb(connectionString);
+});
+
+function getRealDb(): Db {
+  if (getHyperdriveConnectionString()) {
+    return getWorkerDb();
+  }
+
+  return nodeDb;
+}
+
+function createDbProxy(getDb: () => Db): Db {
+  return new Proxy({} as Db, {
+    get(_target, prop) {
+      const realDb = getDb();
+      const value = realDb[prop as keyof Db];
+
+      return typeof value === "function"
+        ? (value as (...args: unknown[]) => unknown).bind(realDb)
+        : value;
+    },
+  });
+}
+
+export const db = createDbProxy(getRealDb);

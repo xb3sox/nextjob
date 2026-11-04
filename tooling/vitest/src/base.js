@@ -1,0 +1,20 @@
+import { configDefaults, defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    globals: true,
+    exclude: [...configDefaults.exclude, "**/e2e/**"],
+    coverage: {
+      enabled: true,
+      provider: "v8",
+      reporter: [
+        [
+          "json",
+          {
+            file: `../coverage.json`,
+          },
+        ],
+      ],
+    },
+  },
+});

@@ -1,0 +1,30 @@
+import { getTranslation } from "~/lib/i18n";
+import { getMetadata } from "~/lib/metadata";
+import { ContactForm } from "~/modules/marketing/contact/contact-form";
+import {
+  Section,
+  SectionBadge,
+  SectionDescription,
+  SectionHeader,
+  SectionTitle,
+} from "~/modules/marketing/layout/section";
+
+export const generateMetadata = getMetadata({
+  title: "marketing:contact.label",
+  description: "marketing:contact.description",
+});
+
+export default async function ContactPage() {
+  const { t } = await getTranslation({ ns: "marketing" });
+  return (
+    <Section>
+      <SectionHeader>
+        <SectionBadge>{t("contact.label")}</SectionBadge>
+        <SectionTitle>{t("contact.title")}</SectionTitle>
+        <SectionDescription>{t("contact.description")}</SectionDescription>
+      </SectionHeader>
+
+      <ContactForm />
+    </Section>
+  );
+}

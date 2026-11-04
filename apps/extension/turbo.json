@@ -1,0 +1,52 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build:chrome": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**"],
+      "env": ["VITE_*"]
+    },
+    "build:chrome:unpacked": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**"],
+      "env": ["VITE_*"]
+    },
+    "build:firefox": {
+      "dependsOn": ["^build"],
+      "outputs": ["build/**"],
+      "env": ["VITE_*"]
+    },
+    "build": {
+      "dependsOn": ["build:chrome", "build:firefox"]
+    },
+    "dev": {
+      "persistent": true
+    },
+    "test:e2e": {
+      "cache": false,
+      "env": [
+        "CI",
+        "SKIP_ENV_VALIDATION",
+        "VITE_*",
+        "PRODUCT_NAME",
+        "URL",
+        "DEFAULT_LOCALE",
+        "PORT",
+        "E2E_BASE_URL",
+        "E2E_USER_EMAIL",
+        "E2E_USER_PASSWORD",
+        "MAILPIT_URL",
+        "DATABASE_URL",
+        "BETTER_AUTH_URL",
+        "SEED_EMAIL",
+        "SEED_PASSWORD",
+        "EMAIL_FROM",
+        "NODEMAILER_HOST",
+        "NODEMAILER_PORT",
+        "NODEMAILER_USER",
+        "NODEMAILER_PASSWORD"
+      ]
+    }
+  }
+}

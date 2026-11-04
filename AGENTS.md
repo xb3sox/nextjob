@@ -1,305 +1,127 @@
-# Agent Instructions
+# AGENTS.md
 
-## Status
+<!-- BEGIN:nextjs-agent-rules -->
 
-In Progress. Modern toolchain implemented with Bun, Vitest, and Biome. Technology stack and all threshold decisions approved (2026-01-15):
-- Eligibility false-positive threshold: ≤2%
-- Autopilot evidence coverage: ≥80%
-- Minimum cohort size for reporting: ≥5 participants
+# This is NOT the Next.js you know
 
-**Completed:**
-- ✅ T-01: Repository structure initialized
-- ✅ T-02: Development environment set up
-- ✅ T-03: Database schema created — 7 tables (tenants, users, accounts, sessions,
-  verification_tokens, applications, receipts); remaining domain tables pending (see TASKS.md)
-- ✅ T-03a: Migrated to Bun package manager (30x faster)
-- ✅ T-03b: Added Vitest testing framework (5x faster)
-- ✅ T-03c: Migrated to Biome linter/formatter (56x faster)
-- ⚠️ T-03d: Turborepo removed 2026-10-25 — the config was never wired to any script
-- ✅ T-03e: Integrated shadcn/ui component library (8 core components)
-- ✅ T-04: Authentication & tenant isolation (OAuth 2.0, RBAC, 33 tests)
-- ✅ T-05: AI Gateway (3 providers, 7 schemas, PII redaction, Langfuse, 55+ tests)
-- ✅ T-06: Temporal workflow infrastructure (durable execution, idempotency, 18 tests)
-- ✅ T-07: Profile import & extraction (PDF/DOCX, AI extraction, 20+ tests)
-- ✅ T-08: Your Profile with evidence provenance (claims service, evidence tracking, versioning, 20+ tests)
-- ✅ T-09: Claim verification workflow (confirm/edit/remove/mark unverified, bulk verification, 15+ tests)
-- ✅ T-09a: Preferences capture (comprehensive preferences schema, versioning, 20+ tests)
-- ✅ T-09b: Automation policy (Manual/Copilot/Autopilot modes, field overrides, 25+ tests)
-- ✅ T-10: Evidence storage (S3/local/memory, signed URLs, access control, 30+ tests)
-- ✅ T-11: Job ingestion & normalization (normalization, deduplication, freshness tracking, 50+ tests)
-- ✅ T-12: Eligibility engine (10 check types, rule management, confidence scoring, 25+ tests)
-- ✅ T-13: Create eligibility evaluation dataset (114 cases, 117 tests, 0% false-positive rate)
-- ✅ T-14: Matching and ranking engine (ranking by fit, eligibility, freshness, explainability, 15 tests)
-- ✅ T-15: Job card UI with capability model (29 tests)
-- ✅ T-16: AI evaluation dataset for tailoring (64 tests)
-- ✅ T-17: Tailoring engine with evidence constraints (18 tests)
-- ✅ T-18: Tailoring UI with evidence display (original → proposed → evidence, 4 tests)
-- ✅ T-03g: Custom shadcn registry (`registry/`, `public/r/`)
-- ✅ T-21: WXT browser extension scaffold (`extension/`)
-- ✅ T-25: Application state machine
-- ✅ T-44: Complete application state machine (verified 2026-10-25 — shipped with T-25, PR #128)
-- ✅ T-43: API documentation (`docs/api/`)
-- ✅ T-47: Localization infrastructure (RTL, locale-aware formatting, locale switcher)
-- ✅ T-64: Static sitemap and robots.txt (`public/`)
-- ✅ T-26: Submission receipts (sha256 field/answer hashes, frozen receipt, wired to the T-25 state machine)
-- ✅ T-52: Landing page implemented (ultra-minimal design)
-- ✅ T-55: Legal compliance (Privacy Policy, Terms of Service)
-- ✅ T-80, T-95-T-99: Technical excellence features
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root — prefer `apps/web/node_modules/next/dist/docs/` or the workspace hoist) before writing any Next.js code. Heed deprecation notices.
 
-**Progress:** 39/118 tasks complete (33.1%)
+This block is written for Next.js 16.4. Verify patterns against bundled docs when upgrading.
 
-> Note: T-13 through T-18 and T-25 are complete with all eval/unit tests passing. T-19 and T-20 are
-> `human`-blocked (#107, #108). T-58 and T-63 are `Blocked`: their PRs stopped at a partial result
-> (#158 closed; #159 shipped static OG metadata only) and the SPA has no server runtime for
-> per-route generation. Next MVP item: T-27 tracker UI (#32); its task dependencies (T-25, T-26) are
-> merged, and it is queued behind #63 and #69 because all three edit `src/App.tsx`.
+<!-- END:nextjs-agent-rules -->
 
-## Agent Skills
+Guide for AI agents working on the Turbostarter monorepo.
 
-### Installed Skills (11 total, ~90% coverage)
+## Agent rules
 
-**Priority 1: Critical (4 skills)**
-- ✅ `shadcn` - Official shadcn/ui skill with comprehensive component knowledge
-- ✅ `@vercel/nextjs` - Next.js patterns for planned migration
-- ✅ `@supabase/supabase` - Supabase integration patterns
-- ✅ `@testing-library/react` - React testing patterns
+**DO:**
 
-**Priority 2: Important (3 skills)**
-- ✅ `@drizzle-orm/drizzle` - Advanced ORM patterns
-- ✅ `@turbo-repo/turborepo` - Monorepo management
-- ✅ `@tailwindcss/tailwind` - Advanced styling patterns
+- Read existing files before editing; understand imports and structure first
+- Keep diffs minimal and scoped to the request
+- Use `pnpm --filter <pkg>` for package-specific commands
+- Use `pnpm with-env` for commands needing environment variables
+- Add dependencies via `pnpm add -F <pkg>` in the appropriate package
+- Follow existing code style, naming, and file layout
+- Use explicit types; prefer `interface` over `type` for objects
+- Use Zod for validation
+- Check `packages/*` for shared helpers before duplicating logic
+- Import from package entry points (`@workspace/ui-web`, not deep paths)
 
-**Priority 3: Useful (4 skills)**
-- ✅ `@radix-ui/primitives` - Accessible component patterns
-- ✅ `@biomejs/biome` - Advanced linting configuration
-- ✅ `@vercel/analytics` - Web analytics integration
-- ✅ `@vercel/edge` - Edge computing patterns
+**DON'T:**
 
-### Installation Commands
+- Commit, push, or modify git state unless explicitly asked
+- Run destructive commands (`reset --hard`, force-push) without permission
+- Invent ad-hoc scripts; use repo commands from the table below
+- Reformat unrelated code or make drive-by changes
+- Delete or rewrite unrelated code
+- Use `any` or unsafe type casts
+- Use enums (prefer maps/objects)
+- Use classes (prefer functions)
 
-Run the installation script:
-```bash
-chmod +x install-skills.sh
-./install-skills.sh
+## Where to look first
+
+| Task              | Start here                                                           |
+| ----------------- | -------------------------------------------------------------------- |
+| Auth logic        | `packages/auth/` → then app-specific usage                           |
+| API endpoints     | `packages/api/src/modules/`                                          |
+| Database schema   | `packages/db/src/schema/`                                            |
+| UI components     | `packages/ui/web/` or `packages/ui/mobile/`                          |
+| Billing           | `packages/billing/{shared,web,mobile}/`                              |
+| Feature flags     | `packages/flags/` → `flags-web` / `flags-mobile` / `flags-extension` |
+| Translations      | `packages/i18n/src/translations/`                                    |
+| Email templates   | `packages/email/src/templates/`                                      |
+| Web pages         | `apps/web/src/app/[locale]/`                                         |
+| Mobile screens    | `apps/mobile/src/app/`                                               |
+| Extension entries | `apps/extension/src/app/`                                            |
+
+## Project structure
+
 ```
+apps/
+  web/         Next.js App Router (src/app/[locale]/{(marketing),auth,dashboard,admin})
+  mobile/      Expo Router (src/app/{(setup),dashboard}, src/modules/)
+  extension/   WXT + React (src/app/{background,content,popup,options,sidepanel,...})
 
-Or install manually:
-```bash
-# Priority 1: Critical
-npx skills add https://github.com/shadcn-ui/ui --skill shadcn
-npx skills add vercel-labs/skills --skill nextjs -y
-npx skills add supabase/skills --skill supabase -y
-npx skills add testing-library/skills --skill react -y
+packages/
+  api/         @workspace/api       Hono modules (admin,ai,auth,billing,organization,storage)
+  auth/        @workspace/auth      Better Auth server + clients (src/client/{web,mobile}.ts)
+  billing/     @workspace/billing   Shared + web (Stripe,LemonSqueezy,Polar) + mobile (RevenueCat,Superwall)
+  flags/       @workspace/flags     OpenFeature helpers + flags-web / flags-mobile / flags-extension
+  cms/         @workspace/cms       MDX content (blog, legal)
+  db/          @workspace/db        Drizzle schema, migrations, scripts
+  email/       @workspace/email     React Email templates + providers
+  i18n/        @workspace/i18n      Translations + server/client utils
+  shared/      @workspace/shared    Constants, schema, logger, hooks, utils
+  storage/     @workspace/storage   S3 storage providers
+  analytics/   @workspace/analytics[-web|-mobile|-extension]
+  monitoring/  @workspace/monitoring[-web|-mobile|-extension]
+  ui/          @workspace/ui[-web|-mobile]
 
-# Priority 2: Important
-npx skills add drizzle-team/skills --skill drizzle -y
-npx skills add vercel/skills --skill turborepo -y
-npx skills add tailwindlabs/skills --skill tailwind -y
-
-# Priority 3: Useful
-npx skills add radix-ui/skills --skill primitives -y
-npx skills add biomejs/skills --skill biome -y
-npx skills add vercel/skills --skill analytics -y
-npx skills add vercel/skills --skill edge -y
+tooling/       oxfmt, oxlint, typescript, vitest, github, scripts
 ```
-
-### Remaining Gaps (5 areas)
-
-1. **AI/LLM Integration** - No official skills for Vercel AI SDK
-2. **Browser Extension** - No skills for WXT (Web Extension Toolkit)
-3. **Temporal Workflow** - No skills for Temporal patterns
-4. **Accessibility Testing** - No dedicated a11y testing skills
-5. **Security Audit** - No comprehensive security scanning skills
-
-### Rejected Skills
-
-Webpack, Jest, ESLint, npm, Create React App, Redux, GraphQL, Docker, AWS - all obsolete or not in tech stack.
-
-### Risky/Unverified Skills
-
-`@openai/openai`, `@anthropic/claude`, third-party AI skills - wait for official releases.
 
 ## Commands
 
-### Commands (Bun — the only package manager)
+| Task               | Command                                                    |
+| ------------------ | ---------------------------------------------------------- |
+| Install deps       | `pnpm install`                                             |
+| Dev (all/specific) | `pnpm dev` / `pnpm --filter <app> dev`                     |
+| Build              | `pnpm build` / `pnpm --filter <app> build`                 |
+| Mobile run         | `pnpm --filter mobile ios` / `android`                     |
+| Extension build    | `pnpm --filter extension build:chrome` / `build:firefox`   |
+| Lint/Format        | `pnpm lint` / `pnpm format`                                |
+| Fix lint/format    | `pnpm lint:fix` / `pnpm format:fix`                        |
+| Test               | `pnpm test`                                                |
+| Clean              | `pnpm clean`                                               |
+| Services           | `pnpm services:setup` / `services:start` / `services:stop` |
+| DB migrate         | `pnpm with-env pnpm -F @workspace/db db:migrate`           |
+| DB generate        | `pnpm with-env pnpm -F @workspace/db db:generate`          |
+| DB studio          | `pnpm with-env pnpm -F @workspace/db db:studio`            |
 
-```bash
-bun install                    # CI uses --frozen-lockfile
-bun run dev                    # dev server
-bun run build                  # production build -> dist/
-bun run typecheck              # tsc --noEmit
-bun run test                   # vitest
-bun run test:coverage          # coverage report
-bun run test:eval              # AI evaluation suite
-bunx wrangler dev --port 8799  # serve dist/ exactly as Workers does
-```
+Environment: create `.env` at repo root with `DATABASE_URL`, `PRODUCT_NAME`, `URL`, `DEFAULT_LOCALE`.
 
-`bun.lock` is the single lockfile. `npm install` or `npx` re-creates
-`package-lock.json` and breaks CI's `--frozen-lockfile` gate.
+## Code conventions
 
-`bun run lint` is a CI gate (Biome: format + lint). Errors fail the build;
-174 warnings (mostly `noExplicitAny`, `noNonNullAssertion`) are tolerated for
-now. Keep it that way — do not add `--error-on-warnings` until they're fixed.
+- TypeScript: functional, declarative; no classes
+- Naming: `isLoading`, `hasError`, `handleClick`
+- File layout: exported component → subcomponents → helpers → types
+- Error handling: guard clauses, early returns
+- JSX: declarative, minimal curly braces
+- Commits: Conventional Commits
 
-**Always lint through `bun run lint`.** Running `bunx biome` resolves the newest biome from the
-registry, not the version in `bun.lock`; a newer formatter rewrites ~16 files and turns a
-one-line fix into a repo-wide diff. If you need the binary directly, pin it:
-`bunx --bun @biomejs/biome@<version-from-bun.lock> check --write <files>`.
+## App-specific
 
-### shadcn/ui Commands (T-03e)
-```bash
-npx shadcn@latest add <component>  # Add shadcn/ui component
-npx shadcn@latest list             # List available components
-npx shadcn@latest diff             # Show component differences
-```
+**Web:** RSC by default; `use client` only when needed; `Suspense` for client components; `nuqs` for URL state; `@workspace/ui-web`. Next.js 16.4: `proxy.ts` (not middleware); error boundaries use `retry` (not `reset`); TypeScript 7 via project-local `tsc`; locale via `next/root-params` (`~/lib/i18n`).
 
-## Structure
+**Mobile:** SafeAreaProvider; minimize hooks; memoize; `expo-image`; `@workspace/ui-mobile`. To run or check the app, use `npx @expo/agent-cli` from `apps/mobile` (`status`, `dev`, `smoke`) instead of raw Expo/EAS CLI; it is experimental and falls back to Expo CLI. `expo start` also prints an Expo Device Hub link for driving simulators/emulators from the browser.
 
-What is in the repo today:
+**Extension:** background for long tasks; content scripts for DOM; WXT messaging; `@workspace/ui-web`
 
-```
-./
-├── src/                    # Vite + React 18 SPA — the shipped application
-│   ├── pages/              # landing (App.tsx), auth/*, dashboard, tailor, legal
-│   ├── components/         # JobCard, WaitlistForm, ProtectedRoute, ui/ (shadcn)
-│   ├── contexts/           # AuthContext (Supabase session)
-│   ├── lib/                # supabase client, cn(), redirect helpers
-│   └── test/               # vitest setup (happy-dom)
-├── packages/
-│   ├── api/                # Fastify modular monolith, Temporal workflows, jobs, auth
-│   ├── profile/            # claims, evidence, import/extraction
-│   ├── tailoring/          # evidence-constrained generation (T-17 engine)
-│   └── ai-gateway/         # model routing, Zod schemas, PII redaction
-├── evals/                  # evaluation datasets (protected)
-├── extension/              # WXT browser extension (T-21)
-├── supabase/               # local stack config and migrations
-├── docs/                   # PRD, TECH, DESIGN (PRD and TECH are protected)
-└── public/
-```
+## Troubleshooting
 
-**Target architecture vs. today.** `docs/TECH.md` describes a Next.js `apps/web`. It does not exist
-yet, and `extension/` lives at the repo root, not under `apps/`. Until `apps/web` exists:
-
-- A task that names `apps/web/src/...` means the equivalent path under `src/` (e.g.
-  `apps/web/src/app/tailor/` → `src/pages/TailorPage.tsx`).
-- A task that names `apps/extension/...` means `extension/`.
-- A task that names a `packages/<name>/` that does not exist yet means create that package
-  (plain TypeScript, `src/index.ts` entry, vitest next to source).
-
-Do not create an `apps/` tree to satisfy a path in a task brief. Ask on the issue if the
-mapping is unclear.
-
-## Rules
-
-- Every generated factual statement MUST trace to a verified CareerClaim.
-- Eligibility MUST run before ranking. Unknown MUST NOT become Eligible silently.
-- Sensitive fields (demographics, disability, health) MUST be user-only.
-- No secrets, PII, or raw CV content in prompts or analytics.
-- All external actions MUST be idempotent with unique user+job constraints.
-- Every automated action MUST be explainable (reason, source, evidence).
-- No model or prompt change ships without regression evaluation passing.
-- Higher-level policy restrictions cannot be overridden by lower levels.
-- Follow WCAG 2.2 AA for all user-facing interfaces.
-- Use Zod schemas for all API boundaries and AI structured output.
-
-## GitHub Workflow
-
-Work is tracked on the [NextJob Roadmap board](https://github.com/users/xb3sox/projects/11)
-(`#11`). Every open task in [TASKS.md](TASKS.md) has exactly one issue.
-
-**One issue = one task = one PR.** Do not bundle tasks; do not open a PR without an issue.
-Issue bodies follow the contract in [docs/OPERATING_MODEL.md](docs/OPERATING_MODEL.md#issue-contract):
-problem, scope, start here, command-checkable acceptance criteria, test command, guardrails.
-
-### Labels
-
-| Label | Meaning |
-| --- | --- |
-| `jules` | **Dispatch trigger.** Adding it starts a task in the Jules GitHub App ([docs](https://jules.google/docs/changelog/2025-06-26/)). Never pre-applied: the repo keeps it off ready issues so installing the app cannot spray tasks. |
-| `jules-queued` | Good agent work, but a dependency has not merged. Do not dispatch yet. |
-| `human` | Needs a person: approval, credentials, legal/compliance judgement, or an unresolved decision. |
-
-Phase lives in the project's `Phase` field, not in labels.
-
-**Ready work** = open, no `jules-queued`, no `human`, no `jules`. MVP milestone first. List it instead
-of trusting a number here:
-
-```bash
-gh issue list --state open --search '-label:jules-queued -label:human -label:jules'
-```
-
-**Status flow** = `Todo` → `In Progress` (dispatched) → `In Review` (PR open) → `Done` (merged).
-`Blocked` requires a native blocked-by, not prose.
-
-### Jules Features & Operating Contract
-
-Jules is Google's asynchronous coding agent running in an isolated cloud VM (full operating manual: [docs/JULES.md](docs/JULES.md)).
-- **Triggers:** GitHub issue label `jules` (dispatch trigger), Web UI (`jules.google.com`), CLI (`@google/jules`), or REST API (`jules.googleapis.com/v1alpha`).
-- **Autonomous Flow:** Clones `main` -> reads `AGENTS.md` context -> generates implementation plan -> executes scoped edits (<=400 lines) -> runs test gates -> opens PR with summary & optional audio changelog.
-- **Review & Feedback Loop:** Jules reads PR review comments (tag `@jules` or review directly). It acknowledges with 👀, applies requested revisions in its VM, verifies tests, and pushes commits to update the PR.
-- **Boundaries:** Never dispatch with `jules-queued` or `human`. Never touch protected paths (`evals/`, `docs/PRD.md`, `docs/TECH.md`, `packages/policy/`, `packages/eligibility/`). Jules never pushes to `main` or self-merges.
-
-### Workflow
-
-1. Pick ready work. Read its brief. **Adding `jules` dispatches the agent** — that single label is the trigger, never an assignment. The four preconditions are in [docs/JULES.md](docs/JULES.md#2-dispatch).
-2. Branch from `main`: `feat/<task-id>-<slug>` (e.g. `feat/t-18-tailoring-review-ui`).
-3. Implement only the scope in the issue. Protected paths stay untouched.
-4. Run the gates below; paste the output into the PR body.
-5. Open the PR against `main`, link the issue with `Closes #N`, and move the board item to `In Review`, then `Done` after merge.
-
-### Gates before any PR
-
-```bash
-bun run typecheck
-bun run lint
-bunx vitest run --maxWorkers 2
-bun run build
-```
-
-`bun.lock` is the single lockfile — never run `npm install`/`npx`. Install with
-`bun install --frozen-lockfile` (CI does).
-
-### Stop and comment instead of guessing when
-
-- A dependency listed on the issue is still open.
-- Acceptance criteria conflict with `docs/PRD.md` or `docs/TECH.md`.
-- The change would touch a protected path or need a new dependency.
-- The work needs a credential, a paid service, or a production action.
-
-## Completion Gates
-
-Before any feature merges to main:
-
-1. Requirements satisfied (traceable to PRD FR/NFR IDs)
-2. Acceptance criteria passing (Given/When/Then)
-3. Unit and integration tests green
-4. AI eval suite passing (no regression)
-5. Accessibility audit passing critical journeys
-6. Security review complete (no secrets in prompts, RBAC verified)
-7. Privacy controls verified (export/delete functional)
-8. Telemetry events emitted without sensitive content
-9. Documentation updated
-10. Rollback procedure documented
-
-## Boundaries
-
-**Protected — do not modify without approval:**
-- `docs/PRD.md` (product requirements authority)
-- `docs/TECH.md` (architecture authority)
-- `evals/` (evaluation datasets)
-- Policy precedence rules in `packages/policy/`
-- Eligibility final-rule logic in `packages/eligibility/`
-
-**Prohibited:**
-- Fabricating candidate experience or claims
-- Auto-approving sensitive fields
-- Sending PII to product analytics or AI providers
-- Retrying ambiguous external submissions automatically
-- Overriding Legal/Safety or Platform rules with lower-level policy
-- Shipping model changes without eval regression
-
-## References
-
-- [Product Requirements](docs/PRD.md)
-- [Technical Design](docs/TECH.md)
-- [Design System](docs/DESIGN.md)
+| Issue            | Fix                                          |
+| ---------------- | -------------------------------------------- |
+| Version mismatch | Check `package.json#packageManager`          |
+| Services refused | `pnpm services:start`, verify Docker running |
+| Env not loaded   | Create `.env` at root; use `pnpm with-env`   |
+| Module issues    | `pnpm clean && pnpm install`                 |

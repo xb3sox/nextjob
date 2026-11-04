@@ -1,0 +1,31 @@
+@import "@workspace/ui-web/globals.css";
+
+@source "../../../../../packages/ui";
+@source "../../../../../node_modules/streamdown/dist/*.js";
+
+/* c15t consent styles */
+html:root[data-theme] {
+  --c15t-primary: var(--primary);
+  --c15t-primary-hover: color-mix(in oklab, var(--primary) 80%, transparent);
+  --c15t-surface: var(--background);
+  --c15t-surface-hover: var(--accent);
+  --c15t-border: var(--border);
+  --c15t-border-hover: var(--border);
+  --c15t-text: var(--foreground);
+  --c15t-text-muted: var(--muted-foreground);
+  --c15t-text-on-primary: var(--primary-foreground);
+  --c15t-overlay: color-mix(in oklab, black 40%, transparent);
+  --c15t-switch-track: var(--input);
+  --c15t-switch-track-active: var(--primary);
+  --c15t-switch-thumb: var(--background);
+  --c15t-font-family: var(--font-sans);
+  --c15t-radius-sm: calc(var(--radius) - 4px);
+  --c15t-radius-md: calc(var(--radius) - 2px);
+  --c15t-radius-lg: var(--radius);
+
+  --legal-links-color: var(--primary);
+  --legal-links-focus-color: var(--primary);
+  --legal-links-focus-color-dark: var(--primary);
+  --legal-links-text-decoration: underline;
+  --legal-links-text-decoration-hover: none;
+}

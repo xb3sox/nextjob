@@ -1,0 +1,19 @@
+appId: com.turbostarter.core
+---
+- assertVisible:
+    id: dashboard-home
+- tapOn:
+    text: Settings
+- tapOn:
+    id: settings-account
+- tapOn:
+    id: settings-sign-out
+- tapOn:
+    text: Log out
+    index: 2
+- extendedWaitUntil:
+    visible:
+      id: welcome-get-started
+    timeout: 120000
+- assertVisible:
+    id: welcome-get-started
