@@ -333,6 +333,8 @@ export const evaluateJobFitForUser = (
   isSaved: boolean,
   canonicalJobId: string | null,
   duplicateOfIds: string[],
+  // Optimization: Allow passing precomputed fingerprint to avoid redundant SHA-256 calculation
+  precomputedFingerprint?: string,
 ): JobWithFitItem => {
   const verifiedSkills = Array.from(
     new Set(verifiedClaims.flatMap((c) => c.skills.map((s) => s.trim()))),
@@ -546,7 +548,9 @@ export const evaluateJobFitForUser = (
     requiredEducation: job.requiredEducation,
     sponsorshipAvailable: job.sponsorshipAvailable,
     allowedCountries: job.allowedCountries,
-    fingerprint: computeJobFingerprint(job.company, job.title, job.location),
+    fingerprint:
+      precomputedFingerprint ??
+      computeJobFingerprint(job.company, job.title, job.location),
     canonicalJobId,
     duplicateOfIds,
     status: job.status,
@@ -604,14 +608,19 @@ export const listJobsWithFitForUser = (
     (c) => c.verificationStatus === "verified",
   );
 
-  // Deduplication grouping by SHA-256 fingerprint
+  // Deduplication grouping by SHA-256 fingerprint:
+  // Optimization: Precompute and cache the SHA-256 fingerprint once per listing in a Map
+  // to avoid redundant cryptographic hashing in the second pass and inside evaluateJobFitForUser.
   const fingerprintGroups = new Map<string, RawJobListing[]>();
+  const jobFingerprints = new Map<RawJobListing, string>();
+
   for (const rawJob of catalog) {
     const fp = computeJobFingerprint(
       rawJob.company,
       rawJob.title,
       rawJob.location,
     );
+    jobFingerprints.set(rawJob, fp);
     const group = fingerprintGroups.get(fp) ?? [];
     group.push(rawJob);
     fingerprintGroups.set(fp, group);
@@ -620,11 +629,7 @@ export const listJobsWithFitForUser = (
   const results: JobWithFitItem[] = [];
 
   for (const rawJob of catalog) {
-    const fp = computeJobFingerprint(
-      rawJob.company,
-      rawJob.title,
-      rawJob.location,
-    );
+    const fp = jobFingerprints.get(rawJob)!;
     const group = fingerprintGroups.get(fp) ?? [rawJob];
     const canonical = group[0] ?? rawJob;
     const isDuplicate = canonical.id !== rawJob.id;
@@ -637,6 +642,20 @@ export const listJobsWithFitForUser = (
       continue;
     }
 
+    // Optimization: Early filter checks before expensive fit evaluation
+    const isSaved = store.savedJobIds.has(rawJob.id);
+    if (filter.savedOnly && !isSaved) {
+      continue;
+    }
+
+    if (
+      filter.workMode &&
+      filter.workMode !== "all" &&
+      rawJob.workMode !== filter.workMode
+    ) {
+      continue;
+    }
+
     const duplicateOfIds = group
       .filter((item) => item.id !== rawJob.id)
       .map((item) => item.id);
@@ -646,22 +665,11 @@ export const listJobsWithFitForUser = (
       verifiedClaims,
       store.preferences,
       store.profile.yearsOfExperience,
-      store.savedJobIds.has(rawJob.id),
+      isSaved,
       isDuplicate ? canonical.id : null,
       duplicateOfIds,
+      fp,
     );
-
-    if (filter.savedOnly && !evaluated.isSaved) {
-      continue;
-    }
-
-    if (
-      filter.workMode &&
-      filter.workMode !== "all" &&
-      evaluated.workMode !== filter.workMode
-    ) {
-      continue;
-    }
 
     if (
       filter.eligibility &&
