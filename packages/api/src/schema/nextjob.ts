@@ -447,7 +447,7 @@ export const careerWorkspaceResponseSchema = z.object({
     summary: z.string(),
     location: z.string(),
     yearsOfExperience: z.number(),
-     completenessScore: z.number(),
+    completenessScore: z.number(),
   }),
   claims: z.array(careerClaimItemSchema),
   evidence: z.array(careerEvidenceItemSchema),

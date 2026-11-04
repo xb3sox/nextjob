@@ -6,11 +6,11 @@ The Billing domain manages subscription plans (Free Tier, Search Pass at $39/30 
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/billing/plans` | List available subscription plans | No | Public |
-| `POST` | `/billing/subscribe` | Create Stripe checkout session for Search Pass | Yes | candidate |
-| `GET`  | `/billing/invoices` | List billing invoices and receipt receipts | Yes | candidate |
+| Method | Endpoint             | Description                                    | Auth Required | RBAC Role |
+| ------ | -------------------- | ---------------------------------------------- | ------------- | --------- |
+| `GET`  | `/billing/plans`     | List available subscription plans              | No            | Public    |
+| `POST` | `/billing/subscribe` | Create Stripe checkout session for Search Pass | Yes           | candidate |
+| `GET`  | `/billing/invoices`  | List billing invoices and receipt receipts     | Yes           | candidate |
 
 ---
 
@@ -21,6 +21,7 @@ The Billing domain manages subscription plans (Free Tier, Search Pass at $39/30 
 List active subscription tiers and feature entitlements.
 
 #### Response `200 OK`
+
 ```json
 {
   "plans": [
@@ -62,6 +63,7 @@ List active subscription tiers and feature entitlements.
 Initiate a Stripe Checkout session to purchase or renew Search Pass.
 
 #### Request Body
+
 ```json
 {
   "planId": "plan_search_pass",
@@ -71,6 +73,7 @@ Initiate a Stripe Checkout session to purchase or renew Search Pass.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "sessionId": "cs_test_a1b2c3d4e5...",
@@ -87,6 +90,7 @@ Initiate a Stripe Checkout session to purchase or renew Search Pass.
 Retrieve invoice history for candidate subscription payments.
 
 #### Response `200 OK`
+
 ```json
 {
   "invoices": [

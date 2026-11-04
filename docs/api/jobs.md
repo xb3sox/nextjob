@@ -6,12 +6,12 @@ The Jobs & Companies domain provides job discovery, search filtering, detailed j
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/jobs` | Search and discover normalized job listings | Yes | candidate, admin |
-| `GET`  | `/jobs/:id` | Get job details and requirement breakdown | Yes | candidate, admin |
-| `GET`  | `/jobs/companies` | List companies and employer details | Yes | candidate, admin |
-| `POST` | `/jobs/ingest` | Ingest and normalize raw job posting | Yes | admin |
+| Method | Endpoint          | Description                                 | Auth Required | RBAC Role        |
+| ------ | ----------------- | ------------------------------------------- | ------------- | ---------------- |
+| `GET`  | `/jobs`           | Search and discover normalized job listings | Yes           | candidate, admin |
+| `GET`  | `/jobs/:id`       | Get job details and requirement breakdown   | Yes           | candidate, admin |
+| `GET`  | `/jobs/companies` | List companies and employer details         | Yes           | candidate, admin |
+| `POST` | `/jobs/ingest`    | Ingest and normalize raw job posting        | Yes           | admin            |
 
 ---
 
@@ -22,16 +22,18 @@ The Jobs & Companies domain provides job discovery, search filtering, detailed j
 Search normalized job listings with filters for keywords, location, work mode, seniority, and salary.
 
 #### Query Parameters
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `query` | string | No | Search keywords | `Software Engineer` |
-| `workMode` | string | No | `remote` \| `hybrid` \| `onsite` | `remote` |
-| `location` | string | No | City, State, or Country | `San Francisco` |
-| `minSalary` | number | No | Minimum annual salary | `150000` |
-| `page` | number | No | Page number (default: 1) | `1` |
-| `limit` | number | No | Items per page (default: 20) | `20` |
+
+| Parameter   | Type   | Required | Description                      | Example             |
+| ----------- | ------ | -------- | -------------------------------- | ------------------- |
+| `query`     | string | No       | Search keywords                  | `Software Engineer` |
+| `workMode`  | string | No       | `remote` \| `hybrid` \| `onsite` | `remote`            |
+| `location`  | string | No       | City, State, or Country          | `San Francisco`     |
+| `minSalary` | number | No       | Minimum annual salary            | `150000`            |
+| `page`      | number | No       | Page number (default: 1)         | `1`                 |
+| `limit`     | number | No       | Items per page (default: 20)     | `20`                |
 
 #### Response `200 OK`
+
 ```json
 {
   "jobs": [
@@ -70,6 +72,7 @@ Search normalized job listings with filters for keywords, location, work mode, s
 Retrieve detailed requirements, responsibilities, and capability dimensions for a specific job posting.
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "job_77218",
@@ -84,9 +87,21 @@ Retrieve detailed requirements, responsibilities, and capability dimensions for 
   "workMode": "hybrid",
   "location": "San Francisco, CA, USA",
   "requirements": [
-    { "type": "experience", "description": "8+ years of software engineering experience", "mandatory": true },
-    { "type": "skill", "description": "Expertise in Node.js / TypeScript and PostgreSQL", "mandatory": true },
-    { "type": "authorization", "description": "Must be authorized to work in the US", "mandatory": true }
+    {
+      "type": "experience",
+      "description": "8+ years of software engineering experience",
+      "mandatory": true
+    },
+    {
+      "type": "skill",
+      "description": "Expertise in Node.js / TypeScript and PostgreSQL",
+      "mandatory": true
+    },
+    {
+      "type": "authorization",
+      "description": "Must be authorized to work in the US",
+      "mandatory": true
+    }
   ],
   "freshnessScore": 0.95,
   "status": "active",
@@ -103,6 +118,7 @@ Retrieve detailed requirements, responsibilities, and capability dimensions for 
 List normalized company entities and job posting statistics.
 
 #### Response `200 OK`
+
 ```json
 {
   "companies": [
@@ -126,6 +142,7 @@ List normalized company entities and job posting statistics.
 Ingest raw job posting data for parsing, normalization, and deduplication.
 
 #### Request Body
+
 ```json
 {
   "rawTitle": "Sr. Full-Stack Engineer (Remote - US)",
@@ -137,6 +154,7 @@ Ingest raw job posting data for parsing, normalization, and deduplication.
 ```
 
 #### Response `201 Created`
+
 ```json
 {
   "id": "job_99182",

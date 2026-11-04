@@ -6,15 +6,15 @@ The Authentication domain manages user sign-up, login, session validation, OAuth
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `POST` | `/auth/register` | Register a new user account | No | Public |
-| `POST` | `/auth/login` | Authenticate with email/password | No | Public |
-| `POST` | `/auth/logout` | End session and invalidate refresh tokens | Yes | Any |
-| `GET`  | `/auth/me` | Retrieve current authenticated user session | Yes | Any |
-| `POST` | `/auth/oauth/google` | Authenticate or register via Google OAuth | No | Public |
-| `POST` | `/auth/oauth/github` | Authenticate or register via GitHub OAuth | No | Public |
-| `POST` | `/auth/reset-password` | Request or execute password reset | No | Public |
+| Method | Endpoint               | Description                                 | Auth Required | RBAC Role |
+| ------ | ---------------------- | ------------------------------------------- | ------------- | --------- |
+| `POST` | `/auth/register`       | Register a new user account                 | No            | Public    |
+| `POST` | `/auth/login`          | Authenticate with email/password            | No            | Public    |
+| `POST` | `/auth/logout`         | End session and invalidate refresh tokens   | Yes           | Any       |
+| `GET`  | `/auth/me`             | Retrieve current authenticated user session | Yes           | Any       |
+| `POST` | `/auth/oauth/google`   | Authenticate or register via Google OAuth   | No            | Public    |
+| `POST` | `/auth/oauth/github`   | Authenticate or register via GitHub OAuth   | No            | Public    |
+| `POST` | `/auth/reset-password` | Request or execute password reset           | No            | Public    |
 
 ---
 
@@ -25,11 +25,13 @@ The Authentication domain manages user sign-up, login, session validation, OAuth
 Register a new user candidate account.
 
 #### Request Headers
+
 ```http
 Content-Type: application/json
 ```
 
 #### Request Body
+
 ```json
 {
   "email": "candidate@example.com",
@@ -39,6 +41,7 @@ Content-Type: application/json
 ```
 
 #### Response `201 Created`
+
 ```json
 {
   "user": {
@@ -55,6 +58,7 @@ Content-Type: application/json
 ```
 
 #### Example cURL
+
 ```bash
 curl -X POST https://api.nextjob.app/v1/auth/register \
   -H "Content-Type: application/json" \
@@ -70,6 +74,7 @@ curl -X POST https://api.nextjob.app/v1/auth/register \
 Authenticate with email and password to receive a JWT access token and session cookie.
 
 #### Request Body
+
 ```json
 {
   "email": "candidate@example.com",
@@ -78,6 +83,7 @@ Authenticate with email and password to receive a JWT access token and session c
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "user": {
@@ -101,11 +107,13 @@ Authenticate with email and password to receive a JWT access token and session c
 Retrieve authenticated user profile, active tenant ID, and permissions.
 
 #### Request Headers
+
 ```http
 Authorization: Bearer <access_token>
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "user": {
@@ -114,7 +122,12 @@ Authorization: Bearer <access_token>
     "fullName": "Alex Mercer",
     "role": "candidate",
     "tenantId": "tnt_cnd_98765",
-    "permissions": ["profile:read", "profile:write", "applications:read", "applications:write"]
+    "permissions": [
+      "profile:read",
+      "profile:write",
+      "applications:read",
+      "applications:write"
+    ]
   }
 }
 ```
@@ -128,11 +141,13 @@ Authorization: Bearer <access_token>
 Invalidate the current session and JWT token.
 
 #### Request Headers
+
 ```http
 Authorization: Bearer <access_token>
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "success": true,
@@ -149,6 +164,7 @@ Authorization: Bearer <access_token>
 Authenticate or register a candidate account using an OAuth authorization code.
 
 #### Request Body
+
 ```json
 {
   "code": "4/0AeaYSHC...",
@@ -157,6 +173,7 @@ Authenticate or register a candidate account using an OAuth authorization code.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "user": {
@@ -179,6 +196,7 @@ Authenticate or register a candidate account using an OAuth authorization code.
 Request a password reset email or reset password using a valid token.
 
 #### Request Body (Request Reset)
+
 ```json
 {
   "email": "candidate@example.com"
@@ -186,6 +204,7 @@ Request a password reset email or reset password using a valid token.
 ```
 
 #### Request Body (Execute Reset)
+
 ```json
 {
   "token": "rst_tok_123456",
@@ -194,6 +213,7 @@ Request a password reset email or reset password using a valid token.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "success": true,

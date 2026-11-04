@@ -273,7 +273,9 @@ export const TodayDashboard = ({
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>
-                  {isArabic ? "الوظائف الموصى بها لك اليوم" : "Recommended Jobs"}
+                  {isArabic
+                    ? "الوظائف الموصى بها لك اليوم"
+                    : "Recommended Jobs"}
                 </CardTitle>
                 <CardDescription>
                   {isArabic

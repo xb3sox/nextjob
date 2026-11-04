@@ -90,7 +90,9 @@ Skills: TypeScript, Rust, PostgreSQL`,
 
     expect(importResult.importedClaims.length).toBeGreaterThanOrEqual(1);
     for (const claim of importResult.importedClaims) {
-      expect(["pending_review", "disputed"]).toContain(claim.verificationStatus);
+      expect(["pending_review", "disputed"]).toContain(
+        claim.verificationStatus,
+      );
     }
 
     // Existing verified claims remain untouched
@@ -110,7 +112,9 @@ Skills: TypeScript, Rust, PostgreSQL`,
       },
     });
     expect(confirmed.claim.verificationStatus).toBe("verified");
-    expect(confirmed.claim.title).toBe("Principal Distributed Systems Engineer");
+    expect(confirmed.claim.title).toBe(
+      "Principal Distributed Systems Engineer",
+    );
   });
 
   // --------------------------------------------------------------------------
@@ -175,7 +179,9 @@ Skills: TypeScript, Rust, PostgreSQL`,
     }
 
     // Also verify unverified pending_review claims (e.g. AWS certification) are excluded
-    const allStatementsText = doc.statements.map((s) => s.proposedText).join(" ");
+    const allStatementsText = doc.statements
+      .map((s) => s.proposedText)
+      .join(" ");
     expect(allStatementsText).not.toContain(
       "AWS Certified Solutions Architect",
     );
@@ -281,7 +287,9 @@ Skills: TypeScript, Rust, PostgreSQL`,
         "Updated verified summary with refined architecture leadership emphasis.",
     });
 
-    expect(getUserStore(userA).applications[0]!.uiStatus).toBe("Needs Approval");
+    expect(getUserStore(userA).applications[0]!.uiStatus).toBe(
+      "Needs Approval",
+    );
 
     // Re-approve for new payload hash
     approveApplicationForSubmission(userA, {
@@ -297,7 +305,9 @@ Skills: TypeScript, Rust, PostgreSQL`,
     expect(uncertainApp.uiStatus).toBe("Submission Uncertain");
     expect(uncertainApp.internalState).toBe("SUBMITTED_UNVERIFIED");
     expect(uncertainApp.uiStatus).not.toBe("Confirmed");
-    expect(uncertainApp.receipt?.verificationStatus).toBe("SUBMITTED_UNVERIFIED");
+    expect(uncertainApp.receipt?.verificationStatus).toBe(
+      "SUBMITTED_UNVERIFIED",
+    );
     expect(verifySubmissionReceiptIntegrity(uncertainApp.receipt!)).toBe(true);
 
     // Automatic retry on an uncertain submission MUST be blocked
@@ -364,7 +374,8 @@ Skills: TypeScript, Rust, PostgreSQL`,
 
     // Conversational update creates a pending_review proposal without mutating verified claims
     const proposal = proposeConversationalCareerUpdate(userA, {
-      message: "I was promoted to Information Manager at CloudScale Technologies",
+      message:
+        "I was promoted to Information Manager at CloudScale Technologies",
     });
     expect(proposal.requiresUserApproval).toBe(true);
     expect(proposal.proposedClaim.verificationStatus).toBe("pending_review");
@@ -377,11 +388,7 @@ Skills: TypeScript, Rust, PostgreSQL`,
       includeCoverLetter: true,
     });
 
-    const exportedPdfHtml = exportTailoredDocument(
-      userA,
-      arDoc.id,
-      "pdf_html",
-    );
+    const exportedPdfHtml = exportTailoredDocument(userA, arDoc.id, "pdf_html");
     expect(exportedPdfHtml.direction).toBe("rtl");
     expect(exportedPdfHtml.content).toContain('dir="rtl"');
 
@@ -477,7 +484,9 @@ Skills: TypeScript, Rust, PostgreSQL`,
       key: "disability_status",
       label: "Voluntary Self-Identification of Disability",
     });
-    expect(afterUserOverride.effectiveClassification.riskLevel).toBe("sensitive");
+    expect(afterUserOverride.effectiveClassification.riskLevel).toBe(
+      "sensitive",
+    );
     expect(afterUserOverride.effectiveClassification.action).toBe(
       "user_only_input",
     );
@@ -532,12 +541,12 @@ Skills: TypeScript, Rust, PostgreSQL`,
   // Tailoring Evaluation Benchmark Suite (5 Datasets + 3 Evidence Scenarios)
   // --------------------------------------------------------------------------
   it("validates all 60 tailoring benchmark cases across 5 datasets and 3 evidence scenarios", () => {
-    expect(tailoringExpectedOutcomes.successCriteria.unsupportedClaims.target).toBe(
-      0,
-    );
-    expect(tailoringExpectedOutcomes.successCriteria.evidenceCoverage.target).toBe(
-      1,
-    );
+    expect(
+      tailoringExpectedOutcomes.successCriteria.unsupportedClaims.target,
+    ).toBe(0);
+    expect(
+      tailoringExpectedOutcomes.successCriteria.evidenceCoverage.target,
+    ).toBe(1);
 
     const allCases = [
       ...resumeTailoringDataset.testCases,
@@ -567,7 +576,10 @@ Skills: TypeScript, Rust, PostgreSQL`,
           ? tc.expectedOutput.sections
           : [];
       for (const sec of sections) {
-        if ("evidenceClaimId" in sec && typeof sec.evidenceClaimId === "string") {
+        if (
+          "evidenceClaimId" in sec &&
+          typeof sec.evidenceClaimId === "string"
+        ) {
           expect(rejectedSet.has(sec.evidenceClaimId)).toBe(false);
         }
         if ("evidenceClaimIds" in sec && Array.isArray(sec.evidenceClaimIds)) {

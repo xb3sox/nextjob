@@ -10,19 +10,19 @@ import {
 } from "./store";
 
 import type {
-  CareerClaimItem,
-  CareerEvidenceItem,
-  CareerPreferences,
-  CareerRevisionItem,
-  ReusableAnswerItem,
-} from "./store";
-import type {
   conversationalUpdatePayloadSchema,
   createManualClaimPayloadSchema,
   importCareerPayloadSchema,
   upsertReusableAnswerPayloadSchema,
   verifyClaimPayloadSchema,
 } from "../../schema/nextjob";
+import type {
+  CareerClaimItem,
+  CareerEvidenceItem,
+  CareerPreferences,
+  CareerRevisionItem,
+  ReusableAnswerItem,
+} from "./store";
 import type * as z from "zod";
 
 export const redactPII = (input: string): string => {
@@ -85,10 +85,14 @@ const parseJsonResume = (rawJson: string): ExtractedCandidateFact[] => {
   if (basics && typeof basics.summary === "string" && basics.summary.trim()) {
     candidates.push({
       category: "summary",
-      title: typeof basics.label === "string" ? basics.label : "Professional Summary",
+      title:
+        typeof basics.label === "string"
+          ? basics.label
+          : "Professional Summary",
       organization: null,
       location:
-        typeof (basics.location as Record<string, unknown> | undefined)?.city === "string"
+        typeof (basics.location as Record<string, unknown> | undefined)
+          ?.city === "string"
           ? String((basics.location as Record<string, unknown>).city)
           : null,
       startDate: null,
@@ -106,8 +110,10 @@ const parseJsonResume = (rawJson: string): ExtractedCandidateFact[] => {
     const entry = item as Record<string, unknown>;
     const title = asStr(entry.position ?? entry.title, "Professional Role");
     const organization = asStr(entry.name ?? entry.company, "Organization");
-    const startDate = typeof entry.startDate === "string" ? entry.startDate : null;
-    const endDate = typeof entry.endDate === "string" && entry.endDate ? entry.endDate : null;
+    const startDate =
+      typeof entry.startDate === "string" ? entry.startDate : null;
+    const endDate =
+      typeof entry.endDate === "string" && entry.endDate ? entry.endDate : null;
     const summary = asStr(
       entry.summary,
       "Delivered key engineering and business outcomes.",
@@ -134,7 +140,8 @@ const parseJsonResume = (rawJson: string): ExtractedCandidateFact[] => {
   const education = Array.isArray(parsed.education) ? parsed.education : [];
   for (const item of education) {
     const entry = item as Record<string, unknown>;
-    const studyType = typeof entry.studyType === "string" ? entry.studyType : "Degree";
+    const studyType =
+      typeof entry.studyType === "string" ? entry.studyType : "Degree";
     const area = typeof entry.area === "string" ? entry.area : "Studies";
     const institution = asStr(entry.institution, "University");
     candidates.push({
@@ -160,7 +167,8 @@ const parseJsonResume = (rawJson: string): ExtractedCandidateFact[] => {
     candidates.push({
       category: "project",
       title: name,
-      organization: typeof entry.entity === "string" ? entry.entity : "Independent",
+      organization:
+        typeof entry.entity === "string" ? entry.entity : "Independent",
       location: null,
       startDate: typeof entry.startDate === "string" ? entry.startDate : null,
       endDate: typeof entry.endDate === "string" ? entry.endDate : null,
@@ -177,7 +185,9 @@ const parseJsonResume = (rawJson: string): ExtractedCandidateFact[] => {
   return candidates;
 };
 
-const parseUnstructuredResumeText = (rawText: string): ExtractedCandidateFact[] => {
+const parseUnstructuredResumeText = (
+  rawText: string,
+): ExtractedCandidateFact[] => {
   const sanitized = redactPII(rawText);
   const lines = sanitized
     .split(/\r?\n/)
@@ -297,18 +307,25 @@ const detectClaimConflict = (
   candidate: ExtractedCandidateFact,
   existingClaims: CareerClaimItem[],
 ): CareerClaimItem["conflictDetails"] => {
-  const normOrg = candidate.organization ? normalizeToken(candidate.organization) : "";
+  const normOrg = candidate.organization
+    ? normalizeToken(candidate.organization)
+    : "";
   const normTitle = normalizeToken(candidate.title);
 
   for (const existing of existingClaims) {
-    if (existing.verificationStatus === "archived" || existing.verificationStatus === "rejected") {
+    if (
+      existing.verificationStatus === "archived" ||
+      existing.verificationStatus === "rejected"
+    ) {
       continue;
     }
     if (existing.category !== candidate.category) {
       continue;
     }
 
-    const existingOrg = existing.organization ? normalizeToken(existing.organization) : "";
+    const existingOrg = existing.organization
+      ? normalizeToken(existing.organization)
+      : "";
     const existingTitle = normalizeToken(existing.title);
 
     const sameOrg = Boolean(normOrg && existingOrg && normOrg === existingOrg);
@@ -333,7 +350,9 @@ const detectClaimConflict = (
         });
       }
 
-      if ((candidate.endDate ?? "Present") !== (existing.endDate ?? "Present")) {
+      if (
+        (candidate.endDate ?? "Present") !== (existing.endDate ?? "Present")
+      ) {
         differences.push({
           field: "endDate",
           existingValue: existing.endDate ?? "Present",
@@ -364,11 +383,16 @@ const detectClaimConflict = (
 
 export const getCareerWorkspace = (userId: string) => {
   const store = getUserStore(userId);
-  const verifiedClaims = store.claims.filter((c) => c.verificationStatus === "verified");
+  const verifiedClaims = store.claims.filter(
+    (c) => c.verificationStatus === "verified",
+  );
   const categoriesCovered = new Set(verifiedClaims.map((c) => c.category));
   const completenessScore = Math.min(
     100,
-    Math.round((categoriesCovered.size / 5) * 80 + (store.preferences.targetRoles.length > 0 ? 20 : 0)),
+    Math.round(
+      (categoriesCovered.size / 5) * 80 +
+        (store.preferences.targetRoles.length > 0 ? 20 : 0),
+    ),
   );
 
   return {
@@ -479,7 +503,9 @@ export const importCareerDocument = (
           : payload.format === "json_resume"
             ? "json_resume"
             : "resume_text",
-    title: payload.fileName ?? `Imported_${payload.format.toUpperCase()}_${now.slice(0, 10)}`,
+    title:
+      payload.fileName ??
+      `Imported_${payload.format.toUpperCase()}_${now.slice(0, 10)}`,
     fileName: payload.fileName ?? null,
     contentHash,
     extractedFactCount: createdClaims.length,
@@ -524,17 +550,25 @@ export const verifyOrUpdateCareerClaim = (
   const now = new Date().toISOString();
 
   if (payload.updates) {
-    if (payload.updates.title !== undefined) claim.title = payload.updates.title;
-    if (payload.updates.organization !== undefined) claim.organization = payload.updates.organization;
-    if (payload.updates.location !== undefined) claim.location = payload.updates.location;
-    if (payload.updates.startDate !== undefined) claim.startDate = payload.updates.startDate;
-    if (payload.updates.endDate !== undefined) claim.endDate = payload.updates.endDate;
-    if (payload.updates.isCurrent !== undefined) claim.isCurrent = payload.updates.isCurrent;
+    if (payload.updates.title !== undefined)
+      claim.title = payload.updates.title;
+    if (payload.updates.organization !== undefined)
+      claim.organization = payload.updates.organization;
+    if (payload.updates.location !== undefined)
+      claim.location = payload.updates.location;
+    if (payload.updates.startDate !== undefined)
+      claim.startDate = payload.updates.startDate;
+    if (payload.updates.endDate !== undefined)
+      claim.endDate = payload.updates.endDate;
+    if (payload.updates.isCurrent !== undefined)
+      claim.isCurrent = payload.updates.isCurrent;
     if (payload.updates.description !== undefined) {
       claim.description = redactPII(payload.updates.description);
     }
-    if (payload.updates.skills !== undefined) claim.skills = payload.updates.skills;
-    if (payload.updates.metrics !== undefined) claim.metrics = payload.updates.metrics;
+    if (payload.updates.skills !== undefined)
+      claim.skills = payload.updates.skills;
+    if (payload.updates.metrics !== undefined)
+      claim.metrics = payload.updates.metrics;
   }
 
   switch (payload.action) {
@@ -562,9 +596,15 @@ export const verifyOrUpdateCareerClaim = (
       break;
     case "resolve_conflict_accept_proposed": {
       if (claim.conflictWithClaimId) {
-        const existingClaim = store.claims.find((c) => c.id === claim.conflictWithClaimId);
+        const existingClaim = store.claims.find(
+          (c) => c.id === claim.conflictWithClaimId,
+        );
         if (existingClaim) {
-          assertResourceOwnership(userId, existingClaim.userId, "existing career claim");
+          assertResourceOwnership(
+            userId,
+            existingClaim.userId,
+            "existing career claim",
+          );
           existingClaim.verificationStatus = "archived";
           existingClaim.updatedAt = now;
         }
@@ -589,7 +629,8 @@ export const verifyOrUpdateCareerClaim = (
     claimId: claim.id,
     action: payload.action,
     actor: userId,
-    reason: payload.reason ?? `User executed ${payload.action} on career claim.`,
+    reason:
+      payload.reason ?? `User executed ${payload.action} on career claim.`,
     previousValue: previousSnapshot,
     newValue: {
       title: claim.title,
@@ -676,15 +717,22 @@ export const proposeConversationalCareerUpdate = (
 
   let category: CareerClaimItem["category"] = "experience";
   let title = "Career Update";
-  let organization: string | null = store.claims.find((c) => c.category === "experience")?.organization ?? "Current Organization";
+  let organization: string | null =
+    store.claims.find((c) => c.category === "experience")?.organization ??
+    "Current Organization";
 
-  const promotionMatch = /promoted\s+to\s+([A-Za-z0-9\s/&+-]+?)(?:\s+at\s+([A-Za-z0-9\s.&+-]+))?[.!]*$/i.exec(
-    message,
-  );
-  const certMatch = /(?:earned|completed|certified\s+in)\s+([A-Za-z0-9\s/&+-]+)[.!]*$/i.exec(message);
-  const skillMatch = /(?:learned|added\s+skills?|proficient\s+in)\s+([A-Za-z0-9\s,+#.-]+)[.!]*$/i.exec(
-    message,
-  );
+  const promotionMatch =
+    /promoted\s+to\s+([A-Za-z0-9\s/&+-]+?)(?:\s+at\s+([A-Za-z0-9\s.&+-]+))?[.!]*$/i.exec(
+      message,
+    );
+  const certMatch =
+    /(?:earned|completed|certified\s+in)\s+([A-Za-z0-9\s/&+-]+)[.!]*$/i.exec(
+      message,
+    );
+  const skillMatch =
+    /(?:learned|added\s+skills?|proficient\s+in)\s+([A-Za-z0-9\s,+#.-]+)[.!]*$/i.exec(
+      message,
+    );
 
   if (promotionMatch) {
     category = "experience";
@@ -751,7 +799,8 @@ export const proposeConversationalCareerUpdate = (
     claimId: proposedClaim.id,
     action: "conversational_proposal",
     actor: "ai_assistant",
-    reason: "Proposed structured career claim from conversational input; awaiting user approval.",
+    reason:
+      "Proposed structured career claim from conversational input; awaiting user approval.",
     previousValue: null,
     newValue: {
       title: proposedClaim.title,
@@ -782,7 +831,8 @@ export const updateCareerPreferences = (
     claimId: null,
     action: "preferences_updated",
     actor: userId,
-    reason: "Updated career goals, salary expectations, and automation preferences.",
+    reason:
+      "Updated career goals, salary expectations, and automation preferences.",
     previousValue: null,
     newValue: preferences as unknown as Record<string, unknown>,
     createdAt: new Date().toISOString(),
@@ -851,7 +901,9 @@ export const upsertReusableAnswer = (
 
 export const exportProfileAsJsonResume = (userId: string) => {
   const store = getUserStore(userId);
-  const verifiedClaims = store.claims.filter((c) => c.verificationStatus === "verified");
+  const verifiedClaims = store.claims.filter(
+    (c) => c.verificationStatus === "verified",
+  );
 
   const work = verifiedClaims
     .filter((c) => c.category === "experience")
@@ -889,7 +941,8 @@ export const exportProfileAsJsonResume = (userId: string) => {
   );
 
   return {
-    $schema: "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+    $schema:
+      "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
     basics: {
       name: userId,
       label: store.profile.headline,

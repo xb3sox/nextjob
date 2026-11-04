@@ -6,11 +6,11 @@ The Eligibility Assessment domain executes deterministic rule evaluation for can
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `POST` | `/eligibility/assess` | Evaluate candidate eligibility against a specific job | Yes | candidate |
-| `GET`  | `/eligibility/assessments` | List past eligibility assessment results | Yes | candidate |
-| `GET`  | `/eligibility/assessments/:id` | Get single detailed assessment breakdown | Yes | candidate |
+| Method | Endpoint                       | Description                                           | Auth Required | RBAC Role |
+| ------ | ------------------------------ | ----------------------------------------------------- | ------------- | --------- |
+| `POST` | `/eligibility/assess`          | Evaluate candidate eligibility against a specific job | Yes           | candidate |
+| `GET`  | `/eligibility/assessments`     | List past eligibility assessment results              | Yes           | candidate |
+| `GET`  | `/eligibility/assessments/:id` | Get single detailed assessment breakdown              | Yes           | candidate |
 
 ---
 
@@ -21,6 +21,7 @@ The Eligibility Assessment domain executes deterministic rule evaluation for can
 Run the deterministic Eligibility Engine for the candidate against a specified job posting.
 
 #### Request Body
+
 ```json
 {
   "jobId": "job_77218"
@@ -28,6 +29,7 @@ Run the deterministic Eligibility Engine for the candidate against a specified j
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "assessmentId": "elg_991823",
@@ -61,6 +63,7 @@ Run the deterministic Eligibility Engine for the candidate against a specified j
 ```
 
 #### Overall Status Definitions
+
 - `ELIGIBLE`: All mandatory criteria explicitly verified.
 - `INELIGIBLE`: Fails one or more non-negotiable requirements (e.g. unauthorized location or missing mandatory license).
 - `UNKNOWN`: Insufficient evidence to verify one or more hard requirements. Defaults to UNKNOWN to maintain ≤2% false-positive rate threshold.
@@ -74,10 +77,12 @@ Run the deterministic Eligibility Engine for the candidate against a specified j
 Retrieve candidate eligibility assessment records.
 
 #### Query Parameters
+
 - `jobId` (optional): Filter assessments by specific job ID.
 - `status` (optional): `ELIGIBLE` | `INELIGIBLE` | `UNKNOWN`.
 
 #### Response `200 OK`
+
 ```json
 {
   "assessments": [
@@ -101,6 +106,7 @@ Retrieve candidate eligibility assessment records.
 Get comprehensive breakdown for a single eligibility assessment.
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "elg_991823",

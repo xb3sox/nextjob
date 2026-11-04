@@ -20,6 +20,7 @@ The NextJob API is designed as a Fastify modular monolith providing a predictabl
 ### 2.1 Authentication Methods
 
 The API supports two authentication mechanisms:
+
 1. **Bearer Token (JWT):** Pass the access token in the standard HTTP authorization header.
    ```http
    Authorization: Bearer <your_access_token>
@@ -29,6 +30,7 @@ The API supports two authentication mechanisms:
 ### 2.2 Tenant Isolation
 
 NextJob strictly enforces multi-tenant isolation. Every query and data access is scoped to a specific tenant (`tenant_id`).
+
 - Pass the tenant context using the `X-Tenant-ID` header if operating in multi-tenant or organization mode:
   ```http
   X-Tenant-ID: tnt_123456789
@@ -39,23 +41,23 @@ NextJob strictly enforces multi-tenant isolation. Every query and data access is
 
 NextJob enforces role-based permissions across four primary roles:
 
-| Role | Access Scope | Description |
-|------|--------------|-------------|
-| `candidate` | Self data only | Default role for individual job seekers. |
+| Role                 | Access Scope      | Description                                          |
+| -------------------- | ----------------- | ---------------------------------------------------- |
+| `candidate`          | Self data only    | Default role for individual job seekers.             |
 | `organization_admin` | Cohort / Org data | Managed access for institutional/org administrators. |
-| `admin` | System management | Operations and user support staff. |
-| `super_admin` | Global platform | Full administrative control and cross-tenant access. |
+| `admin`              | System management | Operations and user support staff.                   |
+| `super_admin`        | Global platform   | Full administrative control and cross-tenant access. |
 
 ---
 
 ## 3. Standard Headers
 
-| Header | Required | Description | Example |
-|--------|----------|-------------|---------|
-| `Authorization` | Yes (Protected) | Bearer JWT token | `Bearer eyJhbGci...` |
-| `X-Tenant-ID` | Optional | Explicit tenant identifier | `tnt_8f9a2b1c` |
-| `Content-Type` | Yes (POST/PUT) | Request payload content type | `application/json` |
-| `X-Correlation-ID` | Optional | Request correlation ID for tracing | `req_9921ab02` |
+| Header             | Required        | Description                        | Example              |
+| ------------------ | --------------- | ---------------------------------- | -------------------- |
+| `Authorization`    | Yes (Protected) | Bearer JWT token                   | `Bearer eyJhbGci...` |
+| `X-Tenant-ID`      | Optional        | Explicit tenant identifier         | `tnt_8f9a2b1c`       |
+| `Content-Type`     | Yes (POST/PUT)  | Request payload content type       | `application/json`   |
+| `X-Correlation-ID` | Optional        | Request correlation ID for tracing | `req_9921ab02`       |
 
 ---
 
@@ -63,14 +65,15 @@ NextJob enforces role-based permissions across four primary roles:
 
 API requests are subject to rate limiting based on authentication status and user tier:
 
-| Tier | Rate Limit |
-|------|------------|
-| Unauthenticated | 60 requests / minute |
-| Free Candidate | 300 requests / minute |
-| Search Pass / Pro | 1,200 requests / minute |
+| Tier               | Rate Limit              |
+| ------------------ | ----------------------- |
+| Unauthenticated    | 60 requests / minute    |
+| Free Candidate     | 300 requests / minute   |
+| Search Pass / Pro  | 1,200 requests / minute |
 | Organization Admin | 3,000 requests / minute |
 
 Rate limit status is returned in every API response header:
+
 - `X-RateLimit-Limit`: Maximum requests allowed in the window.
 - `X-RateLimit-Remaining`: Remaining requests in current window.
 - `X-RateLimit-Reset`: Unix timestamp when the current window resets.
@@ -101,17 +104,17 @@ Errors follow a standardized JSON payload structure:
 
 ### Common HTTP Status Codes
 
-| Code | Meaning | Cause |
-|------|---------|-------|
-| `200 OK` | Success | Request succeeded. |
-| `201 Created` | Resource Created | Resource successfully created. |
-| `400 Bad Request` | Client Error | Invalid parameter or payload. |
-| `401 Unauthorized` | Unauthenticated | Missing or expired token/session. |
-| `403 Forbidden` | Access Denied | Insufficient permissions for role. |
-| `404 Not Found` | Not Found | Requested resource does not exist. |
-| `409 Conflict` | Resource Conflict | Duplicate submission or version conflict. |
-| `429 Too Many Requests` | Rate Limited | Exceeded rate quota. |
-| `500 Internal Error` | Server Error | An unexpected error occurred. |
+| Code                    | Meaning           | Cause                                     |
+| ----------------------- | ----------------- | ----------------------------------------- |
+| `200 OK`                | Success           | Request succeeded.                        |
+| `201 Created`           | Resource Created  | Resource successfully created.            |
+| `400 Bad Request`       | Client Error      | Invalid parameter or payload.             |
+| `401 Unauthorized`      | Unauthenticated   | Missing or expired token/session.         |
+| `403 Forbidden`         | Access Denied     | Insufficient permissions for role.        |
+| `404 Not Found`         | Not Found         | Requested resource does not exist.        |
+| `409 Conflict`          | Resource Conflict | Duplicate submission or version conflict. |
+| `429 Too Many Requests` | Rate Limited      | Exceeded rate quota.                      |
+| `500 Internal Error`    | Server Error      | An unexpected error occurred.             |
 
 ---
 

@@ -6,12 +6,12 @@ The Your Profile domain manages factual candidate career claims (employment, ski
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/profile/claims` | List candidate career claims with evidence status | Yes | candidate |
-| `POST` | `/profile/verify` | Verify, edit, remove, or mark claim unverified | Yes | candidate |
-| `POST` | `/profile/evidence` | Upload evidence document to S3 storage | Yes | candidate |
-| `POST` | `/profile/import` | Import PDF/DOCX resume and extract claims | Yes | candidate |
+| Method | Endpoint            | Description                                       | Auth Required | RBAC Role |
+| ------ | ------------------- | ------------------------------------------------- | ------------- | --------- |
+| `GET`  | `/profile/claims`   | List candidate career claims with evidence status | Yes           | candidate |
+| `POST` | `/profile/verify`   | Verify, edit, remove, or mark claim unverified    | Yes           | candidate |
+| `POST` | `/profile/evidence` | Upload evidence document to S3 storage            | Yes           | candidate |
+| `POST` | `/profile/import`   | Import PDF/DOCX resume and extract claims         | Yes           | candidate |
 
 ---
 
@@ -22,6 +22,7 @@ The Your Profile domain manages factual candidate career claims (employment, ski
 Retrieve all structured claims for the authenticated candidate along with linked evidence IDs and verification status.
 
 #### Response `200 OK`
+
 ```json
 {
   "claims": [
@@ -62,6 +63,7 @@ Retrieve all structured claims for the authenticated candidate along with linked
 Execute a verification action (`confirm`, `edit`, `remove`, `mark_unverified`) on one or more career claims.
 
 #### Request Body
+
 ```json
 {
   "claimId": "clm_exp_001",
@@ -74,6 +76,7 @@ Execute a verification action (`confirm`, `edit`, `remove`, `mark_unverified`) o
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "claim": {
@@ -95,16 +98,19 @@ Execute a verification action (`confirm`, `edit`, `remove`, `mark_unverified`) o
 Upload evidence document (PDF, DOCX, image) to secure S3 storage and generate signed access URLs.
 
 #### Request Headers
+
 ```http
 Content-Type: multipart/form-data
 ```
 
 #### Form Data Parameters
+
 - `file`: Document binary file (PDF / DOCX)
 - `claimId`: (Optional) Associated claim ID
 - `documentType`: `resume` | `transcript` | `certificate` | `employment_letter`
 
 #### Response `201 Created`
+
 ```json
 {
   "evidence": {
@@ -129,14 +135,17 @@ Content-Type: multipart/form-data
 Upload a CV/Resume document for automated AI extraction into candidate CareerClaims.
 
 #### Request Headers
+
 ```http
 Content-Type: multipart/form-data
 ```
 
 #### Form Data Parameters
+
 - `file`: Resume file (PDF or DOCX, max 10MB)
 
 #### Response `200 OK`
+
 ```json
 {
   "importedEvidenceId": "evd_doc_99182",

@@ -15,8 +15,8 @@ import {
   upsertGlobalJobListings,
 } from "./store";
 
-import type { CareerClaimType } from "@workspace/db/schema";
 import type { CareerClaimItem, RawJobListing } from "./store";
+import type { CareerClaimType } from "@workspace/db/schema";
 
 export interface PostgresSyncSummary {
   connected: boolean;
@@ -282,7 +282,9 @@ export const syncUserWorkspaceWithPostgres = async (
       syncedApplicationsCount: store.applications.length,
       syncedAt,
       error:
-        err instanceof Error ? err.message : "PostgreSQL connection unavailable",
+        err instanceof Error
+          ? err.message
+          : "PostgreSQL connection unavailable",
     };
   }
 };

@@ -6,11 +6,11 @@ The Admin Console domain provides system oversight for platform administrators, 
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/admin/users` | List platform users with filter options | Yes | admin, super_admin |
-| `GET`  | `/admin/connectors` | Monitor ATS connector execution health | Yes | admin, super_admin |
-| `POST` | `/admin/kill-switch` | Activate emergency kill-switch for an ATS connector | Yes | super_admin |
+| Method | Endpoint             | Description                                         | Auth Required | RBAC Role          |
+| ------ | -------------------- | --------------------------------------------------- | ------------- | ------------------ |
+| `GET`  | `/admin/users`       | List platform users with filter options             | Yes           | admin, super_admin |
+| `GET`  | `/admin/connectors`  | Monitor ATS connector execution health              | Yes           | admin, super_admin |
+| `POST` | `/admin/kill-switch` | Activate emergency kill-switch for an ATS connector | Yes           | super_admin        |
 
 ---
 
@@ -21,10 +21,12 @@ The Admin Console domain provides system oversight for platform administrators, 
 List platform user accounts with role, tenant ID, and account status filters.
 
 #### Query Parameters
+
 - `role` (optional): `candidate` | `organization_admin` | `admin` | `super_admin`
 - `status` (optional): `active` | `suspended`
 
 #### Response `200 OK`
+
 ```json
 {
   "users": [
@@ -51,6 +53,7 @@ List platform user accounts with role, tenant ID, and account status filters.
 View real-time operational metrics, error rates, and status for all ATS connectors (Greenhouse, Lever, Workday, iCIMS).
 
 #### Response `200 OK`
+
 ```json
 {
   "connectors": [
@@ -85,6 +88,7 @@ View real-time operational metrics, error rates, and status for all ATS connecto
 Immediately stop execution of a specific ATS connector in case of upstream UI breakage or unexpected behavior.
 
 #### Request Body
+
 ```json
 {
   "connectorName": "workday",
@@ -94,6 +98,7 @@ Immediately stop execution of a specific ATS connector in case of upstream UI br
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "connectorName": "workday",

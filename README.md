@@ -12,15 +12,15 @@ It merges the production domain engines from [`xb3sox/nextjob`](https://github.c
    - Connects to permitted public job feeds (Remotive public API + Greenhouse/Lever normalized schema) with SHA-256 deduplication and active/expired tracking.
    - Evaluates hard eligibility across 10 dimensions (`location`, `work_authorization`, `sponsorship`, `license`, `certification`, `education`, `experience`, `skill`, `language`, `clearance`) with a verified **0% false-positive rate** across the 114-case benchmark dataset.
    - Answers all 5 mandatory Job Fit questions for every listing:
-     1. *Why does this match me?*
-     2. *What requirements do I meet?*
-     3. *What am I missing?* (Separated into **Required** vs **Preferred** gaps)
-     4. *Is the opportunity credible?*
-     5. *What happens when I apply?*
+     1. _Why does this match me?_
+     2. _What requirements do I meet?_
+     3. _What am I missing?_ (Separated into **Required** vs **Preferred** gaps)
+     4. _Is the opportunity credible?_
+     5. _What happens when I apply?_
 3. **My Career (`/dashboard/career`) — Single Authoritative Career Identity**
    - Import CVs/Resumes (PDF, DOCX, Text) and **JSON Resume** files into structured claims (`summary`, `experience`, `education`, `skill`, `project`, `certification`, `achievement`) with SHA-256 provenance and PII redaction.
    - **Automatic Conflict Detection**: Highlights employment date or role differences against existing verified claims for explicit user resolution instead of silently overwriting verified facts.
-   - **Approval-Gated Conversational Updates**: Natural language career updates (e.g., *"I was promoted to Information Manager"*) create structured proposals in `pending_review` state that only modify the authoritative profile after explicit user confirmation.
+   - **Approval-Gated Conversational Updates**: Natural language career updates (e.g., _"I was promoted to Information Manager"_) create structured proposals in `pending_review` state that only modify the authoritative profile after explicit user confirmation.
    - **Preferences & Reusable Answers**: Target roles, locations, work modes, salary floor, excluded companies, and verified screening answers.
 4. **Applications (`/dashboard/applications`) — 12-State Pipeline, Evidence-Constrained CV Studio & Cryptographic Receipts**
    - Tracks all 12 lifecycle states: `Saved`, `Preparing`, `Needs Approval`, `Ready`, `Submitting`, `Submission Uncertain`, `Confirmed`, `Interview`, `Offer`, `Rejected`, `Withdrawn`, and `Failed`.

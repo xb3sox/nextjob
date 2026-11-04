@@ -15,7 +15,10 @@ export interface GreenhouseConnectorOptions {
 export interface GreenhouseConnectorInstance {
   detect: (root?: ParentNode) => ConnectorDetectionResult;
   isDuplicate: (jobId: string, idempotencyKey?: string) => boolean;
-  fill: (root: ParentNode, payload: ConnectorFillPayload) => ConnectorFillResult;
+  fill: (
+    root: ParentNode,
+    payload: ConnectorFillPayload,
+  ) => ConnectorFillResult;
   recordSubmission: (
     jobId: string,
     idempotencyKey: string,
@@ -162,7 +165,9 @@ const resolveFieldMappings = (
     }
 
     if (
-      (auto === "email" || el.type === "email" || fieldDesc.includes("email")) &&
+      (auto === "email" ||
+        el.type === "email" ||
+        fieldDesc.includes("email")) &&
       profile.email
     ) {
       mappings.push({
@@ -286,13 +291,7 @@ export const detectGreenhouseForm = (
 
   const isDetected = Boolean(form || isUrlGreenhouse);
   const confidence =
-    form && isUrlGreenhouse
-      ? 1.0
-      : form
-        ? 0.95
-        : isUrlGreenhouse
-          ? 0.8
-          : 0;
+    form && isUrlGreenhouse ? 1.0 : form ? 0.95 : isUrlGreenhouse ? 0.8 : 0;
 
   let jobId: string | undefined;
   if (form) {

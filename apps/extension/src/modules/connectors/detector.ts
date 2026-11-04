@@ -141,10 +141,7 @@ export const detectFields = (
       element: el,
       key,
       name:
-        el.name ||
-        el.id ||
-        el.getAttribute("data-automation-id") ||
-        "unnamed",
+        el.name || el.id || el.getAttribute("data-automation-id") || "unnamed",
       type: el.type || "select",
       required: el.required || el.getAttribute("aria-required") === "true",
       confidence,
@@ -259,7 +256,9 @@ export const runSyntheticAtsFill = (
         });
       }
     } else {
-      logs.push(`[FILL:SKIPPED] ${field.key} (${field.name}) -> No profile value`);
+      logs.push(
+        `[FILL:SKIPPED] ${field.key} (${field.name}) -> No profile value`,
+      );
     }
   }
 

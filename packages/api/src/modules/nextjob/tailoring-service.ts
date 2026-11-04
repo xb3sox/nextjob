@@ -10,12 +10,12 @@ import {
   getUserStore,
 } from "./store";
 
-import type { CareerClaimItem, TailoredDocumentItem } from "./store";
 import type {
   generateTailoredDocumentPayloadSchema,
   tailoredStatementSchema,
   updateTailoredStatementPayloadSchema,
 } from "../../schema/nextjob";
+import type { CareerClaimItem, TailoredDocumentItem } from "./store";
 import type * as z from "zod";
 
 type TailoredStatement = z.infer<typeof tailoredStatementSchema>;
@@ -27,7 +27,10 @@ const computeDocumentPayloadHash = (
 ): string => {
   const activeStatements = statements
     .filter((s) => s.status !== "rejected")
-    .map((s) => `${s.id}:${s.section}:${s.proposedText}:${s.sourceClaimIds.join(",")}`)
+    .map(
+      (s) =>
+        `${s.id}:${s.section}:${s.proposedText}:${s.sourceClaimIds.join(",")}`,
+    )
     .join("|");
   return computeSha256(`${summary}||${activeStatements}||${coverLetter ?? ""}`);
 };
@@ -43,7 +46,9 @@ export const verifyStatementAgainstClaims = (
   if (sourceClaims.length === 0) {
     return {
       isValid: false,
-      unsupportedReasons: ["Statement has no backing verified career claim IDs."],
+      unsupportedReasons: [
+        "Statement has no backing verified career claim IDs.",
+      ],
     };
   }
 
@@ -86,13 +91,15 @@ export const generateTailoredDocumentForJob = (
 
   // Strictly filter to verified claims with confidence >= 0.8
   const verifiedClaims = store.claims.filter(
-    (claim) => claim.verificationStatus === "verified" && claim.confidence >= 0.8,
+    (claim) =>
+      claim.verificationStatus === "verified" && claim.confidence >= 0.8,
   );
 
   if (verifiedClaims.length === 0) {
     throw new HttpException(HttpStatusCode.UNPROCESSABLE_ENTITY, {
       code: "error.invalid",
-      message: "At least one verified career claim is required before tailoring a resume.",
+      message:
+        "At least one verified career claim is required before tailoring a resume.",
     });
   }
 
@@ -146,7 +153,9 @@ export const generateTailoredDocumentForJob = (
     usedClaimIds.add(claim.id);
     const dateRange = `${claim.startDate ?? "N/A"} – ${claim.isCurrent ? (isArabic ? "حتى الآن" : "Present") : (claim.endDate ?? "N/A")}`;
     const metricsSuffix =
-      claim.metrics.length > 0 ? ` Key outcomes: ${claim.metrics.join("; ")}.` : "";
+      claim.metrics.length > 0
+        ? ` Key outcomes: ${claim.metrics.join("; ")}.`
+        : "";
 
     const proposedExpText = `${claim.title} at ${claim.organization ?? "Organization"} (${dateRange}): ${claim.description}${metricsSuffix}`;
 
@@ -168,9 +177,7 @@ export const generateTailoredDocumentForJob = (
   // 3. Verified Skills statement (never includes missing job skills that the user lacks!)
   const prioritizedSkills = [
     ...matchedJobSkills,
-    ...allVerifiedSkills.filter(
-      (s) => !matchedJobSkills.includes(s),
-    ),
+    ...allVerifiedSkills.filter((s) => !matchedJobSkills.includes(s)),
   ];
   const skillBackingClaimIds = verifiedClaims
     .filter((c) => c.skills.length > 0)
@@ -183,7 +190,9 @@ export const generateTailoredDocumentForJob = (
     originalText: allVerifiedSkills.join(", "),
     proposedText: prioritizedSkills.join(", "),
     sourceClaimIds:
-      skillBackingClaimIds.length > 0 ? skillBackingClaimIds : [summaryClaim.id],
+      skillBackingClaimIds.length > 0
+        ? skillBackingClaimIds
+        : [summaryClaim.id],
     confidence: 0.99,
     status: "accepted",
     relevanceReason:
@@ -191,7 +200,9 @@ export const generateTailoredDocumentForJob = (
   });
 
   // 4. Projects & Education statements
-  for (const projClaim of verifiedClaims.filter((c) => c.category === "project")) {
+  for (const projClaim of verifiedClaims.filter(
+    (c) => c.category === "project",
+  )) {
     usedClaimIds.add(projClaim.id);
     statements.push({
       id: createId("stmt-prj"),
@@ -201,11 +212,14 @@ export const generateTailoredDocumentForJob = (
       sourceClaimIds: [projClaim.id],
       confidence: projClaim.confidence,
       status: "accepted",
-      relevanceReason: "Demonstrates hands-on project execution backed by verified profile evidence.",
+      relevanceReason:
+        "Demonstrates hands-on project execution backed by verified profile evidence.",
     });
   }
 
-  for (const eduClaim of verifiedClaims.filter((c) => c.category === "education")) {
+  for (const eduClaim of verifiedClaims.filter(
+    (c) => c.category === "education",
+  )) {
     usedClaimIds.add(eduClaim.id);
     statements.push({
       id: createId("stmt-edu"),
@@ -215,7 +229,8 @@ export const generateTailoredDocumentForJob = (
       sourceClaimIds: [eduClaim.id],
       confidence: eduClaim.confidence,
       status: "accepted",
-      relevanceReason: "Verifies academic credentials with exact institution and graduation dates.",
+      relevanceReason:
+        "Verifies academic credentials with exact institution and graduation dates.",
     });
   }
 
@@ -388,7 +403,9 @@ export const exportTailoredDocument = (
 
   assertResourceOwnership(userId, doc.userId, "tailored document");
 
-  const activeStatements = doc.statements.filter((s) => s.status !== "rejected");
+  const activeStatements = doc.statements.filter(
+    (s) => s.status !== "rejected",
+  );
   const direction = doc.language === "ar" ? "rtl" : "ltr";
   const safeBaseName = `${doc.targetCompany}_${doc.targetRole}_Resume`
     .replace(/[^a-zA-Z0-9_-]/g, "_")
@@ -442,10 +459,12 @@ export const exportTailoredDocument = (
       escapeXml(doc.title),
       escapeXml(`Target Role: ${doc.targetRole} at ${doc.targetCompany}`),
       escapeXml(`Summary: ${doc.summary}`),
-      ...activeStatements.map(
-        (s) => escapeXml(`[${s.section.toUpperCase()}] ${s.proposedText}`),
+      ...activeStatements.map((s) =>
+        escapeXml(`[${s.section.toUpperCase()}] ${s.proposedText}`),
       ),
-      ...(doc.coverLetter ? [escapeXml(`Cover Letter:\n${doc.coverLetter}`)] : []),
+      ...(doc.coverLetter
+        ? [escapeXml(`Cover Letter:\n${doc.coverLetter}`)]
+        : []),
     ]
       .map(
         (text) =>
@@ -465,7 +484,8 @@ export const exportTailoredDocument = (
       documentId: doc.id,
       format: "docx",
       fileName: `${safeBaseName}.doc`,
-      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      mimeType:
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       direction,
       content: wordXml,
     };

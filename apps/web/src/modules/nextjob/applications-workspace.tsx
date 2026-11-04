@@ -272,7 +272,7 @@ export const ApplicationsWorkspace = ({
     null;
 
   const selectedDoc = selectedApp?.tailoredDocumentId
-    ? documents.find((d) => d.id === selectedApp.tailoredDocumentId) ?? null
+    ? (documents.find((d) => d.id === selectedApp.tailoredDocumentId) ?? null)
     : null;
 
   return (
@@ -568,9 +568,7 @@ export const ApplicationsWorkspace = ({
                       />
                       <Button
                         size="sm"
-                        disabled={
-                          isLoading || selectedApp.uiStatus !== "Ready"
-                        }
+                        disabled={isLoading || selectedApp.uiStatus !== "Ready"}
                         onClick={() =>
                           void handleRecordSubmission(selectedApp.id, true)
                         }
@@ -585,9 +583,7 @@ export const ApplicationsWorkspace = ({
                       <Button
                         size="sm"
                         variant="outline"
-                        disabled={
-                          isLoading || selectedApp.uiStatus !== "Ready"
-                        }
+                        disabled={isLoading || selectedApp.uiStatus !== "Ready"}
                         onClick={() =>
                           void handleRecordSubmission(selectedApp.id, false)
                         }

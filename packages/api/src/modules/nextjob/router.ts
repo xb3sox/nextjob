@@ -71,14 +71,22 @@ export const nextjobRouter = new Hono()
   .post("/career/import", validate("json", importCareerPayloadSchema), (c) => {
     return c.json(importCareerDocument(c.var.user.id, c.req.valid("json")));
   })
-  .post("/career/claims/verify", validate("json", verifyClaimPayloadSchema), (c) => {
-    return c.json(verifyOrUpdateCareerClaim(c.var.user.id, c.req.valid("json")));
-  })
+  .post(
+    "/career/claims/verify",
+    validate("json", verifyClaimPayloadSchema),
+    (c) => {
+      return c.json(
+        verifyOrUpdateCareerClaim(c.var.user.id, c.req.valid("json")),
+      );
+    },
+  )
   .post(
     "/career/claims/manual",
     validate("json", createManualClaimPayloadSchema),
     (c) => {
-      return c.json(createManualCareerClaim(c.var.user.id, c.req.valid("json")));
+      return c.json(
+        createManualCareerClaim(c.var.user.id, c.req.valid("json")),
+      );
     },
   )
   .post(
@@ -90,9 +98,15 @@ export const nextjobRouter = new Hono()
       );
     },
   )
-  .put("/career/preferences", validate("json", careerPreferencesSchema), (c) => {
-    return c.json(updateCareerPreferences(c.var.user.id, c.req.valid("json")));
-  })
+  .put(
+    "/career/preferences",
+    validate("json", careerPreferencesSchema),
+    (c) => {
+      return c.json(
+        updateCareerPreferences(c.var.user.id, c.req.valid("json")),
+      );
+    },
+  )
   .post("/career/preferences/reset", (c) => {
     return c.json(resetCareerPreferences(c.var.user.id));
   })

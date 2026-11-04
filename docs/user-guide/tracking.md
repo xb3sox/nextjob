@@ -28,6 +28,6 @@ NextJob generates an immutable submission receipt for every completed applicatio
 
 Keep your tracker accurate by recording updates:
 
-- **Update Status:** Change an application's state to *Interview*, *Offer*, *Rejected*, *Withdrawn*, or *Hired*.
+- **Update Status:** Change an application's state to _Interview_, _Offer_, _Rejected_, _Withdrawn_, or _Hired_.
 - **Add Notes:** Record interview dates, recruiter contacts, or feedback notes.
 - **Withdrawal:** Mark applications as withdrawn if you accept another offer or choose to opt out.

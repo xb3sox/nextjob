@@ -108,10 +108,7 @@ export const careerClaim = pgTable(
     type: text().$type<CareerClaimType>().notNull(),
     title: text().notNull(),
     description: text(),
-    content: jsonb()
-      .$type<Record<string, unknown>>()
-      .notNull()
-      .default({}),
+    content: jsonb().$type<Record<string, unknown>>().notNull().default({}),
     evidenceId: text("evidence_id").references(() => careerEvidence.id, {
       onDelete: "set null",
     }),
@@ -159,7 +156,8 @@ export const careerRevision = pgTable(
         | "conversational_approved"
       >()
       .notNull(),
-    previousSnapshot: jsonb("previous_snapshot").$type<Record<string, unknown>>(),
+    previousSnapshot:
+      jsonb("previous_snapshot").$type<Record<string, unknown>>(),
     newSnapshot: jsonb("new_snapshot")
       .$type<Record<string, unknown>>()
       .notNull(),
@@ -413,10 +411,7 @@ export const jobApplication = pgTable(
     documentId: text("document_id").references(() => tailoredDocument.id, {
       onDelete: "set null",
     }),
-    status: text()
-      .$type<ApplicationTrackerStatus>()
-      .notNull()
-      .default("Saved"),
+    status: text().$type<ApplicationTrackerStatus>().notNull().default("Saved"),
     machineState: text("machine_state").notNull().default("DISCOVERED"),
     submissionMode: text("submission_mode")
       .$type<"manual" | "assisted" | "automated">()
@@ -521,7 +516,9 @@ export const approvalCheckpoint = pgTable(
       onDelete: "cascade",
     }),
     targetType: text("target_type")
-      .$type<"application_submission" | "career_claim_update" | "high_risk_field">()
+      .$type<
+        "application_submission" | "career_claim_update" | "high_risk_field"
+      >()
       .notNull(),
     questionOrSummary: text("question_or_summary").notNull(),
     proposedPayload: jsonb("proposed_payload")
@@ -565,9 +562,12 @@ export const insertCareerClaimSchema = createInsertSchema(careerClaim);
 export const selectCareerClaimSchema = createSelectSchema(careerClaim);
 export const updateCareerClaimSchema = createUpdateSchema(careerClaim);
 
-export const insertCareerPreferenceSchema = createInsertSchema(careerPreference);
-export const selectCareerPreferenceSchema = createSelectSchema(careerPreference);
-export const updateCareerPreferenceSchema = createUpdateSchema(careerPreference);
+export const insertCareerPreferenceSchema =
+  createInsertSchema(careerPreference);
+export const selectCareerPreferenceSchema =
+  createSelectSchema(careerPreference);
+export const updateCareerPreferenceSchema =
+  createUpdateSchema(careerPreference);
 
 export const insertJobListingSchema = createInsertSchema(jobListing);
 export const selectJobListingSchema = createSelectSchema(jobListing);
@@ -578,6 +578,8 @@ export const updateJobApplicationSchema = createUpdateSchema(jobApplication);
 
 export type SelectCareerClaim = z.infer<typeof selectCareerClaimSchema>;
 export type InsertCareerClaim = z.infer<typeof insertCareerClaimSchema>;
-export type SelectCareerPreference = z.infer<typeof selectCareerPreferenceSchema>;
+export type SelectCareerPreference = z.infer<
+  typeof selectCareerPreferenceSchema
+>;
 export type SelectJobListing = z.infer<typeof selectJobListingSchema>;
 export type SelectJobApplication = z.infer<typeof selectJobApplicationSchema>;

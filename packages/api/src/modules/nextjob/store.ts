@@ -77,7 +77,10 @@ export const computeSha256 = (payload: string): string => {
 };
 
 export const normalizeToken = (value: string): string => {
-  return value.trim().toLowerCase().replace(/[^a-z0-9+#.\s-]/g, "");
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9+#.\s-]/g, "");
 };
 
 export const computeJobFingerprint = (
@@ -94,7 +97,8 @@ const INITIAL_PUBLIC_JOB_LISTINGS: RawJobListing[] = [
     id: "job-remotive-101",
     externalId: "remotive-101",
     sourceName: "Remotive Public Feed",
-    sourceUrl: "https://remotive.com/remote-jobs/software-dev/senior-full-stack-engineer-101",
+    sourceUrl:
+      "https://remotive.com/remote-jobs/software-dev/senior-full-stack-engineer-101",
     title: "Senior Full-Stack Engineer",
     company: "Acme Cloud Systems",
     location: "Remote (Global)",
@@ -169,7 +173,8 @@ const INITIAL_PUBLIC_JOB_LISTINGS: RawJobListing[] = [
     id: "job-remotive-304",
     externalId: "remotive-304",
     sourceName: "Remotive Public Feed",
-    sourceUrl: "https://remotive.com/remote-jobs/software-dev/principal-frontend-architect-304",
+    sourceUrl:
+      "https://remotive.com/remote-jobs/software-dev/principal-frontend-architect-304",
     title: "Principal Frontend Architect",
     company: "Orbit Design Labs",
     location: "Remote (EMEA & Americas)",
@@ -181,7 +186,13 @@ const INITIAL_PUBLIC_JOB_LISTINGS: RawJobListing[] = [
     salaryCurrency: "USD",
     description:
       "Own our accessible WCAG 2.2 AA design system, RTL Arabic/English localization architecture, and Next.js App Router performance.",
-    requiredSkills: ["TypeScript", "React", "Next.js", "Tailwind CSS", "Accessibility"],
+    requiredSkills: [
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "Accessibility",
+    ],
     preferredSkills: ["Playwright", "Design Systems", "i18n"],
     requiredExperienceYears: 5,
     requiredEducation: null,
@@ -219,7 +230,8 @@ const INITIAL_PUBLIC_JOB_LISTINGS: RawJobListing[] = [
     id: "job-remotive-506",
     externalId: "remotive-506",
     sourceName: "Remotive Public Feed",
-    sourceUrl: "https://remotive.com/remote-jobs/software-dev/legacy-backend-developer-506",
+    sourceUrl:
+      "https://remotive.com/remote-jobs/software-dev/legacy-backend-developer-506",
     title: "Backend Node.js Engineer (Closed)",
     company: "Sunset Ventures",
     location: "Remote",
@@ -265,8 +277,18 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
       isCurrent: true,
       description:
         "Senior Full-Stack Engineer with 6+ years building TypeScript, Next.js, Hono, and PostgreSQL platforms with evidence-backed AI workflows and WCAG 2.2 AA accessible interfaces.",
-      skills: ["TypeScript", "Next.js", "React", "Node.js", "PostgreSQL", "Hono"],
-      metrics: ["Reduced application data entry time by 78%", "99.95% API uptime"],
+      skills: [
+        "TypeScript",
+        "Next.js",
+        "React",
+        "Node.js",
+        "PostgreSQL",
+        "Hono",
+      ],
+      metrics: [
+        "Reduced application data entry time by 78%",
+        "99.95% API uptime",
+      ],
       verificationStatus: "verified",
       confidence: 0.98,
       conflictWithClaimId: null,
@@ -287,7 +309,15 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
       isCurrent: true,
       description:
         "Architected modular TypeScript monorepo services using Next.js App Router, Hono RPC, Drizzle ORM, and PostgreSQL serving 120,000+ monthly active users.",
-      skills: ["TypeScript", "Next.js", "React", "Hono", "Drizzle", "PostgreSQL", "Tailwind CSS"],
+      skills: [
+        "TypeScript",
+        "Next.js",
+        "React",
+        "Hono",
+        "Drizzle",
+        "PostgreSQL",
+        "Tailwind CSS",
+      ],
       metrics: [
         "Improved p95 API latency by 42%",
         "Delivered bilingual English and Arabic RTL web platform",
@@ -312,7 +342,14 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
       isCurrent: false,
       description:
         "Built automated document parsing, Zod validation pipelines, and customer dashboards with React, Node.js, and PostgreSQL.",
-      skills: ["TypeScript", "React", "Node.js", "PostgreSQL", "Docker", "Playwright"],
+      skills: [
+        "TypeScript",
+        "React",
+        "Node.js",
+        "PostgreSQL",
+        "Docker",
+        "Playwright",
+      ],
       metrics: ["Automated 15,000+ document verifications per month"],
       verificationStatus: "verified",
       confidence: 0.94,
@@ -332,7 +369,8 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
       startDate: "2015-09",
       endDate: "2019-05",
       isCurrent: false,
-      description: "Graduated with Honors in Software Engineering and Distributed Systems.",
+      description:
+        "Graduated with Honors in Software Engineering and Distributed Systems.",
       skills: ["Algorithms", "Distributed Systems", "Database Systems"],
       metrics: ["GPA 3.85/4.0"],
       verificationStatus: "verified",
@@ -375,7 +413,8 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
       startDate: "2023-08",
       endDate: "2026-08",
       isCurrent: true,
-      description: "Extracted from imported resume header; awaiting user confirmation before use in tailored resumes.",
+      description:
+        "Extracted from imported resume header; awaiting user confirmation before use in tailored resumes.",
       skills: ["AWS", "Cloud Architecture", "Docker"],
       metrics: [],
       verificationStatus: "pending_review",
@@ -444,7 +483,8 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
       id: `ans-1-${userId}`,
       userId,
       questionCategory: "Work Authorization",
-      questionPattern: "Are you legally authorized to work remotely for global distributed teams?",
+      questionPattern:
+        "Are you legally authorized to work remotely for global distributed teams?",
       verifiedAnswer:
         "Yes, I am authorized for remote global employment and contractor engagements, and I can relocate or travel as needed.",
       isApprovedForReuse: true,
@@ -454,7 +494,8 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
       id: `ans-2-${userId}`,
       userId,
       questionCategory: "Architecture Experience",
-      questionPattern: "Describe a production system you architected end-to-end.",
+      questionPattern:
+        "Describe a production system you architected end-to-end.",
       verifiedAnswer:
         "At CloudScale Technologies, I led the migration to a modular TypeScript monorepo with Next.js App Router, Hono RPC, Drizzle ORM, and PostgreSQL, cutting p95 API latency by 42%.",
       isApprovedForReuse: true,
@@ -526,7 +567,8 @@ export const upsertGlobalJobListings = (listings: RawJobListing[]): number => {
   let addedCount = 0;
   for (const listing of listings) {
     const existingIndex = globalJobCatalog.findIndex(
-      (item) => item.id === listing.id || item.externalId === listing.externalId,
+      (item) =>
+        item.id === listing.id || item.externalId === listing.externalId,
     );
     if (existingIndex >= 0) {
       globalJobCatalog[existingIndex] = listing;

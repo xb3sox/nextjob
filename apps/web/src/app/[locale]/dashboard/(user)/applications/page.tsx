@@ -1,9 +1,6 @@
 import { redirect } from "next/navigation";
 
-import {
-  getUserStore,
-  listApplicationsForUser,
-} from "@workspace/api/nextjob";
+import { getUserStore, listApplicationsForUser } from "@workspace/api/nextjob";
 
 import { pathsConfig } from "~/config/paths";
 import { getSession } from "~/lib/auth/server";

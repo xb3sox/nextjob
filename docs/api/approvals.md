@@ -6,11 +6,11 @@ The Approvals domain routes high-risk field overrides, sensitive candidate quest
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/approvals/pending` | List application items awaiting candidate approval | Yes | candidate |
-| `POST` | `/approvals/approve` | Approve proposed answer or tailored content | Yes | candidate |
-| `POST` | `/approvals/reject` | Reject proposed answer or block field auto-fill | Yes | candidate |
+| Method | Endpoint             | Description                                        | Auth Required | RBAC Role |
+| ------ | -------------------- | -------------------------------------------------- | ------------- | --------- |
+| `GET`  | `/approvals/pending` | List application items awaiting candidate approval | Yes           | candidate |
+| `POST` | `/approvals/approve` | Approve proposed answer or tailored content        | Yes           | candidate |
+| `POST` | `/approvals/reject`  | Reject proposed answer or block field auto-fill    | Yes           | candidate |
 
 ---
 
@@ -21,6 +21,7 @@ The Approvals domain routes high-risk field overrides, sensitive candidate quest
 Retrieve items requiring candidate review prior to submission.
 
 #### Response `200 OK`
+
 ```json
 {
   "pendingApprovals": [
@@ -49,6 +50,7 @@ Retrieve items requiring candidate review prior to submission.
 Approve a proposed answer or tailoring statement. Can optionally set a scope (`once` vs `always`).
 
 #### Request Body
+
 ```json
 {
   "approvalId": "appr_10092",
@@ -58,6 +60,7 @@ Approve a proposed answer or tailoring statement. Can optionally set a scope (`o
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "approvalId": "appr_10092",
@@ -76,6 +79,7 @@ Approve a proposed answer or tailoring statement. Can optionally set a scope (`o
 Reject proposed answer, preventing automated execution for the specified field.
 
 #### Request Body
+
 ```json
 {
   "approvalId": "appr_10092",
@@ -84,6 +88,7 @@ Reject proposed answer, preventing automated execution for the specified field.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "approvalId": "appr_10092",

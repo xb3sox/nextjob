@@ -39,7 +39,13 @@ export interface EligibilityEvalProfile {
   requiresSponsorship?: boolean | null;
   licenses?: string[];
   certifications?: string[];
-  educationLevel?: "high_school" | "associate" | "bachelor" | "master" | "phd" | null;
+  educationLevel?:
+    | "high_school"
+    | "associate"
+    | "bachelor"
+    | "master"
+    | "phd"
+    | null;
   yearsOfExperience?: number | null;
   skills?: string[];
   languages?: string[];
@@ -95,17 +101,26 @@ export const evaluateHardEligibility = (
         const isAllowed =
           allowed.includes("global") ||
           allowed.includes("remote") ||
-          allowed.some((loc) => candidateLoc.includes(loc) || loc.includes(candidateLoc));
+          allowed.some(
+            (loc) => candidateLoc.includes(loc) || loc.includes(candidateLoc),
+          );
         if (isAllowed) {
           satisfiedRequirements.push(req.label);
         } else {
-          blockingReasons.push(`Location mismatch: requires ${allowed.join(" or ")}`);
+          blockingReasons.push(
+            `Location mismatch: requires ${allowed.join(" or ")}`,
+          );
         }
         break;
       }
       case "work_authorization": {
-        if (!profile.workAuthorizationCountries || profile.workAuthorizationCountries.length === 0) {
-          unknownReasons.push(`Work authorization status unknown for ${req.label}`);
+        if (
+          !profile.workAuthorizationCountries ||
+          profile.workAuthorizationCountries.length === 0
+        ) {
+          unknownReasons.push(
+            `Work authorization status unknown for ${req.label}`,
+          );
           break;
         }
         const authSet = normalizeList(profile.workAuthorizationCountries);
@@ -114,17 +129,23 @@ export const evaluateHardEligibility = (
           : [String(req.value).toLowerCase()];
         const matched =
           allowed.includes("global") ||
-          (authSet.has("global") && !allowed.some((a) => a.includes("citizen-only"))) ||
+          (authSet.has("global") &&
+            !allowed.some((a) => a.includes("citizen-only"))) ||
           allowed.some((c) => authSet.has(c));
         if (matched) {
           satisfiedRequirements.push(req.label);
         } else {
-          blockingReasons.push(`Missing required work authorization: ${allowed.join(", ")}`);
+          blockingReasons.push(
+            `Missing required work authorization: ${allowed.join(", ")}`,
+          );
         }
         break;
       }
       case "sponsorship": {
-        if (profile.requiresSponsorship === undefined || profile.requiresSponsorship === null) {
+        if (
+          profile.requiresSponsorship === undefined ||
+          profile.requiresSponsorship === null
+        ) {
           unknownReasons.push("Visa sponsorship requirement unknown");
           break;
         }
@@ -146,7 +167,9 @@ export const evaluateHardEligibility = (
         if (licSet.has(target)) {
           satisfiedRequirements.push(req.label);
         } else {
-          blockingReasons.push(`Missing mandatory license: ${String(req.value)}`);
+          blockingReasons.push(
+            `Missing mandatory license: ${String(req.value)}`,
+          );
         }
         break;
       }
@@ -157,20 +180,29 @@ export const evaluateHardEligibility = (
         }
         const certSet = normalizeList(profile.certifications);
         const target = String(req.value).toLowerCase();
-        if (certSet.has(target) || Array.from(certSet).some((c) => c.includes(target))) {
+        if (
+          certSet.has(target) ||
+          Array.from(certSet).some((c) => c.includes(target))
+        ) {
           satisfiedRequirements.push(req.label);
         } else {
-          blockingReasons.push(`Missing required certification: ${String(req.value)}`);
+          blockingReasons.push(
+            `Missing required certification: ${String(req.value)}`,
+          );
         }
         break;
       }
       case "education": {
         if (!profile.educationLevel) {
-          unknownReasons.push(`Education degree level unknown for ${req.label}`);
+          unknownReasons.push(
+            `Education degree level unknown for ${req.label}`,
+          );
           break;
         }
-        const candidateRank = EDUCATION_RANK[profile.educationLevel.toLowerCase()] ?? 0;
-        const requiredRank = EDUCATION_RANK[String(req.value).toLowerCase()] ?? 3;
+        const candidateRank =
+          EDUCATION_RANK[profile.educationLevel.toLowerCase()] ?? 0;
+        const requiredRank =
+          EDUCATION_RANK[String(req.value).toLowerCase()] ?? 3;
         if (candidateRank >= requiredRank) {
           satisfiedRequirements.push(req.label);
         } else {
@@ -179,8 +211,13 @@ export const evaluateHardEligibility = (
         break;
       }
       case "experience": {
-        if (profile.yearsOfExperience === undefined || profile.yearsOfExperience === null) {
-          unknownReasons.push(`Total years of experience unknown for ${req.label}`);
+        if (
+          profile.yearsOfExperience === undefined ||
+          profile.yearsOfExperience === null
+        ) {
+          unknownReasons.push(
+            `Total years of experience unknown for ${req.label}`,
+          );
           break;
         }
         const minYears = Number(req.value);
@@ -206,7 +243,9 @@ export const evaluateHardEligibility = (
         if (missing.length === 0) {
           satisfiedRequirements.push(req.label);
         } else {
-          blockingReasons.push(`Missing required core skills: ${missing.join(", ")}`);
+          blockingReasons.push(
+            `Missing required core skills: ${missing.join(", ")}`,
+          );
         }
         break;
       }
@@ -220,21 +259,29 @@ export const evaluateHardEligibility = (
         if (langSet.has(target)) {
           satisfiedRequirements.push(req.label);
         } else {
-          blockingReasons.push(`Missing required language: ${String(req.value)}`);
+          blockingReasons.push(
+            `Missing required language: ${String(req.value)}`,
+          );
         }
         break;
       }
       case "clearance": {
         if (profile.securityClearance === undefined) {
-          unknownReasons.push(`Security clearance status unknown for ${req.label}`);
+          unknownReasons.push(
+            `Security clearance status unknown for ${req.label}`,
+          );
           break;
         }
-        const candidateClearance = (profile.securityClearance ?? "none").toLowerCase();
+        const candidateClearance = (
+          profile.securityClearance ?? "none"
+        ).toLowerCase();
         const targetClearance = String(req.value).toLowerCase();
         if (candidateClearance === targetClearance) {
           satisfiedRequirements.push(req.label);
         } else {
-          blockingReasons.push(`Requires active ${String(req.value)} security clearance`);
+          blockingReasons.push(
+            `Requires active ${String(req.value)} security clearance`,
+          );
         }
         break;
       }
@@ -256,7 +303,10 @@ export const evaluateHardEligibility = (
   };
 };
 
-const computeFreshnessScore = (postedAtIso: string, status: "active" | "expired"): number => {
+const computeFreshnessScore = (
+  postedAtIso: string,
+  status: "active" | "expired",
+): number => {
   if (status === "expired") {
     return 0;
   }
@@ -287,7 +337,9 @@ export const evaluateJobFitForUser = (
   const verifiedSkills = Array.from(
     new Set(verifiedClaims.flatMap((c) => c.skills.map((s) => s.trim()))),
   );
-  const verifiedSkillsLower = new Set(verifiedSkills.map((s) => s.toLowerCase()));
+  const verifiedSkillsLower = new Set(
+    verifiedSkills.map((s) => s.toLowerCase()),
+  );
 
   const hasBachelorOrHigher = verifiedClaims.some(
     (c) =>
@@ -382,7 +434,11 @@ export const evaluateJobFitForUser = (
       (salaryAligned ? 10 : 3),
   );
 
-  if (eligibilityResult.status === "ineligible" || isExcludedCompany || job.status === "expired") {
+  if (
+    eligibilityResult.status === "ineligible" ||
+    isExcludedCompany ||
+    job.status === "expired"
+  ) {
     rawScore = Math.min(rawScore, 35);
   }
 
@@ -410,7 +466,9 @@ export const evaluateJobFitForUser = (
     );
   }
   if (workModeAligned) {
-    whyMatches.push(`Work mode (${job.workMode}) aligns with your preferred work arrangement.`);
+    whyMatches.push(
+      `Work mode (${job.workMode}) aligns with your preferred work arrangement.`,
+    );
   }
   if (salaryAligned && job.salaryMin && job.salaryMax) {
     whyMatches.push(
@@ -418,7 +476,9 @@ export const evaluateJobFitForUser = (
     );
   }
   if (whyMatches.length === 0) {
-    whyMatches.push("Listed in public technical job feed for manual discovery.");
+    whyMatches.push(
+      "Listed in public technical job feed for manual discovery.",
+    );
   }
 
   // 2. What requirements do I meet?
@@ -450,7 +510,9 @@ export const evaluateJobFitForUser = (
     credibilitySignals.push("Transparent compensation band published");
   }
   if (job.status === "expired") {
-    credibilitySignals.push("Warning: Listing is expired/closed to new submissions");
+    credibilitySignals.push(
+      "Warning: Listing is expired/closed to new submissions",
+    );
   } else if (freshnessScore >= 85) {
     credibilitySignals.push("Fresh listing posted within the last 7 days");
   }
@@ -545,7 +607,11 @@ export const listJobsWithFitForUser = (
   // Deduplication grouping by SHA-256 fingerprint
   const fingerprintGroups = new Map<string, RawJobListing[]>();
   for (const rawJob of catalog) {
-    const fp = computeJobFingerprint(rawJob.company, rawJob.title, rawJob.location);
+    const fp = computeJobFingerprint(
+      rawJob.company,
+      rawJob.title,
+      rawJob.location,
+    );
     const group = fingerprintGroups.get(fp) ?? [];
     group.push(rawJob);
     fingerprintGroups.set(fp, group);
@@ -554,7 +620,11 @@ export const listJobsWithFitForUser = (
   const results: JobWithFitItem[] = [];
 
   for (const rawJob of catalog) {
-    const fp = computeJobFingerprint(rawJob.company, rawJob.title, rawJob.location);
+    const fp = computeJobFingerprint(
+      rawJob.company,
+      rawJob.title,
+      rawJob.location,
+    );
     const group = fingerprintGroups.get(fp) ?? [rawJob];
     const canonical = group[0] ?? rawJob;
     const isDuplicate = canonical.id !== rawJob.id;
@@ -603,7 +673,8 @@ export const listJobsWithFitForUser = (
 
     if (filter.search && filter.search.trim()) {
       const q = filter.search.trim().toLowerCase();
-      const hay = `${evaluated.title} ${evaluated.company} ${evaluated.location} ${evaluated.requiredSkills.join(" ")}`.toLowerCase();
+      const hay =
+        `${evaluated.title} ${evaluated.company} ${evaluated.location} ${evaluated.requiredSkills.join(" ")}`.toLowerCase();
       if (!hay.includes(q)) {
         continue;
       }
@@ -639,7 +710,9 @@ export const toggleSavedJob = (
 const asStr = (val: unknown, fallback: string): string =>
   typeof val === "string" || typeof val === "number" ? String(val) : fallback;
 
-export const fetchRemotiveJobs = async (limit = 5): Promise<RawJobListing[]> => {
+export const fetchRemotiveJobs = async (
+  limit = 5,
+): Promise<RawJobListing[]> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 3500);
   try {
@@ -730,7 +803,9 @@ export const fetchGreenhouseBoardJobs = async (
         title: asStr(item.title, "Software Engineer"),
         company: boardToken.charAt(0).toUpperCase() + boardToken.slice(1),
         location: locName,
-        workMode: locName.toLowerCase().includes("remote") ? "remote" : "hybrid",
+        workMode: locName.toLowerCase().includes("remote")
+          ? "remote"
+          : "hybrid",
         employmentType: "full-time",
         seniorityLevel: "Senior",
         salaryMin: 155000,
@@ -790,14 +865,13 @@ export const fetchLeverBoardJobs = async (
         id: `job-lever-live-${asStr(item.id, String(Date.now()))}`,
         externalId: `lever-${asStr(item.id, String(Date.now()))}`,
         sourceName: `Lever Public Feed (${company})`,
-        sourceUrl: asStr(
-          item.hostedUrl,
-          `https://jobs.lever.co/${company}`,
-        ),
+        sourceUrl: asStr(item.hostedUrl, `https://jobs.lever.co/${company}`),
         title: asStr(item.text, "Software Engineer"),
         company: company.charAt(0).toUpperCase() + company.slice(1),
         location: locName,
-        workMode: locName.toLowerCase().includes("remote") ? "remote" : "hybrid",
+        workMode: locName.toLowerCase().includes("remote")
+          ? "remote"
+          : "hybrid",
         employmentType: "full-time",
         seniorityLevel: "Senior",
         salaryMin: 150000,
@@ -838,7 +912,10 @@ export const syncPermittedPublicJobSources = async (
   syncedSource: string;
   addedCount: number;
   totalCatalogCount: number;
-  mode: "live_multi_board_api" | "live_remotive_api" | "curated_permitted_snapshot";
+  mode:
+    | "live_multi_board_api"
+    | "live_remotive_api"
+    | "curated_permitted_snapshot";
 }> => {
   getUserStore(userId);
 

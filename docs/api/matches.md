@@ -6,10 +6,10 @@ The Job Matching & Ranking domain ranks eligible jobs for candidates based on fi
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/matches` | Retrieve candidate matched job feed with explainability | Yes | candidate |
-| `GET`  | `/matches/:id` | Get detailed fit score breakdown for a specific match | Yes | candidate |
+| Method | Endpoint       | Description                                             | Auth Required | RBAC Role |
+| ------ | -------------- | ------------------------------------------------------- | ------------- | --------- |
+| `GET`  | `/matches`     | Retrieve candidate matched job feed with explainability | Yes           | candidate |
+| `GET`  | `/matches/:id` | Get detailed fit score breakdown for a specific match   | Yes           | candidate |
 
 ---
 
@@ -20,14 +20,16 @@ The Job Matching & Ranking domain ranks eligible jobs for candidates based on fi
 Retrieve ranked list of jobs for the candidate. Eligibility evaluation is automatically enforced prior to ranking.
 
 #### Query Parameters
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `minFitScore` | number | No | Filter minimum fit score (0.0 to 1.0) | `0.75` |
-| `workMode` | string | No | `remote` \| `hybrid` \| `onsite` | `remote` |
-| `page` | number | No | Page number (default: 1) | `1` |
-| `limit` | number | No | Items per page (default: 20) | `20` |
+
+| Parameter     | Type   | Required | Description                           | Example  |
+| ------------- | ------ | -------- | ------------------------------------- | -------- |
+| `minFitScore` | number | No       | Filter minimum fit score (0.0 to 1.0) | `0.75`   |
+| `workMode`    | string | No       | `remote` \| `hybrid` \| `onsite`      | `remote` |
+| `page`        | number | No       | Page number (default: 1)              | `1`      |
+| `limit`       | number | No       | Items per page (default: 20)          | `20`     |
 
 #### Response `200 OK`
+
 ```json
 {
   "matches": [
@@ -49,9 +51,7 @@ Retrieve ranked list of jobs for the candidate. Eligibility evaluation is automa
           "8.5 years experience meets 8+ year requirement",
           "Location matches hybrid preference"
         ],
-        "potentialGaps": [
-          "Ruby experience not found in verified claims"
-        ]
+        "potentialGaps": ["Ruby experience not found in verified claims"]
       },
       "createdAt": "2026-01-15T16:30:00.000Z"
     }
@@ -73,6 +73,7 @@ Retrieve ranked list of jobs for the candidate. Eligibility evaluation is automa
 Retrieve fit dimension breakdown for a specific match.
 
 #### Response `200 OK`
+
 ```json
 {
   "matchId": "mtc_881920",
@@ -80,7 +81,7 @@ Retrieve fit dimension breakdown for a specific match.
   "overallFitScore": 0.92,
   "dimensions": {
     "skillFit": 0.95,
-    "experienceFit": 0.90,
+    "experienceFit": 0.9,
     "salaryFit": 0.88,
     "locationFit": 1.0,
     "freshnessFit": 0.95

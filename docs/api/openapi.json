@@ -16,25 +16,46 @@
     }
   ],
   "tags": [
-    { "name": "Authentication", "description": "Auth, OAuth, and session management (/auth)" },
-    { "name": "Users", "description": "User profile and search preferences (/users)" },
+    {
+      "name": "Authentication",
+      "description": "Auth, OAuth, and session management (/auth)"
+    },
+    {
+      "name": "Users",
+      "description": "User profile and search preferences (/users)"
+    },
     {
       "name": "Your Profile",
       "description": "Career claims, evidence, and document import (/profile)"
     },
-    { "name": "Jobs", "description": "Job discovery, search, and company profiles (/jobs)" },
-    { "name": "Eligibility", "description": "Deterministic eligibility checks (/eligibility)" },
-    { "name": "Matches", "description": "Job fit scoring and ranking engine (/matches)" },
+    {
+      "name": "Jobs",
+      "description": "Job discovery, search, and company profiles (/jobs)"
+    },
+    {
+      "name": "Eligibility",
+      "description": "Deterministic eligibility checks (/eligibility)"
+    },
+    {
+      "name": "Matches",
+      "description": "Job fit scoring and ranking engine (/matches)"
+    },
     {
       "name": "Applications",
       "description": "Application state machine and submission receipts (/applications)"
     },
-    { "name": "Approvals", "description": "High-risk field approval workflow (/approvals)" },
+    {
+      "name": "Approvals",
+      "description": "High-risk field approval workflow (/approvals)"
+    },
     {
       "name": "Organizations",
       "description": "B2B cohorts and aggregate reporting (/organizations)"
     },
-    { "name": "Billing", "description": "Subscriptions and entitlement plans (/billing)" },
+    {
+      "name": "Billing",
+      "description": "Subscriptions and entitlement plans (/billing)"
+    },
     {
       "name": "Notifications",
       "description": "Actionable notifications and channel preferences (/notifications)"
@@ -43,7 +64,10 @@
       "name": "Admin",
       "description": "Operations, user support, and connector kill-switches (/admin)"
     },
-    { "name": "Privacy", "description": "GDPR export, deletion, and consent records (/privacy)" }
+    {
+      "name": "Privacy",
+      "description": "GDPR export, deletion, and consent records (/privacy)"
+    }
   ],
   "security": [{ "BearerAuth": [] }],
   "paths": {
@@ -86,7 +110,10 @@
                   "type": "object",
                   "properties": {
                     "user": { "$ref": "#/components/schemas/User" },
-                    "accessToken": { "type": "string", "example": "eyJhbGciOiJIUzI1Ni..." },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1Ni..."
+                    },
                     "expiresIn": { "type": "integer", "example": 3600 }
                   }
                 }
@@ -160,7 +187,10 @@
                   "type": "object",
                   "properties": {
                     "success": { "type": "boolean", "example": true },
-                    "message": { "type": "string", "example": "Successfully logged out" }
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged out"
+                    }
                   }
                 }
               }
@@ -366,7 +396,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "evidence": { "$ref": "#/components/schemas/EvidenceDocument" }
+                    "evidence": {
+                      "$ref": "#/components/schemas/EvidenceDocument"
+                    }
                   }
                 }
               }
@@ -401,7 +433,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "importedEvidenceId": { "type": "string", "example": "evd_doc_99182" },
+                    "importedEvidenceId": {
+                      "type": "string",
+                      "example": "evd_doc_99182"
+                    },
                     "extractedClaims": {
                       "type": "array",
                       "items": { "$ref": "#/components/schemas/CareerClaim" }
@@ -423,7 +458,11 @@
         "parameters": [
           { "name": "query", "in": "query", "schema": { "type": "string" } },
           { "name": "workMode", "in": "query", "schema": { "type": "string" } },
-          { "name": "minSalary", "in": "query", "schema": { "type": "integer" } }
+          {
+            "name": "minSalary",
+            "in": "query",
+            "schema": { "type": "integer" }
+          }
         ],
         "responses": {
           "200": {
@@ -433,7 +472,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "jobs": { "type": "array", "items": { "$ref": "#/components/schemas/Job" } }
+                    "jobs": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Job" }
+                    }
                   }
                 }
               }
@@ -448,7 +490,12 @@
         "summary": "Get job details",
         "operationId": "getJobById",
         "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -476,7 +523,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "companies": { "type": "array", "items": { "type": "object" } }
+                    "companies": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
                   }
                 }
               }
@@ -509,7 +559,9 @@
             "description": "Eligibility assessment result",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/EligibilityAssessment" }
+                "schema": {
+                  "$ref": "#/components/schemas/EligibilityAssessment"
+                }
               }
             }
           }
@@ -531,7 +583,9 @@
                   "properties": {
                     "assessments": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/EligibilityAssessment" }
+                      "items": {
+                        "$ref": "#/components/schemas/EligibilityAssessment"
+                      }
                     }
                   }
                 }
@@ -572,7 +626,12 @@
         "summary": "Get single match fit breakdown",
         "operationId": "getMatchById",
         "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -643,7 +702,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "applicationId": { "type": "string", "example": "app_554102" },
+                    "applicationId": {
+                      "type": "string",
+                      "example": "app_554102"
+                    },
                     "state": { "type": "string", "example": "PLANNED" }
                   }
                 }
@@ -668,7 +730,9 @@
                   "properties": {
                     "receipts": {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/SubmissionReceipt" }
+                      "items": {
+                        "$ref": "#/components/schemas/SubmissionReceipt"
+                      }
                     }
                   }
                 }
@@ -691,7 +755,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "pendingApprovals": { "type": "array", "items": { "type": "object" } }
+                    "pendingApprovals": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
                   }
                 }
               }
@@ -714,7 +781,11 @@
                 "required": ["approvalId"],
                 "properties": {
                   "approvalId": { "type": "string", "example": "appr_10092" },
-                  "scope": { "type": "string", "enum": ["once", "always"], "example": "always" }
+                  "scope": {
+                    "type": "string",
+                    "enum": ["once", "always"],
+                    "example": "always"
+                  }
                 }
               }
             }
@@ -761,7 +832,12 @@
         "summary": "Get aggregate cohort analytics",
         "operationId": "getCohortReport",
         "parameters": [
-          { "name": "cohortId", "in": "query", "required": true, "schema": { "type": "string" } }
+          {
+            "name": "cohortId",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
         ],
         "responses": {
           "200": {
@@ -848,7 +924,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "notifications": { "type": "array", "items": { "type": "object" } }
+                    "notifications": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
                   }
                 }
               }
@@ -870,7 +949,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "connectors": { "type": "array", "items": { "type": "object" } }
+                    "connectors": {
+                      "type": "array",
+                      "items": { "type": "object" }
+                    }
                   }
                 }
               }
@@ -942,7 +1024,10 @@
                 "type": "object",
                 "required": ["confirmationText"],
                 "properties": {
-                  "confirmationText": { "type": "string", "example": "DELETE MY ACCOUNT AND DATA" }
+                  "confirmationText": {
+                    "type": "string",
+                    "example": "DELETE MY ACCOUNT AND DATA"
+                  }
                 }
               }
             }
@@ -988,8 +1073,15 @@
                 "type": "object",
                 "required": ["purpose", "action"],
                 "properties": {
-                  "purpose": { "type": "string", "example": "anonymized_model_learning" },
-                  "action": { "type": "string", "enum": ["grant", "revoke"], "example": "revoke" }
+                  "purpose": {
+                    "type": "string",
+                    "example": "anonymized_model_learning"
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": ["grant", "revoke"],
+                    "example": "revoke"
+                  }
                 }
               }
             }
@@ -1028,7 +1120,11 @@
         "type": "object",
         "properties": {
           "id": { "type": "string", "example": "usr_987654321" },
-          "email": { "type": "string", "format": "email", "example": "candidate@example.com" },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "candidate@example.com"
+          },
           "fullName": { "type": "string", "example": "Alex Mercer" },
           "role": {
             "type": "string",
@@ -1095,7 +1191,10 @@
         "type": "object",
         "properties": {
           "id": { "type": "string", "example": "evd_doc_99182" },
-          "fileName": { "type": "string", "example": "Alex_Mercer_Resume_2026.pdf" },
+          "fileName": {
+            "type": "string",
+            "example": "Alex_Mercer_Resume_2026.pdf"
+          },
           "mimeType": { "type": "string", "example": "application/pdf" },
           "signedUrl": { "type": "string" }
         }
@@ -1146,7 +1245,10 @@
         "properties": {
           "id": { "type": "string", "example": "rcp_990182" },
           "applicationId": { "type": "string", "example": "app_554102" },
-          "confirmationNumber": { "type": "string", "example": "GH-CONF-88912" },
+          "confirmationNumber": {
+            "type": "string",
+            "example": "GH-CONF-88912"
+          },
           "verificationStatus": { "type": "string", "example": "verified" }
         }
       },
@@ -1154,7 +1256,10 @@
         "type": "object",
         "properties": {
           "id": { "type": "string", "example": "org_4412" },
-          "name": { "type": "string", "example": "Bay Area Career Accelerator" },
+          "name": {
+            "type": "string",
+            "example": "Bay Area Career Accelerator"
+          },
           "allocatedLicenses": { "type": "integer", "example": 100 }
         }
       },
@@ -1165,7 +1270,10 @@
             "type": "object",
             "properties": {
               "code": { "type": "string", "example": "VALIDATION_ERROR" },
-              "message": { "type": "string", "example": "Invalid input payload" },
+              "message": {
+                "type": "string",
+                "example": "Invalid input payload"
+              },
               "correlationId": { "type": "string", "example": "req_881a293f" }
             }
           }

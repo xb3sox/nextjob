@@ -2,12 +2,7 @@ import { computeSha256, createId } from "./store";
 
 const nowIso = (): string => new Date().toISOString();
 
-export type RiskLevel =
-  | "low"
-  | "medium"
-  | "high"
-  | "sensitive"
-  | "unsupported";
+export type RiskLevel = "low" | "medium" | "high" | "sensitive" | "unsupported";
 
 export type PolicyAuthority =
   | "legal_safety"

@@ -8,12 +8,7 @@ import * as z from "zod";
 
 import { logger } from "@workspace/shared/logger";
 
-import {
-  config,
-  getInitOptions,
-  getLanguageDirection,
-  isRTL,
-} from "../config";
+import { config, getInitOptions, getLanguageDirection, isRTL } from "../config";
 import { env } from "../env";
 import {
   getValidationLocale,

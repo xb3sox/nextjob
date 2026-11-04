@@ -6,12 +6,12 @@ The Users & Preferences domain manages candidate profile settings, contact detai
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/users/profile` | Retrieve user account profile | Yes | candidate, admin |
-| `PUT`  | `/users/profile` | Update user account profile | Yes | candidate, admin |
-| `GET`  | `/users/preferences` | Retrieve job search preferences | Yes | candidate, admin |
-| `PUT`  | `/users/preferences` | Update job search preferences | Yes | candidate, admin |
+| Method | Endpoint             | Description                     | Auth Required | RBAC Role        |
+| ------ | -------------------- | ------------------------------- | ------------- | ---------------- |
+| `GET`  | `/users/profile`     | Retrieve user account profile   | Yes           | candidate, admin |
+| `PUT`  | `/users/profile`     | Update user account profile     | Yes           | candidate, admin |
+| `GET`  | `/users/preferences` | Retrieve job search preferences | Yes           | candidate, admin |
+| `PUT`  | `/users/preferences` | Update job search preferences   | Yes           | candidate, admin |
 
 ---
 
@@ -22,6 +22,7 @@ The Users & Preferences domain manages candidate profile settings, contact detai
 Retrieve candidate personal details and account settings.
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "usr_987654321",
@@ -43,6 +44,7 @@ Retrieve candidate personal details and account settings.
 Update personal details.
 
 #### Request Body
+
 ```json
 {
   "fullName": "Alex Mercer",
@@ -53,6 +55,7 @@ Update personal details.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "usr_987654321",
@@ -73,6 +76,7 @@ Update personal details.
 Retrieve target roles, work modes, salary thresholds, location preferences, and exclusions.
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "pref_12345",
@@ -102,6 +106,7 @@ Retrieve target roles, work modes, salary thresholds, location preferences, and 
 Update job search parameters and thresholds used by the Matching Engine.
 
 #### Request Body
+
 ```json
 {
   "targetRoles": ["Senior Full Stack Engineer", "Staff Software Engineer"],
@@ -116,6 +121,7 @@ Update job search parameters and thresholds used by the Matching Engine.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "pref_12345",

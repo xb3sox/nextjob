@@ -241,7 +241,8 @@ export const MyCareerWorkspace = ({
         method: "POST",
       });
       if (res.ok) {
-        const updated = (await res.json()) as CareerWorkspaceData["preferences"];
+        const updated =
+          (await res.json()) as CareerWorkspaceData["preferences"];
         setTargetRolesInput(updated.targetRoles.join(", "));
         setLocationsInput(updated.locations.join(", "));
         setMinSalaryInput(String(updated.minSalary ?? ""));
@@ -316,14 +317,9 @@ export const MyCareerWorkspace = ({
             onClick={() => void handleExportJsonResume()}
           >
             <Icons.Download className="size-4" />
-            <span>
-              {isArabic ? "تصدير JSON Resume" : "Export JSON Resume"}
-            </span>
+            <span>{isArabic ? "تصدير JSON Resume" : "Export JSON Resume"}</span>
           </Button>
-          <Button
-            size="sm"
-            onClick={() => setActiveTab("import")}
-          >
+          <Button size="sm" onClick={() => setActiveTab("import")}>
             <Icons.Plus className="size-4" />
             <span>
               {isArabic ? "استيراد سيرة ذاتية / CV" : "Import CV / JSON Resume"}
@@ -359,7 +355,9 @@ export const MyCareerWorkspace = ({
             <Button type="submit" size="sm" disabled={isLoading}>
               <Icons.SendHorizontal className="size-3.5" />
               <span>
-                {isArabic ? "اقتراح تعديل للمراجعة" : "Propose Structured Change"}
+                {isArabic
+                  ? "اقتراح تعديل للمراجعة"
+                  : "Propose Structured Change"}
               </span>
             </Button>
           </form>
@@ -570,9 +568,7 @@ export const MyCareerWorkspace = ({
                           >
                             <Icons.Check className="size-3.5" />
                             <span>
-                              {isArabic
-                                ? "موافقة وتوثيق"
-                                : "Approve & Verify"}
+                              {isArabic ? "موافقة وتوثيق" : "Approve & Verify"}
                             </span>
                           </Button>
                           <Button

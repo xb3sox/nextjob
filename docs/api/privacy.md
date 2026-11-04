@@ -6,12 +6,12 @@ The Privacy & Data Rights domain enforces candidate GDPR / CCPA rights, includin
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `POST` | `/privacy/export` | Request complete JSON package of candidate data | Yes | candidate |
-| `POST` | `/privacy/delete` | Request permanent erasure of profile & PII data | Yes | candidate |
-| `GET`  | `/privacy/consent` | Retrieve active candidate consent records | Yes | candidate |
-| `POST` | `/privacy/consent` | Grant or revoke explicit processing consent | Yes | candidate |
+| Method | Endpoint           | Description                                     | Auth Required | RBAC Role |
+| ------ | ------------------ | ----------------------------------------------- | ------------- | --------- |
+| `POST` | `/privacy/export`  | Request complete JSON package of candidate data | Yes           | candidate |
+| `POST` | `/privacy/delete`  | Request permanent erasure of profile & PII data | Yes           | candidate |
+| `GET`  | `/privacy/consent` | Retrieve active candidate consent records       | Yes           | candidate |
+| `POST` | `/privacy/consent` | Grant or revoke explicit processing consent     | Yes           | candidate |
 
 ---
 
@@ -22,6 +22,7 @@ The Privacy & Data Rights domain enforces candidate GDPR / CCPA rights, includin
 Request a comprehensive archive containing all user profile data, career claims, evidence documents, application history, and audit logs.
 
 #### Response `202 Accepted`
+
 ```json
 {
   "exportRequestId": "exp_req_99012",
@@ -40,6 +41,7 @@ Request a comprehensive archive containing all user profile data, career claims,
 Trigger permanent erasure of candidate profile, evidence files, and PII in compliance with GDPR Right to be Forgotten.
 
 #### Request Body
+
 ```json
 {
   "confirmationText": "DELETE MY ACCOUNT AND DATA",
@@ -48,6 +50,7 @@ Trigger permanent erasure of candidate profile, evidence files, and PII in compl
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "deletionRequestId": "del_req_44102",
@@ -66,6 +69,7 @@ Trigger permanent erasure of candidate profile, evidence files, and PII in compl
 Retrieve active candidate consent declarations for data processing and model learning.
 
 #### Response `200 OK`
+
 ```json
 {
   "consents": [
@@ -94,6 +98,7 @@ Retrieve active candidate consent declarations for data processing and model lea
 Grant or revoke consent for specific processing purposes.
 
 #### Request Body
+
 ```json
 {
   "purpose": "anonymized_model_learning",
@@ -102,6 +107,7 @@ Grant or revoke consent for specific processing purposes.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "purpose": "anonymized_model_learning",

@@ -30,10 +30,10 @@ Application fields are evaluated by the risk and policy engine:
 - **High Risk:** Custom questions or open-ended responses.
 - **Sensitive Risk:** Demographic, disability, health, or legal fields.
 - **Approval Dialog:** When an application contains High or Sensitive fields, an interactive approval dialog presents the question, proposed answer, risk level, and payload version hash. You can choose:
-  - *Approve Once:* Approve for this single application.
-  - *Always Approve:* Store approval preference for identical future questions.
-  - *Edit Answer:* Provide a custom answer.
-  - *Reject / Block:* Decline answering or block the field.
+  - _Approve Once:_ Approve for this single application.
+  - _Always Approve:_ Store approval preference for identical future questions.
+  - _Edit Answer:_ Provide a custom answer.
+  - _Reject / Block:_ Decline answering or block the field.
 
 ## 4. Extension & ATS Connector Submissions
 

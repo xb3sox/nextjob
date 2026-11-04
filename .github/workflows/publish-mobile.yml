@@ -16,13 +16,13 @@ jobs:
     needs: [tests]
     steps:
       - name: ✅ Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: 🔨 Setup
         uses: ./tooling/github/setup
 
       - name: 🏗 Setup EAS
-        uses: expo/expo-github-action@v9
+        uses: expo/expo-github-action@9da89d3617bb88139671bad31b09c65714c2ee06 # v9
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}

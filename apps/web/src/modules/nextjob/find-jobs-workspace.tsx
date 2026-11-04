@@ -305,9 +305,7 @@ export const FindJobsWorkspace = ({
                 }}
               >
                 <span>
-                  {isArabic
-                    ? "إظهار المكررة"
-                    : "Show Cross-Posted Duplicates"}
+                  {isArabic ? "إظهار المكررة" : "Show Cross-Posted Duplicates"}
                 </span>
               </Button>
 
@@ -320,9 +318,7 @@ export const FindJobsWorkspace = ({
                   void fetchFilteredJobs({ includeExpired: next });
                 }}
               >
-                <span>
-                  {isArabic ? "إظهار المنتهية" : "Show Expired"}
-                </span>
+                <span>{isArabic ? "إظهار المنتهية" : "Show Expired"}</span>
               </Button>
 
               <Button
@@ -629,7 +625,9 @@ export const FindJobsWorkspace = ({
                           )}
                         </ul>
                         <a
-                          href={job.fitAnalysis.credibility.sourceAttributionUrl}
+                          href={
+                            job.fitAnalysis.credibility.sourceAttributionUrl
+                          }
                           target="_blank"
                           rel="noreferrer"
                           className="text-primary inline-flex items-center gap-1 text-xs font-medium hover:underline"

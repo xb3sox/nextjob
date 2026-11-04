@@ -6,13 +6,13 @@ The Application Lifecycle domain manages application execution, state transition
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/applications` | List candidate applications across lifecycle states | Yes | candidate |
-| `POST` | `/applications/apply` | Initiate application execution workflow | Yes | candidate |
-| `GET`  | `/applications/:id` | Get application details and state history | Yes | candidate |
-| `GET`  | `/applications/receipts` | List immutable submission receipts | Yes | candidate |
-| `GET`  | `/applications/receipts/:id` | Get detailed submission receipt proof | Yes | candidate |
+| Method | Endpoint                     | Description                                         | Auth Required | RBAC Role |
+| ------ | ---------------------------- | --------------------------------------------------- | ------------- | --------- |
+| `GET`  | `/applications`              | List candidate applications across lifecycle states | Yes           | candidate |
+| `POST` | `/applications/apply`        | Initiate application execution workflow             | Yes           | candidate |
+| `GET`  | `/applications/:id`          | Get application details and state history           | Yes           | candidate |
+| `GET`  | `/applications/receipts`     | List immutable submission receipts                  | Yes           | candidate |
+| `GET`  | `/applications/receipts/:id` | Get detailed submission receipt proof               | Yes           | candidate |
 
 ---
 
@@ -23,9 +23,11 @@ The Application Lifecycle domain manages application execution, state transition
 Filter candidate applications by state (`PLANNED`, `NEEDS_APPROVAL`, `SUBMITTED_VERIFIED`, `INTERVIEW`, `REJECTED`, `OFFER`).
 
 #### Query Parameters
+
 - `state` (optional): State filter (e.g., `SUBMITTED_VERIFIED`, `NEEDS_APPROVAL`)
 
 #### Response `200 OK`
+
 ```json
 {
   "applications": [
@@ -54,6 +56,7 @@ Filter candidate applications by state (`PLANNED`, `NEEDS_APPROVAL`, `SUBMITTED_
 Trigger tailoring and application orchestration workflow.
 
 #### Request Body
+
 ```json
 {
   "jobId": "job_77218",
@@ -62,6 +65,7 @@ Trigger tailoring and application orchestration workflow.
 ```
 
 #### Response `202 Accepted`
+
 ```json
 {
   "applicationId": "app_554102",
@@ -80,6 +84,7 @@ Trigger tailoring and application orchestration workflow.
 Retrieve application details, current state, and audit event transitions.
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "app_554102",
@@ -90,9 +95,21 @@ Retrieve application details, current state, and audit event transitions.
     "coverLetter": "Dear Hiring Manager at Stripe..."
   },
   "stateHistory": [
-    { "from": "DISCOVERED", "to": "PLANNED", "timestamp": "2026-01-15T12:00:00Z" },
-    { "from": "PLANNED", "to": "TAILORED", "timestamp": "2026-01-15T12:01:00Z" },
-    { "from": "TAILORED", "to": "SUBMITTED_VERIFIED", "timestamp": "2026-01-15T12:05:00Z" }
+    {
+      "from": "DISCOVERED",
+      "to": "PLANNED",
+      "timestamp": "2026-01-15T12:00:00Z"
+    },
+    {
+      "from": "PLANNED",
+      "to": "TAILORED",
+      "timestamp": "2026-01-15T12:01:00Z"
+    },
+    {
+      "from": "TAILORED",
+      "to": "SUBMITTED_VERIFIED",
+      "timestamp": "2026-01-15T12:05:00Z"
+    }
   ]
 }
 ```
@@ -106,6 +123,7 @@ Retrieve application details, current state, and audit event transitions.
 Retrieve immutable proof of ATS submission including job version, submitted fields, answer hashes, and confirmation evidence.
 
 #### Response `200 OK`
+
 ```json
 {
   "receipt": {

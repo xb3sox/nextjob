@@ -11,7 +11,6 @@ import {
 } from "./store";
 import { generateTailoredDocumentForJob } from "./tailoring-service";
 
-import type { ApplicationItem, SubmissionReceiptItem } from "./store";
 import type {
   applicationInternalStateSchema,
   applicationUiStatusSchema,
@@ -20,12 +19,16 @@ import type {
   submitApplicationPayloadSchema,
   transitionApplicationPayloadSchema,
 } from "../../schema/nextjob";
+import type { ApplicationItem, SubmissionReceiptItem } from "./store";
 import type * as z from "zod";
 
 type ApplicationUiStatus = z.infer<typeof applicationUiStatusSchema>;
 type ApplicationInternalState = z.infer<typeof applicationInternalStateSchema>;
 
-const UI_STATUS_TO_INTERNAL: Record<ApplicationUiStatus, ApplicationInternalState> = {
+const UI_STATUS_TO_INTERNAL: Record<
+  ApplicationUiStatus,
+  ApplicationInternalState
+> = {
   Saved: "SAVED",
   Preparing: "TAILORING",
   "Needs Approval": "READY_FOR_REVIEW",
@@ -99,7 +102,9 @@ export const createOrPrepareApplication = (
     });
   }
 
-  const existing = store.applications.find((app) => app.jobId === payload.jobId);
+  const existing = store.applications.find(
+    (app) => app.jobId === payload.jobId,
+  );
   if (existing) {
     assertResourceOwnership(userId, existing.userId, "application");
     return {
@@ -287,8 +292,8 @@ export const recordApplicationSubmission = (
 
   const hasValidConfirmation = Boolean(
     payload.hasConfirmationSignal &&
-      ((payload.confirmationCode && payload.confirmationCode.trim().length > 0) ||
-        (payload.confirmationText && payload.confirmationText.trim().length > 0)),
+    ((payload.confirmationCode && payload.confirmationCode.trim().length > 0) ||
+      (payload.confirmationText && payload.confirmationText.trim().length > 0)),
   );
 
   const verificationStatus = hasValidConfirmation
@@ -419,7 +424,8 @@ export const getTodayDashboardForUser = (userId: string) => {
   const suitableJobs = allJobs.filter(
     (j) =>
       j.eligibilityStatus === "eligible" &&
-      (j.recommendation === "strong_match" || j.recommendation === "good_match"),
+      (j.recommendation === "strong_match" ||
+        j.recommendation === "good_match"),
   );
 
   const applicationsNeedingApproval = store.applications.filter(
@@ -432,7 +438,9 @@ export const getTodayDashboardForUser = (userId: string) => {
     (a) => a.uiStatus === "Interview",
   );
   const followUpReminders = store.applications.filter(
-    (a) => Boolean(a.followUpDueAt) && (a.uiStatus === "Confirmed" || a.uiStatus === "Submission Uncertain"),
+    (a) =>
+      Boolean(a.followUpDueAt) &&
+      (a.uiStatus === "Confirmed" || a.uiStatus === "Submission Uncertain"),
   );
   const pendingClaims = store.claims.filter(
     (c) =>
@@ -457,7 +465,10 @@ export const getTodayDashboardForUser = (userId: string) => {
       createdAt: r.createdAt,
     })),
   ]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
     .slice(0, 6);
 
   return {

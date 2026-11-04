@@ -6,10 +6,10 @@ The Notifications domain delivers actionable real-time notifications (approval r
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/notifications` | List in-app notifications for candidate | Yes | candidate |
-| `PUT`  | `/notifications/preferences` | Update notification delivery channels | Yes | candidate |
+| Method | Endpoint                     | Description                             | Auth Required | RBAC Role |
+| ------ | ---------------------------- | --------------------------------------- | ------------- | --------- |
+| `GET`  | `/notifications`             | List in-app notifications for candidate | Yes           | candidate |
+| `PUT`  | `/notifications/preferences` | Update notification delivery channels   | Yes           | candidate |
 
 ---
 
@@ -20,9 +20,11 @@ The Notifications domain delivers actionable real-time notifications (approval r
 List candidate notifications. Only actionable events trigger notifications.
 
 #### Query Parameters
+
 - `unreadOnly` (boolean, optional): Filter for unread notifications (`true` | `false`).
 
 #### Response `200 OK`
+
 ```json
 {
   "notifications": [
@@ -57,6 +59,7 @@ List candidate notifications. Only actionable events trigger notifications.
 Configure email and in-app alert preferences.
 
 #### Request Body
+
 ```json
 {
   "emailAlerts": {
@@ -73,6 +76,7 @@ Configure email and in-app alert preferences.
 ```
 
 #### Response `200 OK`
+
 ```json
 {
   "updatedAt": "2026-01-15T16:00:00.000Z",

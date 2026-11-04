@@ -6,13 +6,13 @@ The Organizations & Cohorts domain handles B2B institutional client accounts, wo
 
 ## Endpoints Summary
 
-| Method | Endpoint | Description | Auth Required | RBAC Role |
-|--------|----------|-------------|---------------|-----------|
-| `GET`  | `/organizations/orgs` | Retrieve organization details and active seat licenses | Yes | organization_admin, admin |
-| `POST` | `/organizations/orgs` | Create or update organization account | Yes | admin, super_admin |
-| `GET`  | `/organizations/cohorts` | List candidate cohorts within organization | Yes | organization_admin, admin |
-| `POST` | `/organizations/cohorts` | Create candidate cohort and allocate licenses | Yes | organization_admin, admin |
-| `GET`  | `/organizations/reports` | Get privacy-safeguarded aggregate cohort analytics | Yes | organization_admin, admin |
+| Method | Endpoint                 | Description                                            | Auth Required | RBAC Role                 |
+| ------ | ------------------------ | ------------------------------------------------------ | ------------- | ------------------------- |
+| `GET`  | `/organizations/orgs`    | Retrieve organization details and active seat licenses | Yes           | organization_admin, admin |
+| `POST` | `/organizations/orgs`    | Create or update organization account                  | Yes           | admin, super_admin        |
+| `GET`  | `/organizations/cohorts` | List candidate cohorts within organization             | Yes           | organization_admin, admin |
+| `POST` | `/organizations/cohorts` | Create candidate cohort and allocate licenses          | Yes           | organization_admin, admin |
+| `GET`  | `/organizations/reports` | Get privacy-safeguarded aggregate cohort analytics     | Yes           | organization_admin, admin |
 
 ---
 
@@ -23,6 +23,7 @@ The Organizations & Cohorts domain handles B2B institutional client accounts, wo
 Retrieve organization metadata and license quotas.
 
 #### Response `200 OK`
+
 ```json
 {
   "id": "org_4412",
@@ -44,6 +45,7 @@ Retrieve organization metadata and license quotas.
 List all cohorts managed by the organization.
 
 #### Response `200 OK`
+
 ```json
 {
   "cohorts": [
@@ -69,6 +71,7 @@ List all cohorts managed by the organization.
 Create a new participant cohort and assign Search Pass licenses.
 
 #### Request Body
+
 ```json
 {
   "name": "Spring 2026 Tech Fellowship",
@@ -79,6 +82,7 @@ Create a new participant cohort and assign Search Pass licenses.
 ```
 
 #### Response `201 Created`
+
 ```json
 {
   "id": "chr_9913",
@@ -97,12 +101,14 @@ Create a new participant cohort and assign Search Pass licenses.
 
 Get aggregate outcome metrics for a cohort.
 
-*Note: In compliance with PRD §G-10, queries against cohorts with fewer than 5 active participants return an error blocking individual data leakage.*
+_Note: In compliance with PRD §G-10, queries against cohorts with fewer than 5 active participants return an error blocking individual data leakage._
 
 #### Query Parameters
+
 - `cohortId` (required): ID of cohort to query.
 
 #### Response `200 OK`
+
 ```json
 {
   "cohortId": "chr_9912",
@@ -120,6 +126,7 @@ Get aggregate outcome metrics for a cohort.
 ```
 
 #### Response `400 Bad Request` (Insufficient Cohort Size)
+
 ```json
 {
   "error": {
