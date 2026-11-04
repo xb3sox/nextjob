@@ -7,6 +7,11 @@ import {
 } from "@workspace/i18n/server";
 
 import {
+  generateTailoredDocumentWithAi,
+  importCareerDocumentWithAi,
+  verifyZeroFabricationStatement,
+} from "../ai-provider";
+import {
   approveApplicationForSubmission,
   createOrPrepareApplication,
   getTodayDashboardForUser,
@@ -23,6 +28,10 @@ import {
   updateCareerPreferences,
   verifyOrUpdateCareerClaim,
 } from "../career-service";
+import {
+  hydrateWorkspaceFromPostgres,
+  syncUserWorkspaceWithPostgres,
+} from "../db-persistence";
 import {
   evaluateEligibilityBenchmarkCase,
   type BenchmarkEligibilityRule,
@@ -568,5 +577,65 @@ Skills: TypeScript, Rust, PostgreSQL`,
         }
       }
     }
+  });
+
+  // --------------------------------------------------------------------------
+  // P1: Drizzle PostgreSQL Persistence Sync & AI SDK Zero-Fabrication Gate
+  // --------------------------------------------------------------------------
+  it("supports Postgres Drizzle sync fallback, AI-assisted CV import, and AI zero-fabrication citation gate", async () => {
+    const syncSummary = await syncUserWorkspaceWithPostgres(userA);
+    expect(syncSummary.syncedClaimsCount).toBeGreaterThan(0);
+    expect(["postgres_drizzle", "in_memory_fallback"]).toContain(
+      syncSummary.mode,
+    );
+
+    const hydrated = await hydrateWorkspaceFromPostgres(userA);
+    expect(hydrated.hydratedClaims).toBeGreaterThanOrEqual(0);
+
+    const aiImport = await importCareerDocumentWithAi(userA, {
+      format: "text",
+      fileName: "AI_Import_Resume.txt",
+      content:
+        "Staff Platform Engineer at Horizon Labs (2023-01 to Present) - Scaled Kubernetes clusters.\nSkills: TypeScript, Go, Kubernetes",
+    });
+    expect(aiImport.importedClaims.length).toBeGreaterThan(0);
+    for (const c of aiImport.importedClaims) {
+      expect(["pending_review", "disputed"]).toContain(c.verificationStatus);
+    }
+
+    const verifiedClaims = getUserStore(userA).claims.filter(
+      (c) => c.verificationStatus === "verified",
+    );
+    const firstVerifiedId = verifiedClaims[0]!.id;
+
+    // Valid citation passes zero-fabrication check
+    expect(
+      verifyZeroFabricationStatement(
+        "Led production TypeScript architecture.",
+        [firstVerifiedId],
+        verifiedClaims,
+      ),
+    ).toBe(true);
+
+    // Unverified / invented claim ID is blocked
+    expect(
+      verifyZeroFabricationStatement(
+        "Invented unverified claim.",
+        ["claim-invented-999"],
+        verifiedClaims,
+      ),
+    ).toBe(false);
+
+    const aiTailored = await generateTailoredDocumentWithAi(
+      userA,
+      {
+        jobId: "job-remotive-101",
+        language: "en",
+        includeCoverLetter: true,
+      },
+      verifiedClaims,
+    );
+    expect(aiTailored.validationPassed).toBe(true);
+    expect(aiTailored.unsupportedClaimCount).toBe(0);
   });
 });

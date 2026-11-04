@@ -639,83 +639,230 @@ export const toggleSavedJob = (
 const asStr = (val: unknown, fallback: string): string =>
   typeof val === "string" || typeof val === "number" ? String(val) : fallback;
 
-/**
- * Permitted Public Job Source Connector (Section 9 P0-05 & Section 13).
- * Connects to Remotive's public API feed when network is reachable, normalizes and deduplicates listings,
- * and falls back gracefully in offline/sandbox environments.
- */
-export const syncPermittedPublicJobSources = async (
-  userId: string,
-): Promise<{
-  syncedSource: string;
-  addedCount: number;
-  totalCatalogCount: number;
-  mode: "live_remotive_api" | "curated_permitted_snapshot";
-}> => {
-  // Verify user session exists
-  getUserStore(userId);
-
+export const fetchRemotiveJobs = async (limit = 5): Promise<RawJobListing[]> => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3500);
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3500);
     const response = await fetch(
-      "https://remotive.com/api/remote-jobs?category=software-dev&limit=5",
+      `https://remotive.com/api/remote-jobs?category=software-dev&limit=${limit}`,
       {
         signal: controller.signal,
-        headers: {
-          Accept: "application/json",
-        },
+        headers: { Accept: "application/json" },
       },
     );
     clearTimeout(timeout);
+    if (!response.ok) return [];
+    const data = (await response.json()) as {
+      jobs?: Array<Record<string, unknown>>;
+    };
+    const jobs = Array.isArray(data.jobs) ? data.jobs.slice(0, limit) : [];
+    return jobs.map((item) => ({
+      id: `job-remotive-live-${asStr(item.id, String(Date.now()))}`,
+      externalId: `remotive-${asStr(item.id, String(Date.now()))}`,
+      sourceName: "Remotive Public API",
+      sourceUrl: asStr(item.url, "https://remotive.com"),
+      title: asStr(item.title, "Software Engineer"),
+      company: asStr(item.company_name, "Remote Employer"),
+      location: asStr(item.candidate_required_location, "Remote"),
+      workMode: "remote",
+      employmentType: "full-time",
+      seniorityLevel: "Senior",
+      salaryMin: 130000,
+      salaryMax: 165000,
+      salaryCurrency: "USD",
+      description: asStr(item.description, "")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .slice(0, 500),
+      requiredSkills: ["TypeScript", "React", "Node.js"],
+      preferredSkills: ["Next.js", "PostgreSQL"],
+      requiredExperienceYears: 4,
+      requiredEducation: null,
+      sponsorshipAvailable: true,
+      allowedCountries: ["Global"],
+      status: "active",
+      postedAt:
+        typeof item.publication_date === "string"
+          ? new Date(item.publication_date).toISOString()
+          : new Date().toISOString(),
+    }));
+  } catch {
+    clearTimeout(timeout);
+    return [];
+  }
+};
 
-    if (response.ok) {
-      const data = (await response.json()) as {
-        jobs?: Array<Record<string, unknown>>;
-      };
-      const jobs = Array.isArray(data.jobs) ? data.jobs.slice(0, 5) : [];
-      const normalized: RawJobListing[] = jobs.map((item) => ({
-        id: `job-remotive-live-${asStr(item.id, String(Date.now()))}`,
-        externalId: `remotive-${asStr(item.id, String(Date.now()))}`,
-        sourceName: "Remotive Public API",
-        sourceUrl: asStr(item.url, "https://remotive.com"),
+export const fetchGreenhouseBoardJobs = async (
+  boardToken = "vercel",
+  limit = 3,
+): Promise<RawJobListing[]> => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3500);
+  try {
+    const response = await fetch(
+      `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(boardToken)}/jobs?content=true`,
+      {
+        signal: controller.signal,
+        headers: { Accept: "application/json" },
+      },
+    );
+    clearTimeout(timeout);
+    if (!response.ok) return [];
+    const data = (await response.json()) as {
+      jobs?: Array<Record<string, unknown>>;
+    };
+    const jobs = Array.isArray(data.jobs) ? data.jobs.slice(0, limit) : [];
+    return jobs.map((item) => {
+      const locObj =
+        typeof item.location === "object" && item.location !== null
+          ? (item.location as Record<string, unknown>)
+          : {};
+      const locName = asStr(locObj.name, "Remote");
+      return {
+        id: `job-greenhouse-live-${asStr(item.id, String(Date.now()))}`,
+        externalId: `greenhouse-${asStr(item.id, String(Date.now()))}`,
+        sourceName: `Greenhouse Public Board (${boardToken})`,
+        sourceUrl: asStr(
+          item.absolute_url,
+          `https://boards.greenhouse.io/${boardToken}`,
+        ),
         title: asStr(item.title, "Software Engineer"),
-        company: asStr(item.company_name, "Remote Employer"),
-        location: asStr(item.candidate_required_location, "Remote"),
-        workMode: "remote",
+        company: boardToken.charAt(0).toUpperCase() + boardToken.slice(1),
+        location: locName,
+        workMode: locName.toLowerCase().includes("remote") ? "remote" : "hybrid",
         employmentType: "full-time",
         seniorityLevel: "Senior",
-        salaryMin: 130000,
-        salaryMax: 165000,
+        salaryMin: 155000,
+        salaryMax: 195000,
         salaryCurrency: "USD",
-        description: asStr(item.description, "")
+        description: asStr(item.content, "")
           .replace(/<[^>]+>/g, " ")
           .replace(/\s+/g, " ")
           .trim()
           .slice(0, 500),
-        requiredSkills: ["TypeScript", "React", "Node.js"],
-        preferredSkills: ["Next.js", "PostgreSQL"],
+        requiredSkills: ["TypeScript", "Next.js", "React"],
+        preferredSkills: ["Distributed Systems", "PostgreSQL"],
         requiredExperienceYears: 4,
         requiredEducation: null,
         sponsorshipAvailable: true,
         allowedCountries: ["Global"],
         status: "active",
         postedAt:
-          typeof item.publication_date === "string"
-            ? new Date(item.publication_date).toISOString()
+          typeof item.updated_at === "string"
+            ? new Date(item.updated_at).toISOString()
             : new Date().toISOString(),
-      }));
-
-      const addedCount = upsertGlobalJobListings(normalized);
-      return {
-        syncedSource: "Remotive Public API (https://remotive.com/api/remote-jobs)",
-        addedCount,
-        totalCatalogCount: getGlobalJobCatalog().length,
-        mode: "live_remotive_api",
       };
-    }
+    });
   } catch {
-    // Offline or sandboxed environment fallback
+    clearTimeout(timeout);
+    return [];
+  }
+};
+
+export const fetchLeverBoardJobs = async (
+  company = "palantir",
+  limit = 3,
+): Promise<RawJobListing[]> => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3500);
+  try {
+    const response = await fetch(
+      `https://api.lever.co/v0/postings/${encodeURIComponent(company)}?mode=json`,
+      {
+        signal: controller.signal,
+        headers: { Accept: "application/json" },
+      },
+    );
+    clearTimeout(timeout);
+    if (!response.ok) return [];
+    const data = await response.json();
+    const jobs = Array.isArray(data)
+      ? (data as Array<Record<string, unknown>>).slice(0, limit)
+      : [];
+    return jobs.map((item) => {
+      const categories =
+        typeof item.categories === "object" && item.categories !== null
+          ? (item.categories as Record<string, unknown>)
+          : {};
+      const locName = asStr(categories.location, "Remote");
+      return {
+        id: `job-lever-live-${asStr(item.id, String(Date.now()))}`,
+        externalId: `lever-${asStr(item.id, String(Date.now()))}`,
+        sourceName: `Lever Public Feed (${company})`,
+        sourceUrl: asStr(
+          item.hostedUrl,
+          `https://jobs.lever.co/${company}`,
+        ),
+        title: asStr(item.text, "Software Engineer"),
+        company: company.charAt(0).toUpperCase() + company.slice(1),
+        location: locName,
+        workMode: locName.toLowerCase().includes("remote") ? "remote" : "hybrid",
+        employmentType: "full-time",
+        seniorityLevel: "Senior",
+        salaryMin: 150000,
+        salaryMax: 190000,
+        salaryCurrency: "USD",
+        description: asStr(item.descriptionPlain, "Engineering role")
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, 500),
+        requiredSkills: ["TypeScript", "React", "PostgreSQL"],
+        preferredSkills: ["Docker", "Cloud Architecture"],
+        requiredExperienceYears: 4,
+        requiredEducation: null,
+        sponsorshipAvailable: true,
+        allowedCountries: ["Global"],
+        status: "active",
+        postedAt:
+          typeof item.createdAt === "number"
+            ? new Date(item.createdAt).toISOString()
+            : new Date().toISOString(),
+      };
+    });
+  } catch {
+    clearTimeout(timeout);
+    return [];
+  }
+};
+
+/**
+ * Permitted Public Job Source Connector (Section 9 P0-05 & Section 13).
+ * Connects in parallel to Remotive, Greenhouse Boards API, and Lever Postings API,
+ * normalizes and deduplicates listings via SHA-256 fingerprint, and falls back gracefully offline.
+ */
+export const syncPermittedPublicJobSources = async (
+  userId: string,
+  options: { greenhouseBoard?: string; leverCompany?: string } = {},
+): Promise<{
+  syncedSource: string;
+  addedCount: number;
+  totalCatalogCount: number;
+  mode: "live_multi_board_api" | "live_remotive_api" | "curated_permitted_snapshot";
+}> => {
+  getUserStore(userId);
+
+  const [remotiveJobs, greenhouseJobs, leverJobs] = await Promise.all([
+    fetchRemotiveJobs(5),
+    fetchGreenhouseBoardJobs(options.greenhouseBoard ?? "vercel", 3),
+    fetchLeverBoardJobs(options.leverCompany ?? "palantir", 3),
+  ]);
+
+  const combined = [...remotiveJobs, ...greenhouseJobs, ...leverJobs];
+  if (combined.length > 0) {
+    const addedCount = upsertGlobalJobListings(combined);
+    const activeSources: string[] = [];
+    if (remotiveJobs.length > 0) activeSources.push("Remotive API");
+    if (greenhouseJobs.length > 0) activeSources.push("Greenhouse Boards API");
+    if (leverJobs.length > 0) activeSources.push("Lever Postings API");
+
+    return {
+      syncedSource: activeSources.join(" + "),
+      addedCount,
+      totalCatalogCount: getGlobalJobCatalog().length,
+      mode:
+        activeSources.length > 1 ? "live_multi_board_api" : "live_remotive_api",
+    };
   }
 
   return {

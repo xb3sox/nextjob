@@ -51,7 +51,13 @@
       "cache": false
     }
   },
-  "globalEnv": ["DATABASE_URL", "PRODUCT_NAME", "URL", "DEFAULT_LOCALE"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "PRODUCT_NAME",
+    "URL",
+    "DEFAULT_LOCALE",
+    "OPENAI_API_KEY"
+  ],
   "globalPassThroughEnv": [
     "NODE_ENV",
     "SKIP_ENV_VALIDATION",

@@ -113,6 +113,13 @@
       "when": 1790099611582,
       "tag": "0015_first_jack_murdock",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1793794844001,
+      "tag": "0016_free_nico_minoru",
+      "breakpoints": true
     }
   ]
 }

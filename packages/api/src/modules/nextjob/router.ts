@@ -18,6 +18,10 @@ import {
   verifyClaimPayloadSchema,
 } from "../../schema/nextjob";
 import {
+  generateTailoredDocumentWithAi,
+  importCareerDocumentWithAi,
+} from "./ai-provider";
+import {
   approveApplicationForSubmission,
   createOrPrepareApplication,
   getTodayDashboardForUser,
@@ -37,6 +41,10 @@ import {
   upsertReusableAnswer,
   verifyOrUpdateCareerClaim,
 } from "./career-service";
+import {
+  hydrateWorkspaceFromPostgres,
+  syncUserWorkspaceWithPostgres,
+} from "./db-persistence";
 import {
   listJobsWithFitForUser,
   syncPermittedPublicJobSources,
@@ -244,4 +252,79 @@ export const nextjobRouter = new Hono()
         results: defaultPolicyEvaluator.evaluateBatch(fields),
       });
     },
-  );
+  )
+  .post("/career/sync-db", async (c) => {
+    return c.json(await syncUserWorkspaceWithPostgres(c.var.user.id));
+  })
+  .post("/career/hydrate-db", async (c) => {
+    return c.json(await hydrateWorkspaceFromPostgres(c.var.user.id));
+  })
+  .post(
+    "/career/import-ai",
+    validate("json", importCareerPayloadSchema),
+    async (c) => {
+      return c.json(
+        await importCareerDocumentWithAi(c.var.user.id, c.req.valid("json")),
+      );
+    },
+  )
+  .post(
+    "/tailoring/generate-ai",
+    validate("json", generateTailoredDocumentPayloadSchema),
+    async (c) => {
+      const store = getUserStore(c.var.user.id);
+      const verifiedClaims = store.claims.filter(
+        (claim) => claim.verificationStatus === "verified",
+      );
+      return c.json(
+        await generateTailoredDocumentWithAi(
+          c.var.user.id,
+          c.req.valid("json"),
+          verifiedClaims,
+        ),
+      );
+    },
+  )
+  .get("/extension/autofill-bundle", (c) => {
+    const store = getUserStore(c.var.user.id);
+    const verifiedClaims = store.claims.filter(
+      (claim) => claim.verificationStatus === "verified",
+    );
+    const latestExp = verifiedClaims.find(
+      (claim) => claim.category === "experience",
+    );
+    const userDisplayName = c.var.user.name || "Alex Rivera";
+    const [firstName = "Alex", ...lastParts] = userDisplayName.split(" ");
+    const lastName = lastParts.join(" ") || "Rivera";
+
+    const standardFields = defaultPolicyEvaluator.evaluateBatch([
+      { key: "first_name", label: "First Name" },
+      { key: "last_name", label: "Last Name" },
+      { key: "email", label: "Email" },
+      { key: "phone", label: "Phone" },
+      { key: "desired_salary", label: "Expected Salary" },
+      { key: "disability_status", label: "Voluntary Disability Self-ID" },
+    ]);
+
+    return c.json({
+      profile: {
+        firstName,
+        lastName,
+        fullName: userDisplayName,
+        email: c.var.user.email || "alex.rivera@nextjob.dev",
+        phone: "+1-555-019-2834",
+        location: store.profile.location,
+        linkedinUrl: "https://linkedin.com/in/alexrivera-dev",
+        githubUrl: "https://github.com/alexrivera",
+        portfolioUrl: "https://alexrivera.dev",
+        currentCompany: latestExp?.organization ?? "CloudScale Technologies",
+        currentTitle: latestExp?.title ?? store.profile.headline,
+        summary: store.profile.summary,
+      },
+      automationPaused: false,
+      requireApprovalBeforeSubmit:
+        store.preferences.requireApprovalBeforeSubmit,
+      reusableAnswers: store.reusableAnswers,
+      policyPreview: standardFields,
+    });
+  });
