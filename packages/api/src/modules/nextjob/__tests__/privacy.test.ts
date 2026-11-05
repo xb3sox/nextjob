@@ -1,4 +1,19 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("../../../middleware", () => ({
+  enforceAuth: async (c: any, next: any) => {
+    c.set("user", { id: "test-user-gdpr-123", email: "candidate@example.com" });
+    await next();
+  },
+  validate: () => async (_c: any, next: any) => next(),
+}));
+vi.mock("@workspace/billing", () => ({
+  getActivePlan: () => "free",
+  checkPlanLimit: () => ({ allowed: true }),
+}));
+vi.mock("@workspace/billing/server", () => ({
+  getCustomersWithPurchasesByReferenceId: () => Promise.resolve([]),
+}));
 
 import {
   eraseCandidateData,
@@ -6,6 +21,7 @@ import {
   getCandidateConsent,
   updateCandidateConsent,
 } from "../privacy-service";
+import { nextjobRouter } from "../router";
 import { getUserStore, resetStoreForTesting } from "../store";
 
 describe("GDPR Privacy & Data Subject Rights (SEC-04)", () => {
@@ -61,5 +77,15 @@ describe("GDPR Privacy & Data Subject Rights (SEC-04)", () => {
 
     const fetched = getCandidateConsent(userId);
     expect(fetched.autoApplyConsent).toBe(true);
+  });
+
+  it("ensures sensitive candidate export routes do not leak to public caches via Cache-Control: no-store", async () => {
+    const res = await nextjobRouter.request("/career/export/json-resume");
+
+    expect(res.status).toBe(200);
+    const cacheControl = res.headers.get("cache-control");
+    expect(cacheControl).toBe("no-store");
+    expect(cacheControl).not.toContain("public");
+    expect(cacheControl).not.toContain("s-maxage");
   });
 });

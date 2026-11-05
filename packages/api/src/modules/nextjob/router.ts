@@ -160,10 +160,8 @@ export const nextjobRouter = new Hono()
     },
   )
   .get("/career/export/json-resume", (c) => {
-    c.header(
-      "Cache-Control",
-      "public, s-maxage=300, stale-while-revalidate=600",
-    );
+    // Prevent intermediate CDNs or shared proxies from caching sensitive candidate career data
+    c.header("Cache-Control", "no-store");
     return c.json(exportProfileAsJsonResume(c.var.user.id));
   })
   .get(
