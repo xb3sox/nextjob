@@ -32,7 +32,14 @@ describe("GDPR Privacy & Data Subject Rights (SEC-04)", () => {
 
   it("performs irreversible candidate data erasure under GDPR Article 17", async () => {
     const storeBefore = getUserStore(userId);
-    expect(storeBefore.claims.length).toBeGreaterThan(0);
+    storeBefore.claims.push({
+      ...storeBefore.claims[0]!,
+      id: "claim-custom-to-erase",
+      title: "Unique Custom Title To Erase",
+    });
+    expect(
+      storeBefore.claims.some((c) => c.id === "claim-custom-to-erase"),
+    ).toBe(true);
 
     const result = await eraseCandidateData(userId);
 
@@ -40,10 +47,14 @@ describe("GDPR Privacy & Data Subject Rights (SEC-04)", () => {
     expect(result.subjectId).toBe(userId);
     expect(result.clearedCollections).toContain("careerClaims");
     expect(result.clearedCollections).toContain("jobApplications");
+    expect(result.clearedCollections).toContain("tailoredDocuments");
+    expect(result.clearedCollections).toContain("submissionReceipts");
 
     // Re-accessing store yields a fresh default profile, not the previous mutated state
     const storeAfter = getUserStore(userId);
-    expect(storeAfter.claims.length).toBeGreaterThan(0); // fresh default seed
+    expect(
+      storeAfter.claims.some((c) => c.id === "claim-custom-to-erase"),
+    ).toBe(false);
   });
 
   it("records and updates candidate consent preferences", () => {

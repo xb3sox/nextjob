@@ -38,8 +38,21 @@ interface SeoProps {
 const SITE_NAME_SEPARATOR = " | ";
 export const SITE_NAME_TEMPLATE = `%s${SITE_NAME_SEPARATOR}${appConfig.name}`;
 
+export const resolveMetadataBase = (rawUrl?: string): URL => {
+  if (!rawUrl?.trim()) return new URL("http://localhost:3000");
+  try {
+    const formatted =
+      rawUrl.startsWith("http://") || rawUrl.startsWith("https://")
+        ? rawUrl
+        : `https://${rawUrl}`;
+    return new URL(formatted);
+  } catch {
+    return new URL("http://localhost:3000");
+  }
+};
+
 const DEFAULT_IMAGE = {
-  url: `${appConfig.url}/opengraph-image.png`,
+  url: `${resolveMetadataBase(appConfig.url).origin}/opengraph-image.png`,
   width: 1200,
   height: 630,
   alt: appConfig.name,
@@ -75,6 +88,7 @@ export const getMetadata =
     };
 
     return {
+      metadataBase: resolveMetadataBase(appConfig.url),
       ...common,
       openGraph: {
         ...common,
@@ -103,7 +117,7 @@ export const DEFAULT_METADATA: Metadata = {
     template: SITE_NAME_TEMPLATE,
     default: appConfig.name,
   },
-  metadataBase: appConfig.url ? new URL(appConfig.url) : null,
+  metadataBase: resolveMetadataBase(appConfig.url),
 };
 
 export const DEFAULT_VIEWPORT: Viewport = {

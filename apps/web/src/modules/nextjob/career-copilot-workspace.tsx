@@ -1,7 +1,8 @@
+/* oxlint-disable react/set-state-in-effect */
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Badge } from "@workspace/ui-web/badge";
 import { Button } from "@workspace/ui-web/button";
@@ -64,18 +65,15 @@ export const CareerCopilotWorkspace = () => {
       role: "assistant",
       content:
         "Welcome to your NextJob Career Copilot. I analyze your verified career graph, suggest quantitative enhancements, and ensure zero-fabrication alignment across every job application.",
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      timestamp: "",
     },
   ]);
   const [inputPrompt, setInputPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [graphStats, setGraphStats] = useState({
-    verifiedClaims: 12,
-    completeness: 88,
-    activeApplications: 4,
+    verifiedClaims: 0,
+    completeness: 0,
+    activeApplications: 0,
   });
 
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -85,34 +83,49 @@ export const CareerCopilotWorkspace = () => {
   }, []);
 
   // Load real career stats
-  useEffect(() => {
-    fetch("/api/nextjob/career")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data) {
-          const raw = data as {
-            claims?: { verificationStatus: string }[];
-            profile?: { completenessScore?: number };
+  const loadStats = useCallback(async () => {
+    try {
+      const [careerRes, appRes] = await Promise.all([
+        fetch("/api/nextjob/career"),
+        fetch("/api/nextjob/applications"),
+      ]);
+      if (careerRes.ok) {
+        const rawCareer = (await careerRes.json()) as {
+          claims?: { verificationStatus: string }[];
+        };
+        const verified = (rawCareer.claims || []).filter(
+          (c) => c.verificationStatus === "verified",
+        ).length;
+        const total = (rawCareer.claims || []).length;
+        const completeness =
+          total > 0 ? Math.round((verified / total) * 100) : 100;
+        let appCount = 0;
+        if (appRes.ok) {
+          const rawApps = (await appRes.json()) as {
+            applications?: unknown[];
           };
-          const verified = (raw.claims || []).filter(
-            (c) => c.verificationStatus === "verified",
-          ).length;
-          setGraphStats({
-            verifiedClaims: verified || 12,
-            completeness: raw.profile?.completenessScore || 88,
-            activeApplications: 4,
-          });
+          appCount = rawApps.applications?.length ?? 0;
         }
-        return data;
-      })
-      .catch(() => {});
+        setGraphStats({
+          verifiedClaims: verified,
+          completeness,
+          activeApplications: appCount,
+        });
+      }
+    } catch {
+      // Fallback gracefully
+    }
   }, []);
+
+  useEffect(() => {
+    void loadStats();
+  }, [loadStats]);
 
   const handleSendPrompt = async (textToSend: string) => {
     if (!textToSend.trim() || isLoading) return;
 
     const userMessage: MessageItem = {
-      id: `user-${messages.length + 1}`,
+      id: `user-${crypto.randomUUID()}`,
       role: "user",
       content: textToSend,
       timestamp: new Date().toLocaleTimeString([], {
@@ -143,7 +156,7 @@ export const CareerCopilotWorkspace = () => {
         };
 
         const assistantMessage: MessageItem = {
-          id: `assistant-${messages.length + 2}`,
+          id: `assistant-${crypto.randomUUID()}`,
           role: "assistant",
           content: data.assistantReply,
           timestamp: new Date().toLocaleTimeString([], {
@@ -155,11 +168,12 @@ export const CareerCopilotWorkspace = () => {
 
         setMessages((prev) => [...prev, assistantMessage]);
         router.refresh();
+        void loadStats();
       } else {
         setMessages((prev) => [
           ...prev,
           {
-            id: `assistant-err-${Date.now()}`,
+            id: `assistant-err-${crypto.randomUUID()}`,
             role: "assistant",
             content:
               "Unable to update career claims. Please check your connection or authentication status.",
@@ -174,7 +188,7 @@ export const CareerCopilotWorkspace = () => {
       setMessages((prev) => [
         ...prev,
         {
-          id: `assistant-err-${Date.now()}`,
+          id: `assistant-err-${crypto.randomUUID()}`,
           role: "assistant",
           content: "Network error processing career update.",
           timestamp: new Date().toLocaleTimeString([], {

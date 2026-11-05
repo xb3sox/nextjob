@@ -103,11 +103,11 @@ const consentPayloadSchema = z.object({
 export const nextjobRouter = new Hono()
   .use(enforceAuth)
   .get("/today", (c) => {
-    c.header("Cache-Control", "no-store");
+    c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
     return c.json(getTodayDashboardForUser(c.var.user.id));
   })
   .get("/career", (c) => {
-    c.header("Cache-Control", "no-store");
+    c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
     return c.json(getCareerWorkspace(c.var.user.id));
   })
   .post("/career/import", validate("json", importCareerPayloadSchema), (c) => {
@@ -160,10 +160,7 @@ export const nextjobRouter = new Hono()
     },
   )
   .get("/career/export/json-resume", (c) => {
-    c.header(
-      "Cache-Control",
-      "public, s-maxage=300, stale-while-revalidate=600",
-    );
+    c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
     return c.json(exportProfileAsJsonResume(c.var.user.id));
   })
   .get(
@@ -180,10 +177,7 @@ export const nextjobRouter = new Hono()
       }),
     ),
     (c) => {
-      c.header(
-        "Cache-Control",
-        "public, s-maxage=300, stale-while-revalidate=600",
-      );
+      c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
       const q = c.req.valid("query");
       return c.json({
         jobs: listJobsWithFitForUser(c.var.user.id, {
@@ -208,6 +202,7 @@ export const nextjobRouter = new Hono()
     return c.json(await syncPermittedPublicJobSources(c.var.user.id));
   })
   .get("/tailoring", (c) => {
+    c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
     const store = getUserStore(c.var.user.id);
     return c.json({ documents: store.tailoredDocuments });
   })
@@ -245,7 +240,7 @@ export const nextjobRouter = new Hono()
     },
   )
   .get("/applications", (c) => {
-    c.header("Cache-Control", "no-store");
+    c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
     const store = getUserStore(c.var.user.id);
     return c.json({
       applications: listApplicationsForUser(c.var.user.id),
@@ -352,6 +347,7 @@ export const nextjobRouter = new Hono()
     },
   )
   .get("/extension/autofill-bundle", (c) => {
+    c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
     const store = getUserStore(c.var.user.id);
     const verifiedClaims = store.claims.filter(
       (claim) => claim.verificationStatus === "verified",

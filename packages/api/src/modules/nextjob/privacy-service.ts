@@ -1,5 +1,6 @@
 import { eq } from "@workspace/db";
 import {
+  applicationEvent,
   approvalCheckpoint,
   auditEvent,
   careerClaim,
@@ -8,8 +9,13 @@ import {
   careerProfile,
   careerRevision,
   jobApplication,
+  matchEvaluation,
   reusableAnswer,
+  savedJob,
+  submissionReceiptTable,
+  tailoredDocument,
 } from "@workspace/db/schema";
+import { logger } from "@workspace/shared/logger";
 
 import {
   computeSha256,
@@ -127,26 +133,59 @@ export const eraseCandidateData = async (
   deleteUserStore(userId);
   userConsents.delete(userId);
 
-  // 2. Cascade delete from PostgreSQL if connected
+  // 2. Cascade delete from PostgreSQL atomically if connected
   if (process.env.DATABASE_URL) {
     try {
       const { db } = await import("@workspace/db/server");
-      await db.delete(careerProfile).where(eq(careerProfile.userId, userId));
-      await db.delete(careerClaim).where(eq(careerClaim.userId, userId));
-      await db.delete(careerEvidence).where(eq(careerEvidence.userId, userId));
-      await db.delete(careerRevision).where(eq(careerRevision.userId, userId));
-      await db
-        .delete(careerPreference)
-        .where(eq(careerPreference.userId, userId));
-      await db.delete(reusableAnswer).where(eq(reusableAnswer.userId, userId));
-      await db.delete(jobApplication).where(eq(jobApplication.userId, userId));
-      await db
-        .delete(approvalCheckpoint)
-        .where(eq(approvalCheckpoint.userId, userId));
-      await db.delete(auditEvent).where(eq(auditEvent.userId, userId));
+      await db.transaction(async (tx) => {
+        await tx.delete(careerProfile).where(eq(careerProfile.userId, userId));
+        await tx.delete(careerClaim).where(eq(careerClaim.userId, userId));
+        await tx
+          .delete(careerEvidence)
+          .where(eq(careerEvidence.userId, userId));
+        await tx
+          .delete(careerRevision)
+          .where(eq(careerRevision.userId, userId));
+        await tx
+          .delete(careerPreference)
+          .where(eq(careerPreference.userId, userId));
+        await tx
+          .delete(reusableAnswer)
+          .where(eq(reusableAnswer.userId, userId));
+        await tx
+          .delete(tailoredDocument)
+          .where(eq(tailoredDocument.userId, userId));
+        await tx.delete(savedJob).where(eq(savedJob.userId, userId));
+        await tx
+          .delete(matchEvaluation)
+          .where(eq(matchEvaluation.userId, userId));
+        await tx
+          .delete(submissionReceiptTable)
+          .where(eq(submissionReceiptTable.userId, userId));
+        await tx
+          .delete(applicationEvent)
+          .where(eq(applicationEvent.userId, userId));
+        await tx
+          .delete(jobApplication)
+          .where(eq(jobApplication.userId, userId));
+        await tx
+          .delete(approvalCheckpoint)
+          .where(eq(approvalCheckpoint.userId, userId));
+        await tx.delete(auditEvent).where(eq(auditEvent.userId, userId));
+      });
       dbRecordsRemoved = true;
-    } catch {
-      dbRecordsRemoved = false;
+    } catch (error) {
+      logger.error("GDPR Article 17 erasure failed on database deletion", {
+        userId,
+        error,
+      });
+      return {
+        erased: false,
+        subjectId: userId,
+        erasedAt,
+        clearedCollections: [],
+        dbRecordsRemoved: false,
+      };
     }
   }
 
@@ -162,9 +201,13 @@ export const eraseCandidateData = async (
       "careerPreferences",
       "reusableAnswers",
       "tailoredDocuments",
-      "jobApplications",
+      "savedJobs",
+      "matchEvaluations",
       "submissionReceipts",
+      "applicationEvents",
+      "jobApplications",
       "approvalCheckpoints",
+      "auditEvents",
     ],
     dbRecordsRemoved,
   };

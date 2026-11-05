@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Badge } from "@workspace/ui-web/badge";
 import {
@@ -33,6 +33,21 @@ export const AutomationModeCard = ({
   const [cap, setCap] = useState(initialCap);
   const [threshold, setThreshold] = useState(initialThreshold);
   const [isSaved, setIsSaved] = useState(false);
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+      }
+    };
+  }, []);
+
+  const triggerSavedFeedback = () => {
+    setIsSaved(true);
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => setIsSaved(false), 2000);
+  };
 
   const isAutoApply = mode === "auto_apply";
 
@@ -44,8 +59,7 @@ export const AutomationModeCard = ({
       dailyApplicationCap: cap,
       autoApplyMinMatchScore: threshold,
     });
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
+    triggerSavedFeedback();
   };
 
   const handleCapChange = (newCap: number) => {
@@ -55,8 +69,7 @@ export const AutomationModeCard = ({
       dailyApplicationCap: newCap,
       autoApplyMinMatchScore: threshold,
     });
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
+    triggerSavedFeedback();
   };
 
   const handleThresholdChange = (newThreshold: number) => {
@@ -66,8 +79,7 @@ export const AutomationModeCard = ({
       dailyApplicationCap: cap,
       autoApplyMinMatchScore: newThreshold,
     });
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 2000);
+    triggerSavedFeedback();
   };
 
   return (
@@ -168,14 +180,14 @@ export const AutomationModeCard = ({
           </div>
         </div>
 
-        {/* Live ATS status ticker */}
+        {/* Supported ATS feeds */}
         <div className="bg-background/80 border-border/50 text-muted-foreground flex items-center justify-between rounded-xl border px-3 py-2 text-[11px]">
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-            <span>Agent actively monitoring 50,000+ career pages</span>
+            <span className="size-2 rounded-full bg-emerald-500/80" />
+            <span>Supported Job Feeds</span>
           </div>
           <span className="text-foreground font-mono font-semibold">
-            Workday • Greenhouse • Lever • Ashby
+            Remotive • Greenhouse • Lever
           </span>
         </div>
       </CardContent>

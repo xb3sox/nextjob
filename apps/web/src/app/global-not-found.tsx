@@ -1,5 +1,6 @@
 import "~/assets/styles/globals.css";
 import { appConfig } from "~/config/app";
+import { resolveMetadataBase } from "~/lib/metadata";
 import { Providers } from "~/lib/providers/providers";
 import { BaseLayout } from "~/modules/common/layout/base";
 import { NotFound } from "~/modules/common/not-found";
@@ -7,6 +8,7 @@ import { NotFound } from "~/modules/common/not-found";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: resolveMetadataBase(appConfig.url),
   title: "Not found",
   robots: { index: false, follow: false },
 };

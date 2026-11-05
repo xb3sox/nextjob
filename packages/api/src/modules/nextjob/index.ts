@@ -5,6 +5,7 @@ export * from "./tailoring-service";
 export * from "./applications-service";
 export * from "./eligibility-benchmark";
 export * from "./policy-service";
+export * from "./privacy-service";
 export * from "./db-persistence";
 export * from "./ai-provider";
 export * from "./router";

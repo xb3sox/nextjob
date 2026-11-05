@@ -130,7 +130,9 @@ export const TodayDashboard = ({
             className="h-8 cursor-pointer gap-1.5 text-xs"
           >
             <Icons.Sparkles className="size-3.5" />
-            <span>Setup Agent (60s)</span>
+            <span>
+              {isArabic ? "إعداد المساعد (٦٠ ث)" : "Setup Agent (60s)"}
+            </span>
           </Button>
           <Button
             variant="outline"

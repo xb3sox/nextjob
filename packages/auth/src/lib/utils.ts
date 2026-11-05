@@ -15,6 +15,7 @@ export const trustedOrigins = [
   "turbostarter://",
   /* Needed only for Apple ID authentication */
   "https://appleid.apple.com",
+  ...(process.env.URL ? [new URL(process.env.URL).origin] : []),
   ...(process.env.NODE_ENV !== "production"
     ? ["http://localhost*", "https://localhost*", "exp://"]
     : []),

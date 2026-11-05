@@ -38,10 +38,23 @@ const appRouter = new Hono()
   )
   .use(
     cors({
-      origin: "*",
-      allowHeaders: ["Content-Type", "Authorization"],
+      origin: (origin) => {
+        if (!origin) return null;
+        const isTrusted = auth.options.trustedOrigins.some((trustedOrigin) =>
+          matchesPattern(origin, trustedOrigin),
+        );
+        return isTrusted ? origin : null;
+      },
+      allowHeaders: ["Content-Type", "Authorization", "x-client-platform"],
       maxAge: 3600,
       credentials: true,
+    }),
+  )
+  .get("/health", (c) =>
+    c.json({
+      status: "ok",
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
     }),
   )
   .use(loggerMiddleware((...args) => logger.info(...args)))

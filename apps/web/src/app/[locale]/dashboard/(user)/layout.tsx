@@ -4,6 +4,7 @@ import { Suspense } from "react";
 
 import { getBillingSummaryResponseSchema } from "@workspace/api/schema";
 import { handle } from "@workspace/api/utils";
+import { logger } from "@workspace/shared/logger";
 import { Icons } from "@workspace/ui-web/icons";
 import { SidebarInset, SidebarProvider } from "@workspace/ui-web/sidebar";
 
@@ -108,17 +109,24 @@ async function AuthenticatedSidebar() {
   const { user } = session;
 
   const queryClient = getQueryClient();
-  await queryClient.query({
-    ...billing.queries.summary.get(user.id),
-    queryFn: () =>
-      handle(api.billing.summary.$get, {
-        schema: getBillingSummaryResponseSchema,
-      })({
-        query: {
-          referenceId: user.id,
-        },
-      }),
-  });
+  try {
+    await queryClient.prefetchQuery({
+      ...billing.queries.summary.get(user.id),
+      queryFn: () =>
+        handle(api.billing.summary.$get, {
+          schema: getBillingSummaryResponseSchema,
+        })({
+          query: {
+            referenceId: user.id,
+          },
+        }),
+    });
+  } catch (error) {
+    logger.error("Failed to prefetch billing summary in dashboard layout", {
+      userId: user.id,
+      error,
+    });
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
