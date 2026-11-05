@@ -84,6 +84,9 @@ import {
   Circle,
   Minus,
   PanelLeft,
+  Sparkles,
+  Edit,
+  Send,
 } from "lucide-react";
 
 import { Icons as GlobalIcons } from "@workspace/ui/assets";
@@ -175,6 +178,9 @@ export const Icons = {
   TrendingUp,
   MoreHorizontal,
   Circle,
+  Sparkles,
+  Edit,
+  Send,
 };
 
 export type Icon = (typeof Icons)[keyof typeof Icons];
