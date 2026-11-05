@@ -117,6 +117,6 @@ npm run test:eval -- tailoring --coverage
 
 ## Related Documentation
 
-- [Tailoring Engine](../../packages/tailoring/src/tailoring-engine.ts)
-- [PRD - Tailoring Requirements](../../docs/PRD.md#tailoring)
-- [TASKS.md - T-16](../../TASKS.md#t-16)
+- [Tailoring Engine](../../../tailoring-service.ts)
+- [PRD - Tailoring Requirements](../../../../../../../../docs/user-guide/applying.md#2-ai-tailoring-with-evidence-constraints)
+- [TASKS.md - T-16](../../../../../../../../TASKS.md)
