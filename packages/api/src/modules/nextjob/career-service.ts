@@ -28,7 +28,15 @@ import type * as z from "zod";
 export const redactPII = (input: string): string => {
   return input
     .replace(/\b\d{3}-\d{2}-\d{4}\b/g, "[REDACTED-SSN]")
-    .replace(/\b(?:\d[ -]*?){13,16}\b/g, "[REDACTED-CARD]");
+    .replace(/\b(?:\d[ -]*?){13,16}\b/g, "[REDACTED-CARD]")
+    .replace(
+      /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
+      "[REDACTED-EMAIL]",
+    )
+    .replace(
+      /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g,
+      "[REDACTED-PHONE]",
+    );
 };
 
 interface ExtractedCandidateFact {
