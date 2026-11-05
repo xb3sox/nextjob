@@ -1,17 +1,17 @@
 /* oxlint-disable i18next/no-literal-string */
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Badge } from "@workspace/ui-web/badge";
 import { Button } from "@workspace/ui-web/button";
 import { Icons } from "@workspace/ui-web/icons";
+import { Skeleton } from "@workspace/ui-web/skeleton";
 
 import { pathsConfig } from "~/config/paths";
 import { TurboLink } from "~/modules/common/turbo-link";
-
-import { VisualDiffViewer } from "./visual-diff-viewer";
 
 import type {
   applicationItemSchema,
@@ -19,6 +19,20 @@ import type {
   tailoredDocumentItemSchema,
 } from "@workspace/api/schema";
 import type * as z from "zod";
+
+const VisualDiffViewer = dynamic(
+  () => import("./visual-diff-viewer").then((mod) => mod.VisualDiffViewer),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="space-y-3">
+        <Skeleton className="h-12 w-full rounded-xl" />
+        <Skeleton className="h-28 w-full rounded-xl" />
+        <Skeleton className="h-28 w-full rounded-xl" />
+      </div>
+    ),
+  },
+);
 
 type ApplicationItem = z.infer<typeof applicationItemSchema>;
 type TailoredDocumentItem = z.infer<typeof tailoredDocumentItemSchema>;

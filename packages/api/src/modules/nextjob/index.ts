@@ -8,4 +8,6 @@ export * from "./policy-service";
 export * from "./privacy-service";
 export * from "./db-persistence";
 export * from "./ai-provider";
+export * from "./webhook-service";
+export * from "./webhook-router";
 export * from "./router";

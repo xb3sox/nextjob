@@ -69,6 +69,7 @@ import {
   generateTailoredDocumentForJob,
   updateTailoredStatement,
 } from "./tailoring-service";
+import { atsWebhookRouter } from "./webhook-router";
 
 const enforceQuota = createMiddleware(async (c, next) => {
   const userId = c.var.user.id;
@@ -101,6 +102,8 @@ const consentPayloadSchema = z.object({
 });
 
 export const nextjobRouter = new Hono()
+  .route("/webhooks", atsWebhookRouter)
+  .route("/webhook", atsWebhookRouter)
   .use(enforceAuth)
   .get("/today", (c) => {
     c.header("Cache-Control", "private, no-cache, no-store, must-revalidate");

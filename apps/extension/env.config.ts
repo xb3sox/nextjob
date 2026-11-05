@@ -12,6 +12,7 @@ export default defineEnv({
   client: {
     VITE_PRODUCT_NAME: z.string(),
     VITE_SITE_URL: z.url(),
+    VITE_PUBLIC_API_URL: z.url().optional(),
     VITE_DEFAULT_LOCALE: z.string().optional().default("en"),
     VITE_THEME_MODE: z.enum(ThemeMode).optional().default(ThemeMode.SYSTEM),
     VITE_THEME_COLOR: z.enum(ThemeColor).optional().default(ThemeColor.ORANGE),
@@ -20,6 +21,7 @@ export default defineEnv({
     ...import.meta.env,
     VITE_PRODUCT_NAME: import.meta.env.VITE_PRODUCT_NAME,
     VITE_SITE_URL: import.meta.env.VITE_SITE_URL,
+    VITE_PUBLIC_API_URL: import.meta.env.VITE_PUBLIC_API_URL || undefined,
     VITE_DEFAULT_LOCALE: import.meta.env.VITE_DEFAULT_LOCALE,
     VITE_THEME_MODE: import.meta.env.VITE_THEME_MODE,
     VITE_THEME_COLOR: import.meta.env.VITE_THEME_COLOR,

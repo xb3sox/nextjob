@@ -3,9 +3,19 @@ import { ThemeFont, ThemeRadius } from "@workspace/ui";
 import env from "../../env.config";
 import { version } from "../../package.json";
 
+export const getApiBaseUrl = (): string => {
+  return (
+    import.meta.env.VITE_PUBLIC_API_URL ||
+    env.VITE_PUBLIC_API_URL ||
+    env.VITE_SITE_URL ||
+    "http://localhost:3000"
+  );
+};
+
 export const appConfig = {
   name: env.VITE_PRODUCT_NAME,
   url: env.VITE_SITE_URL,
+  apiUrl: getApiBaseUrl(),
   locale: env.VITE_DEFAULT_LOCALE,
   version,
   theme: {

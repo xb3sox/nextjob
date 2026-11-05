@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@workspace/ui-web/card";
 
+import { getApiBaseUrl } from "~/config/app";
 import { Layout, render } from "~/modules/common/layout/layout";
 import {
   createGreenhouseConnector,
@@ -85,7 +86,7 @@ const Popup = () => {
     setSyncStatus("Syncing with NextJob Web API...");
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_PUBLIC_API_URL || import.meta.env.VITE_SITE_URL || "http://localhost:3000"}/api/nextjob/extension/autofill-bundle`,
+        `${getApiBaseUrl()}/api/nextjob/extension/autofill-bundle`,
         {
           credentials: "include",
         },

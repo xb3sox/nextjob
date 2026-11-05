@@ -2,12 +2,14 @@ import { hc } from "hono/client";
 
 import { Platform } from "@workspace/shared/constants";
 
-import { appConfig } from "~/config/app";
+import { getApiBaseUrl } from "~/config/app";
 
 import type { AppRouter } from "@workspace/api";
 
+export { getApiBaseUrl };
+
 export const getBaseUrl = () => {
-  return appConfig.url;
+  return getApiBaseUrl();
 };
 
 export const { api } = hc<AppRouter>(getBaseUrl(), {

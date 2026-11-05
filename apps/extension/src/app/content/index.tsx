@@ -8,6 +8,7 @@ import { logger } from "@workspace/shared/logger";
 import { Button } from "@workspace/ui-web/button";
 
 import "~/assets/styles/globals.css";
+import { getApiBaseUrl } from "~/config/app";
 import {
   createGreenhouseConnector,
   detectFields,
@@ -29,7 +30,7 @@ const ContentScriptUI = () => {
     let profile: CandidateProfile | null = null;
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_PUBLIC_API_URL || import.meta.env.VITE_SITE_URL || "http://localhost:3000"}/api/nextjob/extension/autofill-bundle`,
+        `${getApiBaseUrl()}/api/nextjob/extension/autofill-bundle`,
         {
           credentials: "include",
         },

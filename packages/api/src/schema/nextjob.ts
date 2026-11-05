@@ -475,3 +475,14 @@ export const evaluateFieldPolicyPayloadSchema = z.object({
     }),
   ),
 });
+
+export const atsProviderSchema = z.enum(["greenhouse", "lever"]);
+
+export const atsWebhookPayloadSchema = z.object({
+  action: z.string().optional(),
+  event: z.string().optional(),
+  payload: z.record(z.string(), z.unknown()).optional(),
+  data: z.record(z.string(), z.unknown()).optional(),
+  triggeredAt: z.union([z.number(), z.string()]).optional(),
+  signature: z.string().optional(),
+});

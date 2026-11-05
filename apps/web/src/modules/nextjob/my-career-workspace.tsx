@@ -567,18 +567,18 @@ export const MyCareerWorkspace = ({
                     </div>
 
                     {claim.organization && (
-                      <p className="text-muted-foreground pl-4 text-xs font-semibold">
+                      <p className="text-muted-foreground ps-4 text-xs font-semibold">
                         @ {claim.organization}
                         {claim.location && ` • ${claim.location}`}
                       </p>
                     )}
 
-                    <p className="text-foreground/90 pl-4 text-xs leading-relaxed whitespace-pre-wrap">
+                    <p className="text-foreground/90 ps-4 text-xs leading-relaxed whitespace-pre-wrap">
                       {claim.description}
                     </p>
 
                     {claim.skills.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 pt-1.5 pl-4">
+                      <div className="flex flex-wrap gap-1.5 ps-4 pt-1.5">
                         {claim.skills.map((skill) => (
                           <span
                             key={skill}

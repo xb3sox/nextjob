@@ -31,23 +31,30 @@ export default defineConfig({
   manifest: async () => {
     const { appConfig } = await import("./src/config/app");
     const site = URL.canParse(appConfig.url) ? new URL(appConfig.url) : null;
+    const api =
+      appConfig.apiUrl && URL.canParse(appConfig.apiUrl)
+        ? new URL(appConfig.apiUrl)
+        : null;
+
+    const hostPermissions = new Set<string>([
+      "*://*.greenhouse.io/*",
+      "*://*.lever.co/*",
+      "*://*.myworkdayjobs.com/*",
+      "*://*.ashbyhq.com/*",
+    ]);
+
+    if (site) {
+      hostPermissions.add(`${site.protocol}//${site.hostname}/*`);
+    }
+
+    if (api) {
+      hostPermissions.add(`${api.protocol}//${api.hostname}/*`);
+    }
+
     return {
       name: appConfig.name,
       permissions: ["storage", "cookies"],
-      host_permissions: site
-        ? [
-            `${site.protocol}//${site.hostname}/*`,
-            "*://*.greenhouse.io/*",
-            "*://*.lever.co/*",
-            "*://*.myworkdayjobs.com/*",
-            "*://*.ashbyhq.com/*",
-          ]
-        : [
-            "*://*.greenhouse.io/*",
-            "*://*.lever.co/*",
-            "*://*.myworkdayjobs.com/*",
-            "*://*.ashbyhq.com/*",
-          ],
+      host_permissions: Array.from(hostPermissions),
       browser_specific_settings: {
         gecko: {
           strict_min_version: "140.0",

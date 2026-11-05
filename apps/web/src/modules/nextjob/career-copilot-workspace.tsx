@@ -247,8 +247,8 @@ export const CareerCopilotWorkspace = () => {
               <div
                 className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                   msg.role === "user"
-                    ? "bg-foreground text-background rounded-br-none"
-                    : "bg-muted/40 border-border/50 text-foreground rounded-bl-none border"
+                    ? "bg-foreground text-background rounded-ee-none"
+                    : "bg-muted/40 border-border/50 text-foreground rounded-es-none border"
                 }`}
               >
                 <p className="whitespace-pre-wrap">{msg.content}</p>

@@ -2,7 +2,7 @@ import { Badge } from "@workspace/ui-web/badge";
 import { Button } from "@workspace/ui-web/button";
 import { Icons } from "@workspace/ui-web/icons";
 
-interface VisualDiffStatement {
+export interface VisualDiffStatement {
   id: string;
   originalText: string;
   proposedText: string;
@@ -12,7 +12,7 @@ interface VisualDiffStatement {
   keywordsAdded?: string[];
 }
 
-interface VisualDiffViewerProps {
+export interface VisualDiffViewerProps {
   statements: VisualDiffStatement[];
   targetCompany?: string;
   targetRole?: string;

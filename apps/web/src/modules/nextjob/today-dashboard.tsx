@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,10 +14,17 @@ import { pathsConfig } from "~/config/paths";
 import { TurboLink } from "~/modules/common/turbo-link";
 
 import { AutomationModeCard } from "./automation-mode-card";
-import { OnboardingWizard } from "./onboarding-wizard";
 
 import type { todayDashboardResponseSchema } from "@workspace/api/schema";
 import type * as z from "zod";
+
+const OnboardingWizard = dynamic(
+  () => import("./onboarding-wizard").then((mod) => mod.OnboardingWizard),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
 
 type TodayDashboardData = z.infer<typeof todayDashboardResponseSchema>;
 
@@ -549,14 +557,16 @@ export const TodayDashboard = ({
       </div>
 
       {/* 60-Second Onboarding Wizard */}
-      <OnboardingWizard
-        isOpen={isOnboardingOpen}
-        onClose={() => setIsOnboardingOpen(false)}
-        onComplete={() => {
-          setIsOnboardingOpen(false);
-          void refreshToday();
-        }}
-      />
+      {isOnboardingOpen && (
+        <OnboardingWizard
+          isOpen={isOnboardingOpen}
+          onClose={() => setIsOnboardingOpen(false)}
+          onComplete={() => {
+            setIsOnboardingOpen(false);
+            void refreshToday();
+          }}
+        />
+      )}
     </div>
   );
 };

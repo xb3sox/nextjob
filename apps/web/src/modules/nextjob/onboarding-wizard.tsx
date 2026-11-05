@@ -16,7 +16,7 @@ import { Icons } from "@workspace/ui-web/icons";
 import { Input } from "@workspace/ui-web/input";
 import { Textarea } from "@workspace/ui-web/textarea";
 
-interface OnboardingWizardProps {
+export interface OnboardingWizardProps {
   isOpen: boolean;
   onClose: () => void;
   onComplete: () => void;
@@ -211,7 +211,7 @@ export const OnboardingWizard = ({
             <button
               type="button"
               onClick={() => setAutomationMode("review_first")}
-              className={`w-full cursor-pointer space-y-1 rounded-xl border p-4 text-left transition-all ${
+              className={`w-full cursor-pointer space-y-1 rounded-xl border p-4 text-start transition-all ${
                 automationMode === "review_first"
                   ? "border-foreground bg-muted/40 shadow-xs"
                   : "border-border/60 hover:border-foreground/30"
@@ -234,7 +234,7 @@ export const OnboardingWizard = ({
             <button
               type="button"
               onClick={() => setAutomationMode("auto_apply")}
-              className={`w-full cursor-pointer space-y-1 rounded-xl border p-4 text-left transition-all ${
+              className={`w-full cursor-pointer space-y-1 rounded-xl border p-4 text-start transition-all ${
                 automationMode === "auto_apply"
                   ? "border-foreground bg-muted/40 shadow-xs"
                   : "border-border/60 hover:border-foreground/30"
