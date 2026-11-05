@@ -14,6 +14,7 @@ import {
 } from "@workspace/ui-web/card";
 import { Icons } from "@workspace/ui-web/icons";
 import { Input } from "@workspace/ui-web/input";
+import { Skeleton } from "@workspace/ui-web/skeleton";
 
 import { pathsConfig } from "~/config/paths";
 import { TurboLink } from "~/modules/common/turbo-link";
@@ -668,6 +669,53 @@ export const FindJobsWorkspace = ({
             );
           })
         )}
+      </div>
+    </div>
+  );
+};
+
+export const FindJobsWorkspaceSkeleton = () => {
+  return (
+    <div className="flex flex-col gap-6 pb-12">
+      <div className="flex flex-col justify-between gap-4 border-b pb-5 sm:flex-row sm:items-center">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-96" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-36" />
+          <Skeleton className="h-9 w-32" />
+        </div>
+      </div>
+
+      <Card className="p-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <Skeleton className="h-10 flex-1 rounded-md" />
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-9 w-28" />
+            <Skeleton className="h-9 w-28" />
+            <Skeleton className="h-9 w-20" />
+            <Skeleton className="h-9 w-24" />
+          </div>
+        </div>
+      </Card>
+
+      <div className="flex flex-col gap-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Card key={i} className="p-6">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="h-4 w-80" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-8 w-28" />
+              </div>
+            </div>
+            <Skeleton className="mt-4 h-16 w-full" />
+          </Card>
+        ))}
       </div>
     </div>
   );
