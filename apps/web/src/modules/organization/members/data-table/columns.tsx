@@ -189,6 +189,7 @@ const Actions = ({ member }: { member: Member }) => {
         <DropdownMenuTrigger
           render={
             <Button variant="ghost" size="icon" disabled={groups.length <= 0}>
+              <span className="sr-only">{t("actions")}</span>
               <Icons.Ellipsis className="size-4" />
             </Button>
           }

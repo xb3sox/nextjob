@@ -25,6 +25,7 @@ import {
   getCareerWorkspace,
   importCareerDocument,
   proposeConversationalCareerUpdate,
+  redactPII,
   updateCareerPreferences,
   verifyOrUpdateCareerClaim,
 } from "../career-service";
@@ -398,6 +399,17 @@ Skills: TypeScript, Rust, PostgreSQL`,
 
     const jsonResume = exportProfileAsJsonResume(userA);
     expect(jsonResume.work.length).toBeGreaterThan(0);
+
+    // PII redaction routine verification (phone, email, SSN, card)
+    const piiText =
+      "Contact me at alice.smith@example.org or +1 (555) 234-5678. SSN: 000-12-3456.";
+    const redactedText = redactPII(piiText);
+    expect(redactedText).toContain("[REDACTED-EMAIL]");
+    expect(redactedText).toContain("[REDACTED-PHONE]");
+    expect(redactedText).toContain("[REDACTED-SSN]");
+    expect(redactedText).not.toContain("alice.smith@example.org");
+    expect(redactedText).not.toContain("555");
+    expect(redactedText).not.toContain("000-12-3456");
 
     // Preferences update & Today dashboard summary
     const updatedPrefs = updateCareerPreferences(userA, {

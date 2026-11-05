@@ -27,15 +27,23 @@ export const createAvatarPath = ({
   return `${AVATAR_PATH_PREFIX}/${ownerId}/${crypto.randomUUID()}.${extension}`;
 };
 
+/**
+ * Verifies that a storage path belongs strictly to the specified owner.
+ * Security: strictly requires the path to be contained within the owner's isolated folder,
+ * preventing cross-tenant path confusion or prefix collision attacks.
+ */
 export const isOwnedAvatarPath = ({
   path,
   ownerId,
 }: {
   path: string;
   ownerId: string;
-}) =>
-  path.startsWith(`${AVATAR_PATH_PREFIX}/${ownerId}/`) ||
-  path.startsWith(`${AVATAR_PATH_PREFIX}/${ownerId}-`);
+}) => {
+  if (!ownerId || !path) {
+    return false;
+  }
+  return path.startsWith(`${AVATAR_PATH_PREFIX}/${ownerId}/`);
+};
 
 export const getAvatarPath = ({
   avatar,

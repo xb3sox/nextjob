@@ -202,18 +202,22 @@ const Content = () => {
 
   const pan = panGesture()
     .onBegin(() => {
+      "worklet";
       startY.set(positionY.get());
     })
     .onChange((event) => {
+      "worklet";
       const next = startY.get() + event.translationY;
       positionY.set(Math.min(0, next));
     })
     .onFinalize((event) => {
-      const threshold = Math.max(64, (height.get() + offset) * 0.4);
-      const shouldDismiss =
-        positionY.get() < -threshold || event.velocityY < -500;
+      "worklet";
+      const currentHeight = height.get();
+      const currentPos = positionY.get();
+      const threshold = Math.max(64, (currentHeight + offset) * 0.4);
+      const shouldDismiss = currentPos < -threshold || event.velocityY < -500;
       if (shouldDismiss) {
-        positionY.set(withSpring(-(height.get() + offset)));
+        positionY.set(withSpring(-(currentHeight + offset)));
         scheduleOnRN(setVisible, false);
       } else {
         positionY.set(withSpring(0));
