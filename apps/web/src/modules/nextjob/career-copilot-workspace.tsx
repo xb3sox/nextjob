@@ -263,7 +263,7 @@ export const CareerCopilotWorkspace = () => {
                           router.push(pathsConfig.dashboard.user.career)
                         }
                       >
-                        <Icons.Check className="mr-1 h-3 w-3" />
+                        <Icons.Check className="me-1 h-3 w-3" />
                         Inspect in Career Graph
                       </Button>
                     </div>
@@ -413,7 +413,7 @@ export const CareerCopilotWorkspace = () => {
             className="h-9 w-full justify-start text-xs"
             onClick={() => router.push(pathsConfig.dashboard.user.career)}
           >
-            <Icons.BookOpen className="mr-2 h-3.5 w-3.5" />
+            <Icons.BookOpen className="me-2 h-3.5 w-3.5" />
             View Full Career Graph
           </Button>
           <Button
@@ -421,7 +421,7 @@ export const CareerCopilotWorkspace = () => {
             className="h-9 w-full justify-start text-xs"
             onClick={() => window.open("/api/nextjob/privacy/export", "_blank")}
           >
-            <Icons.Download className="mr-2 h-3.5 w-3.5" />
+            <Icons.Download className="me-2 h-3.5 w-3.5" />
             Export My Data (GDPR Portability)
           </Button>
         </div>

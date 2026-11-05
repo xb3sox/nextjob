@@ -185,7 +185,7 @@ export const VisualDiffViewer = ({
                         onEditStatement(stmt.id, stmt.proposedText)
                       }
                     >
-                      <Icons.Edit className="mr-1 h-3 w-3" />
+                      <Icons.Edit className="me-1 h-3 w-3" />
                       Edit Wording
                     </Button>
                   )}

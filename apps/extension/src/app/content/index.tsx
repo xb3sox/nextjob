@@ -29,7 +29,7 @@ const ContentScriptUI = () => {
     let profile: CandidateProfile | null = null;
     try {
       const response = await fetch(
-        "http://localhost:3000/api/nextjob/extension/autofill-bundle",
+        `${import.meta.env.VITE_PUBLIC_API_URL || import.meta.env.VITE_SITE_URL || "http://localhost:3000"}/api/nextjob/extension/autofill-bundle`,
         {
           credentials: "include",
         },
