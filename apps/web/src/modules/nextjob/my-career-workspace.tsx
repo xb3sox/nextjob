@@ -608,7 +608,7 @@ export const MyCareerWorkspace = ({
                           setEditDescription(claim.description);
                         }}
                       >
-                        <Icons.Edit className="mr-1 h-3 w-3" />
+                        <Icons.Edit className="me-1 h-3 w-3" />
                         Edit
                       </Button>
                       <Button
@@ -658,7 +658,7 @@ export const MyCareerWorkspace = ({
                   disabled={!conversationalPrompt.trim() || isLoading}
                   className="h-8 w-full text-xs"
                 >
-                  <Icons.Sparkles className="mr-1.5 h-3.5 w-3.5" />
+                  <Icons.Sparkles className="me-1.5 h-3.5 w-3.5" />
                   Propose Fact
                 </Button>
               </form>
@@ -795,7 +795,7 @@ export const MyCareerWorkspace = ({
                 window.open("/api/nextjob/privacy/export", "_blank")
               }
             >
-              <Icons.Download className="mr-1.5 h-3 w-3" />
+              <Icons.Download className="me-1.5 h-3 w-3" />
               Download My Data Bundle
             </Button>
           </div>
