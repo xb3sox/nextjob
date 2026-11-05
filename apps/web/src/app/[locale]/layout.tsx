@@ -10,7 +10,6 @@ import { ImpersonatingBanner } from "~/modules/admin/users/user/impersonating-ba
 import { BaseLayout } from "~/modules/common/layout/base";
 import { OfflineBanner } from "~/modules/common/offline-banner";
 import { Toaster } from "~/modules/common/toast";
-import { BuyCtaDialog } from "~/modules/marketing/layout/buy-cta-dialog";
 
 export const viewport = DEFAULT_VIEWPORT;
 export const metadata = DEFAULT_METADATA;
@@ -36,7 +35,6 @@ export default async function LocaleLayout({
         <OfflineBanner />
         <ImpersonatingBanner />
         {children}
-        <BuyCtaDialog />
         <Toaster />
       </Providers>
     </BaseLayout>

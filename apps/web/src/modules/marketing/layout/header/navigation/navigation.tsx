@@ -83,7 +83,7 @@ export const Item = ({
               <span className="relative w-fit text-sm leading-none font-medium">
                 {t(title)}
                 {isExternal(href) && (
-                  <Icons.ArrowUpRight className="-mt-1 ml-0.5 inline size-2.5" />
+                  <Icons.ArrowUpRight className="ms-0.5 -mt-1 inline size-2.5" />
                 )}
               </span>
               <p className="text-muted-foreground truncate text-sm leading-snug">

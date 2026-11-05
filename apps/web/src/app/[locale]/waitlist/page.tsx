@@ -4,7 +4,7 @@ import {
   AvatarFallback,
   AvatarGroup,
   AvatarImage,
-} from "@workspace/ui-web/components/avatar";
+} from "@workspace/ui-web/avatar";
 import { Icons } from "@workspace/ui-web/icons";
 
 import { pathsConfig } from "~/config/paths";
@@ -16,24 +16,9 @@ import { WaitlistGradient } from "~/modules/marketing/waitlist/gradient";
 
 const socials = [
   {
-    id: "x",
-    href: "https://x.com/turbostarter_",
-    icon: Icons.Twitter,
-  },
-  {
-    id: "linkedin",
-    href: "#",
-    icon: Icons.Linkedin,
-  },
-  {
-    id: "facebook",
-    href: "#",
-    icon: Icons.Facebook,
-  },
-  {
-    id: "discord",
-    href: "https://discord.gg/KjpK2uk3JP",
-    icon: Icons.Discord,
+    id: "github",
+    href: "https://github.com/xb3sox/nextjob",
+    icon: Icons.Github,
   },
 ] as const;
 

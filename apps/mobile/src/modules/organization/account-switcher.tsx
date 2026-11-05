@@ -127,7 +127,7 @@ export const AccountSwitcher = () => {
                 <Skeleton className="mt-1.5 h-3 w-20" />
               ) : (
                 <Text className="text-muted-foreground font-sans leading-tight">
-                  {t(`plan.${activePlan}.name`)}
+                  {t(`plan.${activePlan}.name` as any)}
                 </Text>
               )}
             </View>

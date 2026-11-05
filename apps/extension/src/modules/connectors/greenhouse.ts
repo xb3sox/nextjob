@@ -18,12 +18,12 @@ export interface GreenhouseConnectorInstance {
   fill: (
     root: ParentNode,
     payload: ConnectorFillPayload,
-  ) => ConnectorFillResult;
+  ) => Promise<ConnectorFillResult>;
   recordSubmission: (
     jobId: string,
     idempotencyKey: string,
     submissionHash?: string,
-  ) => SubmissionRecord;
+  ) => Promise<SubmissionRecord>;
   clearHistory: () => void;
 }
 
@@ -87,19 +87,19 @@ const fillElement = (
   }
 };
 
-const computeSubmissionHash = (
+const computeSubmissionHash = async (
   jobId: string,
   email: string,
   idempotencyKey: string,
-): string => {
+): Promise<string> => {
   const raw = `${jobId}:${email}:${idempotencyKey}`;
-  let hash = 0;
-  for (let i = 0; i < raw.length; i++) {
-    const char = raw.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  return `gh_${Math.abs(hash).toString(16).padStart(8, "0")}`;
+  const msgBuffer = new TextEncoder().encode(raw);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return hashHex;
 };
 
 const resolveFieldMappings = (
@@ -374,10 +374,10 @@ export const createGreenhouseConnector = (
     );
   };
 
-  const fill = (
+  const fill = async (
     root: ParentNode,
     payload: ConnectorFillPayload,
-  ): ConnectorFillResult => {
+  ): Promise<ConnectorFillResult> => {
     const detection = detectGreenhouseForm(root);
 
     if (!detection.isDetected || !detection.formElement) {
@@ -446,7 +446,7 @@ export const createGreenhouseConnector = (
       }
     }
 
-    const submissionHash = computeSubmissionHash(
+    const submissionHash = await computeSubmissionHash(
       targetJobId,
       payload.profile.email,
       payload.idempotencyKey,
@@ -465,16 +465,18 @@ export const createGreenhouseConnector = (
     };
   };
 
-  const recordSubmission = (
+  const recordSubmission = async (
     jobId: string,
     idempotencyKey: string,
     submissionHash?: string,
-  ): SubmissionRecord => {
+  ): Promise<SubmissionRecord> => {
+    const finalHash =
+      submissionHash ||
+      (await computeSubmissionHash(jobId, "", idempotencyKey));
     const record: SubmissionRecord = {
       jobId,
       idempotencyKey,
-      submissionHash:
-        submissionHash || computeSubmissionHash(jobId, "", idempotencyKey),
+      submissionHash: finalHash,
       submittedAt: new Date().toISOString(),
       platform: "greenhouse",
     };

@@ -1,4 +1,4 @@
-# Privacy & Data Rights API (`/privacy`)
+# Privacy & Data Rights API (`/api/nextjob/privacy`)
 
 The Privacy & Data Rights domain enforces candidate GDPR / CCPA rights, including full data export, account deletion, consent record versioning, and learning preferences.
 
@@ -6,12 +6,12 @@ The Privacy & Data Rights domain enforces candidate GDPR / CCPA rights, includin
 
 ## Endpoints Summary
 
-| Method | Endpoint           | Description                                     | Auth Required | RBAC Role |
-| ------ | ------------------ | ----------------------------------------------- | ------------- | --------- |
-| `POST` | `/privacy/export`  | Request complete JSON package of candidate data | Yes           | candidate |
-| `POST` | `/privacy/delete`  | Request permanent erasure of profile & PII data | Yes           | candidate |
-| `GET`  | `/privacy/consent` | Retrieve active candidate consent records       | Yes           | candidate |
-| `POST` | `/privacy/consent` | Grant or revoke explicit processing consent     | Yes           | candidate |
+| Method | Endpoint                       | Description                                     | Auth Required | RBAC Role |
+| ------ | ------------------------------ | ----------------------------------------------- | ------------- | --------- |
+| `GET`  | `/api/nextjob/privacy/export`  | Request complete JSON package of candidate data | Yes           | candidate |
+| `POST` | `/api/nextjob/privacy/delete`  | Request permanent erasure of profile & PII data | Yes           | candidate |
+| `GET`  | `/api/nextjob/privacy/consent` | Retrieve active candidate consent records       | Yes           | candidate |
+| `POST` | `/api/nextjob/privacy/consent` | Grant or revoke explicit processing consent     | Yes           | candidate |
 
 ---
 

@@ -117,7 +117,7 @@ const INITIAL_PUBLIC_JOB_LISTINGS: RawJobListing[] = [
     sponsorshipAvailable: true,
     allowedCountries: ["Global", "US", "UK", "UAE", "DE", "CA"],
     status: "active",
-    postedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    postedAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
   },
   {
     id: "job-greenhouse-102",
@@ -142,13 +142,14 @@ const INITIAL_PUBLIC_JOB_LISTINGS: RawJobListing[] = [
     sponsorshipAvailable: true,
     allowedCountries: ["Global", "US", "UK", "UAE", "DE", "CA"],
     status: "active",
-    postedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    postedAt: new Date(Date.now() - 42 * 60 * 1000).toISOString(),
   },
   {
     id: "job-lever-203",
     externalId: "lever-203",
-    sourceName: "Lever Public Board",
-    sourceUrl: "https://jobs.lever.co/novapay/staff-ai-platform-engineer-203",
+    sourceName: "Ashby Direct Career Page",
+    sourceUrl:
+      "https://jobs.ashbyhq.com/novapay/staff-ai-platform-engineer-203",
     title: "Staff AI Platform Engineer",
     company: "NovaPay",
     location: "London, UK / Hybrid",
@@ -476,6 +477,10 @@ const createDefaultSeedForUser = (userId: string): UserCareerStore => {
     requireApprovalForProfileChanges: true,
     workAuthorizationCountries: ["Global", "UAE", "UK", "US"],
     requiresSponsorship: false,
+    automationMode: "review_first",
+    autoApplyMinMatchScore: 85,
+    dailyApplicationCap: 15,
+    autoApplyKeywords: ["TypeScript", "Next.js", "Full-Stack"],
   };
 
   const reusableAnswers: ReusableAnswerItem[] = [
@@ -583,6 +588,10 @@ export const upsertGlobalJobListings = (listings: RawJobListing[]): number => {
 export const resetStoreForTesting = (): void => {
   userStores.clear();
   globalJobCatalog = [...INITIAL_PUBLIC_JOB_LISTINGS];
+};
+
+export const deleteUserStore = (userId: string): boolean => {
+  return userStores.delete(userId);
 };
 
 export const createId = (prefix: string): string => {

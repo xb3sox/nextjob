@@ -34,7 +34,20 @@ export default defineConfig({
     return {
       name: appConfig.name,
       permissions: ["storage", "cookies"],
-      host_permissions: site ? [`${site.protocol}//${site.hostname}/*`] : [],
+      host_permissions: site
+        ? [
+            `${site.protocol}//${site.hostname}/*`,
+            "*://*.greenhouse.io/*",
+            "*://*.lever.co/*",
+            "*://*.myworkdayjobs.com/*",
+            "*://*.ashbyhq.com/*",
+          ]
+        : [
+            "*://*.greenhouse.io/*",
+            "*://*.lever.co/*",
+            "*://*.myworkdayjobs.com/*",
+            "*://*.ashbyhq.com/*",
+          ],
       browser_specific_settings: {
         gecko: {
           strict_min_version: "140.0",

@@ -23,12 +23,23 @@ export default function UserLayout() {
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger
-        name="ai"
+        name="jobs"
         activityEnabled
         disableAutomaticContentInsets
       >
-        <NativeTabs.Trigger.Icon sf="sparkles.2" drawable="ic_menu_star" />
-        <NativeTabs.Trigger.Label>{t("ai")}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: "briefcase", selected: "briefcase.fill" }}
+          drawable="ic_menu_star"
+        />
+        <NativeTabs.Trigger.Label>Jobs</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="applications">
+        <NativeTabs.Trigger.Icon
+          sf={{ default: "doc.text", selected: "doc.text.fill" }}
+          drawable="ic_menu_star"
+        />
+        <NativeTabs.Trigger.Label>Applications</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="settings">

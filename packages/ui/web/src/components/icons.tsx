@@ -73,6 +73,10 @@ import {
   Calendar,
   ShieldUser,
   Building,
+  Briefcase,
+  ShieldCheck,
+  AlertCircle,
+  FileText,
   HandCoins,
   Code,
   VenetianMask,
@@ -84,6 +88,7 @@ import {
   Circle,
   Minus,
   PanelLeft,
+  Radio,
   Sparkles,
   Edit,
   Send,
@@ -93,6 +98,10 @@ import { Icons as GlobalIcons } from "@workspace/ui/assets";
 
 export const Icons = {
   ...GlobalIcons,
+  Sparkles,
+  Edit,
+  Send,
+  Radio,
   Minus,
   PanelLeft,
   Eye,
@@ -174,13 +183,14 @@ export const Icons = {
   PlusCircle,
   ShieldUser,
   Building,
+  Briefcase,
+  ShieldCheck,
+  AlertCircle,
+  FileText,
   HandCoins,
   TrendingUp,
   MoreHorizontal,
   Circle,
-  Sparkles,
-  Edit,
-  Send,
 };
 
 export type Icon = (typeof Icons)[keyof typeof Icons];

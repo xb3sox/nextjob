@@ -30,7 +30,7 @@ const menu = [
       {
         title: "findJobs",
         href: pathsConfig.dashboard.user.jobs,
-        icon: <Icons.Search />,
+        icon: <Icons.Briefcase />,
       },
       {
         title: "myCareer",
@@ -40,7 +40,7 @@ const menu = [
       {
         title: "applications",
         href: pathsConfig.dashboard.user.applications,
-        icon: <Icons.BookOpen />,
+        icon: <Icons.FileText />,
       },
       {
         title: "ai",

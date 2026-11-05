@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-import { Badge } from "@workspace/ui-web/components/badge";
-import { Button } from "@workspace/ui-web/components/button";
+import { Badge } from "@workspace/ui-web/badge";
+import { Button } from "@workspace/ui-web/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@workspace/ui-web/components/card";
+} from "@workspace/ui-web/card";
 
 import { Layout, render } from "~/modules/common/layout/layout";
 import {
@@ -110,7 +110,7 @@ const Popup = () => {
     setSyncStatus("Using cached verified Career Graph");
   };
 
-  const handleRunDryRunAutofill = () => {
+  const handleRunDryRunAutofill = async () => {
     if (isPaused) {
       setLastFillReport("Automation paused by user kill-switch.");
       return;
@@ -119,7 +119,7 @@ const Popup = () => {
     const container = document.createElement("div");
     container.innerHTML = createMockGreenhouseHtml();
     const connector = createGreenhouseConnector({ allowDuplicates: true });
-    const result = connector.fill(container, {
+    const result = await connector.fill(container, {
       jobId: "gh-dryrun-991",
       idempotencyKey: `idem-${Date.now()}`,
       profile,

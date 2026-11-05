@@ -19,6 +19,7 @@ export const config = billingConfigSchema.parse({
       name: "plan.free.name",
       description: "plan.free.description",
       features: Object.values(FEATURES[BillingPlan.FREE]),
+      limits: { applications: 25 },
       variants: [
         {
           id: "free-onetime-flat",
@@ -91,11 +92,12 @@ export const config = billingConfigSchema.parse({
       ],
     },
     {
-      id: BillingPlan.PREMIUM,
-      name: "plan.premium.name",
-      description: "plan.premium.description",
-      badge: "plan.premium.badge",
-      features: Object.values(FEATURES[BillingPlan.PREMIUM]),
+      id: BillingPlan.STARTER,
+      name: "plan.starter.name",
+      description: "plan.starter.description",
+      badge: "plan.starter.badge",
+      features: Object.values(FEATURES[BillingPlan.STARTER]),
+      limits: { applications: 600 },
       variants: [
         /* WEB */
         {
@@ -266,10 +268,29 @@ export const config = billingConfigSchema.parse({
       ],
     },
     {
-      id: BillingPlan.ENTERPRISE,
-      name: "plan.enterprise.name",
-      description: "plan.enterprise.description",
-      features: Object.values(FEATURES[BillingPlan.ENTERPRISE]),
+      id: BillingPlan.PRO,
+      name: "plan.pro.name",
+      description: "plan.pro.description",
+      features: Object.values(FEATURES[BillingPlan.PRO]),
+      limits: { applications: 1500 },
+      variants: [
+        {
+          id: "pro-recurring-flat-month",
+          label: "common:contactUs",
+          href: "/contact",
+          type: BillingType.FLAT,
+          model: BillingModel.RECURRING,
+          interval: RecurringInterval.MONTH,
+          custom: true,
+        },
+      ],
+    },
+    {
+      id: BillingPlan.POWER,
+      name: "plan.power.name",
+      description: "plan.power.description",
+      features: Object.values(FEATURES[BillingPlan.POWER]),
+      limits: { applications: 4500 },
       variants: [
         {
           id: "enterprise-onetime-flat",

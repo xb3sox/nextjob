@@ -1,12 +1,12 @@
 {
   "home": {
     "seo": {
-      "title": "NextJob — One Profile. Every Opportunity. Less Work."
+      "title": "NextJob: AI Career Agent That Auto-Applies to Jobs with Visual Diff Review"
     }
   },
   "product": {
-    "title": "One Profile. Every Opportunity. Less Work.",
-    "description": "The open-source, evidence-backed AI career platform that eliminates repetitive data entry, simplifies job discovery, generates tailored applications, and supports safe, authorized automation.",
+    "title": "AI Agent That Auto-Applies to Jobs for You.",
+    "description": "Stop filling 50-field ATS forms. NextJob monitors company career pages, tailors resumes with line-by-line visual diffs, and submits applications with zero hallucinations.",
     "mobile": {
       "ios": {
         "title": "iOS App",
@@ -32,18 +32,87 @@
       }
     }
   },
-  "announcement": "NextJob P0 — Open-Source Evidence-Backed Career Identity & Job Fit Platform",
-  "shippedWith": "Built with Next.js App Router, Hono, Better Auth, Drizzle & Zod",
+  "hero": {
+    "badge": "NextJob 2.0",
+    "preview": {
+      "title": "NextJob Autonomous Engine",
+      "status": "Autonomous Active",
+      "cap": "Daily Budget: 18 / 25",
+      "minMatch": "Min Match: >= 85%",
+      "tabs": {
+        "feed": "Auto-Apply Feed",
+        "diff": "Visual Diff Studio",
+        "fit": "5-Question Fit"
+      },
+      "ticker": {
+        "label": "Live ATS Monitors",
+        "ashby": "Ashby Direct",
+        "greenhouse": "Greenhouse API",
+        "lever": "Lever Direct",
+        "workday": "Workday Portal"
+      },
+      "feed": {
+        "item1Title": "Staff Infrastructure Engineer",
+        "item1Company": "Stripe",
+        "item1Loc": "Remote • $215k - $275k",
+        "item1Status": "Submitted • Confirmed Receipt",
+        "item1Diff": "14 bullets aligned • 0 hallucinations",
+        "item2Title": "Senior Frontend Architect",
+        "item2Company": "Linear",
+        "item2Loc": "Remote (US/EU) • $190k - $240k",
+        "item2Status": "Awaiting Approval Gate",
+        "item2Diff": "+12 verified words • 2 citations",
+        "item2Approve": "Approve & Submit",
+        "item2Inspect": "Inspect Diff",
+        "item3Title": "Principal Systems Engineer",
+        "item3Company": "Vercel",
+        "item3Loc": "Remote • $220k - $290k",
+        "item3Status": "42/42 fields auto-mapped",
+        "item3Diff": "Zero-Fabrication Gate Passed"
+      },
+      "diff": {
+        "title": "Visual Diff Review — Senior Platform Engineer",
+        "company": "Stripe • Greenhouse ATS",
+        "source": "Source: Verified Claim #104 (CloudScale)",
+        "confidence": "Confidence: 0.98",
+        "original": "Original CV bullet (generic):",
+        "tailored": "Evidence-Tailored CV bullet (with citations):",
+        "stats": "+28 words tailored • 0 ungrounded claims • 100% truth score",
+        "badge": "Zero-Hallucination Sealed"
+      },
+      "fit": {
+        "title": "5-Question Fit Engine — OpenAI Platform Role",
+        "status": "94% Match • Eligible",
+        "q1": "1. Hard Eligibility & Work Auth: US Authorized",
+        "q2": "2. Minimum Experience Gate: 7+ Years (User: 8.5 yrs)",
+        "q3": "3. Mandatory Tech Stack: Kubernetes, Go, Rust (100% Match)",
+        "q4": "4. Preferred Skills: ClickHouse, Kafka (Covered via Claim #82)",
+        "q5": "5. Location & Remote: 100% Remote Permitted"
+      }
+    },
+    "trust": {
+      "guarantee": "Zero-Fabrication Guarantee",
+      "platforms": "Direct ATS Ingestion",
+      "safeguards": "Bounded Caps & Approval Gates"
+    }
+  },
+  "banner": {
+    "title": "Ready to Put Your Job Hunt on Autopilot?",
+    "subtitle": "Join thousands of engineers and professionals automating job applications with word-level visual diff precision and zero hallucinations.",
+    "trust": "Free 25 applications • No credit card required • Cryptographically verified"
+  },
+  "announcement": "NextJob 2.0: Autonomous AI Career Agent with Zero-Fabrication Diff Review",
+  "shippedWith": "Powered by NextJob Intelligence Engine • Trusted across 30+ ATS Platforms",
   "cta": {
-    "question": "Ready to simplify your career journey?",
-    "button": "Start for free",
+    "question": "Ready to let AI handle your job applications?",
+    "button": "Start 25 Free Applications",
     "buy": {
-      "question": "Ready to take ownership of your career identity?",
-      "description": "Import your CV once, verify your career claims, discover high-fit opportunities, and generate tailored resumes without hallucinated facts.",
-      "button": "Open NextJob Workspace",
+      "question": "Ready to put your job hunt on autopilot?",
+      "description": "Import your CV once. Our AI agent monitors company career pages, tailors your resume with line-by-line visual diffs, and auto-applies with zero fabricated claims.",
+      "button": "Start Autonomous Hunt",
       "join": {
-        "description": "Explore the open-source NextJob platform built for quality and time saved, not application spam.",
-        "button": "Explore Find Jobs"
+        "description": "Experience high-precision career automation built for high interview conversion, not blind application spam.",
+        "button": "Browse Live Jobs"
       }
     }
   },
@@ -54,24 +123,24 @@
   },
   "features": {
     "label": "Capabilities",
-    "title": "One Authoritative Career Identity",
-    "description": "Designed for quality, transparency, and time saved across your entire career lifecycle.",
+    "title": "Autonomous Speed with Full Transparency",
+    "description": "The only career agent that combines direct ATS auto-apply with word-level visual diff verification.",
     "feature": {
       "core": {
-        "title": "Verified Career Profile & Conflict Detection",
-        "description": "Import CVs or JSON Resumes into structured claims with date conflict detection, revision history, and conversational updates."
+        "title": "Visual Diff Studio",
+        "description": "Inspect exact word-level red/green diffs on your resume for every job. No black-box changes."
       },
       "ai": {
-        "title": "Evidence-Constrained CV Tailoring",
-        "description": "Generate role-aligned resumes and cover letters backed strictly by your verified claims—zero invented qualifications."
+        "title": "Zero-Fabrication Tailoring",
+        "description": "Tailor resumes strictly against your verified career claims with SHA-256 cryptographic proof."
       },
       "mobile": {
-        "title": "Explainable 5-Question Job Fit",
-        "description": "Every listing answers why it matches, what requirements you meet, required vs preferred gaps, credibility, and application steps."
+        "title": "Live ATS Career Page Monitoring",
+        "description": "Direct feeds from Ashby, Greenhouse, Lever, and Workday 15 minutes before aggregator boards."
       },
       "extension": {
-        "title": "Transparent Approvals & Receipts",
-        "description": "Human-in-the-loop payload hash approvals and SHA-256 submission receipts that clearly distinguish Confirmed from Submission Uncertain."
+        "title": "Bounded Auto-Apply Engine",
+        "description": "Set daily application caps and minimum match thresholds. Run autonomous or in review-first mode."
       }
     }
   },

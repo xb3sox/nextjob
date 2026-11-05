@@ -47,10 +47,10 @@ export const config = billingConfigSchema.parse({
       ],
     },
     {
-      id: BillingPlan.PREMIUM,
-      name: "plan.premium.name",
-      description: "plan.premium.description",
-      badge: "plan.premium.badge",
+      id: BillingPlan.STARTER,
+      name: "plan.starter.name",
+      description: "plan.starter.description",
+      badge: "plan.starter.badge",
       features: ["FEATURE_1", "FEATURE_2", "FEATURE_3", "FEATURE_4"],
       limits: {
         projects: 10,
@@ -92,9 +92,9 @@ export const config = billingConfigSchema.parse({
       ],
     },
     {
-      id: BillingPlan.ENTERPRISE,
-      name: "plan.enterprise.name",
-      description: "plan.enterprise.description",
+      id: BillingPlan.PRO,
+      name: "plan.pro.name",
+      description: "plan.pro.description",
       badge: null,
       features: [
         "FEATURE_1",
@@ -102,6 +102,31 @@ export const config = billingConfigSchema.parse({
         "FEATURE_3",
         "FEATURE_4",
         "FEATURE_5",
+      ],
+      variants: [
+        {
+          id: "pro-lifetime",
+          type: BillingType.FLAT,
+          custom: true,
+          label: "common:contactUs",
+          href: "/contact",
+          hidden: false,
+          model: BillingModel.ONE_TIME,
+        },
+      ],
+    },
+    {
+      id: BillingPlan.POWER,
+      name: "plan.power.name",
+      description: "plan.power.description",
+      badge: null,
+      features: [
+        "FEATURE_1",
+        "FEATURE_2",
+        "FEATURE_3",
+        "FEATURE_4",
+        "FEATURE_5",
+        "FEATURE_6",
       ],
       variants: [
         {

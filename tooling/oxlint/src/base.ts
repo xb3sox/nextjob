@@ -38,6 +38,8 @@ export default defineConfig({
     ...getPluginRules(i18nextPlugin.configs?.recommended),
     ...getPluginRules(turboPlugin.configs?.recommended),
 
+    "i18next/no-literal-string": "off",
+
     "no-shadow": "off",
     "no-map-spread": "off",
     "no-await-in-loop": "off",

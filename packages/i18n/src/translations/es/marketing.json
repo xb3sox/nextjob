@@ -1,4 +1,73 @@
 {
+  "banner": {
+    "title": "¿Listo para poner tu búsqueda de empleo en piloto automático?",
+    "subtitle": "Únete a miles de profesionales automatizando postulaciones laborales con precisión de diferencias visuales y cero alucinaciones.",
+    "trust": "25 postulaciones gratuitas • Sin tarjeta de crédito • Criptográficamente verificado"
+  },
+  "hero": {
+    "badge": "NextJob 2.0",
+    "preview": {
+      "title": "Motor Autónomo NextJob",
+      "status": "Autónomo Activo",
+      "cap": "Presupuesto Diario: 18 / 25",
+      "minMatch": "Coincidencia Mín: >= 85%",
+      "tabs": {
+        "feed": "Flujo de Postulación",
+        "diff": "Estudio de Diferencias",
+        "fit": "Ajuste de 5 Preguntas"
+      },
+      "ticker": {
+        "label": "Monitores ATS en Vivo",
+        "ashby": "Ashby Directo",
+        "greenhouse": "Greenhouse API",
+        "lever": "Lever Directo",
+        "workday": "Portal Workday"
+      },
+      "feed": {
+        "item1Title": "Staff Infrastructure Engineer",
+        "item1Company": "Stripe",
+        "item1Loc": "Remoto • $215k - $275k",
+        "item1Status": "Enviado • Recibo Confirmado",
+        "item1Diff": "14 viñetas alineadas • 0 alucinaciones",
+        "item2Title": "Senior Frontend Architect",
+        "item2Company": "Linear",
+        "item2Loc": "Remoto (US/EU) • $190k - $240k",
+        "item2Status": "Esperando Puerta de Aprobación",
+        "item2Diff": "+12 palabras verificadas • 2 citas",
+        "item2Approve": "Aprobar y Enviar",
+        "item2Inspect": "Inspeccionar Diferencias",
+        "item3Title": "Principal Systems Engineer",
+        "item3Company": "Vercel",
+        "item3Loc": "Remoto • $220k - $290k",
+        "item3Status": "42/42 campos mapeados",
+        "item3Diff": "Control Cero-Fabricación Aprobado"
+      },
+      "diff": {
+        "title": "Revisión de Diferencias — Senior Platform Engineer",
+        "company": "Stripe • Greenhouse ATS",
+        "source": "Fuente: Afirmación Verificada #104 (CloudScale)",
+        "confidence": "Confianza: 0.98",
+        "original": "Viñeta original del CV (genérica):",
+        "tailored": "Viñeta adaptada con evidencia (con citas):",
+        "stats": "+28 palabras adaptadas • 0 afirmaciones infundadas • 100% puntuación de verdad",
+        "badge": "Sellado Cero-Alucinación"
+      },
+      "fit": {
+        "title": "Motor de Ajuste de 5 Preguntas — OpenAI Platform Role",
+        "status": "94% Coincidencia • Elegible",
+        "q1": "1. Elegibilidad estricta y autorización: Autorizado US",
+        "q2": "2. Experiencia mínima: 7+ Años (Usuario: 8.5 años)",
+        "q3": "3. Pila obligatoria: Kubernetes, Go, Rust (100% Coincidencia)",
+        "q4": "4. Habilidades preferidas: ClickHouse, Kafka (Cubierto en #82)",
+        "q5": "5. Ubicación y remoto: 100% Remoto Permitido"
+      }
+    },
+    "trust": {
+      "guarantee": "Garantía de Cero Fabricación",
+      "platforms": "Ingesta Directa de ATS",
+      "safeguards": "Límites Acotados y Puertas de Aprobación"
+    }
+  },
   "home": {
     "seo": {
       "title": "TurboStarter - lanza tu SaaS más rápido con un kit de inicio full-stack"

@@ -11,25 +11,9 @@ import { StatusIndicator } from "~/modules/marketing/layout/status-indicator";
 
 const socials = [
   {
-    id: "x",
-    href: "https://x.com/turbostarter_",
-    icon: Icons.Twitter,
-  },
-  {
     id: "github",
-    href: "https://github.com/turbostarter",
+    href: "https://github.com/xb3sox/nextjob",
     icon: Icons.Github,
-  },
-
-  {
-    id: "facebook",
-    href: "#",
-    icon: Icons.Facebook,
-  },
-  {
-    id: "linkedin",
-    href: "#",
-    icon: Icons.Linkedin,
   },
 ];
 

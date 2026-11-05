@@ -94,7 +94,7 @@ export const AccountSwitcher = memo<AccountSwitcherProps>(({ user }) => {
                   )}
                 </Avatar>
 
-                <div className="grid flex-1 text-left text-sm leading-tight">
+                <div className="grid flex-1 text-start text-sm leading-tight">
                   <span className="truncate font-medium">
                     {activeOrganization
                       ? activeOrganization.name
@@ -104,12 +104,12 @@ export const AccountSwitcher = memo<AccountSwitcherProps>(({ user }) => {
                     <Skeleton className="mt-1 h-3 w-20" />
                   ) : (
                     <span className="text-muted-foreground truncate text-xs capitalize">
-                      {t(`plan.${activePlan}.name`)}
+                      {t(`plan.${activePlan}.name` as any)}
                     </span>
                   )}
                 </div>
 
-                <Icons.ChevronsUpDown className="ml-auto" />
+                <Icons.ChevronsUpDown className="ms-auto" />
               </SidebarMenuButton>
             }
           />
@@ -147,7 +147,7 @@ export const AccountSwitcher = memo<AccountSwitcherProps>(({ user }) => {
                       </Avatar>
                       {t("account.personal")}
                       {!activeOrganization && (
-                        <Icons.Check className="ml-auto" />
+                        <Icons.Check className="ms-auto" />
                       )}
                     </TurboLink>
                   </CommandItem>
@@ -194,7 +194,7 @@ export const AccountSwitcher = memo<AccountSwitcherProps>(({ user }) => {
                             {organization.name}
 
                             {activeOrganization?.slug === organization.slug && (
-                              <Icons.Check className="ml-auto" />
+                              <Icons.Check className="ms-auto" />
                             )}
                           </TurboLink>
                         </CommandItem>

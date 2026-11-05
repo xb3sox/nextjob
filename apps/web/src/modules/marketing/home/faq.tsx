@@ -1,3 +1,4 @@
+/* oxlint-disable i18next/no-literal-string */
 import {
   Accordion,
   AccordionContent,
@@ -53,32 +54,45 @@ export const Faq = async () => {
   const { t } = await getTranslation({ ns: "marketing" });
 
   return (
-    <Section id="faq" className="lg:flex-row lg:items-start">
-      <SectionHeader className="grow basis-0 lg:items-start">
+    <Section
+      id="faq"
+      className="gap-10 py-12 sm:py-16 md:py-20 lg:flex-row lg:items-start lg:gap-14"
+    >
+      <SectionHeader className="grow basis-0 gap-4 lg:items-start lg:text-start">
         <SectionBadge>{t("faq.label")}</SectionBadge>
-        <SectionTitle className="lg:text-left">{t("faq.title")}</SectionTitle>
-        <SectionDescription className="lg:text-left">
+        <SectionTitle className="mt-2 lg:text-start">
+          {t("faq.title")}
+        </SectionTitle>
+        <SectionDescription className="text-sm leading-relaxed sm:text-base lg:text-start">
           {t("faq.description")}
         </SectionDescription>
 
-        <TurboLink
-          href={pathsConfig.marketing.contact}
-          className={buttonVariants({
-            variant: "outline",
-          })}
-        >
-          {t("faq.cta")}
-          <Icons.ArrowRight className="ml-1 size-4" />
-        </TurboLink>
+        <div className="pt-2">
+          <TurboLink
+            href={pathsConfig.marketing.contact}
+            className={buttonVariants({
+              variant: "outline",
+              className:
+                "group h-10 px-4 text-xs sm:text-sm font-medium border-border/70 hover:bg-muted/50 transition-all",
+            })}
+          >
+            <span>{t("faq.cta")}</span>
+            <Icons.ArrowRight className="ms-1.5 size-3.5 transition-transform group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
+          </TurboLink>
+        </div>
       </SectionHeader>
 
-      <Accordion multiple className="grow basis-0">
+      <Accordion multiple className="w-full grow basis-0 space-y-2.5">
         {questions.map((question) => (
-          <AccordionItem key={question.question} value={question.question}>
-            <AccordionTrigger className="text-base">
+          <AccordionItem
+            key={question.question}
+            value={question.question}
+            className="border-border/60 bg-card/70 hover:bg-card/95 rounded-xl border px-4 shadow-xs transition-colors sm:px-5"
+          >
+            <AccordionTrigger className="text-foreground py-4 text-start text-sm font-medium hover:no-underline sm:text-base">
               {t(question.question)}
             </AccordionTrigger>
-            <AccordionContent className="text-base">
+            <AccordionContent className="text-muted-foreground pt-1 pb-4 text-xs leading-relaxed font-normal sm:text-sm">
               {t(question.answer)}
             </AccordionContent>
           </AccordionItem>

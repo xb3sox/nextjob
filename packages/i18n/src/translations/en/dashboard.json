@@ -70,5 +70,30 @@
     "tool": "Use <a>expo.dev/notifications</a> to quickly test remote notifications in real-time.",
     "docs": "Learn more at <a>turbostarter.dev/docs/mobile/push-notifications</a>.",
     "cta": "Notify"
+  },
+  "nextjob": {
+    "dashboard": {
+      "title": "Today's Pipeline",
+      "subtitle": "Active autonomous job search overview",
+      "approvalQueue": "Approval Queue",
+      "matchingRoles": "Top Matching Roles",
+      "copilot": "Copilot"
+    },
+    "findJobs": {
+      "title": "Find Jobs",
+      "searchPlaceholder": "Search roles, companies, or keywords...",
+      "allModes": "All Modes",
+      "remote": "Remote",
+      "hybrid": "Hybrid",
+      "onsite": "On-site",
+      "matchScore": "Match"
+    },
+    "applications": {
+      "title": "Applications Pipeline",
+      "needsReview": "Needs Review",
+      "active": "Active",
+      "closed": "Closed",
+      "verifyReceipt": "Verify Receipt"
+    }
   }
 }

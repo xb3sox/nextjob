@@ -866,6 +866,10 @@ export const resetCareerPreferences = (userId: string): CareerPreferences => {
     requireApprovalForProfileChanges: true,
     workAuthorizationCountries: ["Global"],
     requiresSponsorship: false,
+    automationMode: "review_first",
+    autoApplyMinMatchScore: 80,
+    dailyApplicationCap: 15,
+    autoApplyKeywords: [],
   };
   return store.preferences;
 };

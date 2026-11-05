@@ -17,19 +17,6 @@ import {
 
 import type { CandidateProfile } from "~/modules/connectors";
 
-const DEFAULT_CANDIDATE_PROFILE: CandidateProfile = {
-  firstName: " Elena",
-  lastName: "Rostova",
-  fullName: "Elena Rostova",
-  email: "elena.rostova@example.com",
-  phone: "+1-555-0144",
-  linkedin: "https://linkedin.com/in/elena-rostova",
-  github: "https://github.com/elena-rostova",
-  portfolio: "https://elenarostova.dev",
-  workAuthorization: "yes",
-  sponsorship: "no",
-};
-
 const greenhouseConnector = createGreenhouseConnector();
 
 const ContentScriptUI = () => {
@@ -37,12 +24,52 @@ const ContentScriptUI = () => {
   const platform = detectPlatform(document);
   const detectedCount = detectFields(document).length;
 
-  const handleAutofill = () => {
+  const handleAutofill = async () => {
+    setStatusText("Fetching profile...");
+    let profile: CandidateProfile | null = null;
+    try {
+      const response = await fetch(
+        "http://localhost:3000/api/nextjob/extension/autofill-bundle",
+        {
+          credentials: "include",
+        },
+      );
+      if (response.ok) {
+        const data = (await response.json()) as {
+          profile?: Record<string, string>;
+        };
+        if (data.profile) {
+          // Map backend profile structure to CandidateProfile if necessary
+          profile = {
+            firstName: data.profile.firstName || "",
+            lastName: data.profile.lastName || "",
+            fullName: data.profile.fullName || "",
+            email: data.profile.email || "",
+            phone: data.profile.phone || "",
+            linkedin: data.profile.linkedinUrl || "",
+            github: data.profile.githubUrl || "",
+            portfolio: data.profile.portfolioUrl || "",
+            workAuthorization:
+              (data.profile.workAuthorization as "yes" | "no") || undefined,
+            sponsorship:
+              (data.profile.sponsorship as "yes" | "no") || undefined,
+          };
+        }
+      }
+    } catch (e) {
+      console.error("Failed to fetch profile bundle", e);
+    }
+
+    if (!profile) {
+      setStatusText("Failed to load profile. Please log in.");
+      return;
+    }
+
     if (platform === "greenhouse") {
-      const result = greenhouseConnector.fill(document, {
+      const result = await greenhouseConnector.fill(document, {
         jobId: window.location.pathname,
         idempotencyKey: `ext-${Date.now()}`,
-        profile: DEFAULT_CANDIDATE_PROFILE,
+        profile,
       });
       setStatusText(
         result.success
@@ -52,7 +79,7 @@ const ContentScriptUI = () => {
       return;
     }
 
-    const report = runSyntheticAtsFill(document, DEFAULT_CANDIDATE_PROFILE);
+    const report = runSyntheticAtsFill(document, profile);
     setStatusText(
       `NextJob Autofilled ${report.filledCount}/${report.detectedCount} fields (${report.platform})`,
     );
@@ -73,7 +100,12 @@ const ContentScriptUI = () => {
 };
 
 export default defineContentScript({
-  matches: ["<all_urls>"],
+  matches: [
+    "*://*.greenhouse.io/*",
+    "*://*.lever.co/*",
+    "*://*.myworkdayjobs.com/*",
+    "*://*.ashbyhq.com/*",
+  ],
   cssInjectionMode: "ui",
 
   async main(ctx) {

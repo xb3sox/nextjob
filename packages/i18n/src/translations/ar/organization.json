@@ -53,7 +53,7 @@
     },
     "invitation": {
       "title": "Join {{organizationName}}",
-      "description": "<bold>{{inviterEmail}}</bold> has invited you to join <bold>{{organizationName}}</bold> on TurboStarter.",
+      "description": "<bold>{{inviterEmail}}</bold> has invited you to join <bold>{{organizationName}}</bold> on NextJob.",
       "skip": "Skip to dashboard"
     },
     "user": {
@@ -83,8 +83,8 @@
       "success_other": "Members invited successfully!",
       "email": {
         "subject": "You have been invited to join an organization",
-        "preview": "Join {{inviter}} on TurboStarter",
-        "body": "<bold>{{inviter}}</bold> has invited you to join <bold>{{organization}}</bold> on TurboStarter.",
+        "preview": "Join {{inviter}} on NextJob",
+        "body": "<bold>{{inviter}}</bold> has invited you to join <bold>{{organization}}</bold> on NextJob.",
         "or": "Or, copy and paste this link into your browser:",
         "cta": "Join {{organization}}",
         "disclaimer": "If you were not expecting this invitation, there's nothing to worry about, you can safely ignore this email."
@@ -131,7 +131,7 @@
   },
   "delete": {
     "title": "Delete organization",
-    "description": "Permanently remove this organization and all of its contents from the TurboStarter platform. This action is not reversible, so please continue with caution.",
+    "description": "Permanently remove this organization and all of its contents from the NextJob platform. This action is not reversible, so please continue with caution.",
     "cta": "Delete organization",
     "disclaimer": "You are about to delete this organization. \n\nAfter deleting it, all organization data (including members and teams) will be permanently deleted and cannot be recovered. \n\nDo you want to continue?",
     "success": "Organization deleted successfully!",

@@ -24,8 +24,9 @@ export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus];
 
 export const BillingPlan = {
   FREE: "free",
-  PREMIUM: "premium",
-  ENTERPRISE: "enterprise",
+  STARTER: "starter",
+  PRO: "pro",
+  POWER: "power",
 } as const;
 export type BillingPlan = (typeof BillingPlan)[keyof typeof BillingPlan];
 

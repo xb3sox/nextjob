@@ -4,7 +4,7 @@ import { ConsentDialogLink } from "@c15t/nextjs";
 
 import { useTranslation } from "@workspace/i18n";
 import { isExternal } from "@workspace/shared/utils";
-import { Icons } from "@workspace/ui-web/components/icons";
+import { Icons } from "@workspace/ui-web/icons";
 
 import { pathsConfig } from "~/config/paths";
 import { TurboLink } from "~/modules/common/turbo-link";
@@ -14,24 +14,20 @@ const links = [
     label: "common:product",
     items: [
       {
-        title: "marketing:product.mobile.ios.title",
-        href: "https://apps.apple.com/app/id6754278899",
+        title: "common:today",
+        href: pathsConfig.dashboard.user.index,
       },
       {
-        title: "marketing:product.mobile.android.title",
-        href: "https://play.google.com/store/apps/details?id=com.turbostarter.core",
+        title: "common:findJobs",
+        href: pathsConfig.dashboard.user.jobs,
       },
       {
-        title: "marketing:product.extension.chrome.title",
-        href: "https://chromewebstore.google.com/detail/bcjmonmlfbnngpkllpnpmnjajaciaboo",
+        title: "common:myCareer",
+        href: pathsConfig.dashboard.user.career,
       },
       {
-        title: "marketing:product.extension.firefox.title",
-        href: "https://addons.mozilla.org/addon/turbostarter_",
-      },
-      {
-        title: "marketing:product.extension.edge.title",
-        href: "https://microsoftedge.microsoft.com/addons/detail/turbostarter/ianbflanmmoeleokihabnmmcahhfijig",
+        title: "common:applications",
+        href: pathsConfig.dashboard.user.applications,
       },
     ],
   },
@@ -39,33 +35,16 @@ const links = [
     label: "resources",
     items: [
       {
-        title: "marketing:contact.label",
-        href: pathsConfig.marketing.contact,
-      },
-      {
-        title: "marketing:roadmap.title",
-        href: "https://github.com/orgs/turbostarter/projects/1",
-      },
-      {
-        title: "marketing:docs.title",
-        href: "https://www.turbostarter.dev/docs/web",
-      },
-      {
-        title: "marketing:api.title",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "about",
-    items: [
-      {
-        title: "billing:pricing.label",
-        href: pathsConfig.marketing.pricing,
+        title: "common:ai",
+        href: pathsConfig.dashboard.user.ai,
       },
       {
         title: "marketing:blog.label",
         href: pathsConfig.marketing.blog.index,
+      },
+      {
+        title: "marketing:contact.label",
+        href: pathsConfig.marketing.contact,
       },
     ],
   },
@@ -96,7 +75,7 @@ export const FooterNavigation = () => {
   const { t } = useTranslation(["common", "marketing", "billing"]);
 
   return (
-    <div className="mt-1 grid w-full max-w-200 grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="mt-1 grid w-full max-w-200 grid-cols-2 gap-8 sm:grid-cols-3">
       {links.map((link) => (
         <div className="flex w-full flex-col gap-5" key={link.label}>
           <span className="text-foreground text-sm font-medium">

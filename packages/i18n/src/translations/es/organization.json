@@ -45,7 +45,7 @@
     },
     "invitation": {
       "title": "Unirse a {{organizationName}}",
-      "description": "<bold>{{inviterEmail}}</bold> te ha invitado a unirte a <bold>{{organizationName}}</bold> en TurboStarter.",
+      "description": "<bold>{{inviterEmail}}</bold> te ha invitado a unirte a <bold>{{organizationName}}</bold> en NextJob.",
       "skip": "Ir al panel"
     },
     "user": {
@@ -75,8 +75,8 @@
       "success_other": "¡Miembros invitados exitosamente!",
       "email": {
         "subject": "Has sido invitado a unirte a una organización",
-        "preview": "Únete a {{inviter}} en TurboStarter",
-        "body": "<bold>{{inviter}}</bold> te ha invitado a unirte a <bold>{{organization}}</bold> en TurboStarter.",
+        "preview": "Únete a {{inviter}} en NextJob",
+        "body": "<bold>{{inviter}}</bold> te ha invitado a unirte a <bold>{{organization}}</bold> en NextJob.",
         "or": "O, copia y pega este enlace en tu navegador:",
         "cta": "Unirse a {{organization}}",
         "disclaimer": "Si no esperabas esta invitación, no te preocupes, puedes ignorar este correo."
@@ -121,7 +121,7 @@
   },
   "delete": {
     "title": "Eliminar organización",
-    "description": "Elimina permanentemente esta organización y todo su contenido de la plataforma TurboStarter. Esta acción no es reversible.",
+    "description": "Elimina permanentemente esta organización y todo su contenido de la plataforma NextJob. Esta acción no es reversible.",
     "cta": "Eliminar organización",
     "disclaimer": "Estás a punto de eliminar esta organización. \n\nDespués, todos los datos (incluidos miembros y equipos) serán eliminados permanentemente y no podrán recuperarse. \n\n¿Deseas continuar?",
     "success": "¡Organización eliminada exitosamente!",

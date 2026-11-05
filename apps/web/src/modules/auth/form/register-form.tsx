@@ -152,7 +152,7 @@ export const RegisterCta = () => {
               ? `${pathsConfig.auth.register}?${searchParams.toString()}`
               : pathsConfig.auth.register
           }
-          className="hover:text-primary pl-2 font-medium underline underline-offset-4"
+          className="hover:text-primary ps-2 font-medium underline underline-offset-4"
         >
           {t("register.cta")}!
         </TurboLink>

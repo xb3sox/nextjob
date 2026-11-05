@@ -149,6 +149,12 @@ export const careerPreferencesSchema = z.object({
   requireApprovalForProfileChanges: z.boolean(),
   workAuthorizationCountries: z.array(z.string()),
   requiresSponsorship: z.boolean(),
+  automationMode: z
+    .enum(["review_first", "auto_apply"])
+    .default("review_first"),
+  autoApplyMinMatchScore: z.number().default(85),
+  dailyApplicationCap: z.number().default(15),
+  autoApplyKeywords: z.array(z.string()).default([]),
 });
 
 export const reusableAnswerItemSchema = z.object({

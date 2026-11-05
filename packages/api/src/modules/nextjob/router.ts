@@ -1,5 +1,11 @@
 import { Hono } from "hono";
+import { createMiddleware } from "hono/factory";
 import * as z from "zod";
+
+import { getActivePlan, checkPlanLimit } from "@workspace/billing";
+import { getCustomersWithPurchasesByReferenceId } from "@workspace/billing/server";
+import { HttpStatusCode } from "@workspace/shared/constants";
+import { HttpException } from "@workspace/shared/utils";
 
 import { enforceAuth, validate } from "../../middleware";
 import {
@@ -51,12 +57,48 @@ import {
   toggleSavedJob,
 } from "./jobs-service";
 import { defaultPolicyEvaluator } from "./policy-service";
+import {
+  eraseCandidateData,
+  exportCandidateData,
+  getCandidateConsent,
+  updateCandidateConsent,
+} from "./privacy-service";
 import { getUserStore } from "./store";
 import {
   exportTailoredDocument,
   generateTailoredDocumentForJob,
   updateTailoredStatement,
 } from "./tailoring-service";
+
+const enforceQuota = createMiddleware(async (c, next) => {
+  const userId = c.var.user.id;
+  const store = getUserStore(userId);
+  const customers = await getCustomersWithPurchasesByReferenceId(userId);
+  const activePlanId = getActivePlan(customers);
+  const currentUsage = store.applications.length;
+
+  const limitCheck = checkPlanLimit({
+    id: activePlanId,
+    key: "applications",
+    currentUsage,
+    increment: 1,
+  });
+
+  if (!limitCheck.allowed) {
+    throw new HttpException(HttpStatusCode.PAYMENT_REQUIRED, {
+      code: "error.paymentRequired",
+      message: "Application quota exceeded. Please upgrade your billing plan.",
+    });
+  }
+
+  await next();
+});
+
+const consentPayloadSchema = z.object({
+  dataProcessingConsent: z.boolean().optional(),
+  aiAnalysisConsent: z.boolean().optional(),
+  autoApplyConsent: z.boolean().optional(),
+});
 
 export const nextjobRouter = new Hono()
   .use(enforceAuth)
@@ -171,6 +213,7 @@ export const nextjobRouter = new Hono()
   })
   .post(
     "/tailoring/generate",
+    enforceQuota,
     validate("json", generateTailoredDocumentPayloadSchema),
     (c) => {
       return c.json(
@@ -229,6 +272,7 @@ export const nextjobRouter = new Hono()
   )
   .post(
     "/applications/submit",
+    enforceQuota,
     validate("json", submitApplicationPayloadSchema),
     (c) => {
       return c.json(
@@ -315,9 +359,9 @@ export const nextjobRouter = new Hono()
     const latestExp = verifiedClaims.find(
       (claim) => claim.category === "experience",
     );
-    const userDisplayName = c.var.user.name || "Alex Rivera";
-    const [firstName = "Alex", ...lastParts] = userDisplayName.split(" ");
-    const lastName = lastParts.join(" ") || "Rivera";
+    const userDisplayName = c.var.user.name || "";
+    const [firstName = "", ...lastParts] = userDisplayName.split(" ");
+    const lastName = lastParts.join(" ");
 
     const standardFields = defaultPolicyEvaluator.evaluateBatch([
       { key: "first_name", label: "First Name" },
@@ -333,13 +377,13 @@ export const nextjobRouter = new Hono()
         firstName,
         lastName,
         fullName: userDisplayName,
-        email: c.var.user.email || "alex.rivera@nextjob.dev",
-        phone: "+1-555-019-2834",
+        email: c.var.user.email || "",
+        phone: "", // No mock phone number
         location: store.profile.location,
-        linkedinUrl: "https://linkedin.com/in/alexrivera-dev",
-        githubUrl: "https://github.com/alexrivera",
-        portfolioUrl: "https://alexrivera.dev",
-        currentCompany: latestExp?.organization ?? "CloudScale Technologies",
+        linkedinUrl: "", // No mock linkedin
+        githubUrl: "", // No mock github
+        portfolioUrl: "", // No mock portfolio
+        currentCompany: latestExp?.organization ?? "",
         currentTitle: latestExp?.title ?? store.profile.headline,
         summary: store.profile.summary,
       },
@@ -349,4 +393,18 @@ export const nextjobRouter = new Hono()
       reusableAnswers: store.reusableAnswers,
       policyPreview: standardFields,
     });
+  })
+  .get("/privacy/export", (c) => {
+    c.header("Cache-Control", "no-store");
+    return c.json(exportCandidateData(c.var.user.id));
+  })
+  .post("/privacy/delete", async (c) => {
+    return c.json(await eraseCandidateData(c.var.user.id));
+  })
+  .get("/privacy/consent", (c) => {
+    c.header("Cache-Control", "no-store");
+    return c.json(getCandidateConsent(c.var.user.id));
+  })
+  .post("/privacy/consent", validate("json", consentPayloadSchema), (c) => {
+    return c.json(updateCandidateConsent(c.var.user.id, c.req.valid("json")));
   });

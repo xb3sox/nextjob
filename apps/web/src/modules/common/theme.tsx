@@ -48,7 +48,7 @@ const Customizer = () => {
   return (
     <>
       <div className="flex items-start">
-        <div className="space-y-1 pr-2">
+        <div className="space-y-1 pe-2">
           <div className="text-base leading-none font-semibold tracking-tight">
             {t("theme.customization.title")}
           </div>
@@ -60,7 +60,7 @@ const Customizer = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="ml-auto"
+          className="ms-auto"
           onClick={() => {
             onChange(appConfig.theme);
           }}

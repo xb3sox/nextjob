@@ -32,7 +32,7 @@ export const Pricing = () => {
           components={{
             reference: (
               <TurboLink
-                href="https://www.turbostarter.dev/docs/web/billing/overview"
+                href="https://github.com/xb3sox/nextjob"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline underline-offset-4 hover:no-underline"

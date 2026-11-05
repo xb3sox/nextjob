@@ -6,12 +6,19 @@ Welcome to the NextJob REST API reference documentation. NextJob provides an API
 
 ## 1. Architecture & Overview
 
-The NextJob API is designed as a Fastify modular monolith providing a predictable, type-safe REST interface over HTTPS.
+The NextJob API is architected as high-performance, type-safe Hono modules (`@workspace/api`) integrated with Next.js App Router (`/api/[...route]`), Drizzle ORM, and Better Auth.
 
-- **Base URL (Production):** `https://api.nextjob.app/v1`
-- **Base URL (Staging):** `https://staging-api.nextjob.app/v1`
-- **Base URL (Development):** `http://localhost:8799/v1`
+- **Base URL (App Router Integration):** `/api/nextjob`
+- **Full Path Format:** `https://<domain>/api/nextjob/<endpoint>`
 - **Format:** JSON (`Content-Type: application/json`)
+- **Key Modules:**
+  - `/api/nextjob/today` - Real-time daily dashboard pipeline
+  - `/api/nextjob/career` - Career graph, claims, evidence, revisions, and import
+  - `/api/nextjob/jobs` - Job catalog and candidate-job fit scoring
+  - `/api/nextjob/tailoring` - Provenance-constrained document tailoring
+  - `/api/nextjob/applications` - Application lifecycle tracking and receipts
+  - `/api/nextjob/privacy` - GDPR Articles 17 & 20 data portability, consent, and erasure
+  - `/api/nextjob/extension` - Browser copilot and ATS autofill bundle
 
 ---
 

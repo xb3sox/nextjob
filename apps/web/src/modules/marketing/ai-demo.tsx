@@ -143,7 +143,7 @@ export const AIDemo = () => {
               onClick={() => submit(t(example.prompt))}
               key={example.prompt}
               variant="outline"
-              className="text-muted-foreground h-auto grow flex-col items-start gap-2 py-3 text-left whitespace-normal"
+              className="text-muted-foreground h-auto grow flex-col items-start gap-2 py-3 text-start whitespace-normal"
             >
               <example.icon className="size-5 shrink-0" />
               {t(example.prompt)}

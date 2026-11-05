@@ -1,10 +1,11 @@
 import { Layout, render } from "~/modules/common/layout/layout";
-import { Main } from "~/modules/common/main";
+
+import { SidepanelWorkspace } from "./sidepanel-workspace";
 
 const SidePanel = () => {
   return (
-    <Layout className="p-8">
-      <Main filename="app/sidepanel" />
+    <Layout className="p-4">
+      <SidepanelWorkspace />
     </Layout>
   );
 };

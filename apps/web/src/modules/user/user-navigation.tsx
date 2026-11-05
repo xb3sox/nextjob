@@ -65,7 +65,7 @@ export const UserNavigation = memo<UserNavigationProps>(({ user }) => {
               </AvatarFallback>
             </Avatar>
 
-            <div className="grid flex-1 text-left text-sm leading-tight">
+            <div className="grid flex-1 text-start text-sm leading-tight">
               {user.name && (
                 <span className="truncate font-medium">{user.name}</span>
               )}
@@ -73,7 +73,7 @@ export const UserNavigation = memo<UserNavigationProps>(({ user }) => {
                 <span className="truncate text-xs">{user.email}</span>
               )}
             </div>
-            <Icons.EllipsisVertical className="ml-auto size-4" />
+            <Icons.EllipsisVertical className="ms-auto size-4" />
           </SidebarMenuButton>
         }
       />
@@ -145,7 +145,7 @@ export const UserNavigation = memo<UserNavigationProps>(({ user }) => {
               <Icons.Sun className="text-muted-foreground size-4 dark:hidden" />
               <Icons.Moon className="text-muted-foreground hidden size-4 dark:block" />
               {t("theme.title")}
-              <div className="bg-primary text-muted-foreground ml-auto size-3 rounded-full"></div>
+              <div className="bg-primary text-muted-foreground ms-auto size-3 rounded-full"></div>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="space-y-4 p-6">
               <Customizer />

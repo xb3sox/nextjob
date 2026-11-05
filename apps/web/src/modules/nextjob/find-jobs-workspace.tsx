@@ -1,3 +1,4 @@
+/* oxlint-disable i18next/no-literal-string */
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -5,13 +6,7 @@ import { useState } from "react";
 
 import { Badge } from "@workspace/ui-web/badge";
 import { Button } from "@workspace/ui-web/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui-web/card";
+import { Card } from "@workspace/ui-web/card";
 import { Icons } from "@workspace/ui-web/icons";
 import { Input } from "@workspace/ui-web/input";
 import { Skeleton } from "@workspace/ui-web/skeleton";
@@ -37,17 +32,18 @@ export const FindJobsWorkspace = ({
   const [jobs, setJobs] = useState<JobWithFit[]>(initialJobs);
   const [search, setSearch] = useState("");
   const [workModeFilter, setWorkModeFilter] = useState<string>("all");
-  const [eligibilityFilter, setEligibilityFilter] = useState<string>("all");
+  const [eligibilityFilter] = useState<string>("all");
   const [savedOnly, setSavedOnly] = useState(false);
-  const [includeDuplicates, setIncludeDuplicates] = useState(false);
-  const [includeExpired, setIncludeExpired] = useState(false);
-  const [expandedJobId, setExpandedJobId] = useState<string | null>(
+  const [includeDuplicates] = useState(false);
+  const [includeExpired] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(
     initialJobs[0]?.id ?? null,
   );
   const [isLoading, setIsLoading] = useState(false);
   const [bannerMessage, setBannerMessage] = useState<string | null>(null);
 
   const isArabic = locale === "ar";
+  const selectedJob = jobs.find((j) => j.id === selectedJobId) ?? jobs[0];
 
   const fetchFilteredJobs = async (overrides?: {
     search?: string;
@@ -75,6 +71,12 @@ export const FindJobsWorkspace = ({
       if (res.ok) {
         const data = (await res.json()) as { jobs: JobWithFit[] };
         setJobs(data.jobs);
+        if (
+          data.jobs.length > 0 &&
+          !data.jobs.some((j) => j.id === selectedJobId)
+        ) {
+          setSelectedJobId(data.jobs[0]?.id ?? null);
+        }
       }
     } finally {
       setIsLoading(false);
@@ -91,12 +93,11 @@ export const FindJobsWorkspace = ({
           syncedSource: string;
           addedCount: number;
           totalCatalogCount: number;
-          mode: string;
         };
         setBannerMessage(
           isArabic
-            ? `تمت مزامنة المصادر (${syncResult.syncedSource}) — إجمالي الوظائف: ${syncResult.totalCatalogCount}.`
-            : `Synced ${syncResult.syncedSource} (${syncResult.addedCount} new, ${syncResult.totalCatalogCount} total catalog listings).`,
+            ? `تمت مزامنة المصادر (${syncResult.syncedSource}): إجمالي ${syncResult.totalCatalogCount} وظيفة.`
+            : `Synced ${syncResult.syncedSource}: ${syncResult.totalCatalogCount} active opportunities in catalog.`,
         );
         await fetchFilteredJobs();
       }
@@ -128,17 +129,15 @@ export const FindJobsWorkspace = ({
         }),
       });
       if (res.ok) {
-        const result = (await res.json()) as {
-          isDuplicate: boolean;
-        };
+        const result = (await res.json()) as { isDuplicate: boolean };
         setBannerMessage(
           result.isDuplicate
             ? isArabic
-              ? "يوجد طلب نشط بالفعل لهذه الوظيفة. يمكنك مراجعته في صفحة الطلبات."
-              : "An active application already exists for this job. Opening Applications pipeline..."
+              ? "يوجد طلب نشط بالفعل لهذه الوظيفة في مسار الطلبات."
+              : "Application already in pipeline. Check Applications workspace."
             : isArabic
-              ? "تم توليد سيرة ذاتية مخصصة مقيدة بالأدلة وإضافتها إلى الطلبات للمراجعة."
-              : "Evidence-constrained tailored CV prepared! Review and approve it in Applications.",
+              ? "تم إعداد مسودة السيرة المخصصة والطلب بنجاح! جاهز للمراجعة في الطلبات."
+              : "Tailored CV draft ready for your review in Applications.",
         );
         router.refresh();
       }
@@ -148,41 +147,50 @@ export const FindJobsWorkspace = ({
   };
 
   return (
-    <div className="flex flex-col gap-6 pb-12">
-      <div className="flex flex-col justify-between gap-4 border-b pb-5 sm:flex-row sm:items-center">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 pb-16">
+      {/* Clean Header */}
+      <div className="flex flex-col justify-between gap-3 border-b pb-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+          <div className="flex items-center gap-2">
+            <h1 className="text-foreground text-2xl font-semibold tracking-tight">
+              {isArabic ? "الوظائف المتاحة" : "Find Jobs"}
+            </h1>
+            <Badge
+              variant="outline"
+              className="font-mono text-[11px] font-normal"
+            >
+              <span className="tabular-nums">{jobs.length}</span>{" "}
+              {isArabic ? "فرصة" : "roles"}
+            </Badge>
+          </div>
+          <p className="text-muted-foreground text-xs">
             {isArabic
-              ? "البحث عن وظائف وتحليل الملاءمة"
-              : "Find Jobs & Fit Analysis"}
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            {isArabic
-              ? "اكتشف الوظائف من المصادر المسموح بها مع إزالة التكرار وتحليل الأهلية والملاءمة من 5 أسئلة."
-              : "Permitted public job feeds with SHA-256 deduplication, hard eligibility verification, and 5-question explainable fit."}
+              ? "فرص موثوقة ومطابقة لملفك المهني مع حساب الملاءمة بالأدلة."
+              : "Curated roles matching your verified career profile and preferences."}
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
             disabled={isLoading}
             onClick={handleSyncSources}
+            className="h-8 cursor-pointer text-xs"
           >
-            <Icons.Globe2 className="size-4" />
-            <span>
-              {isArabic ? "مزامنة مصادر الوظائف" : "Sync Permitted Sources"}
-            </span>
+            <Icons.Globe2 className="size-3.5" />
+            <span>{isArabic ? "مزامنة المصادر" : "Sync Feeds"}</span>
           </Button>
           <Button
             size="sm"
             variant="secondary"
+            className="h-8 cursor-pointer text-xs"
             render={
               <TurboLink href={pathsConfig.dashboard.user.applications} />
             }
           >
-            <span>{isArabic ? "عرض الطلبات" : "View Applications"}</span>
+            <Icons.FileText className="size-3.5" />
+            <span>{isArabic ? "الطلبات" : "Applications"}</span>
           </Button>
         </div>
       </div>
@@ -190,268 +198,260 @@ export const FindJobsWorkspace = ({
       {bannerMessage && (
         <div
           role="status"
-          className="border-primary/30 bg-primary/10 flex items-center justify-between rounded-lg border px-4 py-3 text-sm"
+          className="bg-muted/40 border-border/80 text-foreground flex items-center justify-between gap-3 rounded-lg border px-4 py-2.5 text-xs shadow-2xs"
         >
-          <span>{bannerMessage}</span>
+          <div className="flex items-center gap-2">
+            <Icons.Info className="text-primary size-4 shrink-0" />
+            <span>{bannerMessage}</span>
+          </div>
           <div className="flex items-center gap-2">
             <Button
               size="sm"
               variant="outline"
+              className="h-6 px-2 text-[11px]"
               render={
                 <TurboLink href={pathsConfig.dashboard.user.applications} />
               }
             >
-              {isArabic ? "الانتقال إلى الطلبات" : "Go to Applications"}
+              {isArabic ? "عرض الطلبات" : "View Pipeline"}
             </Button>
-            <Button
-              size="sm"
-              variant="ghost"
+            <button
+              type="button"
               onClick={() => setBannerMessage(null)}
+              className="text-muted-foreground hover:text-foreground cursor-pointer"
+              aria-label="Close"
             >
-              <Icons.X className="size-4" />
-            </Button>
+              <Icons.X className="size-3.5" />
+            </button>
           </div>
         </div>
       )}
 
-      {/* Search & Filters Bar */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center">
-            <div className="relative flex-1">
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    void fetchFilteredJobs({ search });
-                  }
-                }}
-                placeholder={
-                  isArabic
-                    ? "ابحث بالمسمى الوظيفي، الشركة، أو المهارة (مثل TypeScript، Next.js)..."
-                    : "Search by role, company, or skill (e.g. TypeScript, Next.js, AI)..."
-                }
-                aria-label="Search jobs"
-              />
-            </div>
+      {/* Super Minimal Search & Filter Bar */}
+      <div className="bg-card border-border/60 flex flex-col gap-3 rounded-xl border p-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative flex-1">
+          <Icons.Search className="text-muted-foreground/60 absolute start-3 top-1/2 size-3.5 -translate-y-1/2" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                void fetchFilteredJobs({ search });
+              }
+            }}
+            className="placeholder:text-muted-foreground/60 h-8 border-0 bg-transparent ps-8 text-xs focus-visible:ring-0 focus-visible:ring-offset-0"
+            placeholder={
+              isArabic
+                ? "ابحث بالمسمى أو الشركة أو المهارة..."
+                : "Search by title, company, or stack (e.g. React, Next.js, Cloud)..."
+            }
+          />
+        </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <select
-                aria-label="Filter by work mode"
-                value={workModeFilter}
-                onChange={(e) => {
-                  setWorkModeFilter(e.target.value);
-                  void fetchFilteredJobs({ workMode: e.target.value });
-                }}
-                className="bg-background border-input h-9 rounded-md border px-3 text-xs"
-              >
-                <option value="all">
-                  {isArabic ? "جميع أنماط العمل" : "All Work Modes"}
-                </option>
-                <option value="remote">
-                  {isArabic ? "عن بُعد (Remote)" : "Remote"}
-                </option>
-                <option value="hybrid">
-                  {isArabic ? "هجين (Hybrid)" : "Hybrid"}
-                </option>
-                <option value="on-site">
-                  {isArabic ? "حضوري (On-site)" : "On-site"}
-                </option>
-              </select>
+        <div className="flex flex-wrap items-center gap-1.5 border-t pt-2 sm:border-t-0 sm:pt-0">
+          {(
+            [
+              { id: "all", labelEn: "All", labelAr: "الكل" },
+              { id: "remote", labelEn: "Remote", labelAr: "عن بُعد" },
+              { id: "hybrid", labelEn: "Hybrid", labelAr: "هجين" },
+              { id: "on-site", labelEn: "On-site", labelAr: "حضوري" },
+            ] as const
+          ).map((mode) => (
+            <button
+              key={mode.id}
+              type="button"
+              onClick={() => {
+                setWorkModeFilter(mode.id);
+                void fetchFilteredJobs({ workMode: mode.id });
+              }}
+              className={`cursor-pointer rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                workModeFilter === mode.id
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+              }`}
+            >
+              {isArabic ? mode.labelAr : mode.labelEn}
+            </button>
+          ))}
 
-              <select
-                aria-label="Filter by eligibility"
-                value={eligibilityFilter}
-                onChange={(e) => {
-                  setEligibilityFilter(e.target.value);
-                  void fetchFilteredJobs({ eligibility: e.target.value });
-                }}
-                className="bg-background border-input h-9 rounded-md border px-3 text-xs"
-              >
-                <option value="all">
-                  {isArabic ? "جميع حالات الأهلية" : "All Eligibility"}
-                </option>
-                <option value="eligible">
-                  {isArabic ? "مؤهل (Eligible)" : "Eligible Only"}
-                </option>
-                <option value="ineligible">
-                  {isArabic ? "غير مؤهل (Ineligible)" : "Ineligible"}
-                </option>
-                <option value="unknown">
-                  {isArabic ? "غير محدد (Unknown)" : "Unknown"}
-                </option>
-              </select>
+          <span className="text-muted-foreground/40 mx-1">|</span>
 
-              <Button
-                size="sm"
-                variant={savedOnly ? "default" : "outline"}
-                onClick={() => {
-                  const next = !savedOnly;
-                  setSavedOnly(next);
-                  void fetchFilteredJobs({ savedOnly: next });
-                }}
-              >
-                <Icons.Star className="size-3.5" />
-                <span>{isArabic ? "المحفوظة" : "Saved"}</span>
-              </Button>
+          <button
+            type="button"
+            onClick={() => {
+              const next = !savedOnly;
+              setSavedOnly(next);
+              void fetchFilteredJobs({ savedOnly: next });
+            }}
+            className={`inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors ${
+              savedOnly
+                ? "font-semibold text-amber-500"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Icons.Star
+              className={`size-3 ${savedOnly ? "fill-amber-500" : ""}`}
+            />
+            <span>{isArabic ? "محفوظة" : "Saved"}</span>
+          </button>
+        </div>
+      </div>
 
-              <Button
-                size="sm"
-                variant={includeDuplicates ? "default" : "outline"}
-                onClick={() => {
-                  const next = !includeDuplicates;
-                  setIncludeDuplicates(next);
-                  void fetchFilteredJobs({ includeDuplicates: next });
-                }}
-              >
-                <span>
-                  {isArabic ? "إظهار المكررة" : "Show Cross-Posted Duplicates"}
-                </span>
-              </Button>
+      {/* Master-Detail Explorer */}
+      {jobs.length === 0 ? (
+        <div className="bg-card border-border/60 space-y-2 rounded-xl border py-16 text-center">
+          <Icons.Briefcase className="text-muted-foreground/40 mx-auto size-8" />
+          <h3 className="text-foreground text-sm font-semibold">
+            {isArabic ? "لا توجد نتائج مطابقة" : "No matching jobs found"}
+          </h3>
+          <p className="text-muted-foreground mx-auto max-w-xs text-xs">
+            {isArabic
+              ? "جرّب تغيير كلمات البحث أو تصفية نمط العمل."
+              : "Try clearing filters or syncing permitted feeds."}
+          </p>
+          <Button
+            size="sm"
+            variant="outline"
+            className="mt-2 h-7 text-xs"
+            onClick={() => {
+              setSearch("");
+              setWorkModeFilter("all");
+              void fetchFilteredJobs({
+                search: "",
+                workMode: "all",
+                savedOnly: false,
+              });
+            }}
+          >
+            {isArabic ? "إعادة الضبط" : "Reset Filters"}
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+          {/* Left Column: Job Cards List (Master) */}
+          <div className="flex flex-col gap-2 lg:col-span-5">
+            <div className="flex flex-col gap-1.5">
+              {jobs.map((job) => {
+                const isSelected = selectedJob?.id === job.id;
+                const isFitHigh = job.overallScore >= 80;
 
-              <Button
-                size="sm"
-                variant={includeExpired ? "default" : "outline"}
-                onClick={() => {
-                  const next = !includeExpired;
-                  setIncludeExpired(next);
-                  void fetchFilteredJobs({ includeExpired: next });
-                }}
-              >
-                <span>{isArabic ? "إظهار المنتهية" : "Show Expired"}</span>
-              </Button>
-
-              <Button
-                size="sm"
-                onClick={() => void fetchFilteredJobs()}
-                disabled={isLoading}
-              >
-                <Icons.Search className="size-3.5" />
-                <span>{isArabic ? "تطبيق" : "Search"}</span>
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Job Listings with 5-Question Fit Analysis */}
-      <div className="flex flex-col gap-4">
-        {jobs.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground text-sm">
-                {isArabic
-                  ? "لم يتم العثور على وظائف تطابق عوامل التصفية المحددة."
-                  : "No job listings match your current filters."}
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          jobs.map((job) => {
-            const isExpanded = expandedJobId === job.id;
-            return (
-              <Card
-                key={job.id}
-                className={
-                  job.status === "expired"
-                    ? "border-dashed opacity-80"
-                    : job.eligibilityStatus === "ineligible"
-                      ? "border-destructive/30"
-                      : ""
-                }
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-                    <div className="space-y-1.5">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <CardTitle className="text-lg">{job.title}</CardTitle>
-                        <Badge
-                          variant={
-                            job.overallScore >= 80
-                              ? "default"
-                              : job.overallScore >= 60
-                                ? "secondary"
-                                : "outline"
-                          }
-                        >
-                          {job.overallScore}% {isArabic ? "ملاءمة" : "Fit Score"}
-                        </Badge>
-                        <Badge
-                          variant={
-                            job.eligibilityStatus === "eligible"
-                              ? "secondary"
-                              : job.eligibilityStatus === "ineligible"
-                                ? "destructive"
-                                : "outline"
-                          }
-                        >
-                          {job.eligibilityStatus === "eligible"
-                            ? isArabic
-                              ? "مؤهل"
-                              : "Eligible"
-                            : job.eligibilityStatus === "ineligible"
-                              ? isArabic
-                                ? "غير مؤهل"
-                                : "Ineligible"
-                              : isArabic
-                                ? "أهلية غير مؤكدة"
-                                : "Eligibility Unknown"}
-                        </Badge>
-                        {job.status === "expired" && (
-                          <Badge variant="destructive">
-                            {isArabic ? "منتهية الصلاحية" : "Expired Listing"}
-                          </Badge>
-                        )}
-                        {job.canonicalJobId && (
-                          <Badge variant="outline">
-                            {isArabic
-                              ? `مكررة من ${job.canonicalJobId}`
-                              : `Duplicate of ${job.canonicalJobId}`}
-                          </Badge>
-                        )}
-                        {!job.canonicalJobId &&
-                          job.duplicateOfIds.length > 0 && (
-                            <Badge variant="outline">
-                              {isArabic
-                                ? `تم دمج ${job.duplicateOfIds.length} إعلان مكرر`
-                                : `Deduplicated (${job.duplicateOfIds.length} duplicate merged)`}
-                            </Badge>
+                return (
+                  <div
+                    key={job.id}
+                    onClick={() => setSelectedJobId(job.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setSelectedJobId(job.id);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    className={`group relative flex cursor-pointer flex-col rounded-xl border p-3.5 text-start transition-all duration-150 ${
+                      isSelected
+                        ? "border-foreground/40 bg-accent/40 shadow-2xs"
+                        : "border-border/60 bg-card hover:border-border hover:bg-accent/20"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1 space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-foreground truncate text-sm font-medium">
+                            {job.title}
+                          </span>
+                          {job.isSaved && (
+                            <Icons.Star className="size-3 shrink-0 fill-amber-500 text-amber-500" />
                           )}
+                        </div>
+                        <p className="text-muted-foreground truncate text-xs">
+                          {job.company} • {job.location}
+                        </p>
                       </div>
 
-                      <CardDescription className="flex flex-wrap items-center gap-2 text-xs">
-                        <span className="text-foreground font-medium">
-                          {job.company}
-                        </span>
-                        <span>•</span>
-                        <span>{job.location}</span>
-                        <span>•</span>
-                        <span className="capitalize">{job.workMode}</span>
-                        <span>•</span>
-                        <span>
-                          {job.salaryMin && job.salaryMax
-                            ? `${job.salaryCurrency ?? "USD"} ${job.salaryMin.toLocaleString()}–${job.salaryMax.toLocaleString()}`
-                            : "Salary not listed"}
-                        </span>
-                        <span>•</span>
-                        <span>
-                          {isArabic ? "المصدر:" : "Source:"} {job.sourceName} (
-                          {isArabic ? "حداثة" : "Freshness"}{" "}
-                          {job.freshnessScore}%)
-                        </span>
-                      </CardDescription>
+                      <span
+                        className={`inline-flex shrink-0 items-center rounded-full px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums ${
+                          isFitHigh
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        {job.overallScore}%
+                      </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="text-muted-foreground mt-2.5 flex items-center justify-between text-[11px]">
+                      <div className="flex items-center gap-1.5 truncate">
+                        <span className="capitalize">{job.workMode}</span>
+                        <span>•</span>
+                        <span className="text-muted-foreground/80 truncate font-mono text-[10px]">
+                          {job.sourceName}
+                        </span>
+                      </div>
+                      {job.salaryMin && job.salaryMax && (
+                        <span className="shrink-0 ps-1 font-mono tabular-nums">
+                          {job.salaryCurrency ?? "$"}
+                          {job.salaryMin.toLocaleString()} -{" "}
+                          {job.salaryMax.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right Column: Clean Detail Inspector */}
+          <div className="lg:col-span-7">
+            {selectedJob ? (
+              <div className="bg-card border-border/60 sticky top-4 space-y-5 rounded-xl border p-5 shadow-2xs">
+                {/* Header with Title and Primary Actions */}
+                <div className="space-y-3 border-b pb-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-foreground text-lg font-semibold">
+                          {selectedJob.title}
+                        </h2>
+                        <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-emerald-600 tabular-nums dark:text-emerald-400">
+                          {selectedJob.overallScore}%{" "}
+                          {isArabic ? "توافق" : "Match"}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-xs">
+                        <span className="text-foreground font-medium">
+                          {selectedJob.company}
+                        </span>
+                        {" • "}
+                        <span>{selectedJob.location}</span>
+                        {" • "}
+                        <span className="capitalize">
+                          {selectedJob.workMode}
+                        </span>
+                        {selectedJob.salaryMin && selectedJob.salaryMax && (
+                          <>
+                            {" • "}
+                            <span className="text-foreground font-mono tabular-nums">
+                              {selectedJob.salaryCurrency ?? "$"}
+                              {selectedJob.salaryMin.toLocaleString()} -{" "}
+                              {selectedJob.salaryMax.toLocaleString()}
+                            </span>
+                          </>
+                        )}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
                       <Button
                         size="sm"
-                        variant={job.isSaved ? "secondary" : "outline"}
-                        onClick={() => void handleToggleSave(job.id)}
+                        variant={selectedJob.isSaved ? "secondary" : "outline"}
+                        className="h-8 cursor-pointer text-xs"
+                        onClick={() => void handleToggleSave(selectedJob.id)}
                       >
-                        <Icons.Star className="size-3.5" />
+                        <Icons.Star
+                          className={`size-3.5 ${selectedJob.isSaved ? "fill-amber-500 text-amber-500" : ""}`}
+                        />
                         <span>
-                          {job.isSaved
+                          {selectedJob.isSaved
                             ? isArabic
                               ? "محفوظة"
                               : "Saved"
@@ -463,213 +463,113 @@ export const FindJobsWorkspace = ({
 
                       <Button
                         size="sm"
-                        variant="outline"
+                        disabled={isLoading || selectedJob.status === "expired"}
                         onClick={() =>
-                          setExpandedJobId(isExpanded ? null : job.id)
+                          void handlePrepareApplication(selectedJob.id)
                         }
-                      >
-                        <span>
-                          {isExpanded
-                            ? isArabic
-                              ? "إخفاء تحليل الملاءمة"
-                              : "Hide 5-Question Analysis"
-                            : isArabic
-                              ? "عرض تحليل الملاءمة (5 أسئلة)"
-                              : "Inspect 5-Question Fit"}
-                        </span>
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        disabled={isLoading || job.status === "expired"}
-                        onClick={() => void handlePrepareApplication(job.id)}
+                        className="h-8 cursor-pointer text-xs shadow-xs"
                       >
                         <Icons.Check className="size-3.5" />
                         <span>
-                          {isArabic
-                            ? "تخصيص السيرة والتقديم"
-                            : "Tailor CV & Prepare"}
+                          {isArabic ? "تخصيص والتقديم" : "Tailor & Apply"}
                         </span>
                       </Button>
                     </div>
                   </div>
-                </CardHeader>
+                </div>
 
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground text-sm">
-                    {job.description}
-                  </p>
+                {/* Match Analysis: Strengths & Gaps in Linear Style */}
+                <div className="space-y-3">
+                  <h3 className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                    {isArabic ? "تحليل الملاءمة المفسر" : "Fit Breakdown"}
+                  </h3>
 
-                  {/* 5 Mandatory Job Fit Questions (Section 5.2) */}
-                  {isExpanded && (
-                    <div className="bg-muted/30 grid gap-4 rounded-xl border p-4 md:grid-cols-2 lg:grid-cols-3">
-                      {/* Question 1: Why does this match me? */}
-                      <div className="bg-background space-y-2 rounded-lg border p-3">
-                        <h3 className="flex items-center gap-1.5 text-xs font-bold tracking-wide uppercase">
-                          <Icons.CheckCircle2 className="text-primary size-4" />
-                          <span>
-                            {isArabic
-                              ? "1. لماذا تناسبني هذه الوظيفة؟"
-                              : "1. Why does this match me?"}
-                          </span>
-                        </h3>
-                        <ul className="space-y-1 text-xs">
-                          {job.fitAnalysis.whyMatches.map((reason, idx) => (
-                            <li key={idx} className="text-muted-foreground">
-                              • {reason}
-                            </li>
-                          ))}
-                        </ul>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="bg-muted/20 border-border/40 space-y-1.5 rounded-lg border p-3 text-xs">
+                      <div className="flex items-center gap-1.5 font-medium text-emerald-600 dark:text-emerald-400">
+                        <Icons.CheckCircle2 className="size-3.5" />
+                        <span>
+                          {isArabic ? "أسباب التوافق" : "Key Strengths"}
+                        </span>
                       </div>
-
-                      {/* Question 2: What requirements do I meet? */}
-                      <div className="bg-background space-y-2 rounded-lg border p-3">
-                        <h3 className="flex items-center gap-1.5 text-xs font-bold tracking-wide uppercase">
-                          <Icons.BadgeCheck className="size-4 text-emerald-600" />
-                          <span>
-                            {isArabic
-                              ? "2. ما المتطلبات التي أستوفيها؟"
-                              : "2. What requirements do I meet?"}
-                          </span>
-                        </h3>
-                        <ul className="space-y-1 text-xs">
-                          {job.fitAnalysis.requirementsMet.map((req, idx) => (
-                            <li key={idx} className="text-muted-foreground">
-                              {`✓ ${req}`}
-                            </li>
+                      <ul className="text-muted-foreground list-disc space-y-1 ps-4 text-[11px] leading-relaxed">
+                        {selectedJob.fitAnalysis.whyMatches
+                          .slice(0, 3)
+                          .map((w, i) => (
+                            <li key={i}>{w}</li>
                           ))}
-                        </ul>
-                      </div>
+                      </ul>
+                    </div>
 
-                      {/* Question 3: What am I missing? (Required vs Preferred gaps) */}
-                      <div className="bg-background space-y-2 rounded-lg border p-3">
-                        <h3 className="flex items-center gap-1.5 text-xs font-bold tracking-wide uppercase">
-                          <Icons.AlertTriangle className="size-4 text-amber-500" />
-                          <span>
-                            {isArabic
-                              ? "3. ما الذي ينقصني؟ (إلزامي مقابل مفضل)"
-                              : "3. What am I missing?"}
-                          </span>
-                        </h3>
-                        {job.fitAnalysis.missingRequired.length === 0 &&
-                        job.fitAnalysis.missingPreferred.length === 0 ? (
-                          <p className="text-xs text-emerald-600">
-                            {isArabic
-                              ? "لا توجد فجوات مهارية؛ أنت تستوفي جميع المتطلبات الأساسية والمفضلة."
-                              : "Zero skill or eligibility gaps detected against your verified profile."}
-                          </p>
-                        ) : (
-                          <div className="space-y-2 text-xs">
-                            {job.fitAnalysis.missingRequired.length > 0 && (
-                              <div>
-                                <span className="text-destructive font-semibold">
-                                  {isArabic
-                                    ? "متطلبات أساسية مفقودة:"
-                                    : "Required Gaps:"}
-                                </span>
-                                <ul className="mt-0.5 space-y-0.5">
-                                  {job.fitAnalysis.missingRequired.map(
-                                    (gap, idx) => (
-                                      <li
-                                        key={idx}
-                                        className="text-destructive"
-                                      >
-                                        • {gap}
-                                      </li>
-                                    ),
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-                            {job.fitAnalysis.missingPreferred.length > 0 && (
-                              <div>
-                                <span className="font-semibold text-amber-600">
-                                  {isArabic
-                                    ? "مهارات مفضلة (غير إلزامية):"
-                                    : "Preferred (Non-blocking) Gaps:"}
-                                </span>
-                                <ul className="mt-0.5 space-y-0.5">
-                                  {job.fitAnalysis.missingPreferred.map(
-                                    (gap, idx) => (
-                                      <li
-                                        key={idx}
-                                        className="text-muted-foreground"
-                                      >
-                                        • {gap}
-                                      </li>
-                                    ),
-                                  )}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
+                    <div className="bg-muted/20 border-border/40 space-y-1.5 rounded-lg border p-3 text-xs">
+                      <div className="text-foreground flex items-center gap-1.5 font-medium">
+                        <Icons.BadgeCheck className="size-3.5 text-blue-500" />
+                        <span>
+                          {isArabic
+                            ? "المتطلبات المستوفاة"
+                            : "Requirements Met"}
+                        </span>
+                      </div>
+                      <ul className="text-muted-foreground list-disc space-y-1 ps-4 text-[11px] leading-relaxed">
+                        {selectedJob.fitAnalysis.requirementsMet
+                          .slice(0, 3)
+                          .map((r, i) => (
+                            <li key={i}>{r}</li>
+                          ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {selectedJob.fitAnalysis.missingRequired.length > 0 && (
+                    <div className="bg-destructive/5 border-destructive/20 rounded-lg border p-3 text-xs">
+                      <span className="text-destructive font-medium">
+                        {isArabic
+                          ? "متطلبات أساسية غير مؤكدة:"
+                          : "Missing Required Skills:"}
+                      </span>
+                      <ul className="text-destructive/80 mt-1 list-disc space-y-0.5 ps-4 text-[11px]">
+                        {selectedJob.fitAnalysis.missingRequired.map(
+                          (gap, i) => (
+                            <li key={i}>{gap}</li>
+                          ),
                         )}
-                      </div>
-
-                      {/* Question 4: Is the opportunity credible? */}
-                      <div className="bg-background space-y-2 rounded-lg border p-3">
-                        <h3 className="flex items-center gap-1.5 text-xs font-bold tracking-wide uppercase">
-                          <Icons.Info className="size-4 text-blue-500" />
-                          <span>
-                            {isArabic
-                              ? "4. هل الفرصة موثوقة؟"
-                              : "4. Is the opportunity credible?"}
-                          </span>
-                        </h3>
-                        <ul className="space-y-1 text-xs">
-                          {job.fitAnalysis.credibility.signals.map(
-                            (sig, idx) => (
-                              <li key={idx} className="text-muted-foreground">
-                                • {sig}
-                              </li>
-                            ),
-                          )}
-                        </ul>
-                        <a
-                          href={
-                            job.fitAnalysis.credibility.sourceAttributionUrl
-                          }
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-primary inline-flex items-center gap-1 text-xs font-medium hover:underline"
-                        >
-                          <span>
-                            {isArabic
-                              ? "رابط المصدر الأصلي"
-                              : "Original Source Attribution"}
-                          </span>
-                          <Icons.ArrowUpRight className="size-3" />
-                        </a>
-                      </div>
-
-                      {/* Question 5: What happens when I apply? */}
-                      <div className="bg-background space-y-2 rounded-lg border p-3 md:col-span-2">
-                        <h3 className="flex items-center gap-1.5 text-xs font-bold tracking-wide uppercase">
-                          <Icons.Lock className="text-primary size-4" />
-                          <span>
-                            {isArabic
-                              ? "5. ماذا يحدث عندما أتقدم للوظيفة؟"
-                              : "5. What happens when I apply?"}
-                          </span>
-                        </h3>
-                        <ul className="grid gap-1.5 text-xs sm:grid-cols-2">
-                          {job.fitAnalysis.applicationProcess.steps.map(
-                            (step, idx) => (
-                              <li key={idx} className="text-muted-foreground">
-                                {step}
-                              </li>
-                            ),
-                          )}
-                        </ul>
-                      </div>
+                      </ul>
                     </div>
                   )}
-                </CardContent>
-              </Card>
-            );
-          })
-        )}
-      </div>
+                </div>
+
+                {/* Description */}
+                <div className="space-y-1.5 border-t pt-4">
+                  <h3 className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+                    {isArabic ? "الوصف الوظيفي" : "Role Overview"}
+                  </h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed whitespace-pre-line">
+                    {selectedJob.description}
+                  </p>
+                </div>
+
+                {/* Attribution Link */}
+                <div className="text-muted-foreground flex items-center justify-between border-t pt-3 text-[11px]">
+                  <span>
+                    {isArabic ? "المصدر:" : "Source:"} {selectedJob.sourceName}
+                  </span>
+                  <a
+                    href={selectedJob.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-foreground inline-flex items-center gap-1 font-medium hover:underline"
+                  >
+                    <span>
+                      {isArabic ? "فتح إعلان المصدر" : "Original Posting"}
+                    </span>
+                    <Icons.ArrowUpRight className="size-3" />
+                  </a>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

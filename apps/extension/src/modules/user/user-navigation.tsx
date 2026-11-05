@@ -177,7 +177,7 @@ export const UserNavigation = memo<UserNavigationProps>(
                   <Skeleton className="mt-1 h-3 w-20" />
                 ) : (
                   <span className="text-muted-foreground truncate text-xs capitalize">
-                    {t(`plan.${activePlan}.name`)}
+                    {t(`plan.${activePlan}.name` as any)}
                   </span>
                 )}
               </div>

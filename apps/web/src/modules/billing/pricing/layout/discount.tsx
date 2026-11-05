@@ -28,7 +28,7 @@ export const Discount = () => {
 
   return (
     <p className="sm mt-2 text-center md:text-lg">
-      <Icons.Gift className="text-primary mr-1.5 mb-1.5 inline-block h-5 w-5" />
+      <Icons.Gift className="text-primary me-1.5 mb-1.5 inline-block h-5 w-5" />
       <span className="text-primary">
         <Trans
           i18nKey="billing:discount.specialOffer"

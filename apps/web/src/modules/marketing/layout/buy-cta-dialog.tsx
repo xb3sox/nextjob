@@ -14,6 +14,9 @@ import {
 } from "@workspace/ui-web/dialog";
 import { Icons } from "@workspace/ui-web/icons";
 
+import { pathsConfig } from "~/config/paths";
+import { TurboLink } from "~/modules/common/turbo-link";
+
 const MIN_DELAY_MS = 15_000;
 const MAX_DELAY_MS = 7_200_000;
 const STORAGE_LAST_SHOWN_AT = "buyCtaDialog:lastShownAt";
@@ -85,15 +88,13 @@ export const BuyCtaDialog = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <a
-          href="https://www.turbostarter.dev/#pricing"
-          target="_blank"
-          rel="noopener noreferrer"
+        <TurboLink
+          href={pathsConfig.dashboard.user.index}
           className={cn(buttonVariants(), "gap-2")}
         >
           <Icons.Code className="size-4" />
           {t("cta.buy.button")}
-        </a>
+        </TurboLink>
 
         <div className="bg-border relative -mx-6 my-3 h-px">
           <span className="bg-background text-muted-foreground absolute left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 text-sm lowercase">
@@ -104,20 +105,13 @@ export const BuyCtaDialog = () => {
         <div className="flex flex-col gap-4">
           <p className="text-base">{t("cta.buy.join.description")}</p>
 
-          <a
-            className={cn(
-              buttonVariants(),
-              "gap-2 bg-[#5865F2] px-7 no-underline hover:bg-[#5865F2]/95",
-            )}
-            href="https://discord.gg/KjpK2uk3JP"
-            rel="noopener noreferrer"
-            target="_blank"
+          <TurboLink
+            className={cn(buttonVariants({ variant: "outline" }), "gap-2 px-7")}
+            href={pathsConfig.dashboard.user.jobs}
           >
-            <Icons.Discord className="size-[1.35rem] text-white" />
-            <span className="font-semibold text-white">
-              {t("cta.buy.join.button")}
-            </span>
-          </a>
+            <Icons.Search className="size-4" />
+            <span className="font-semibold">{t("cta.buy.join.button")}</span>
+          </TurboLink>
         </div>
       </DialogContent>
     </Dialog>

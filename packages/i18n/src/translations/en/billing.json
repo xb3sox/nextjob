@@ -1,9 +1,9 @@
 {
   "pricing": {
-    "label": "Pricing",
-    "title": "This is where you start earning",
-    "description": "Configure pricing based on your use-case and start charging your customers.",
-    "disclaimer": "Mix and match config to create the perfect pricing for your business. <reference>Check docs for more information.</reference>"
+    "label": "Pricing & Plans",
+    "title": "Open-Source & Free for Professionals",
+    "description": "NextJob is free and open-source. Discover jobs, track career truth, and tailor evidence-backed applications.",
+    "disclaimer": "NextJob is free and open-source. <reference>View our documentation and GitHub repository.</reference>"
   },
   "settings": {
     "subscriptions": {

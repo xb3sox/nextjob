@@ -1,6 +1,6 @@
 import "i18next";
 import type { config } from "../config";
-import type { translations } from "../translations";
+import type { en } from "../translations/en";
 
 type ExtractDefault<T> = T extends () => Promise<infer R>
   ? R extends { default: infer D }
@@ -8,7 +8,7 @@ type ExtractDefault<T> = T extends () => Promise<infer R>
     : never
   : never;
 
-type Translation = (typeof translations)[keyof typeof translations];
+type Translation = typeof en;
 
 declare module "i18next" {
   interface CustomTypeOptions {

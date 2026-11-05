@@ -1,11 +1,12 @@
 import { getMetadata } from "~/lib/metadata";
-import { AIDemo } from "~/modules/marketing/ai-demo";
+import { CareerCopilotWorkspace } from "~/modules/nextjob/career-copilot-workspace";
 
 export const generateMetadata = getMetadata({
-  title: "ai",
-  description: "marketing:ai.description",
+  title: "Career Copilot | NextJob",
+  description:
+    "AI-powered zero-fabrication career graph intelligence and role alignment.",
 });
 
-export default function AI() {
-  return <AIDemo />;
+export default function CareerCopilotPage() {
+  return <CareerCopilotWorkspace />;
 }

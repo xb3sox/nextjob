@@ -15,6 +15,8 @@ import { buttonVariants } from "@workspace/ui-web/button";
 import { Icons } from "@workspace/ui-web/icons";
 import { SidebarTrigger } from "@workspace/ui-web/sidebar";
 
+import { I18nControls } from "~/modules/common/i18n/controls";
+import { ThemeControls } from "~/modules/common/theme";
 import { TurboLink } from "~/modules/common/turbo-link";
 
 import { useMenu } from "./sidebar/use-menu";
@@ -61,9 +63,12 @@ export const DashboardActionBar = ({ menu }: { menu: Menu }) => {
   const last = breadcrumbs?.at(-1);
 
   return (
-    <header className="bg-background sticky top-(--banner-height,0px) z-10 flex h-14 w-full shrink-0 items-center justify-between gap-2 border-b px-4 transition-[width,height] ease-linear md:px-6 lg:px-7">
-      <SidebarTrigger className="md:-ml-1" />
-      <div className="absolute left-1/2 -translate-x-1/2">
+    <header className="bg-background sticky top-(--banner-height,0px) z-10 flex h-14 w-full shrink-0 items-center justify-between gap-3 border-b px-4 transition-[width,height] ease-linear md:px-6 lg:px-7">
+      <div className="flex items-center gap-2">
+        <SidebarTrigger className="md:-ms-1" />
+      </div>
+
+      <div className="hidden items-center sm:flex">
         {breadcrumbs ? (
           <Breadcrumb>
             <BreadcrumbList>
@@ -102,18 +107,23 @@ export const DashboardActionBar = ({ menu }: { menu: Menu }) => {
         ) : null}
       </div>
 
-      <a
-        href="https://discord.gg/KjpK2uk3JP"
-        rel="noopener noreferrer"
-        target="_blank"
-        className={buttonVariants({
-          variant: "ghost",
-          size: "icon",
-          className: "text-muted-foreground",
-        })}
-      >
-        <Icons.Discord className="size-4.5" />
-      </a>
+      <div className="ms-auto flex items-center gap-1.5">
+        <ThemeControls />
+        <I18nControls />
+        <a
+          href="https://github.com/xb3sox/nextjob"
+          rel="noopener noreferrer"
+          target="_blank"
+          aria-label="GitHub Repository"
+          className={buttonVariants({
+            variant: "ghost",
+            size: "icon",
+            className: "text-muted-foreground hover:text-foreground",
+          })}
+        >
+          <Icons.Github className="size-4" />
+        </a>
+      </div>
     </header>
   );
 };

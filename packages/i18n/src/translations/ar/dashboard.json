@@ -70,5 +70,30 @@
     "tool": "استخدم <a>expo.dev/notifications</a> لاختبار الإشعارات.",
     "docs": "اعرف المزيد في <a>turbostarter.dev/docs/mobile/push-notifications</a>.",
     "cta": "إشعار"
+  },
+  "nextjob": {
+    "dashboard": {
+      "title": "جدول اليوم",
+      "subtitle": "نظرة عامة على البحث التلقائي عن الوظائف",
+      "approvalQueue": "قائمة المراجعة والموافقة",
+      "matchingRoles": "أفضل الوظائف المطابقة",
+      "copilot": "المساعد الذكي"
+    },
+    "findJobs": {
+      "title": "البحث عن وظائف",
+      "searchPlaceholder": "ابحث بالدور، الشركة، أو الكلمات المفتاحية...",
+      "allModes": "جميع أنماط العمل",
+      "remote": "عن بُعد",
+      "hybrid": "هجين",
+      "onsite": "حضوري",
+      "matchScore": "نسبة التطابق"
+    },
+    "applications": {
+      "title": "متابعة التقديمات",
+      "needsReview": "بحاجة لمراجعة",
+      "active": "نشطة",
+      "closed": "مغلقة",
+      "verifyReceipt": "التحقق من الإيصال"
+    }
   }
 }

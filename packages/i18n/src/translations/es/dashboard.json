@@ -70,5 +70,30 @@
     "tool": "Usa <a>expo.dev/notifications</a> para probar rápidamente notificaciones remotas en tiempo real.",
     "docs": "Aprende más en <a>turbostarter.dev/docs/mobile/push-notifications</a>.",
     "cta": "Notificar"
+  },
+  "nextjob": {
+    "dashboard": {
+      "title": "Panel de hoy",
+      "subtitle": "Resumen de búsqueda autónoma de empleo",
+      "approvalQueue": "Cola de aprobación",
+      "matchingRoles": "Puestos con mayor afinidad",
+      "copilot": "Copiloto"
+    },
+    "findJobs": {
+      "title": "Buscar empleos",
+      "searchPlaceholder": "Buscar puestos, empresas o palabras clave...",
+      "allModes": "Todas las modalidades",
+      "remote": "Remoto",
+      "hybrid": "Híbrido",
+      "onsite": "Presencial",
+      "matchScore": "Afinidad"
+    },
+    "applications": {
+      "title": "Flujo de solicitudes",
+      "needsReview": "Requiere revisión",
+      "active": "Activas",
+      "closed": "Cerradas",
+      "verifyReceipt": "Verificar recibo"
+    }
   }
 }
