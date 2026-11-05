@@ -11,11 +11,11 @@
 
 - Inspected **TurboStarter** monorepo (`apps/web`, `apps/mobile`, `apps/extension`, `packages/api`, `packages/auth`, `packages/db`, `packages/i18n`, `packages/ui`, `packages/storage`, `packages/shared`).
 - Cloned and inspected [`xb3sox/nextjob`](https://github.com/xb3sox/nextjob) (`packages/profile`, `packages/tailoring`, `packages/applications`, `packages/policy`, `packages/ai-gateway`, `packages/api`, `evals/`).
-- Recorded conflict resolution and architectural decisions in [`DECISIONS.md`](file:///d:/Projects/Development/Projects/nextjob/DECISIONS.md), task traceability in [`TASKS.md`](file:///d:/Projects/Development/Projects/nextjob/TASKS.md), and integration architecture in [`TURBOSTARTER_INTEGRATION.md`](file:///d:/Projects/Development/Projects/nextjob/TURBOSTARTER_INTEGRATION.md).
+- Recorded conflict resolution and architectural decisions in [`DECISIONS.md`](./DECISIONS.md), task traceability in [`TASKS.md`](./TASKS.md), and integration architecture in [`TURBOSTARTER_INTEGRATION.md`](./TURBOSTARTER_INTEGRATION.md).
 
 ### Phase 2: Relational Database Schema (`@workspace/db` — `VERIFIED`)
 
-- Implemented [`packages/db/src/schema/career.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/db/src/schema/career.ts) and exported from [`packages/db/src/schema/index.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/db/src/schema/index.ts):
+- Implemented [`packages/db/src/schema/career.ts`](./packages/db/src/schema/career.ts) and exported from [`packages/db/src/schema/index.ts`](./packages/db/src/schema/index.ts):
   1. `careerProfile`
   2. `careerEvidence`
   3. `careerClaim`
@@ -33,23 +33,23 @@
 
 ### Phase 3: Domain Services & Hono RPC API (`@workspace/api` — `VERIFIED`)
 
-- [`packages/api/src/schema/nextjob.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/schema/nextjob.ts): Shared Zod contracts for all NextJob operations.
-- [`packages/api/src/modules/nextjob/store.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/modules/nextjob/store.ts): Per-user isolated store with `assertResourceOwnership` (`403 Forbidden` cross-user isolation), SHA-256 hashing (`computeSha256`, `computePayloadHash`), and seeded permitted job sources.
-- [`packages/api/src/modules/nextjob/career-service.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/modules/nextjob/career-service.ts): Resume/CV/JSON Resume import, PII redaction, employment date/role conflict detection, verification actions, immutable revision history, approval-gated conversational updates, preferences, reusable answers, and JSON Resume v1.0.0 export.
-- [`packages/api/src/modules/nextjob/jobs-service.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/modules/nextjob/jobs-service.ts) & [`packages/api/src/modules/nextjob/eligibility-benchmark.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/modules/nextjob/eligibility-benchmark.ts): 10-dimension hard eligibility evaluation, SHA-256 deduplication, live Remotive public API sync with offline fallback, and 5-question explainable Job Fit analysis.
-- [`packages/api/src/modules/nextjob/tailoring-service.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/modules/nextjob/tailoring-service.ts): Evidence-constrained CV & cover letter generator (`verified` claims with `confidence >= 0.8` only), statement-level accept/edit/reject with automatic SHA-256 payload hash recomputation and stale approval invalidation, and DOCX / Print-ready PDF HTML / JSON exporters with RTL support.
-- [`packages/api/src/modules/nextjob/applications-service.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/modules/nextjob/applications-service.ts): 12-state pipeline tracker, duplicate application prevention, payload-hash-bound human approval gate, `Confirmed` (`SUBMITTED_VERIFIED`) vs `Submission Uncertain` (`SUBMITTED_UNVERIFIED`) handling with automatic retry blocking, and SHA-256 `SubmissionReceipt` verification.
-- [`packages/api/src/modules/nextjob/router.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/modules/nextjob/router.ts): Mounted at `/api/nextjob` in [`packages/api/src/index.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/api/src/index.ts).
+- [`packages/api/src/schema/nextjob.ts`](./packages/api/src/schema/nextjob.ts): Shared Zod contracts for all NextJob operations.
+- [`packages/api/src/modules/nextjob/store.ts`](./packages/api/src/modules/nextjob/store.ts): Per-user isolated store with `assertResourceOwnership` (`403 Forbidden` cross-user isolation), SHA-256 hashing (`computeSha256`, `computePayloadHash`), and seeded permitted job sources.
+- [`packages/api/src/modules/nextjob/career-service.ts`](./packages/api/src/modules/nextjob/career-service.ts): Resume/CV/JSON Resume import, PII redaction, employment date/role conflict detection, verification actions, immutable revision history, approval-gated conversational updates, preferences, reusable answers, and JSON Resume v1.0.0 export.
+- [`packages/api/src/modules/nextjob/jobs-service.ts`](./packages/api/src/modules/nextjob/jobs-service.ts) & [`packages/api/src/modules/nextjob/eligibility-benchmark.ts`](./packages/api/src/modules/nextjob/eligibility-benchmark.ts): 10-dimension hard eligibility evaluation, SHA-256 deduplication, live Remotive public API sync with offline fallback, and 5-question explainable Job Fit analysis.
+- [`packages/api/src/modules/nextjob/tailoring-service.ts`](./packages/api/src/modules/nextjob/tailoring-service.ts): Evidence-constrained CV & cover letter generator (`verified` claims with `confidence >= 0.8` only), statement-level accept/edit/reject with automatic SHA-256 payload hash recomputation and stale approval invalidation, and DOCX / Print-ready PDF HTML / JSON exporters with RTL support.
+- [`packages/api/src/modules/nextjob/applications-service.ts`](./packages/api/src/modules/nextjob/applications-service.ts): 12-state pipeline tracker, duplicate application prevention, payload-hash-bound human approval gate, `Confirmed` (`SUBMITTED_VERIFIED`) vs `Submission Uncertain` (`SUBMITTED_UNVERIFIED`) handling with automatic retry blocking, and SHA-256 `SubmissionReceipt` verification.
+- [`packages/api/src/modules/nextjob/router.ts`](./packages/api/src/modules/nextjob/router.ts): Mounted at `/api/nextjob` in [`packages/api/src/index.ts`](./packages/api/src/index.ts).
 
 ### Phase 4: Web Application Screens & Bilingual RTL Support (`apps/web` & `@workspace/i18n` — `VERIFIED`)
 
-- Added Arabic (`ar`) locale, translations (`packages/i18n/src/translations/ar/*`), and `getLanguageDirection(locale)` (`dir="rtl"`) in [`packages/i18n/src/config.ts`](file:///d:/Projects/Development/Projects/nextjob/packages/i18n/src/config.ts) and [`apps/web/src/modules/common/layout/base.tsx`](file:///d:/Projects/Development/Projects/nextjob/apps/web/src/modules/common/layout/base.tsx).
+- Added Arabic (`ar`) locale, translations (`packages/i18n/src/translations/ar/*`), and `getLanguageDirection(locale)` (`dir="rtl"`) in [`packages/i18n/src/config.ts`](./packages/i18n/src/config.ts) and [`apps/web/src/modules/common/layout/base.tsx`](./apps/web/src/modules/common/layout/base.tsx).
 - Implemented the 4 primary screens + Persistent AI Career Assistant:
-  1. **Today** ([`today-dashboard.tsx`](file:///d:/Projects/Development/Projects/nextjob/apps/web/src/modules/nextjob/today-dashboard.tsx))
-  2. **Find Jobs** ([`find-jobs-workspace.tsx`](file:///d:/Projects/Development/Projects/nextjob/apps/web/src/modules/nextjob/find-jobs-workspace.tsx))
-  3. **My Career** ([`my-career-workspace.tsx`](file:///d:/Projects/Development/Projects/nextjob/apps/web/src/modules/nextjob/my-career-workspace.tsx))
-  4. **Applications** ([`applications-workspace.tsx`](file:///d:/Projects/Development/Projects/nextjob/apps/web/src/modules/nextjob/applications-workspace.tsx))
-  5. **Persistent Career Assistant** ([`persistent-assistant.tsx`](file:///d:/Projects/Development/Projects/nextjob/apps/web/src/modules/nextjob/persistent-assistant.tsx))
+  1. **Today** ([`today-dashboard.tsx`](./apps/web/src/modules/nextjob/today-dashboard.tsx))
+  2. **Find Jobs** ([`find-jobs-workspace.tsx`](./apps/web/src/modules/nextjob/find-jobs-workspace.tsx))
+  3. **My Career** ([`my-career-workspace.tsx`](./apps/web/src/modules/nextjob/my-career-workspace.tsx))
+  4. **Applications** ([`applications-workspace.tsx`](./apps/web/src/modules/nextjob/applications-workspace.tsx))
+  5. **Persistent Career Assistant** ([`persistent-assistant.tsx`](./apps/web/src/modules/nextjob/persistent-assistant.tsx))
 
 ---
 
