@@ -368,12 +368,17 @@ export const updateTailoredStatement = (
   return doc;
 };
 
-const escapeXml = (str: string) =>
+// Security: Escapes HTML/XML special characters to prevent Cross-Site Scripting (XSS)
+// and markup injection when exporting documents to DOCX or HTML/PDF.
+const escapeHtml = (str: string) =>
   str
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const escapeXml = escapeHtml;
 
 /**
  * Exports a tailored document into DOCX (WordprocessingML XML), Print-ready PDF/HTML (with RTL support),
@@ -499,18 +504,18 @@ export const exportTailoredDocument = (
     const items = activeStatements.filter((s) => s.section === sectionKey);
     if (items.length === 0) return "";
     return `<section style="margin-top: 18px;">
-      <h2 style="font-size: 14pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; color: #0f172a;">${heading}</h2>
+      <h2 style="font-size: 14pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; color: #0f172a;">${escapeHtml(heading)}</h2>
       <ul style="padding-inline-start: 20px; margin-top: 8px;">
-        ${items.map((item) => `<li style="margin-bottom: 6px; line-height: 1.5;">${item.proposedText}</li>`).join("")}
+        ${items.map((item) => `<li style="margin-bottom: 6px; line-height: 1.5;">${escapeHtml(item.proposedText)}</li>`).join("")}
       </ul>
     </section>`;
   };
 
   const htmlContent = `<!DOCTYPE html>
-<html lang="${doc.language}" dir="${direction}">
+<html lang="${escapeHtml(doc.language)}" dir="${escapeHtml(direction)}">
 <head>
   <meta charset="UTF-8" />
-  <title>${doc.title}</title>
+  <title>${escapeHtml(doc.title)}</title>
   <style>
     @page { size: A4; margin: 20mm; }
     body {
@@ -526,9 +531,9 @@ export const exportTailoredDocument = (
   </style>
 </head>
 <body>
-  <h1 style="font-size: 20pt; margin-bottom: 4px;">${doc.targetRole} — ${doc.targetCompany}</h1>
-  <div class="meta">Evidence-Verified Resume • Payload SHA-256: ${doc.payloadHash.slice(0, 16)}…</div>
-  <p style="line-height: 1.6; font-size: 11pt;">${doc.summary}</p>
+  <h1 style="font-size: 20pt; margin-bottom: 4px;">${escapeHtml(doc.targetRole)} — ${escapeHtml(doc.targetCompany)}</h1>
+  <div class="meta">Evidence-Verified Resume • Payload SHA-256: ${escapeHtml(doc.payloadHash.slice(0, 16))}…</div>
+  <p style="line-height: 1.6; font-size: 11pt;">${escapeHtml(doc.summary)}</p>
   ${renderSection(doc.language === "ar" ? "الخبرات المهنية" : "Professional Experience", "experience")}
   ${renderSection(doc.language === "ar" ? "المهارات التقنية الموثقة" : "Verified Skills", "skills")}
   ${renderSection(doc.language === "ar" ? "المشاريع" : "Key Projects", "projects")}

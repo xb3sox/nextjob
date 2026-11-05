@@ -397,6 +397,27 @@ Skills: TypeScript, Rust, PostgreSQL`,
     expect(exportedDocx.direction).toBe("rtl");
     expect(exportedDocx.content).toContain("<w:bidi/>");
 
+    // Security: Verify HTML/XSS injection prevention in pdf_html export
+    updateTailoredStatement(userA, {
+      documentId: arDoc.id,
+      statementId: arDoc.statements[0]!.id,
+      action: "edit",
+      editedText: `<script>alert("xss")</script><img src=x onerror=alert(1)> & "Safe"`,
+    });
+    const sanitizedHtmlExport = exportTailoredDocument(
+      userA,
+      arDoc.id,
+      "pdf_html",
+    );
+    expect(sanitizedHtmlExport.content).not.toContain("<script>");
+    expect(sanitizedHtmlExport.content).not.toContain("<img");
+    expect(sanitizedHtmlExport.content).toContain(
+      "&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;",
+    );
+    expect(sanitizedHtmlExport.content).toContain(
+      "&lt;img src=x onerror=alert(1)&gt; &amp; &quot;Safe&quot;",
+    );
+
     const jsonResume = exportProfileAsJsonResume(userA);
     expect(jsonResume.work.length).toBeGreaterThan(0);
 
