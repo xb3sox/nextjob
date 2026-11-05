@@ -118,6 +118,10 @@ export const nextjobRouter = new Hono()
     },
   )
   .get("/career/export/json-resume", (c) => {
+    c.header(
+      "Cache-Control",
+      "public, s-maxage=300, stale-while-revalidate=600",
+    );
     return c.json(exportProfileAsJsonResume(c.var.user.id));
   })
   .get(
@@ -134,6 +138,10 @@ export const nextjobRouter = new Hono()
       }),
     ),
     (c) => {
+      c.header(
+        "Cache-Control",
+        "public, s-maxage=300, stale-while-revalidate=600",
+      );
       const q = c.req.valid("query");
       return c.json({
         jobs: listJobsWithFitForUser(c.var.user.id, {
